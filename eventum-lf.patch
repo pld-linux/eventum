@@ -1,0 +1,49 @@
+minor look & feel fixes
+
+--- ./templates/en/faq.tpl.html~	2005-02-27 17:59:14.000000000 +0200
++++ ./templates/en/faq.tpl.html	2005-03-17 12:25:38.000000000 +0200
+@@ -13,7 +13,7 @@
+             <td class="default_white" bgcolor="{$cell_color}"><b>{$faq.faq_title|escape:"html"}</b></td>
+           </tr>
+           <tr>
+-            <td class="default" bgcolor="{$dark_color}">
++            <td class="default" bgcolor="{$dark_color}" height="260" valign="top">
+               <p><i>Last updated: {$faq.faq_updated_date}</i></p>
+               {$faq.message}
+             </td>
+--- ./templates/en/view_form.tpl.html~	2005-02-27 17:59:14.000000000 +0200
++++ ./templates/en/view_form.tpl.html	2005-03-17 12:38:03.000000000 +0200
+@@ -5,13 +5,13 @@
+ {literal}
+ function openHistory(issue_id)
+ {
+-    var features = 'width=520,height=400,top=30,left=30,resizable=yes,scrollbars=yes,toolbar=no,location=no,menubar=no,status=no';
++    var features = 'width=890,height=500,top=30,left=30,resizable=yes,scrollbars=yes,toolbar=no,location=no,menubar=no,status=no';
+     var popupWin = window.open('history.php?iss_id=' + issue_id, '_impact', features);
+     popupWin.focus();
+ }
+ function openNotification(issue_id)
+ {
+-    var features = 'width=440,height=400,top=30,left=30,resizable=yes,scrollbars=yes,toolbar=no,location=no,menubar=no,status=no';
++    var features = 'width=540,height=400,top=30,left=30,resizable=yes,scrollbars=yes,toolbar=no,location=no,menubar=no,status=no';
+     var popupWin = window.open('notification.php?iss_id=' + issue_id, '_notification', features);
+     popupWin.focus();
+ }
+--- ./templates/en/update_form.tpl.html~	2005-03-16 19:03:57.000000000 +0200
++++ ./templates/en/update_form.tpl.html	2005-03-17 12:59:17.000000000 +0200
+@@ -31,13 +31,13 @@
+ <!--
+ function openHistory(issue_id)
+ {
+-    var features = 'width=420,height=400,top=30,left=30,resizable=yes,scrollbars=yes,toolbar=no,location=no,menubar=no,status=no';
++    var features = 'width=890,height=500,top=30,left=30,resizable=yes,scrollbars=yes,toolbar=no,location=no,menubar=no,status=no';
+     var popupWin = window.open('history.php?iss_id=' + issue_id, '_impact', features);
+     popupWin.focus();
+ }
+ function openNotification(issue_id)
+ {
+-    var features = 'width=440,height=400,top=30,left=30,resizable=yes,scrollbars=yes,toolbar=no,location=no,menubar=no,status=no';
++    var features = 'width=540,height=400,top=30,left=30,resizable=yes,scrollbars=yes,toolbar=no,location=no,menubar=no,status=no';
+     var popupWin = window.open('notification.php?iss_id=' + issue_id, '_notification', features);
+     popupWin.focus();
+ }
