@@ -19,8 +19,8 @@ Summary:	Eventum Issue / Bug Tracking System
 Name:		eventum
 Version:	1.4
 Release:	0.1
-License:	GNU GPL
-Group:		Applications/Databases
+License:	GPL
+Group:		Applications/WWW
 Source0:	http://mysql.wildyou.net/Downloads/%{name}/%{name}-%{version}.tar.gz
 # Source0-md5:	361c1355e46a6bbfa54e420964ec92cf
 URL:		http://dev.mysql.com/downloads/other/eventum/index.html
@@ -30,7 +30,6 @@ Requires:	php-pcre
 Requires:	php-mysql
 Requires:	php-gd
 Requires:	php-imap
-Requires:	mysql
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_htmldir	%{_datadir}/%{name}
