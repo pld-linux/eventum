@@ -1,0 +1,2 @@
+# eventum mail queue processor
+* * * * * http cd /usr/share/eventum/misc && /usr/bin/php4 -q process_mail_queue.php
