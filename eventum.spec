@@ -46,11 +46,10 @@ Source9:	%{name}-irc.sysconfig
 Source10:	%{name}-config.php
 Source11:	%{name}-router-qmail.sh
 Patch0:		%{name}-paths.patch
-Patch2:		%{name}-cvs-config.patch
-Patch3:		%{name}-irc-config.patch
-Patch4:		%{name}-PEAR.patch
-Patch11:	%{name}-scm_checkin_associated.patch
-Patch23:	%{name}-db-20050227.patch
+Patch1:		%{name}-cvs-config.patch
+Patch2:		%{name}-irc-config.patch
+Patch3:		%{name}-PEAR.patch
+Patch10:	%{name}-db-20050227.patch
 URL:		http://dev.mysql.com/downloads/other/eventum/index.html
 BuildRequires:	rpmbuild(macros) >= 1.177
 BuildRequires:	sed >= 4.0
@@ -421,13 +420,12 @@ $,,'
 
 # packaging
 %patch0 -p1 -b .paths
+%patch1 -p1
 %patch2 -p1
-%patch3 -p1
-%{?with_pear:%patch4 -p1 -b .PEAR}
+%{?with_pear:%patch3 -p1 -b .PEAR}
 
 # bug fixes.
-%patch11 -p1
-%patch23 -p1
+%patch10 -p1
 
 # replace in remaining scripts config.inc.php to system one
 grep -rl 'include_once(".*config.inc.php")' . | xargs sed -i -e '
