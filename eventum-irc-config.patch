@@ -22,7 +22,7 @@
 -$irc->connect('localhost', 6667);
 -$irc->login('EventumBOT', 'EventumBOT', 0, 'EventumBOT');
 +$irc->connect($irc_host, $irc_port);
-+$irc->login($irc_nick, $irc_realname, 0, $irc_username);
++$irc->login($irc_nick, $irc_realname, 0, $irc_username, $irc_password);
  foreach ($channels as $prj_id => $channel_list) {
      $irc->join($channel_list);
  }
