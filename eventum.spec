@@ -22,7 +22,7 @@
 %define _source http://mysql.wildyou.net/Downloads/%{name}/%{name}-%{version}.tar.gz
 %endif
 
-%define _rel 1.147
+%define _rel 1.151
 
 Summary:	Eventum Issue - a bug tracking system
 Summary(pl):	Eventum - system ¶ledzenia spraw/b³êdów
@@ -54,6 +54,7 @@ Patch15:		%{name}-fixes.patch
 Patch16:		%{name}-rss-charset.patch
 Patch17:		%{name}-scm-silence-add.patch
 Patch18:		%{name}-default-TZ.patch
+Patch19:		%{name}-charset-mailsubj.patch
 URL:		http://dev.mysql.com/downloads/other/eventum/index.html
 BuildRequires:	rpmbuild(macros) >= 1.177
 BuildRequires:	sed >= 4.0
@@ -169,7 +170,7 @@ Summary(pl):	¦ci±ganie poczty Eventum
 Group:		Applications/WWW
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 Requires:	crondaemon
-Requires:	php4 >= 4.1.0
+Requires:	php >= 4.1.0
 
 %description mail-download
 In order for Eventum's email integration feature to work, you need to
@@ -399,6 +400,7 @@ $,,'
 %patch16 -p1
 %patch17 -p1
 %patch18 -p1
+%patch19 -p1
 
 rm -f */*~ */*/*~
 
