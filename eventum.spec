@@ -30,6 +30,7 @@
 %define _rel 1.38
 
 Summary:	Eventum Issue / Bug Tracking System
+Summary(pl):	Eventum - system ¶ledzenia spraw/b³êdów
 Name:		eventum
 Version:	1.4
 Release:	%{?_snap:0.%{_snap}.}%{_rel}
@@ -41,13 +42,13 @@ Source1:	%{name}-apache.conf
 Patch0:		%{name}-rpm.patch
 Patch1:		%{name}-clock-status.patch
 URL:		http://dev.mysql.com/downloads/other/eventum/index.html
-BuildRequires:	sed >= 4.0
 BuildRequires:	rpmbuild(macros) >= 1.177
+BuildRequires:	sed >= 4.0
 Requires:	php >= 4.1.0
-Requires:	php-pcre
-Requires:	php-mysql
 Requires:	php-gd
 Requires:	php-imap
+Requires:	php-mysql
+Requires:	php-pcre
 #Requires:	apache-mod_dir
 # conflict with non-confdir apache
 Conflicts:	apache1 < 1.3.33-1.1
@@ -66,16 +67,29 @@ requests, or by a software development team to quickly organize tasks
 and bugs. Eventum is used by the MySQL AB Technical Support team, and
 has allowed us to dramatically improve our response times.
 
+%description -l pl
+Eventum to przyjazny dla u¿ytkownika system ¶ledzenia spraw, który
+mo¿e byæ u¿ywany przez dzia³ obs³ugi do ¶ledzenia przychodz±cych ¿±dañ
+obs³ugi technicznej albo przez zespó³ tworz±cy oprogramowanie do
+szybkiej organizacji zadañ i b³êdów. Eventum jest u¿ywany przez zespó³
+Technical Support MySQL AB i umo¿liwi³ im znacz±co poprawiæ czasy
+reakcji.
+
 %package setup
-Summary:	Eventum setup package.
+Summary:	Eventum setup package
+Summary(pl):	Pakiet do wstêpnej konfiguracji Eventum
 Group:		Applications/WWW
-PreReq:		%{name}
-Requires:	%{name} = %{epoch}:%{version}-%{release}
+PreReq:		%{name} = %{epoch}:%{version}-%{release}
 
 %description setup
 Install this package to configure initial Eventum installation. You
 should uninstall this package when you're done, as it considered
 insecure to keep the setup files in place.
+
+%description setup -l pl
+Ten pakiet nale¿y zainstalowaæ w celu wstêpnej konfiguracji Eventum po
+pierwszej instalacji. Potem nale¿y go odinstalowaæ, jako ¿e
+pozostawienie plików instalacyjnych mog³oby byæ niebezpieczne.
 
 %prep
 %setup -q %{?_snap:-n %{name}-%{_snap}}
@@ -86,7 +100,6 @@ insecure to keep the setup files in place.
 
 %install
 rm -rf $RPM_BUILD_ROOT
-
 install -d $RPM_BUILD_ROOT{%{_sysconfdir},%{_appdir}/{locks,templates_c},/var/log}
 
 cp -a . $RPM_BUILD_ROOT%{_appdir}
