@@ -22,9 +22,9 @@
 %define _source http://mysql.wildyou.net/Downloads/%{name}/%{name}-%{version}.tar.gz
 %endif
 
-%define _rel 2.201
+%define _rel 2.204
 
-Summary:	Eventum Issue - a bug tracking system
+Summary:	Eventum Issue / Bug tracking system
 Summary(pl):	Eventum - system ¶ledzenia spraw/b³êdów
 Name:		eventum
 Version:	1.4
@@ -60,7 +60,6 @@ Patch19:		%{name}-charset-mailsubj.patch
 URL:		http://dev.mysql.com/downloads/other/eventum/index.html
 BuildRequires:	rpmbuild(macros) >= 1.177
 BuildRequires:	sed >= 4.0
-# is_a(), which wrapper we removed from config, is from 4.2.0
 Requires:	php >= 4.2.0
 Requires:	php-gd
 Requires:	php-imap
