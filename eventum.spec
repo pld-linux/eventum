@@ -23,7 +23,7 @@
 %define _source http://mysql.wildyou.net/Downloads/%{name}/%{name}-%{version}.tar.gz
 %endif
 
-%define _rel 255
+%define _rel 257
 
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl):	Eventum - system ¶ledzenia spraw/b³êdów
@@ -664,29 +664,29 @@ if [ "`getent passwd %{name} | cut -d: -f6`" = "%{_appdir}" ]; then
 fi
 
 %triggerpostun -- eventum < 1.5-0.240
-%banner %{name}-trigger -e -a <<-EOF
+scriptdir=%{_appdir}/upgrade/v1.4_to_1.5
+%banner %{name}-trigger-1.5 -e <<-EOF
 
-	Running eventum upgrade scripts to 1.5
+	Running eventum upgrade scripts to 1.5 in $scriptdir
 	These will fail if your eventum user doesn't have ALTER privilege to database.
 
 EOF
 #'
 
-scriptdir=%{_appdir}/upgrade/v1.4_to_1.5
 /usr/bin/php4 -q $scriptdir/database_changes.php || {
 	echo >&2 "Please run manually: /usr/bin/php4 -q $scriptdir/database_changes.php"
 }
 
-%triggerpostun -- eventum < 1.5.1-0.246
-%banner %{name}-trigger -e -a <<-EOF
+%triggerpostun -- eventum < 1.5.1-0.257
+scriptdir=%{_appdir}/upgrade/v1.5_to_v1.5.1
+%banner %{name}-trigger-1.5.1 -e <<-EOF
 
-	Running eventum upgrade scripts to 1.5.1
+	Running eventum upgrade scripts to 1.5.1 in $scriptdir
 	These will fail if your eventum user doesn't have ALTER privilege to database.
 
 EOF
 #'
 
-scriptdir=%{_appdir}/upgrade/v1.5_to_v1.5.1
 /usr/bin/php4 -q $scriptdir/database_changes.php || {
 	echo >&2 "Please run manually: /usr/bin/php4 -q $scriptdir/database_changes.php"
 }
