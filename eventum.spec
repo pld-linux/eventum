@@ -7,7 +7,6 @@
 #  - dynCalendar.js (http://www.phpguru.org/dyncalendar.html)
 #  - overLIB 3.5.1 (http://www.bosrup.com/web/overlib/)
 #  - A few other small javascript libraries
-# - Command-line Interface (misc/cli/eventum)
 # - create eventum-router-qmail, eventum-router-postfix for -route-mails and -route-notes
 # - need start-stop-daemon (from dpkg for now)
 # - use eventum user for irc bot?
@@ -21,7 +20,7 @@
 %define _source http://mysql.wildyou.net/Downloads/%{name}/%{name}-%{version}.tar.gz
 %endif
 
-%define _rel 1.98
+%define _rel 1.106
 
 Summary:	Eventum Issue - a bug tracking system
 Summary(pl):	Eventum - system ¶ledzenia spraw/b³êdów
@@ -58,6 +57,7 @@ Requires:	php-imap
 Requires:	php-mysql
 Requires:	php-pcre
 Requires:	Smarty >= 2.6.2
+Requires:	%{name}-base = %{epoch}:%{version}-%{release}
 #Requires:	apache-mod_dir
 # conflict with non-confdir apache
 Conflicts:	apache1 < 1.3.33-1.1
@@ -84,6 +84,13 @@ obs³ugi technicznej albo przez zespó³ tworz±cy oprogramowanie do
 szybkiej organizacji zadañ i b³êdów. Eventum jest u¿ywany przez zespó³
 Technical Support MySQL AB i umo¿liwi³ im znacz±co poprawiæ czasy
 reakcji.
+
+%package base
+Summary:	Eventum base package
+Group:		Applications/WWW
+
+%description base
+This package contains base directory structure for Eventum.
 
 %package setup
 Summary:	Eventum setup package
@@ -315,7 +322,7 @@ funkcji interfejsu WWW prosto z linii poleceñ pow³oki.
 Summary:	Eventum SCM integration
 Summary(pl):	Integracja SCM dla Eventum
 Group:		Applications/WWW
-Requires:	%{name} = %{epoch}:%{version}-%{release}
+Requires:	%{name}-base = %{epoch}:%{version}-%{release}
 Requires:	php4 >= 4.1.0
 
 %description scm
@@ -358,7 +365,7 @@ install -d $RPM_BUILD_ROOT{%{_sysconfdir},%{_bindir},%{_appdir}} \
 	$RPM_BUILD_ROOT{/etc/{rc.d/init.d,cron.d},/var/log} \
 	$RPM_BUILD_ROOT{/var/run/eventum,/var/cache/eventum}
 
-rm -f eventumrc
+rm -f eventumrc %{name}-scm
 cp -a . $RPM_BUILD_ROOT%{_appdir}
 # argsh! say no words
 find $RPM_BUILD_ROOT%{_appdir} -type f -print0 | xargs -0 sed -i -e 's,
@@ -369,6 +376,8 @@ $,,' misc/cli/eventumrc_example > eventumrc
 > $RPM_BUILD_ROOT%{_appdir}/setup.conf.php
 
 sed -i -e 's,/usr/local/bin/php,/usr/bin/php4,' $RPM_BUILD_ROOT%{_appdir}/misc/cli/eventum
+echo '#!/usr/bin/php4 -q' > %{name}-scm
+cat $RPM_BUILD_ROOT%{_appdir}/misc/scm/process_cvs_commits.php >> %{name}-scm
 
 # change private key, so we can easily grep
 sed -i -e '
@@ -408,9 +417,10 @@ install -d $RPM_BUILD_ROOT%{_smartyplugindir}
 # These plugins are not in Smarty package (Smarty-2.6.2-3)
 cp -a include/Smarty/plugins/function.{calendar,get_display_style,get_innerhtml,get_textarea_size}.php $RPM_BUILD_ROOT%{_smartyplugindir}
 
-# in _bindir
+# in bindir
 mv $RPM_BUILD_ROOT%{_appdir}/misc/cli/eventum $RPM_BUILD_ROOT%{_bindir}
-rm -f $RPM_BUILD_ROOT%{_appdir}/misc/cli/eventumrc_example
+rm -f $RPM_BUILD_ROOT%{_appdir}/misc/{cli/eventumrc_example,scm/process_cvs_commits.php}
+install %{name}-scm $RPM_BUILD_ROOT%{_bindir}/%{name}-scm
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -499,18 +509,19 @@ fi
 %files
 %defattr(644,root,root,755)
 %doc ChangeLog FAQ INSTALL README UPGRADE misc/upgrade docs/* rpc/xmlrpc_client.php
-%attr(751,root,root) %dir %{_sysconfdir}
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/apache.conf
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/config.php
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/private_key.php
 %attr(660,root,http) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/setup.php
+
+%dir %{_appdir}
+%dir %{_appdir}/misc
 
 %dir %attr(731,root,http) /var/log/%{name}
 %attr(620,root,http) %ghost /var/log/%{name}/*
 
 %{_smartyplugindir}/*
 
-%dir %{_appdir}
 %{_appdir}/*.php
 %{_appdir}/css
 %{_appdir}/customer
@@ -531,8 +542,11 @@ fi
 %dir %attr(730,root,http) /var/run/%{name}
 %dir %attr(730,root,http) /var/cache/%{name}
 
-%dir %{_appdir}/misc
 %{_appdir}/misc/blank.html
+
+%files base
+%defattr(644,root,root,755)
+%attr(751,root,root) %dir %{_sysconfdir}
 
 %files setup
 %defattr(644,root,root,755)
@@ -577,12 +591,12 @@ fi
 %defattr(644,root,root,755)
 %doc eventumrc
 %attr(644,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/cli.php
-%attr(755,root,root) %{_bindir}/*
+%attr(755,root,root) %{_bindir}/%{name}
 %dir %{_appdir}/misc/cli
 %{_appdir}/misc/cli/include
 
 %files scm
 %defattr(644,root,root,755)
 %attr(644,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/cvs.php
-%dir %{_appdir}/misc/scm
-%{_appdir}/misc/scm/process_cvs_commits.php
+# FIXME: not sure about this naming.
+%attr(755,root,root) %{_bindir}/%{name}-scm
