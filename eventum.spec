@@ -46,6 +46,7 @@ Source9:	%{name}-irc.sysconfig
 Source10:	%{name}-config.php
 Source11:	%{name}-router-qmail.sh
 Source12:	http://dev.mysql.com/common/favicon.ico
+# Source12-md5:	858be0130832da4144c08d4b59116411
 Patch0:		%{name}-paths.patch
 Patch1:		%{name}-cvs-config.patch
 Patch2:		%{name}-irc-config.patch
