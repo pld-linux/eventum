@@ -1,4 +1,5 @@
 # TODO
+# - where to put templates_c (templates cache dir)? /var/run/eventum? /var/run/php/eventum? /var/cache/eventum?
 # - php5 is not tested, but not placing hard conflict on it, as it prevents php4 & php coinstallation
 # - discard bundled packages (from INSTALL):
 #  - JpGraph 1.5.3 (last GPL version)
@@ -26,7 +27,7 @@
 %define _source http://mysql.wildyou.net/Downloads/%{name}/%{name}-%{version}.tar.gz
 %endif
 
-%define _rel 1.35
+%define _rel 1.37
 
 Summary:	Eventum Issue / Bug Tracking System
 Name:		eventum
@@ -86,7 +87,7 @@ insecure to keep the setup files in place.
 %install
 rm -rf $RPM_BUILD_ROOT
 
-install -d $RPM_BUILD_ROOT{%{_sysconfdir},%{_appdir}/{locks,templates_c}}
+install -d $RPM_BUILD_ROOT{%{_sysconfdir},%{_appdir}/{locks,templates_c},/var/log}
 
 cp -a . $RPM_BUILD_ROOT%{_appdir}
 
@@ -100,6 +101,10 @@ install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/apache.conf
 mv $RPM_BUILD_ROOT%{_appdir}/{config.inc.php,setup.conf.php} $RPM_BUILD_ROOT%{_sysconfdir}
 ln -s %{_sysconfdir}/config.inc.php $RPM_BUILD_ROOT%{_appdir}
 ln -s %{_sysconfdir}/setup.conf.php $RPM_BUILD_ROOT%{_appdir}
+
+# log directory
+mv $RPM_BUILD_ROOT%{_appdir}/logs $RPM_BUILD_ROOT/var/log/%{name}
+ln -s /var/log/%{name} $RPM_BUILD_ROOT%{_appdir}/logs
 
 # in doc
 rm -f $RPM_BUILD_ROOT%{_appdir}/{COPYING,ChangeLog,FAQ,INSTALL,README,UPGRADE}
@@ -185,6 +190,9 @@ fi
 %dir %{_sysconfdir}
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/*
 
+%dir %attr(731,root,http) /var/log/%{name}
+%attr(640,http,root) %ghost /var/log/%{name}/*
+
 %dir %{_appdir}
 %{_appdir}/*.php
 %{_appdir}/css
@@ -192,6 +200,7 @@ fi
 %{_appdir}/docs
 %{_appdir}/images
 %{_appdir}/js
+%{_appdir}/logs
 %{_appdir}/manage
 %{_appdir}/misc
 %{_appdir}/reports
@@ -210,9 +219,6 @@ fi
 %{_appdir}/include/db_access.php
 %{_appdir}/include/jsrsServer.inc.php
 %attr(640,http,root) %{_appdir}/include/private_key.php
-
-%dir %attr(731,root,http) %{_appdir}/logs
-%attr(640,http,root) %config(noreplace) %verify(not md5 mtime size) %{_appdir}/logs/*
 
 %dir %attr(750,http,root) %{_appdir}/templates_c
 
