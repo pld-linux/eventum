@@ -26,9 +26,9 @@
  
  $tpl->assign("phpversion", phpversion());
  $tpl->assign("rel_url", $relative_url);
---- eventum-1.4.orig/setup/config.inc.php	2005-01-05 01:05:58.000000000 +0200
-+++ eventum-1.4/setup/config.inc.php	2005-01-19 02:28:23.000000000 +0200
-@@ -56,9 +56,9 @@
+--- eventum-1.4.c/setup/config.inc.php	2005-01-05 01:05:58.000000000 +0200
++++ eventum-1.4/setup/config.inc.php	2005-01-24 17:21:52.000000000 +0200
+@@ -56,10 +56,10 @@
  @define("APP_INC_PATH", APP_PATH . "include/");
  @define("APP_PEAR_PATH", APP_INC_PATH . "pear/");
  @define("APP_TPL_PATH", APP_PATH . "templates/");
@@ -36,10 +36,19 @@
 +@define("APP_SMARTY_PATH", "/usr/share/pear/Smarty/");
  @define("APP_JPGRAPH_PATH", APP_INC_PATH . "jpgraph/");
 -@define("APP_LOG_PATH", APP_PATH . "logs/");
+-@define("APP_LOCKS_PATH", APP_PATH . "locks/");
 +@define("APP_LOG_PATH", "/var/log/eventum/");
- @define("APP_LOCKS_PATH", APP_PATH . "locks/");
++@define("APP_LOCKS_PATH", "/var/run/eventum/");
  if (stristr(PHP_OS, 'darwin')) {
      ini_set("include_path", ".:" . APP_PEAR_PATH);
+ } elseif (stristr(PHP_OS, 'win')) {
+@@ -153,4 +153,4 @@
+ 
+ // set charset
+ header("content-type: text/html;charset=" . APP_CHARSET);
+-?>
+\ No newline at end of file
++?>
 --- ./misc/cli/eventum~	2005-01-19 02:47:20.000000000 +0200
 +++ ./misc/cli/eventum	2005-01-19 03:02:40.119100405 +0200
 @@ -11,7 +11,7 @@
@@ -69,3 +78,14 @@
 -?>
 \ No newline at end of file
 +?>
+--- eventum-1.4.c/include/class.template.php	2005-01-05 01:05:59.000000000 +0200
++++ eventum-1.4/include/class.template.php	2005-01-24 17:22:35.000000000 +0200
+@@ -60,7 +60,7 @@
+     {
+         $this->smarty = new Smarty;
+         $this->smarty->template_dir = APP_PATH . "templates/" . APP_CURRENT_LANG;
+-        $this->smarty->compile_dir = APP_PATH . "templates_c";
++        $this->smarty->compile_dir = "/var/cache/eventum";
+         $this->smarty->config_dir = '';
+         $this->smarty->register_modifier("activateLinks", array('Link_Filter', 'processText'));
+     }
