@@ -1,5 +1,5 @@
---- index.php~	2005-01-14 19:23:25.334500007 +0200
-+++ index.php	2005-01-14 19:23:32.743136482 +0200
+--- eventum-1.4/setup/index.php~	2005-01-14 19:23:25.334500007 +0200
++++ eventum-1.4/setup/index.php	2005-01-14 19:23:32.743136482 +0200
 @@ -417,23 +417,8 @@
      $tpl->assign('is_imap_enabled', function_exists('imap_open'));
  }
