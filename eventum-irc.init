@@ -32,11 +32,11 @@ start)
 	if [ ! -f /var/lock/subsys/eventum-irc ]; then
 		msg_starting eventum-irc
 		start-stop-daemon --start \
-			 --exec $PHP \
-			 --pidfile $PIDFILE \
-			 --chuid http \
-			 --chdir /usr/share/eventum/misc/irc \
-			 --background -- -q bot.php
+			--exec $PHP \
+			--pidfile $PIDFILE \
+			--chuid http \
+			--chdir /usr/share/eventum/misc/irc \
+			--background -- -q bot.php
 
 		RETVAL=$?
 		if [ $RETVAL -eq 0 ]; then
@@ -52,7 +52,7 @@ start)
 stop)
 	if [ -f /var/lock/subsys/eventum-irc ]; then
 		msg_stopping eventum-irc
-		if start-stop-daemon --stop --pidfile $PIDFILE; then
+		if start-stop-daemon --stop --oknodo --pidfile $PIDFILE; then
 			rm -f $PIDFILE /var/lock/subsys/eventum-irc >/dev/null 2>&1
 			ok
 		else
