@@ -23,7 +23,7 @@
 %define _source http://mysql.wildyou.net/Downloads/%{name}/%{name}-%{version}.tar.gz
 %endif
 
-%define _rel 262
+%define _rel 265
 
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl):	Eventum - system ¶ledzenia spraw/b³êdów
@@ -59,6 +59,7 @@ Patch14:	http://glen.alkohol.ee/pld/eventum-rss-updates.patch
 Patch15:	http://glen.alkohol.ee/pld/eventum-opera.patch
 Patch16:	eventum-lf.patch
 Patch17:	eventum-iss-ass-fix.patch
+Patch18:	eventum-iss-close.patch
 URL:		http://dev.mysql.com/downloads/other/eventum/
 BuildRequires:	rpmbuild(macros) >= 1.177
 BuildRequires:	sed >= 4.0
@@ -344,8 +345,7 @@ Group:		Applications/WWW
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 Requires:	php >= 4.1.0
 Requires:	php-sockets
-# FIXME just need start-stop-daemon
-Requires:	dpkg
+Requires:	rc-scripts >= 0.4.0.18
 
 %description irc
 The IRC notification bot is a nice feature for remote teams that want
@@ -440,6 +440,7 @@ $,,'
 %patch15 -p1
 %patch16 -p1
 %patch17 -p1
+%patch18 -p1
 
 # replace in remaining scripts config.inc.php to system one
 grep -rl 'include_once(".*config.inc.php")' . | xargs sed -i -e '
