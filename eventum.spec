@@ -26,7 +26,7 @@
 %define _source http://mysql.wildyou.net/Downloads/%{name}/%{name}-%{version}.tar.gz
 %endif
 
-%define _rel 1.10
+%define _rel 1.15
 
 Summary:	Eventum Issue / Bug Tracking System
 Name:		eventum
@@ -36,6 +36,7 @@ License:	GPL
 Group:		Applications/WWW
 Source0:	%{_source}
 # Source0-md5:	361c1355e46a6bbfa54e420964ec92cf
+Source1:	%{name}-apache.conf
 Patch0:		%{name}-rpm.patch
 Patch1:		%{name}-clock-status.patch
 URL:		http://dev.mysql.com/downloads/other/eventum/index.html
@@ -45,9 +46,15 @@ Requires:	php-pcre
 Requires:	php-mysql
 Requires:	php-gd
 Requires:	php-imap
+# conflict with non-confdir apache
+Conflicts:	apache1 < 1.3.33-1.1
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
+%define		_sysconfdir	/etc/%{name}
 %define		_appdir	%{_datadir}/%{name}
+
+%define		_apache1dir	/etc/apache
+%define		_apache2dir	/etc/httpd
 
 %description
 Eventum is a user-friendly and flexible issue tracking system that can
@@ -66,14 +73,15 @@ has allowed us to dramatically improve our response times.
 %install
 rm -rf $RPM_BUILD_ROOT
 
-install -d $RPM_BUILD_ROOT%{_appdir}/{locks,templates_c}
-
-# TODO: php4
-sed -i -e 's,/usr/local/bin/php,/usr/bin/php,' misc/cli/eventum
+install -d $RPM_BUILD_ROOT{%{_sysconfdir},%{_appdir}/{locks,templates_c}}
 
 cp -a . $RPM_BUILD_ROOT%{_appdir}
 
 > $RPM_BUILD_ROOT%{_appdir}/setup.conf.php
+
+sed -i -e 's,/usr/local/bin/php,/usr/bin/php4,' $RPM_BUILD_ROOT%{_appdir}/misc/cli/eventum
+
+install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/apache.conf
 
 # in doc
 rm -f $RPM_BUILD_ROOT%{_appdir}/{COPYING,ChangeLog,FAQ,INSTALL,README,UPGRADE}
@@ -82,9 +90,46 @@ rm -rf $RPM_BUILD_ROOT%{_appdir}/misc/upgrade
 %clean
 rm -rf $RPM_BUILD_ROOT
 
+%post
+# apache1
+if [ -f %{_apache1dir}/apache.conf ]; then
+	ln -sf %{_sysconfdir}/apache.conf %{_apache1dir}/conf.d/99_%{name}.conf
+	if [ -f /var/lock/subsys/apache ]; then
+		/etc/rc.d/init.d/apache restart 1>&2
+	fi
+fi
+# apache2
+if [ -d %{_apache2dir}/httpd.conf ]; then
+	ln -sf %{_sysconfdir}/apache.conf %{_apache2dir}/httpd.conf/99_%{name}.conf
+	if [ -f /var/lock/subsys/httpd ]; then
+		/etc/rc.d/init.d/httpd restart 1>&2
+	fi
+fi
+
+%preun
+if [ "$1" = "0" ]; then
+	# apache1
+	if [ -f %{_apache1dir}/apache.conf ]; then
+		rm -f %{_apache1dir}/conf.d/99_%{name}.conf
+		if [ -f /var/lock/subsys/apache ]; then
+			/etc/rc.d/init.d/apache restart 1>&2
+		fi
+	fi
+	# apache2
+	if [ -d %{_apache2dir}/httpd.conf ]; then
+		rm -f %{_apache1dir}/httpd.conf/99_%{name}.conf
+		if [ -f /var/lock/subsys/httpd ]; then
+			/etc/rc.d/init.d/httpd restart 1>&2
+		fi
+	fi
+fi
+
 %files
 %defattr(644,root,root,755)
 %doc ChangeLog FAQ INSTALL README UPGRADE misc/upgrade
+%dir %{_sysconfdir}
+%attr(640,http,root) %config(noreplace) %{_sysconfdir}/apache.conf
+
 %dir %{_appdir}
 %attr(640,http,root) %config(noreplace) %{_appdir}/config.inc.php
 %attr(640,http,root) %config(noreplace) %{_appdir}/setup.conf.php
