@@ -10,7 +10,7 @@
 . /etc/sysconfig/network
 
 PHP=/usr/bin/php4
-PIDFILE=/usr/share/eventum/locks/irc_bot.pid
+PIDFILE=/var/run/eventum/irc_bot.pid
 
 # Get service config
 [ -f /etc/sysconfig/eventum-irc ] && . /etc/sysconfig/eventum-irc
