@@ -50,16 +50,16 @@ Patch1:		%{name}-scm-encode.patch
 Patch2:		%{name}-cvs-config.patch
 Patch3:		%{name}-irc-config.patch
 Patch4:		%{name}-PEAR.patch
-Patch11:		%{name}-scm_checkin_associated.patch
-Patch12:		%{name}-mail-queue.tpl.patch
-Patch13:		%{name}-maildecode.patch
-Patch14:		%{name}-send-typo.patch
-Patch15:		%{name}-fixes.patch
-Patch16:		%{name}-rss-charset.patch
-Patch17:		%{name}-scm-silence-add.patch
-Patch18:		%{name}-default-TZ.patch
-Patch19:		%{name}-charset-mailsubj.patch
-Patch20:		%{name}-monitor-bot-process.patch
+Patch11:	%{name}-scm_checkin_associated.patch
+Patch12:	%{name}-mail-queue.tpl.patch
+Patch13:	%{name}-maildecode.patch
+Patch14:	%{name}-send-typo.patch
+Patch15:	%{name}-fixes.patch
+Patch16:	%{name}-rss-charset.patch
+Patch17:	%{name}-scm-silence-add.patch
+Patch18:	%{name}-default-TZ.patch
+Patch19:	%{name}-charset-mailsubj.patch
+Patch20:	%{name}-monitor-bot-process.patch
 URL:		http://dev.mysql.com/downloads/other/eventum/index.html
 BuildRequires:	rpmbuild(macros) >= 1.177
 BuildRequires:	sed >= 4.0
@@ -306,6 +306,7 @@ spraw± i rozprowadzane do cz³onków personelu listy og³oszeniowej.
 
 %package router-qmail
 Summary:	Eventum Mail Routing - qmail
+Summary(pl):	Przekazywanie poczty Eventum - qmail
 Group:		Applications/Mail
 Requires:	%{name}-base = %{epoch}:%{version}-%{release}
 Requires:	qmail >= 1.03
@@ -315,8 +316,13 @@ Provides:	eventum-router
 This package provides way of routing notes and emails back to Eventum
 via qmail.
 
+%description router-qmail -l pl
+Ten pakiet udostêpnia metodê przekazywania notatek i listów do Eventum
+przez qmaila.
+
 %package router-postfix
 Summary:	Eventum Mail Routing - Postfix
+Summary(pl):	Przekazywanie poczty Eventum - Postfix
 Group:		Applications/Mail
 Requires:	%{name}-base = %{epoch}:%{version}-%{release}
 Requires:	postfix
@@ -325,6 +331,10 @@ Provides:	eventum-router
 %description router-postfix
 This package provides way of routing notes and emails back to Eventum
 via Postfix.
+
+%description router-postfix -l pl
+Ten pakiet udostêpnia metodê przekazywania notatek i listów do Eventum
+przez Postfiksa.
 
 %package irc
 Summary:	Eventum IRC Notification Bot
