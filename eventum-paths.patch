@@ -165,6 +165,98 @@
  
  $tpl = new Smarty();
  $tpl->template_dir = '../templates/en';
+--- ./setup/index.php~	2005-02-22 21:50:50.000000000 +0200
++++ ./setup/index.php	2005-03-28 23:01:03.000000000 +0300
+@@ -126,7 +126,7 @@
+     if (!empty($error)) {
+         $errors[] = $error;
+     }
+-    $error = checkPermissions('../config.inc.php', "File 'config.inc.php'");
++    $error = checkPermissions('/etc/eventum/config.php', "File '/etc/eventum/config.php'");
+     if (!empty($error)) {
+         $errors[] = $error;
+     }
+@@ -134,11 +134,11 @@
+     if (!empty($error)) {
+         $errors[] = $error;
+     }
+-    $error = checkPermissions('../setup.conf.php', "File 'setup.conf.php'");
++    $error = checkPermissions('/etc/eventum/setup.php', "File '/etc/eventum/setup.php'");
+     if (!empty($error)) {
+         $errors[] = $error;
+     }
+-    $error = checkPermissions('../include/private_key.php', "File 'include/private_key.php'");
++    $error = checkPermissions('/etc/eventum/private_key.php', "File '/etc/eventum/private_key.php'");
+     if (!empty($error)) {
+         $errors[] = $error;
+     }
+@@ -202,7 +202,7 @@
+ include_once("/usr/share/pear/Smarty/Smarty.class.php");
+ 
+ $tpl = new Smarty();
+-$tpl->template_dir = '../templates/en';
++$tpl->template_dir = '/usr/share/eventum/templates/en';
+ $tpl->compile_dir = "/var/cache/eventum";
+ $tpl->config_dir = '';
+ 
+@@ -272,8 +272,8 @@
+ 
+     clearstatcache();
+     // check if config.inc.php in the root directory is writable
+-    if (!is_writable('../config.inc.php')) {
+-        return "The file 'config.inc.php' in Eventum's root directory needs to be writable by the web server user. Please correct this problem and try again.";
++    if (!is_writable('/etc/eventum/config.php')) {
++        return "The file '/etc/eventum/config.php' needs to be writable by the web server user. Please correct this problem and try again.";
+     }
+     // gotta check and see if the provided installation path really exists...
+     if (!file_exists($HTTP_POST_VARS['path'])) {
+@@ -283,16 +283,16 @@
+     $private_key = '<?php
+ $private_key = "' . md5(microtime()) . '";
+ ?>';
+-    if (!is_writable('../include/private_key.php')) {
+-        return "The file 'include/private_key.php' needs to be writable by the web server user. Please correct this problem and try again.";
++    if (!is_writable('/etc/eventum/private_key.php')) {
++        return "The file '/etc/eventum/private_key.php' needs to be writable by the web server user. Please correct this problem and try again.";
+     }
+-    $fp = @fopen('../include/private_key.php', 'w');
++    $fp = @fopen('/etc/eventum/private_key.php', 'w');
+     if ($fp === FALSE) {
+-        return "Could not open the file 'include/private_key.php' for writing. The permissions on the file should be set as to allow the user that the web server runs as to open it. Please correct this problem and try again.";
++        return "Could not open the file '/etc/eventum/private_key.php' for writing. The permissions on the file should be set as to allow the user that the web server runs as to open it. Please correct this problem and try again.";
+     }
+     $res = fwrite($fp, $private_key);
+     if ($fp === FALSE) {
+-        return "Could not write the configuration information to 'include/private_key.php'. The file should be writable by the user that the web server runs as. Please correct this problem and try again.";
++        return "Could not write the configuration information to '/etc/eventum/private_key.php'. The file should be writable by the user that the web server runs as. Please correct this problem and try again.";
+     }
+     fclose($fp);
+     // check if we can connect
+@@ -385,20 +385,20 @@
+     $config_contents = str_replace("%{APP_TABLE_PREFIX}%", $HTTP_POST_VARS['db_table_prefix'], $config_contents);
+     $config_contents = str_replace("%{APP_HOSTNAME}%", $HTTP_POST_VARS['hostname'], $config_contents);
+     $config_contents = str_replace("%{APP_RELATIVE_URL}%", $HTTP_POST_VARS['relative_url'], $config_contents);
+-    $config_contents = str_replace("%{APP_VERSION}%", "1.5.1", $config_contents);
++    $config_contents = str_replace("%{APP_VERSION}%", "1.5.1", $config_contents);
+     if (@$HTTP_POST_VARS['is_ssl'] == 'yes') {
+         $protocol_type = 'https://';
+     } else {
+         $protocol_type = 'http://';
+     }
+     $config_contents = str_replace("%{PROTOCOL_TYPE}%", $protocol_type, $config_contents);
+-    $fp = @fopen('../config.inc.php', 'w');
++    $fp = @fopen('/etc/eventum/config.php', 'w');
+     if ($fp === FALSE) {
+-        return "Could not open the file 'config.inc.php' for writing. The permissions on the file should be set as to allow the user that the web server runs as to open it. Please correct this problem and try again.";
++        return "Could not open the file '/etc/eventum/config.php' for writing. The permissions on the file should be set as to allow the user that the web server runs as to open it. Please correct this problem and try again.";
+     }
+     $res = fwrite($fp, $config_contents);
+     if ($fp === FALSE) {
+-        return "Could not write the configuration information to 'config.inc.php'. The file should be writable by the user that the web server runs as. Please correct this problem and try again.";
++        return "Could not write the configuration information to '/etc/eventum/config.php'. The file should be writable by the user that the web server runs as. Please correct this problem and try again.";
+     }
+     fclose($fp);
+     
 --- eventum-1.5.1/setup/config.inc.php~	2005-03-14 15:21:18.000000000 +0200
 +++ eventum-1.5.1/setup/config.inc.php	2005-03-14 15:20:22.000000000 +0200
 @@ -27,49 +27,6 @@
