@@ -145,6 +145,7 @@ Ten pakiet zawiera zadanie dla crona.
 
 %package reminder
 Summary:	Eventum Reminder System
+Summary(pl):	System przypominania dla Eventum
 Group:		Applications/WWW
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 Requires:	php4 >= 4.1.0
@@ -159,8 +160,18 @@ you may deem necessary.
 
 This package contains the cron job.
 
+%description reminder -l pl
+System przypominania zosta³ zaprojektowany tak, aby s³u¿y³ jako
+bezpieczna sieæ dla spraw wymagaj±cych uwagi. W zale¿no¶ci od
+konfiguracji mo¿na ustawiæ ró¿ne przypominajki (lub alarmy) wysy³ane
+przy ka¿dej sprawie wymagaj±cej uwagi lub przy parametrze, który mo¿na
+uwa¿aæ za potrzebny.
+
+Ten pakiet zawiera zadanie dla crona.
+
 %package monitor
 Summary:	Eventum Heartbeat Monitor
+Summary(pl):	Monitor ¿ycia dla Eventum
 Group:		Applications/WWW
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 Requires:	php4 >= 4.1.0
@@ -180,8 +191,21 @@ Monitor::checkConfiguration().
 
 This package contains the cron job.
 
+%description monitor -l pl
+Monitor ¿ycia to funkcjonalno¶æ zaprojektowana dla administratora
+chc±cego byæ alarmowanym przy ka¿dym wykryciu popularnego problemu z
+Eventum, jak nie dzia³anie serwera bazy danych albo zmiana uprawnieñ
+do plików konfiguracyjnych.
+
+Nale¿y zauwa¿yæ, ¿e przed uruchomieniem tego monitora mo¿e byæ
+konieczne dostosowanie niektórych testów do systemu, w szczególno¶ci
+testów uprawnieñ i plików w Monitor::checkConfiguration().
+
+Ten pakiet zawiera zadanie dla crona.
+
 %package route-emails
 Summary:	Eventum Email Routing
+Summary(pl):	Przekazywanie poczty dla Eventum
 Group:		Applications/WWW
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 Requires:	php4 >= 4.1.0
@@ -196,8 +220,18 @@ their email clients to reply to emails coming from Eventum, and those
 replies will be automatically associated with the issue and
 broadcasted to the entire notification list.
 
+%description route-emails -l pl
+Funkcjonalno¶æ przekazywania poczty s³u¿y do automatycznego wi±zania
+w±tku listów ze spraw± w Eventum. Po ustawieniu qmaila (czy nawet
+postfiksa), aby dostarcza³ listy wysy³ane na pewien adres (zwykle
+issue-<numer>@<domena>) na powy¿szy skrypt, u¿ytkownicy bêd± mogli
+u¿ywaæ klientów pocztowych do odpowiadania na listy przychodz±ce z
+Eventum, a odpowiedzi te bêd± automatycznie wi±zane ze spraw± i
+rozprowadzane do ca³ej listy og³oszeniowej.
+
 %package route-notes
 Summary:	Eventum Note Routing
+Summary(pl):	Przekazywanie notatek dla Eventum
 Group:		Applications/WWW
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 Requires:	php4 >= 4.1.0
@@ -212,8 +246,18 @@ their email clients to reply to internal notes coming from Eventum,
 and those replies will be automatically associated with the issue and
 broadcasted to the notification list staff members.
 
+%description route-notes -l pl
+Funkcjonalno¶æ przekazywania notatek s³u¿y do automatycznego wi±zania
+w±tku notatek ze spraw± w Eventum. Po ustawieniu qmaila (czy nawet
+postfiksa), aby dostarcza³ listy wysy³ane na pewien adres (zwykle
+note-<numer>@<domena>) na powy¿szy skrypt, u¿ytkownicy bêd± mogli
+u¿ywaæ klientów pocztowych do odpowiadania na wewnêtrzne notatki
+pochodz±ce od Eventu, a odpowiedzi te bêd± automatycznie wi±zane ze
+spraw± i rozprowadzane do cz³onków personelu listy og³oszeniowej.
+
 %package irc
 Summary:	Eventum IRC Notification Bot
+Summary(pl):	IRC-owy bot powiadamiaj±cy dla Eventum
 Group:		Applications/WWW
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 Requires:	php4 >= 4.1.0
@@ -231,6 +275,18 @@ notifications. Right now the bot notifies of the following actions:
 NOTE: You will need to manually edit the bot.php script to set your
 appropriate preferences, like IRC server and channel that the bot
 should join.
+
+%description irc -l pl
+IRC-owy bot powiadamiaj±cy to mi³a funkcjonalno¶æ dla zdalnych
+zespo³ów chc±cych obs³ugiwaæ sprawy i mieæ szybki i ³atwy sposób na
+uzyskiwanie prostych powiadomieñ. Aktualnie bot powiadamia o
+nastêpuj±cych zdarzeniach:
+- nowych sprawach
+- zablokowanych listach
+- sprawach, dla których zmieni³a siê lista powi±zañ
+
+UWAGA: w celu wprowadzenia w³asnych ustawieñ, takich jak serwer IRC i
+kana³ u¿ywany przez bota, trzeba rêcznie zmodyfikowaæ skrypt bot.php .
 
 %package scm
 Summary:	Eventum SCM integration
