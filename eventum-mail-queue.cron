@@ -1,2 +1,13 @@
 # eventum mail queue processor
+# bounce messages back to root
+MAILTO=root
+
 * * * * * http cd /usr/share/eventum/misc && /usr/bin/php4 -q process_mail_queue.php
+
+# The above line will run the mail queue script every minute. To setup
+# the SMTP server that Eventum should use to send these queued emails,
+# go to:
+#
+# Administration >>> General Setup > SMTP (Outgoing Email) Settings
+
+# vim:syn=crontab
