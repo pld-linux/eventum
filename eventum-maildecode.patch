@@ -1,0 +1,79 @@
+--- eventum-1.4/include/class.mime_helper.php~	2005-01-26 00:28:42.000000000 +0200
++++ eventum-1.4/include/class.mime_helper.php	2005-01-26 02:24:08.000000000 +0200
+@@ -180,11 +180,73 @@
+      */
+     function encodeAddress($address)
+     {
++        $charset = APP_CHARSET;
+         $address = MIME_Helper::removeQuotes($address);
+-        $address = MIME_Helper::encode($address);
+-        return MIME_Helper::quoteSender($address);
++        if (Mime_Helper::is8bit($address)) {
++            // split into name and address section
++            preg_match("/(.*)<(.*)>/", $address, $matches);
++           $address = "=?$charset?Q?" . 
++                str_replace(' ', '_', trim(preg_replace('/([\x80-\xFF]|[\x21-\x29]|[\xFC]|[\x3F])/e', '"=" . strtoupper(dechex(ord(stripslashes("\1"))))', $matches[1]))) . "?= <" . $matches[2] . ">";
++           return $address;
++        } else {
++            return MIME_Helper::quoteSender($address);
++        }
+     }
+-
++    
++        
++    /**
++     * Wraps a Quoted printable encoded address into multiple lines if string is longer then 68 characters.
++     * 
++     * @param   string $string The address string to wrap.
++     * @return  string The address on multiple lines if needed.
++     */
++    function wrapQP($string)
++    {
++        $max_length = 68;
++        if (strlen($string) >= $max_length) {
++            // get charset and content
++            preg_match("/=\?(.+)\?Q\?(.+)\?= <(.+)>/", $string, $matches);
++            $charset = $matches[1];
++            $address = $matches[3];
++            
++            $length = $max_length - (strlen($charset) + 5);
++            
++            // try to find a space
++            $last_space = strrpos(substr($matches[2], 0, $length), "_");
++            if ($last_space != false) {
++                $length = $last_space;
++            }
++            
++            $return = "=?$charset?Q?" . substr($matches[2], 0, $length) . "?=\n ";
++            $remaining_string = substr($matches[2], $length);
++            if (strlen($remaining_string) > 0) {
++                $return .= Mime_Helper::wrapQP("=?$charset?Q?" . $remaining_string . "?= <$address>");
++            } else {
++                $return .= "<$address>";
++            }
++            return $return;
++        } else {
++            return $string;
++        }
++        
++    }
++    
++    
++    /**
++     * Decodes a quoted printable encoded address and returns the string.
++     * 
++     * @param   string $address The address to decode
++     * @return  string The decoded address
++     */
++    function decodeAddress($address)
++    {
++        if (preg_match("/=\?.+\?Q\?(.+)\?= <(.+)>/i", $address, $matches)) {
++            return str_replace("_", ' ', quoted_printable_decode($matches[1])) . " <" . $matches[2] . ">";
++        } else {
++            return $address;
++        }
++    }
++    
+ 
+     /**
+      * Determine if a string contains 8-bit characters.
