@@ -1,31 +1,3 @@
---- eventum-1.4/setup/index.php~	2005-01-14 19:23:25.334500007 +0200
-+++ eventum-1.4/setup/index.php	2005-01-14 19:23:32.743136482 +0200
-@@ -417,23 +417,8 @@
-     $tpl->assign('is_imap_enabled', function_exists('imap_open'));
- }
- 
--
--$full_url = dirname($HTTP_SERVER_VARS['PHP_SELF']);
--$pieces = explode("/", $full_url);
--$relative_url = array();
--$relative_url[] = '';
--foreach ($pieces as $piece) {
--    if ((!empty($piece)) && ($piece != 'setup')) {
--        $relative_url[] = $piece;
--    }
--}
--$relative_url[] = '';
--$relative_url = implode("/", $relative_url);
--
--if (substr($HTTP_SERVER_VARS['DOCUMENT_ROOT'], -1) == '/') {
--    $HTTP_SERVER_VARS['DOCUMENT_ROOT'] = substr($HTTP_SERVER_VARS['DOCUMENT_ROOT'], 0, -1);
--}
--$installation_path = $HTTP_SERVER_VARS['DOCUMENT_ROOT'] . $relative_url;
-+$installation_path = "/usr/share/eventum";
-+$relative_url = "/eventum/";
- 
- $tpl->assign("phpversion", phpversion());
- $tpl->assign("rel_url", $relative_url);
 --- eventum-1.4.c/setup/config.inc.php	2005-01-05 01:05:58.000000000 +0200
 +++ eventum-1.4/setup/config.inc.php	2005-01-24 17:21:52.000000000 +0200
 @@ -56,10 +56,10 @@
@@ -89,14 +61,24 @@
          $this->smarty->config_dir = '';
          $this->smarty->register_modifier("activateLinks", array('Link_Filter', 'processText'));
      }
---- index.php	2005-01-24 17:39:51.000000000 +0200
-+++ eventum-1.4/setup/index.php	2005-01-24 17:42:33.000000000 +0200
-@@ -118,7 +118,7 @@
+--- index.php	2005-01-05 01:05:52.000000000 +0200
++++ eventum-1.4/setup/index.php	2005-01-24 17:47:16.000000000 +0200
+@@ -114,15 +114,15 @@
+     if (ini_get('allow_call_time_pass_reference') != "1") {
+         $errors[] = "The 'allow_call_time_pass_reference' directive needs to be enabled in your PHP.INI file in order for Eventum to work properly.";
+     }
+-    $error = checkPermissions('../locks', "Directory 'locks'", TRUE);
++    $error = checkPermissions('/var/run/eventum', "Directory '/var/run/eventum'", TRUE);
      if (!empty($error)) {
          $errors[] = $error;
      }
 -    $error = checkPermissions('../logs', "Directory 'logs'", TRUE);
 +    $error = checkPermissions('/var/log/eventum', "Directory '/var/log/eventum'", TRUE);
+     if (!empty($error)) {
+         $errors[] = $error;
+     }
+-    $error = checkPermissions('../templates_c', "Directory 'templates_c'", TRUE);
++    $error = checkPermissions('/var/cache/eventum', "Directory '/var/cache/eventum'", TRUE);
      if (!empty($error)) {
          $errors[] = $error;
      }
@@ -123,3 +105,29 @@
  $tpl->config_dir = '';
  
  function replace_table_prefix($str)
+@@ -417,23 +417,8 @@
+     $tpl->assign('is_imap_enabled', function_exists('imap_open'));
+ }
+ 
+-
+-$full_url = dirname($HTTP_SERVER_VARS['PHP_SELF']);
+-$pieces = explode("/", $full_url);
+-$relative_url = array();
+-$relative_url[] = '';
+-foreach ($pieces as $piece) {
+-    if ((!empty($piece)) && ($piece != 'setup')) {
+-        $relative_url[] = $piece;
+-    }
+-}
+-$relative_url[] = '';
+-$relative_url = implode("/", $relative_url);
+-
+-if (substr($HTTP_SERVER_VARS['DOCUMENT_ROOT'], -1) == '/') {
+-    $HTTP_SERVER_VARS['DOCUMENT_ROOT'] = substr($HTTP_SERVER_VARS['DOCUMENT_ROOT'], 0, -1);
+-}
+-$installation_path = $HTTP_SERVER_VARS['DOCUMENT_ROOT'] . $relative_url;
++$installation_path = "/usr/share/eventum";
++$relative_url = "/eventum/";
+ 
+ $tpl->assign("phpversion", phpversion());
+ $tpl->assign("rel_url", $relative_url);
