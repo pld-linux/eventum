@@ -1,0 +1,13 @@
+- activateLinks on issue details page for attachment description
+
+--- ./include/class.attachment.php~	2005-03-16 19:03:57.000000000 +0200
++++ ./include/class.attachment.php	2005-03-28 14:40:04.000000000 +0300
+@@ -385,7 +385,7 @@
+             return "";
+         } else {
+             for ($i = 0; $i < count($res); $i++) {
+-                $res[$i]["iat_description"] = Link_Filter::processText(Issue::getProjectID($issue_id), nl2br(htmlspecialchars($res[$i]["iat_description"])));
++                $res[$i]["iat_description"] = Link_Filter::processText(Issue::getProjectID($issue_id), nl2br(Misc::activateLinks(htmlspecialchars($res[$i]["iat_description"]))));
+                 $res[$i]["files"] = Attachment::getFileList($res[$i]["iat_id"]);
+                 $res[$i]["iat_created_date"] = Date_API::getFormattedDate($res[$i]["iat_created_date"]);
+                 
