@@ -23,7 +23,7 @@
 %define _source http://mysql.wildyou.net/Downloads/%{name}/%{name}-%{version}.tar.gz
 %endif
 
-%define _rel 267
+%define _rel 271
 
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl):	Eventum - system ¶ledzenia spraw/b³êdów
@@ -563,18 +563,37 @@ fi
 
 # check if the package is configured.
 if grep -q 'header("Location: setup/")' %{_sysconfdir}/config.php; then
+if [ -f %{_appdir}/htdocs/setup/index.php ]; then
+%banner %{name} -e <<EOF
+
+You haven't yet configured Eventum!
+Please open in browser <http://localhost/eventum/>
+If you need access from elsewhere, you need to edit
+%{_sysconfdir}/apache.conf and restart apache.
+
+IMPORTANT: When You have configured Eventum, please uninstall the
+setup package, so that %{name}-setup is able to secure your Eventum
+installation.
+
+EOF
+#' vim stupidity.
+else
 %banner %{name} -e <<EOF
 
 You haven't yet configured Eventum!
 
-Install %{name}-setup and open up http://yourserver/eventum/
--- that will help you setup initial config.
+To setup eventum, please install %{name}-setup and open in browser
+<http://localhost/eventum/>.
+If you need access from elsewhere, you need to edit
+%{_sysconfdir}/apache.conf and restart apache.
 
-when have configured Eventum, please uninstall the setup package,
-so that %{name}-setup is able to secure your Eventum installation.
+IMPORTANT: When You have configured Eventum, please uninstall the
+setup package, so that %{name}-setup is able to secure your Eventum
+installation.
 
 EOF
 #' vim stupidity.
+fi
 
 elif grep -q 'DEFAULTPRIVATEKEY' %{_sysconfdir}/private_key.php; then
 %banner %{name} -e <<EOF
