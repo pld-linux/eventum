@@ -21,7 +21,7 @@
 %define _source http://mysql.wildyou.net/Downloads/%{name}/%{name}-%{version}.tar.gz
 %endif
 
-%define _rel 1.77
+%define _rel 1.79
 
 Summary:	Eventum Issue - a bug tracking system
 Summary(pl):	Eventum - system ¶ledzenia spraw/b³êdów
@@ -40,12 +40,11 @@ Source5:	%{name}-monitor.cron
 Source6:	%{name}-cvs.php
 Source7:	%{name}-irc.php
 Source8:	%{name}-irc.init
-Patch0:		%{name}-rpm.patch
+Patch0:		%{name}-paths.patch
 Patch1:		%{name}-clock-status.patch
 Patch2:		%{name}-scm-encode.patch
 Patch3:		%{name}-cvs-config.patch
 Patch4:		%{name}-irc-config.patch
-Patch5:		%{name}-system-pkg.patch
 URL:		http://dev.mysql.com/downloads/other/eventum/index.html
 BuildRequires:	rpmbuild(macros) >= 1.177
 BuildRequires:	sed >= 4.0
@@ -325,7 +324,6 @@ Szczegó³y na temat instalacji mo¿na przeczytaæ pod
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
-%patch5 -p1
 
 %build
 
@@ -362,7 +360,6 @@ ln -s %{_sysconfdir}/private_key.php $RPM_BUILD_ROOT%{_appdir}/include/private_k
 
 # log directory
 mv $RPM_BUILD_ROOT%{_appdir}/logs $RPM_BUILD_ROOT/var/log/%{name}
-ln -s /var/log/%{name} $RPM_BUILD_ROOT%{_appdir}/logs
 
 # in doc
 rm -f $RPM_BUILD_ROOT%{_appdir}/{COPYING,ChangeLog,FAQ,INSTALL,README,UPGRADE}
@@ -478,7 +475,6 @@ fi
 %{_appdir}/customer
 %{_appdir}/images
 %{_appdir}/js
-%{_appdir}/logs
 %{_appdir}/manage
 %{_appdir}/reports
 %{_appdir}/rpc
