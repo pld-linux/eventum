@@ -1,7 +1,0 @@
-# eventum reminder
-# bounce messages back to root
-MAILTO=root
-
-*/10 * * * * http cd /usr/share/eventum && /usr/bin/php4 -q monitor.php
-
-# vim:syn=crontab
