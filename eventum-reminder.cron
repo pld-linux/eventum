@@ -1,0 +1,11 @@
+# eventum reminder
+# bounce messages back to root
+MAILTO=root
+
+*/10 * * * * http cd /usr/share/eventum/misc && /usr/bin/php4 -q check_reminders.php
+
+# It is recommended that you run the reminder cron job every 10 minutes,
+# so it won't flood you with alerts too often, but it would still be
+# enough to handle most cases.
+
+# vim:syn=crontab
