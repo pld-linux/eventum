@@ -14,7 +14,7 @@
 %bcond_with	pear	# build with system PEAR packages (or use bundled ones)
 
 # snapshot: DATE
-#define _snap 20050217
+%define _snap 20050222
 
 %if 0%{?_snap}
 %define _source http://downloads.mysql.com/snapshots/%{name}/%{name}-nightly-%{_snap}.tar.gz
@@ -28,11 +28,11 @@ Summary:	Eventum Issue - a bug tracking system
 Summary(pl):	Eventum - system ¶ledzenia spraw/b³êdów
 Name:		eventum
 Version:	1.4
-Release:	%{?_snap:0.%{_snap}.}%{_rel}
+Release:	%{?_snap:2.%{_snap}.}%{_rel}
 License:	GPL
 Group:		Applications/WWW
 Source0:	%{_source}
-# Source0-md5:	361c1355e46a6bbfa54e420964ec92cf
+# Source0-md5:	035bd8f7890260c1c058eaf1d54dcc90
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -396,13 +396,13 @@ $,,'
 
 # bug fixes.
 %patch11 -p1
-%patch12 -p1
-%patch13 -p1
-%patch14 -p1
-%patch15 -p1
-%patch16 -p1
-%patch17 -p1
-%patch18 -p1
+#%patch12 -p1
+#%patch13 -p1
+#%patch14 -p1
+#%patch15 -p1
+#%patch16 -p1
+#%patch17 -p1
+#%patch18 -p1
 %patch19 -p1
 
 # replace in remaining scripts config.inc.php to system one
