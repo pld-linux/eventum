@@ -23,7 +23,7 @@
 %define _source http://mysql.wildyou.net/Downloads/%{name}/%{name}-%{version}.tar.gz
 %endif
 
-%define _rel 237
+%define _rel 238
 
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl):	Eventum - system ¶ledzenia spraw/b³êdów
@@ -50,6 +50,7 @@ Patch1:		%{name}-cvs-config.patch
 Patch2:		%{name}-irc-config.patch
 Patch3:		%{name}-PEAR.patch
 Patch10:	%{name}-db-20050227.patch
+Patch11:	%{name}-charset-recent-activity.patch
 URL:		http://dev.mysql.com/downloads/other/eventum/index.html
 BuildRequires:	rpmbuild(macros) >= 1.177
 BuildRequires:	sed >= 4.0
@@ -426,6 +427,7 @@ $,,'
 
 # bug fixes.
 %patch10 -p1
+%patch11 -p1
 
 # replace in remaining scripts config.inc.php to system one
 grep -rl 'include_once(".*config.inc.php")' . | xargs sed -i -e '
