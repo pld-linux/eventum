@@ -3,7 +3,6 @@
 # - php5 is not tested, but not placing hard conflict on it, as it prevents php4 & php coinstallation
 # - discard bundled packages (from INSTALL):
 #  - JpGraph 1.5.3 (last GPL version)
-#  - Smarty 2.3.0 (http://smarty.php.net)
 #  - PEAR packages
 #  - dTree 2.0.5 (http://www.destroydrop.com/javascript/tree/)
 #  - dynCalendar.js (http://www.phpguru.org/dyncalendar.html)
@@ -22,7 +21,7 @@
 %define _source http://mysql.wildyou.net/Downloads/%{name}/%{name}-%{version}.tar.gz
 %endif
 
-%define _rel 1.74
+%define _rel 1.77
 
 Summary:	Eventum Issue - a bug tracking system
 Summary(pl):	Eventum - system ¶ledzenia spraw/b³êdów
@@ -46,6 +45,7 @@ Patch1:		%{name}-clock-status.patch
 Patch2:		%{name}-scm-encode.patch
 Patch3:		%{name}-cvs-config.patch
 Patch4:		%{name}-irc-config.patch
+Patch5:		%{name}-system-pkg.patch
 URL:		http://dev.mysql.com/downloads/other/eventum/index.html
 BuildRequires:	rpmbuild(macros) >= 1.177
 BuildRequires:	sed >= 4.0
@@ -54,6 +54,7 @@ Requires:	php-gd
 Requires:	php-imap
 Requires:	php-mysql
 Requires:	php-pcre
+Requires:	Smarty >= 2.6.2
 #Requires:	apache-mod_dir
 # conflict with non-confdir apache
 Conflicts:	apache1 < 1.3.33-1.1
@@ -61,6 +62,7 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_sysconfdir	/etc/%{name}
 %define		_appdir	%{_datadir}/%{name}
+%define		_smartyplugindir	%{php_pear_dir}/Smarty/plugins
 
 %define		_apache1dir	/etc/apache
 %define		_apache2dir	/etc/httpd
@@ -323,6 +325,7 @@ Szczegó³y na temat instalacji mo¿na przeczytaæ pod
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
+%patch5 -p1
 
 %build
 
@@ -364,6 +367,12 @@ ln -s /var/log/%{name} $RPM_BUILD_ROOT%{_appdir}/logs
 # in doc
 rm -f $RPM_BUILD_ROOT%{_appdir}/{COPYING,ChangeLog,FAQ,INSTALL,README,UPGRADE}
 rm -rf $RPM_BUILD_ROOT%{_appdir}/{docs,misc/upgrade}
+
+# use system Smarty
+rm -rf $RPM_BUILD_ROOT%{_appdir}/include/Smarty
+install -d $RPM_BUILD_ROOT%{_smartyplugindir}
+# These plugins are not in Smarty package (Smarty-2.6.2-3)
+cp -a include/Smarty/plugins/function.{calendar,get_display_style,get_innerhtml,get_textarea_size}.php $RPM_BUILD_ROOT%{_smartyplugindir}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -461,6 +470,8 @@ fi
 %dir %attr(731,root,http) /var/log/%{name}
 %attr(620,root,http) %ghost /var/log/%{name}/*
 
+%{_smartyplugindir}/*
+
 %dir %{_appdir}
 %{_appdir}/*.php
 %{_appdir}/css
@@ -479,7 +490,6 @@ fi
 %{_appdir}/include/customer
 %{_appdir}/include/jpgraph
 %{_appdir}/include/pear
-%{_appdir}/include/Smarty
 %{_appdir}/include/workflow
 %{_appdir}/include/*.php
 
