@@ -35,13 +35,17 @@ define("APP_LOGIN_LOG", APP_LOG_PATH . "login_attempts.log");
 
 define("APP_VERSION", "%{APP_VERSION}%");
 
-// define the user_id of system user
-define("APP_SYSTEM_USER_ID", 1);
-
-define("APP_BENCHMARK", false);
-
 # include site config
 include_once '/etc/eventum/config.php';
+
+// define the user_id of system user
+if (!defined('APP_SYSTEM_USER_ID')) {
+    define("APP_SYSTEM_USER_ID", 1);
+}
+
+if (!defined('APP_BENCHMARK')) {
+    define("APP_BENCHMARK", false);
+}
 
 if (APP_BENCHMARK) {
     // always benchmark the scripts
