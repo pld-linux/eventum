@@ -732,7 +732,7 @@ fi
 %{_appdir}/include/customer
 %{_appdir}/include/jpgraph
 %{_appdir}/include/workflow
-%{_appdir}/include/class.[^m]*.php
+%{_appdir}/include/class.[!m]*.php
 %{_appdir}/include/class.mail.php
 %{_appdir}/include/class.mail_queue.php
 %{_appdir}/include/class.mime_helper.php
