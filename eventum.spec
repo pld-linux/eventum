@@ -86,6 +86,7 @@ Requires:	php-pear-XML_RPC
 Requires:	apache-mod_dir
 # conflict with non-confdir apache
 Conflicts:	apache1 < 1.3.33-1.1
+BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_sysconfdir	/etc/%{name}
@@ -451,7 +452,7 @@ rm -rf $RPM_BUILD_ROOT%{_appdir}/rpc/xmlrpc_client.php
 # in bindir
 mv $RPM_BUILD_ROOT%{_appdir}/misc/cli/eventum $RPM_BUILD_ROOT%{_bindir}
 rm -f $RPM_BUILD_ROOT%{_appdir}/misc/{cli/eventumrc_example,scm/process_cvs_commits.php}
-cp misc/cli/eventumrc_example eventumrc
+cp -f misc/cli/eventumrc_example eventumrc
 install %{name}-scm $RPM_BUILD_ROOT%{_libdir}/scm
 
 %if %{with pear}
