@@ -23,7 +23,7 @@
 %define _source http://mysql.wildyou.net/Downloads/%{name}/%{name}-%{version}.tar.gz
 %endif
 
-%define _rel 240
+%define _rel 245
 
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl):	Eventum - system ¶ledzenia spraw/b³êdów
@@ -51,6 +51,18 @@ Patch2:		%{name}-irc-config.patch
 Patch3:		%{name}-PEAR.patch
 Patch10:	%{name}-db-20050227.patch
 Patch11:	%{name}-charset-recent-activity.patch
+# Fixing the mail queue handling script
+Patch12:	http://mysql.bkbits.net:8080/eventum/gnupatch@4225f616OxPaWaC3PObJxe3yNpN0BA
+# Change attachment handling to handle certain attachment types better
+# http://mysql.bkbits.net:8080/eventum/gnupatch@4226b723YMp2Tkh1U5_w7Tc_z0Qq8A
+Patch13:	gnupatch@4226b723YMp2Tkh1U5_w7Tc_z0Qq8A
+# Changed the behavior of the view issue screen to automatically hide tables without any data
+# http://mysql.bkbits.net:8080/eventum/gnupatch@4228c476PFEFwX_LFfvD5y0xkmYqPw
+Patch14:	gnupatch@4228c476PFEFwX_LFfvD5y0xkmYqPw
+# Added some code to prevent people from creating an internal FAQ entry without selecting the project first
+Patch15:	http://mysql.bkbits.net:8080/eventum/gnupatch@422746b1A1Szq1_GufnINJkuc8nlAA
+#Patch16:	http://glen.alkohol.ee/pld/eventum-cli-rpc-base64.patch
+#Patch17:	http://glen.alkohol.ee/pld/eventum-view-email-mail-content-type.patch
 URL:		http://dev.mysql.com/downloads/other/eventum/index.html
 BuildRequires:	rpmbuild(macros) >= 1.177
 BuildRequires:	sed >= 4.0
@@ -425,9 +437,9 @@ $,,'
 # bug fixes.
 %patch10 -p1
 %patch11 -p1
-
-# version that we support upgrading from
-mv misc/upgrade/v1.4_to_1.5 upgrade
+%patch12 -p1
+%patch13 -p1
+%patch14 -p1
 
 # replace in remaining scripts config.inc.php to system one
 grep -rl 'include_once(".*config.inc.php")' . | xargs sed -i -e '
@@ -459,7 +471,7 @@ cp -a templates $RPM_BUILD_ROOT%{_appdir}
 cp -a include/{customer,jpgraph,pear,workflow} $RPM_BUILD_ROOT%{_appdir}/include
 cp -a include/*.php $RPM_BUILD_ROOT%{_appdir}/include
 cp -a logs/* $RPM_BUILD_ROOT/var/log/%{name}
-cp -a upgrade $RPM_BUILD_ROOT%{_appdir}
+cp -a misc/upgrade $RPM_BUILD_ROOT%{_appdir}
 
 # cli
 install -d $RPM_BUILD_ROOT%{_appdir}/cli
@@ -704,7 +716,7 @@ echo >&2 "Performing database upgrades!"
 echo >&2 "These will fail if your eventum user doesn't have ALTER privilege to database."
 echo >&2 ""
 
-scriptdir=%{_appdir}/upgrade
+scriptdir=%{_appdir}/upgrade/v1.4_to_1.5
 
 /usr/bin/php4 -q $scriptdir/database_changes.php || {
 	echo >&2 "Please run manually: /usr/bin/php4 -q $scriptdir/database_changes.php"
@@ -713,7 +725,7 @@ scriptdir=%{_appdir}/upgrade
 %files
 %defattr(644,root,root,755)
 %doc ChangeLog FAQ INSTALL README UPGRADE
-%doc misc/upgrade docs/* rpc/xmlrpc_client.php setup/schema.sql
+%doc docs/* rpc/xmlrpc_client.php setup/schema.sql
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/apache.conf
 %attr(640,root,eventum) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/config.php
 %attr(640,root,eventum) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/private_key.php
