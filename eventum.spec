@@ -9,6 +9,8 @@
 #  - A few other small javascript libraries
 # - need start-stop-daemon (from dpkg for now)
 # - 64bit platforms beware? http://bugs.php.net/bug.php?id=30215 (it's actually Smarty related problem)
+# before STBR:
+# - put useradd/groupadd macros into PLD rpm
 
 %bcond_with	pear	# build with system PEAR packages (or use bundled ones)
 
@@ -24,7 +26,7 @@
 %define _source http://mysql.wildyou.net/Downloads/%{name}/%{name}-%{version}.tar.gz
 %endif
 
-%define _rel 278
+%define _rel 279
 
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl):	Eventum - system ¶ledzenia spraw/b³êdów
@@ -66,6 +68,7 @@ Patch19:	http://glen.alkohol.ee/pld/%{name}-attach-activate-links.patch
 Patch20:	%{name}-irc-memlimit.patch
 Patch21:	http://glen.alkohol.ee/pld/eventum-link-tilde2.patch
 Patch22:	http://glen.alkohol.ee/pld/eventum-reply-timestamp.patch
+Patch23:	http://glen.alkohol.ee/pld/eventum-lf-checkins.patch
 URL:		http://dev.mysql.com/downloads/other/eventum/
 BuildRequires:	rpmbuild(macros) >= 1.177
 BuildRequires:	sed >= 4.0
@@ -451,6 +454,7 @@ $,,'
 %patch20 -p1
 %patch21 -p1
 %patch22 -p1
+%patch23 -p1
 
 # replace in remaining scripts config.inc.php to system one
 grep -rl 'include_once(".*config.inc.php")' . | xargs sed -i -e '
@@ -642,11 +646,10 @@ if [ "$1" = "0" ]; then
 			/etc/rc.d/init.d/httpd restart 1>&2
 		fi
 	fi
-fi
 
-%postun
-# nuke cache
-rm -f /var/cache/eventum/*.php
+	# nuke cache
+	rm -f /var/cache/eventum/*.php 2>/dev/null || :
+fi
 
 %pre base
 %groupadd -P %{name}-base %{name}
