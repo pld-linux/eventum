@@ -22,7 +22,7 @@
 %define _source http://mysql.wildyou.net/Downloads/%{name}/%{name}-%{version}.tar.gz
 %endif
 
-%define _rel 1.138
+%define _rel 1.140
 
 Summary:	Eventum Issue - a bug tracking system
 Summary(pl):	Eventum - system ¶ledzenia spraw/b³êdów
@@ -52,6 +52,7 @@ Patch12:		%{name}-mail-queue.tpl.patch
 Patch13:		%{name}-maildecode.patch
 Patch14:		%{name}-send-typo.patch
 Patch15:		%{name}-fixes.patch
+Patch16:		%{name}-rss-charset.patch
 URL:		http://dev.mysql.com/downloads/other/eventum/index.html
 BuildRequires:	rpmbuild(macros) >= 1.177
 BuildRequires:	sed >= 4.0
@@ -394,6 +395,7 @@ $,,'
 %patch13 -p1
 %patch14 -p1
 %patch15 -p1
+%patch16 -p1
 
 rm -f */*~ */*/*~
 
@@ -464,7 +466,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %post
 # apache1
-if [ -f %{_apache1dir}/apache.conf ]; then
+if [ -d %{_apache1dir}/conf.d ]; then
 	ln -sf %{_sysconfdir}/apache.conf %{_apache1dir}/conf.d/99_%{name}.conf
 	if [ -f /var/lock/subsys/apache ]; then
 		/etc/rc.d/init.d/apache restart 1>&2
@@ -526,7 +528,7 @@ if [ "$1" = "0" ]; then
 	fi
 	# apache2
 	if [ -d %{_apache2dir}/httpd.conf ]; then
-		rm -f %{_apache1dir}/httpd.conf/99_%{name}.conf
+		rm -f %{_apache2dir}/httpd.conf/99_%{name}.conf
 		if [ -f /var/lock/subsys/httpd ]; then
 			/etc/rc.d/init.d/httpd restart 1>&2
 		fi
