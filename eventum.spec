@@ -26,7 +26,7 @@
 %define _source http://mysql.wildyou.net/Downloads/%{name}/%{name}-%{version}.tar.gz
 %endif
 
-%define _rel 1.15
+%define _rel 1.16
 
 Summary:	Eventum Issue / Bug Tracking System
 Name:		eventum
@@ -62,6 +62,15 @@ be used by a support department to track incoming technical support
 requests, or by a software development team to quickly organize tasks
 and bugs. Eventum is used by the MySQL AB Technical Support team, and
 has allowed us to dramatically improve our response times.
+
+%package setup
+Summary:	Eventum setup package.
+Group:		Applications/WWW
+
+%description setup
+Install this package to configure initial Eventum installation. You
+should uninstall this package when you're done, as it considered
+insecure to keep the setup files in place.
 
 %prep
 %setup -q %{?_snap:-n %{name}-%{_snap}}
@@ -144,7 +153,6 @@ fi
 %{_appdir}/misc
 %{_appdir}/reports
 %{_appdir}/rpc
-%{_appdir}/setup
 %{_appdir}/templates
 
 %dir %attr(755,http,root) %{_appdir}/locks
@@ -164,3 +172,7 @@ fi
 %attr(640,http,root) %{_appdir}/logs/*
 
 %dir %attr(750,http,root) %{_appdir}/templates_c
+
+%files setup
+%defattr(644,root,root,755)
+%{_appdir}/setup
