@@ -16,13 +16,25 @@
 # - Note Routing Script (misc/route_notes.php)
 # - IRC Notification Bot (misc/irc/bot.php)
 # - Command-line Interface (misc/cli/eventum)
+
+# snapshot: DATE
+#define _snap 20050114
+
+%if 0%{?_snap}
+%define _source http://downloads.mysql.com/snapshots/%{name}/%{name}-nightly-%{_snap}.tar.gz
+%else
+%define _source http://mysql.wildyou.net/Downloads/%{name}/%{name}-%{version}.tar.gz
+%endif
+
+%define _rel 1.9
+
 Summary:	Eventum Issue / Bug Tracking System
 Name:		eventum
 Version:	1.4
-Release:	0.9
+Release:	%{?_snap:0.%{_snap}.}%{_rel}
 License:	GPL
 Group:		Applications/WWW
-Source0:	http://mysql.wildyou.net/Downloads/%{name}/%{name}-%{version}.tar.gz
+Source0:	%{_source}
 # Source0-md5:	361c1355e46a6bbfa54e420964ec92cf
 Patch0:		%{name}-clock-status.patch
 URL:		http://dev.mysql.com/downloads/other/eventum/index.html
@@ -44,7 +56,7 @@ and bugs. Eventum is used by the MySQL AB Technical Support team, and
 has allowed us to dramatically improve our response times.
 
 %prep
-%setup -q
+%setup -q %{?_snap:-n %{name}-%{_snap}}
 %patch0 -p1
 
 %build
@@ -52,7 +64,7 @@ has allowed us to dramatically improve our response times.
 %install
 rm -rf $RPM_BUILD_ROOT
 
-install -d $RPM_BUILD_ROOT%{_appdir}/locks
+install -d $RPM_BUILD_ROOT%{_appdir}/{locks,templates_c}
 
 # TODO: php4
 sed -i -e 's,/usr/local/bin/php,/usr/bin/php,' misc/cli/eventum
