@@ -26,7 +26,7 @@
 %define _source http://mysql.wildyou.net/Downloads/%{name}/%{name}-%{version}.tar.gz
 %endif
 
-%define _rel 1.17
+%define _rel 1.31
 
 Summary:	Eventum Issue / Bug Tracking System
 Name:		eventum
@@ -67,6 +67,8 @@ has allowed us to dramatically improve our response times.
 %package setup
 Summary:	Eventum setup package.
 Group:		Applications/WWW
+PreReq:		%{name}
+Requires:	%{name} = %{epoch}:%{version}-%{release}
 
 %description setup
 Install this package to configure initial Eventum installation. You
@@ -116,6 +118,10 @@ if [ -d %{_apache2dir}/httpd.conf ]; then
 	fi
 fi
 
+echo "If you're installing %{name} for the first time, Install %{name}-setup,"
+echo "and open up http://yourserver/eventum/, and when done,"
+echo "uninstall the package, that will secure the config files."
+
 %preun
 if [ "$1" = "0" ]; then
 	# apache1
@@ -134,15 +140,27 @@ if [ "$1" = "0" ]; then
 	fi
 fi
 
+%post setup
+# RACE possible? chmod just in case
+chmod 640 %{_appdir}/{config.inc,setup.conf}.php
+chown http:root %{_appdir}/{config.inc,setup.conf}.php
+
+%postun setup
+if [ "$1" = "0" ]; then
+	# RACE condition possible?
+	chmod 640 %{_appdir}/{config.inc,setup.conf}.php
+	chown root:http %{_appdir}/{config.inc,setup.conf}.php
+fi
+
 %files
 %defattr(644,root,root,755)
 %doc ChangeLog FAQ INSTALL README UPGRADE misc/upgrade
 %dir %{_sysconfdir}
-%attr(640,http,root) %config(noreplace) %{_sysconfdir}/apache.conf
+%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/apache.conf
 
 %dir %{_appdir}
-%attr(640,http,root) %config(noreplace) %{_appdir}/config.inc.php
-%attr(640,http,root) %config(noreplace) %{_appdir}/setup.conf.php
+%attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_appdir}/config.inc.php
+%attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_appdir}/setup.conf.php
 %{_appdir}/*[!cf].php
 
 %{_appdir}/css
@@ -156,7 +174,7 @@ fi
 %{_appdir}/rpc
 %{_appdir}/templates
 
-%dir %attr(755,http,root) %{_appdir}/locks
+%dir %attr(750,http,root) %{_appdir}/locks
 
 %dir %{_appdir}/include
 %{_appdir}/include/customer
@@ -169,8 +187,8 @@ fi
 %{_appdir}/include/jsrsServer.inc.php
 %attr(640,http,root) %{_appdir}/include/private_key.php
 
-%dir %attr(755,root,root) %{_appdir}/logs
-%attr(640,http,root) %{_appdir}/logs/*
+%dir %attr(731,root,http) %{_appdir}/logs
+%attr(640,http,root) %config(noreplace) %verify(not md5 mtime size) %{_appdir}/logs/*
 
 %dir %attr(750,http,root) %{_appdir}/templates_c
 
