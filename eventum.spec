@@ -9,13 +9,10 @@
 #  - dynCalendar.js (http://www.phpguru.org/dyncalendar.html)
 #  - overLIB 3.5.1 (http://www.bosrup.com/web/overlib/)
 #  - A few other small javascript libraries
-# - Reminder System (misc/check_reminders.php)
-# - Heartbeat Monitor (misc/monitor.php)
-# - Email Routing Script (misc/route_emails.php)
-# - Note Routing Script (misc/route_notes.php)
 # - IRC Notification Bot (misc/irc/bot.php)
 # - Command-line Interface (misc/cli/eventum)
 # - scm subpackage doesn't work (yet)
+# - eventum-router-qmail, eventum-router-postfix for -route-mails and -route-notes
 
 # snapshot: DATE
 #define _snap 20050117
@@ -26,7 +23,7 @@
 %define _source http://mysql.wildyou.net/Downloads/%{name}/%{name}-%{version}.tar.gz
 %endif
 
-%define _rel 1.61
+%define _rel 1.74
 
 Summary:	Eventum Issue - a bug tracking system
 Summary(pl):	Eventum - system ¶ledzenia spraw/b³êdów
@@ -38,10 +35,18 @@ Group:		Applications/WWW
 Source0:	%{_source}
 # Source0-md5:	361c1355e46a6bbfa54e420964ec92cf
 Source1:	%{name}-apache.conf
-Source2:	%{name}-mail-queue.sh
-Source3:	%{name}-mail-download.sh
+Source2:	%{name}-mail-queue.cron
+Source3:	%{name}-mail-download.cron
+Source4:	%{name}-reminder.cron
+Source5:	%{name}-monitor.cron
+Source6:	%{name}-cvs.php
+Source7:	%{name}-irc.php
+Source8:	%{name}-irc.init
 Patch0:		%{name}-rpm.patch
 Patch1:		%{name}-clock-status.patch
+Patch2:		%{name}-scm-encode.patch
+Patch3:		%{name}-cvs-config.patch
+Patch4:		%{name}-irc-config.patch
 URL:		http://dev.mysql.com/downloads/other/eventum/index.html
 BuildRequires:	rpmbuild(macros) >= 1.177
 BuildRequires:	sed >= 4.0
@@ -139,6 +144,93 @@ czêsto.
 
 Ten pakiet zawiera zadanie dla crona.
 
+%package reminder
+Summary:	Eventum Reminder System
+Group:		Applications/WWW
+Requires:	%{name} = %{epoch}:%{version}-%{release}
+Requires:	php4 >= 4.1.0
+Requires:	crondaemon
+
+%description reminder
+The reminder system was designed with the objective as serving as a
+safe net for issues that need attention. Depending on what
+configuration you create, you may have several reminders (or alerts)
+be sent out whenever an issue needs attention, for whatever parameter
+you may deem necessary.
+
+This package contains the cron job.
+
+%package monitor
+Summary:	Eventum Heartbeat Monitor
+Group:		Applications/WWW
+Requires:	%{name} = %{epoch}:%{version}-%{release}
+Requires:	php4 >= 4.1.0
+Requires:	crondaemon
+
+%description monitor
+The heartbeat monitor is a feature designed for the administrator that
+wants to be alerted whenever a common problem in Eventum is detected,
+like the database server not being available anymore, or maybe when
+the recommended permissions for certain configuration files are
+changed.
+
+Please note that before running the heartbeat monitor, you may need to
+customize some of the checks to be appropriate for your own system,
+particularly the permission and file checks on
+Monitor::checkConfiguration().
+
+This package contains the cron job.
+
+%package route-emails
+Summary:	Eventum Email Routing
+Group:		Applications/WWW
+Requires:	%{name} = %{epoch}:%{version}-%{release}
+Requires:	php4 >= 4.1.0
+#Requires:	eventum-router
+
+%description route-emails
+The email routing feature is used to automatically associate a thread
+of emails into an Eventum issue. By setting up qmail (or even postfix)
+to deliver emails sent to a specific address (usually
+issue-<number>@<domain>) to the above script, users are able to use
+their email clients to reply to emails coming from Eventum, and those
+replies will be automatically associated with the issue and
+broadcasted to the entire notification list.
+
+%package route-notes
+Summary:	Eventum Note Routing
+Group:		Applications/WWW
+Requires:	%{name} = %{epoch}:%{version}-%{release}
+Requires:	php4 >= 4.1.0
+#Requires:	eventum-router
+
+%description route-notes
+The note routing feature is used to automatically associate a thread
+of notes into an Eventum issue. By setting up qmail (or even postfix)
+to deliver emails sent to a specific address (usually
+note-<number>@<domain>) to the above script, users are able to use
+their email clients to reply to internal notes coming from Eventum,
+and those replies will be automatically associated with the issue and
+broadcasted to the notification list staff members.
+
+%package irc
+Summary:	Eventum IRC Notification Bot
+Group:		Applications/WWW
+Requires:	%{name} = %{epoch}:%{version}-%{release}
+Requires:	php4 >= 4.1.0
+
+%description irc
+The IRC notification bot is a nice feature for remote teams that want
+to handle issues and want to have a quick and easy way to get simple
+notifications. Right now the bot notifies of the following actions:
+- New Issues
+- Blocked emails
+- Issues that got their assignment list changed
+
+NOTE: You will need to manually edit the bot.php script to set your
+appropriate preferences, like IRC server and channel that the bot
+should join.
+
 %package scm
 Summary:	Eventum SCM integration
 Summary(pl):	Integracja SCM dla Eventum
@@ -171,12 +263,15 @@ Szczegó³y na temat instalacji mo¿na przeczytaæ pod
 %setup -q %{?_snap:-n %{name}-%{_snap}}
 %patch0 -p1
 %patch1 -p1
+%patch2 -p1
+%patch3 -p1
+%patch4 -p1
 
 %build
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_sysconfdir},/etc/cron.d,%{_appdir}/{locks,templates_c},/var/log}
+install -d $RPM_BUILD_ROOT{%{_sysconfdir},/etc/{rc.d/init.d,cron.d},%{_appdir}/{locks,templates_c},/var/log}
 
 cp -a . $RPM_BUILD_ROOT%{_appdir}
 
@@ -192,6 +287,11 @@ s,$private_key\s*=\s*".*";,$private_key = "DEFAULTPRIVATEKEYPLEASERUNSETUP!";,
 install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/apache.conf
 install %{SOURCE2} $RPM_BUILD_ROOT/etc/cron.d/%{name}-mail-queue
 install %{SOURCE3} $RPM_BUILD_ROOT/etc/cron.d/%{name}-mail-download
+install %{SOURCE4} $RPM_BUILD_ROOT/etc/cron.d/%{name}-reminder
+install %{SOURCE5} $RPM_BUILD_ROOT/etc/cron.d/%{name}-monitor
+install %{SOURCE6} $RPM_BUILD_ROOT%{_sysconfdir}/cvs.php
+install %{SOURCE7} $RPM_BUILD_ROOT%{_sysconfdir}/irc.php
+install %{SOURCE8} $RPM_BUILD_ROOT/etc/rc.d/init.d/eventum-irc
 
 # in conf
 mv $RPM_BUILD_ROOT%{_appdir}/{config.inc.php,setup.conf.php} $RPM_BUILD_ROOT%{_sysconfdir}
@@ -330,13 +430,7 @@ fi
 
 %dir %{_appdir}/misc
 %{_appdir}/misc/cli
-%{_appdir}/misc/irc
 %{_appdir}/misc/blank.html
-%{_appdir}/misc/check_reminders.php
-%{_appdir}/misc/monitor.php
-%{_appdir}/misc/route_drafts.php
-%{_appdir}/misc/route_emails.php
-%{_appdir}/misc/route_notes.php
 
 %files setup
 %defattr(644,root,root,755)
@@ -352,7 +446,33 @@ fi
 %{_appdir}/misc/download_emails.php
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/cron.d/%{name}-mail-download
 
+%files reminder
+%defattr(644,root,root,755)
+%{_appdir}/misc/check_reminders.php
+%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/cron.d/%{name}-reminder
+
+%files monitor
+%defattr(644,root,root,755)
+%{_appdir}/misc/monitor.php
+%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/cron.d/%{name}-monitor
+
+%files route-emails
+%defattr(644,root,root,755)
+%{_appdir}/misc/route_emails.php
+
+%files route-notes
+%defattr(644,root,root,755)
+%{_appdir}/misc/route_drafts.php
+%{_appdir}/misc/route_notes.php
+
+%files irc
+%defattr(644,root,root,755)
+%attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/irc.php
+%{_appdir}/misc/irc
+%attr(754,root,root) /etc/rc.d/init.d/%{name}-irc
+
 %files scm
 %defattr(644,root,root,755)
+%attr(644,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/cvs.php
 %dir %{_appdir}/misc/scm
-%attr(644,root,root) %config(noreplace) %verify(not md5 mtime size) %{_appdir}/misc/scm/process_cvs_commits.php
+%{_appdir}/misc/scm/process_cvs_commits.php
