@@ -1,0 +1,28 @@
+--- index.php~	2005-01-14 19:23:25.334500007 +0200
++++ index.php	2005-01-14 19:23:32.743136482 +0200
+@@ -417,23 +417,8 @@
+     $tpl->assign('is_imap_enabled', function_exists('imap_open'));
+ }
+ 
+-
+-$full_url = dirname($HTTP_SERVER_VARS['PHP_SELF']);
+-$pieces = explode("/", $full_url);
+-$relative_url = array();
+-$relative_url[] = '';
+-foreach ($pieces as $piece) {
+-    if ((!empty($piece)) && ($piece != 'setup')) {
+-        $relative_url[] = $piece;
+-    }
+-}
+-$relative_url[] = '';
+-$relative_url = implode("/", $relative_url);
+-
+-if (substr($HTTP_SERVER_VARS['DOCUMENT_ROOT'], -1) == '/') {
+-    $HTTP_SERVER_VARS['DOCUMENT_ROOT'] = substr($HTTP_SERVER_VARS['DOCUMENT_ROOT'], 0, -1);
+-}
+-$installation_path = $HTTP_SERVER_VARS['DOCUMENT_ROOT'] . $relative_url;
++$installation_path = "/usr/share/eventum";
++$relative_url = "/eventum/";
+ 
+ $tpl->assign("phpversion", phpversion());
+ $tpl->assign("rel_url", $relative_url);
