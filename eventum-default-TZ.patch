@@ -1,0 +1,13 @@
+--- ./include/class.date.php~	2005-02-15 23:50:44.000000000 +0200
++++ ./include/class.date.php	2005-02-18 00:34:59.000000000 +0200
+@@ -43,7 +43,9 @@
+ include_once(APP_INC_PATH . "class.prefs.php");
+ include_once(APP_PEAR_PATH . "Date.php");
+ 
+-define('APP_DEFAULT_TIMEZONE', 'UTC');
++if (!defined(APP_DEFAULT_TIMEZONE)) {
++    define('APP_DEFAULT_TIMEZONE', 'UTC');
++}
+ define("SECOND", 1);
+ define("MINUTE", SECOND * 60);
+ define("HOUR", MINUTE * 60);
