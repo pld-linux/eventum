@@ -2,7 +2,6 @@
 # - php5 is not tested, but not placing hard conflict on it, as it prevents php4 & php coinstallation
 # - discard bundled packages (from INSTALL):
 #  - JpGraph 1.5.3 (last GPL version)
-#  - PEAR packages
 #  - dTree 2.0.5 (http://www.destroydrop.com/javascript/tree/)
 #  - dynCalendar.js (http://www.phpguru.org/dyncalendar.html)
 #  - overLIB 3.5.1 (http://www.bosrup.com/web/overlib/)
@@ -20,7 +19,7 @@
 %define _source http://mysql.wildyou.net/Downloads/%{name}/%{name}-%{version}.tar.gz
 %endif
 
-%define _rel 1.109
+%define _rel 1.129
 
 Summary:	Eventum Issue - a bug tracking system
 Summary(pl):	Eventum - system ¶ledzenia spraw/b³êdów
@@ -58,6 +57,22 @@ Requires:	php-mysql
 Requires:	php-pcre
 Requires:	Smarty >= 2.6.2
 Requires:	%{name}-base = %{epoch}:%{version}-%{release}
+Requires:	php-pear-Benchmark
+Requires:	php-pear-DB
+Requires:	php-pear-Date
+Requires:	php-pear-HTTP_Request
+Requires:	php-pear-Mail
+Requires:	php-pear-Math_Stats
+Requires:	php-pear-Net_DIME
+Requires:	php-pear-Net_POP3
+Requires:	php-pear-Net_SMTP
+Requires:	php-pear-Net_SmartIRC
+Requires:	php-pear-Net_Socket
+Requires:	php-pear-Net_URL
+Requires:	php-pear-Net_UserAgent_Detect
+Requires:	php-pear-PEAR
+Requires:	php-pear-Text_Diff
+Requires:	php-pear-XML_RPC
 #Requires:	apache-mod_dir
 # conflict with non-confdir apache
 Conflicts:	apache1 < 1.3.33-1.1
@@ -309,7 +324,8 @@ Requires:	%{name} = %{epoch}:%{version}-%{release}
 Requires:	php4 >= 4.1.0
 Requires:	php4-cli
 Requires:	php4-curl
-#Requires:	php4-openssl
+Requires:	php4-xml
+Requires:	php-pear-XML_RPC
 
 %description cli
 The Eventum command-line interface allows you to access most of the
@@ -423,6 +439,10 @@ mv $RPM_BUILD_ROOT%{_appdir}/misc/cli/eventum $RPM_BUILD_ROOT%{_bindir}
 rm -f $RPM_BUILD_ROOT%{_appdir}/misc/{cli/eventumrc_example,scm/process_cvs_commits.php}
 install %{name}-scm $RPM_BUILD_ROOT%{_bindir}/%{name}-scm
 
+# provided by PEAR
+rm -rf $RPM_BUILD_ROOT%{_appdir}/misc/cli/include/pear
+rm -rf $RPM_BUILD_ROOT%{_appdir}/include/pear
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -511,8 +531,8 @@ fi
 %defattr(644,root,root,755)
 %doc ChangeLog FAQ INSTALL README UPGRADE misc/upgrade docs/* rpc/xmlrpc_client.php
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/apache.conf
-%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/config.php
-%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/private_key.php
+%attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/config.php
+%attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/private_key.php
 %attr(660,root,http) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/setup.php
 
 %dir %{_appdir}
@@ -536,7 +556,6 @@ fi
 %dir %{_appdir}/include
 %{_appdir}/include/customer
 %{_appdir}/include/jpgraph
-%{_appdir}/include/pear
 %{_appdir}/include/workflow
 %{_appdir}/include/*.php
 
