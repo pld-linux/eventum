@@ -14,7 +14,7 @@
 %bcond_with	pear	# build with system PEAR packages (or use bundled ones)
 
 # snapshot: DATE
-#define _snap 20050217
+%define _snap 20050222
 
 %if 0%{?_snap}
 %define _source http://downloads.mysql.com/snapshots/%{name}/%{name}-nightly-%{_snap}.tar.gz
@@ -22,17 +22,17 @@
 %define _source http://mysql.wildyou.net/Downloads/%{name}/%{name}-%{version}.tar.gz
 %endif
 
-%define _rel 1.151
+%define _rel 1.152
 
 Summary:	Eventum Issue - a bug tracking system
 Summary(pl):	Eventum - system ¶ledzenia spraw/b³êdów
 Name:		eventum
 Version:	1.4
-Release:	%{?_snap:0.%{_snap}.}%{_rel}
+Release:	%{?_snap:1.%{_snap}.}%{_rel}
 License:	GPL
 Group:		Applications/WWW
 Source0:	%{_source}
-# Source0-md5:	361c1355e46a6bbfa54e420964ec92cf
+# Source0-md5:	035bd8f7890260c1c058eaf1d54dcc90
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -47,13 +47,13 @@ Patch2:		%{name}-cvs-config.patch
 Patch3:		%{name}-irc-config.patch
 Patch4:		%{name}-PEAR.patch
 Patch11:		%{name}-scm_checkin_associated.patch
-Patch12:		%{name}-mail-queue.tpl.patch
+#Patch12:		%{name}-mail-queue.tpl.patch
 Patch13:		%{name}-maildecode.patch
-Patch14:		%{name}-send-typo.patch
-Patch15:		%{name}-fixes.patch
-Patch16:		%{name}-rss-charset.patch
-Patch17:		%{name}-scm-silence-add.patch
-Patch18:		%{name}-default-TZ.patch
+#Patch14:		%{name}-send-typo.patch
+#Patch15:		%{name}-fixes.patch
+#Patch16:		%{name}-rss-charset.patch
+#Patch17:		%{name}-scm-silence-add.patch
+#Patch18:		%{name}-default-TZ.patch
 Patch19:		%{name}-charset-mailsubj.patch
 URL:		http://dev.mysql.com/downloads/other/eventum/index.html
 BuildRequires:	rpmbuild(macros) >= 1.177
@@ -83,7 +83,7 @@ Requires:	php-pear-PEAR
 Requires:	php-pear-Text_Diff
 Requires:	php-pear-XML_RPC
 %endif
-Requires:	apache-mod_dir
+Requires:	apache(mod_dir)
 # conflict with non-confdir apache
 Conflicts:	apache1 < 1.3.33-1.1
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -393,13 +393,13 @@ $,,'
 
 # bug fixes.
 %patch11 -p1
-%patch12 -p1
+#%patch12 -p1
 %patch13 -p1
-%patch14 -p1
-%patch15 -p1
-%patch16 -p1
-%patch17 -p1
-%patch18 -p1
+#%patch14 -p1
+#%patch15 -p1
+#%patch16 -p1
+#%patch17 -p1
+#%patch18 -p1
 %patch19 -p1
 
 rm -f */*~ */*/*~
