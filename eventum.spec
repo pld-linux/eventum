@@ -27,7 +27,7 @@
 %define _source http://mysql.wildyou.net/Downloads/%{name}/%{name}-%{version}.tar.gz
 %endif
 
-%define _rel 1.42
+%define _rel 1.49
 
 Summary:	Eventum Issue / Bug Tracking System
 Summary(pl):	Eventum - system ¶ledzenia spraw/b³êdów
@@ -108,6 +108,11 @@ cp -a . $RPM_BUILD_ROOT%{_appdir}
 
 sed -i -e 's,/usr/local/bin/php,/usr/bin/php4,' $RPM_BUILD_ROOT%{_appdir}/misc/cli/eventum
 
+# change private key, so we can easily grep
+sed -i -e '
+s,$private_key\s*=\s*".*";,$private_key = "DEFAULTPRIVATEKEYPLEASERUNSETUP!";,
+' $RPM_BUILD_ROOT%{_appdir}/include/private_key.php
+
 install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/apache.conf
 
 # in conf
@@ -158,16 +163,28 @@ so that %{name}-setup is able to secure your Eventum installation.
 
 EOF
 #' vim stupidity.
-else
-	if [ -d %{_appdir}/setup ]; then
+
+elif grep -q 'DEFAULTPRIVATEKEY' %{_sysconfdir}/private_key.php; then
+%banner %{name} -e <<EOF
+
+You have default private key installed!
+
+Install %{name}-setup and open up http://yourserver/eventum/setup/
+-- that will help you setup initial config.
+
+when have configured Eventum, please uninstall the setup package,
+so that %{name}-setup is able to secure your Eventum installation.
+
+EOF
+	elif [ -d %{_appdir}/setup ]; then
 %banner %{name} -e <<EOF
 
 If you have have configured Eventum, please uninstall the setup package,
 so that %{name}-setup is able to secure your Eventum installation.
 
 EOF
-	fi
 fi
+
 
 %preun
 if [ "$1" = "0" ]; then
@@ -200,7 +217,7 @@ fi
 %files
 %defattr(644,root,root,755)
 %doc ChangeLog FAQ INSTALL README UPGRADE misc/upgrade docs/*
-%dir %{_sysconfdir}
+%attr(751,root,root) %dir %{_sysconfdir}
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/*
 
 %dir %attr(731,root,http) /var/log/%{name}
