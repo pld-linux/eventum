@@ -14,7 +14,7 @@
 # - use eventum user for irc bot?
 
 # snapshot: DATE
-#define _snap 20050117
+#define _snap 20050124
 
 %if 0%{?_snap}
 %define _source http://downloads.mysql.com/snapshots/%{name}/%{name}-nightly-%{_snap}.tar.gz
@@ -22,7 +22,7 @@
 %define _source http://mysql.wildyou.net/Downloads/%{name}/%{name}-%{version}.tar.gz
 %endif
 
-%define _rel 1.94
+%define _rel 1.95
 
 Summary:	Eventum Issue - a bug tracking system
 Summary(pl):	Eventum - system ¶ledzenia spraw/b³êdów
@@ -41,12 +41,15 @@ Source5:	%{name}-monitor.cron
 Source6:	%{name}-cvs.php
 Source7:	%{name}-irc.php
 Source8:	%{name}-irc.init
+# packaging
 Patch0:		%{name}-paths.patch
-Patch1:		%{name}-clock-status.patch
-Patch2:		%{name}-scm-encode.patch
-Patch3:		%{name}-cvs-config.patch
-Patch4:		%{name}-irc-config.patch
-Patch5:		%{name}-scm_checkin_associated.patch
+Patch1:		%{name}-scm-encode.patch
+Patch2:		%{name}-cvs-config.patch
+Patch3:		%{name}-irc-config.patch
+# bug fixes
+Patch10:		%{name}-clock-status.patch
+Patch11:		%{name}-scm_checkin_associated.patch
+Patch12:		%{name}-mail-queue.tpl.patch
 URL:		http://dev.mysql.com/downloads/other/eventum/index.html
 BuildRequires:	rpmbuild(macros) >= 1.177
 BuildRequires:	sed >= 4.0
@@ -343,8 +346,10 @@ Szczegó³y na temat instalacji mo¿na przeczytaæ pod
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
-%patch4 -p1
-%patch5 -p1
+
+%patch10 -p1
+%patch11 -p1
+%patch12 -p1
 
 %build
 
