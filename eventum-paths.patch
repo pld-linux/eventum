@@ -89,3 +89,37 @@
          $this->smarty->config_dir = '';
          $this->smarty->register_modifier("activateLinks", array('Link_Filter', 'processText'));
      }
+--- index.php	2005-01-24 17:39:51.000000000 +0200
++++ eventum-1.4/setup/index.php	2005-01-24 17:42:33.000000000 +0200
+@@ -118,7 +118,7 @@
+     if (!empty($error)) {
+         $errors[] = $error;
+     }
+-    $error = checkPermissions('../logs', "Directory 'logs'", TRUE);
++    $error = checkPermissions('/var/log/eventum', "Directory '/var/log/eventum'", TRUE);
+     if (!empty($error)) {
+         $errors[] = $error;
+     }
+@@ -130,7 +130,7 @@
+     if (!empty($error)) {
+         $errors[] = $error;
+     }
+-    $error = checkPermissions('../logs/errors.log', "File 'logs/errors.log'");
++    $error = checkPermissions('/var/log/eventum/errors.log', "File '/var/log/eventum/errors.log'");
+     if (!empty($error)) {
+         $errors[] = $error;
+     }
+@@ -199,11 +199,11 @@
+ }
+ 
+ ini_set("include_path", '.');
+-include_once("../include/Smarty/Smarty.class.php");
++include_once('/usr/share/pear/Smarty/Smarty.class.php');
+ 
+ $tpl = new Smarty();
+ $tpl->template_dir = '../templates/en';
+-$tpl->compile_dir = "../templates_c";
++$tpl->compile_dir = "/var/cache/eventum";
+ $tpl->config_dir = '';
+ 
+ function replace_table_prefix($str)
