@@ -1,5 +1,4 @@
 # TODO
-# - where to put templates_c (templates cache dir)? /var/run/eventum? /var/run/php/eventum? /var/cache/eventum?
 # - php5 is not tested, but not placing hard conflict on it, as it prevents php4 & php coinstallation
 # - discard bundled packages (from INSTALL):
 #  - JpGraph 1.5.3 (last GPL version)
@@ -22,7 +21,7 @@
 %define _source http://mysql.wildyou.net/Downloads/%{name}/%{name}-%{version}.tar.gz
 %endif
 
-%define _rel 1.95
+%define _rel 1.98
 
 Summary:	Eventum Issue - a bug tracking system
 Summary(pl):	Eventum - system ¶ledzenia spraw/b³êdów
@@ -355,8 +354,11 @@ Szczegó³y na temat instalacji mo¿na przeczytaæ pod
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_sysconfdir},%{_bindir},/etc/{rc.d/init.d,cron.d},%{_appdir}/{locks,templates_c},/var/log}
+install -d $RPM_BUILD_ROOT{%{_sysconfdir},%{_bindir},%{_appdir}} \
+	$RPM_BUILD_ROOT{/etc/{rc.d/init.d,cron.d},/var/log} \
+	$RPM_BUILD_ROOT{/var/run/eventum,/var/cache/eventum}
 
+rm -f eventumrc
 cp -a . $RPM_BUILD_ROOT%{_appdir}
 # argsh! say no words
 find $RPM_BUILD_ROOT%{_appdir} -type f -print0 | xargs -0 sed -i -e 's,
@@ -519,8 +521,6 @@ fi
 %{_appdir}/rpc
 %{_appdir}/templates
 
-%dir %attr(730,root,http) %{_appdir}/locks
-
 %dir %{_appdir}/include
 %{_appdir}/include/customer
 %{_appdir}/include/jpgraph
@@ -528,7 +528,8 @@ fi
 %{_appdir}/include/workflow
 %{_appdir}/include/*.php
 
-%dir %attr(730,root,http) %{_appdir}/templates_c
+%dir %attr(730,root,http) /var/run/%{name}
+%dir %attr(730,root,http) /var/cache/%{name}
 
 %dir %{_appdir}/misc
 %{_appdir}/misc/blank.html
