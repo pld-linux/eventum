@@ -26,7 +26,7 @@
 %define _source http://mysql.wildyou.net/Downloads/%{name}/%{name}-%{version}.tar.gz
 %endif
 
-%define _rel 1.32
+%define _rel 1.33
 
 Summary:	Eventum Issue / Bug Tracking System
 Name:		eventum
@@ -133,6 +133,15 @@ so that %{name}-setup is able to secure your Eventum installation.
 
 EOF
 #' vim stupidity.
+else
+	if [ -d %{_appdir}/setup ]; then
+%banner %{name} -e <<EOF
+
+If you have have configured Eventum, please uninstall the setup package,
+so that %{name}-setup is able to secure your Eventum installation.
+
+EOF
+	fi
 fi
 
 %preun
