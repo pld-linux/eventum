@@ -26,7 +26,7 @@
 %define _source http://mysql.wildyou.net/Downloads/%{name}/%{name}-%{version}.tar.gz
 %endif
 
-%define _rel 279
+%define _rel 281
 
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl):	Eventum - system ¶ledzenia spraw/b³êdów
@@ -69,6 +69,7 @@ Patch20:	%{name}-irc-memlimit.patch
 Patch21:	http://glen.alkohol.ee/pld/eventum-link-tilde2.patch
 Patch22:	http://glen.alkohol.ee/pld/eventum-reply-timestamp.patch
 Patch23:	http://glen.alkohol.ee/pld/eventum-lf-checkins.patch
+Patch24:	eventum-strip-bcc.patch
 URL:		http://dev.mysql.com/downloads/other/eventum/
 BuildRequires:	rpmbuild(macros) >= 1.177
 BuildRequires:	sed >= 4.0
@@ -130,6 +131,8 @@ reakcji.
 Summary:	Eventum base package
 Summary(pl):	Podstawowy pakiet Eventum
 Group:		Applications/WWW
+Provides:	user(eventum)
+Provides:	group(eventum)
 
 %description base
 This package contains base directory structure for Eventum.
@@ -455,6 +458,7 @@ $,,'
 %patch21 -p1
 %patch22 -p1
 %patch23 -p1
+%patch24 -p1
 
 # replace in remaining scripts config.inc.php to system one
 grep -rl 'include_once(".*config.inc.php")' . | xargs sed -i -e '
