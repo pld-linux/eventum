@@ -24,7 +24,7 @@
 %define _source http://mysql.wildyou.net/Downloads/%{name}/%{name}-%{version}.tar.gz
 %endif
 
-%define _rel 271
+%define _rel 274
 
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl):	Eventum - system ¶ledzenia spraw/b³êdów
@@ -54,15 +54,16 @@ Patch2:		%{name}-irc-config.patch
 Patch3:		%{name}-PEAR.patch
 Patch4:		%{name}-db-20050227.patch
 Patch10:	%{name}-charset-recent-activity.patch
-Patch11:	http://glen.alkohol.ee/pld/eventum-cli-rpc-base64.patch
-Patch12:	http://glen.alkohol.ee/pld/eventum-send-height.patch
-Patch13:	http://glen.alkohol.ee/pld/eventum-reply-subject.patch
-Patch14:	http://glen.alkohol.ee/pld/eventum-rss-updates.patch
-Patch15:	http://glen.alkohol.ee/pld/eventum-opera.patch
-Patch16:	eventum-lf.patch
-Patch17:	eventum-iss-ass-fix.patch
-Patch18:	eventum-iss-close.patch
-Patch19:	http://glen.alkohol.ee/pld/eventum-attach-activate-links.patch
+Patch11:	http://glen.alkohol.ee/pld/%{name}-cli-rpc-base64.patch
+Patch12:	http://glen.alkohol.ee/pld/%{name}-send-height.patch
+Patch13:	http://glen.alkohol.ee/pld/%{name}-reply-subject.patch
+Patch14:	http://glen.alkohol.ee/pld/%{name}-rss-updates.patch
+Patch15:	http://glen.alkohol.ee/pld/%{name}-opera.patch
+Patch16:	%{name}-lf.patch
+Patch17:	%{name}-iss-ass-fix.patch
+Patch18:	%{name}-iss-close.patch
+Patch19:	http://glen.alkohol.ee/pld/%{name}-attach-activate-links.patch
+Patch19:	%{name}-irc-memlimit.patch
 URL:		http://dev.mysql.com/downloads/other/eventum/
 BuildRequires:	rpmbuild(macros) >= 1.177
 BuildRequires:	sed >= 4.0
@@ -484,12 +485,12 @@ install %{SOURCE12} $RPM_BUILD_ROOT%{_appdir}/htdocs/favicon.ico
 install -d $RPM_BUILD_ROOT%{_appdir}/cli
 install misc/cli/include/class.{misc,command_line}.php $RPM_BUILD_ROOT%{_appdir}/cli
 install misc/cli/config.inc.php $RPM_BUILD_ROOT%{_sysconfdir}/cli.php
-sed -e 's,/usr/local/bin/php,/usr/bin/php4,' misc/cli/eventum \
-	> $RPM_BUILD_ROOT%{_bindir}/%{name}
+sed -e '1s,#!.*/bin/php,#!%{_bindir}/php4,' \
+	misc/cli/eventum > $RPM_BUILD_ROOT%{_bindir}/%{name}
 cp -f misc/cli/eventumrc_example eventumrc
 
 # scm
-echo '#!/usr/bin/php4 -q' > %{name}-scm
+echo '#!%{_bindir}/php4 -q' > %{name}-scm
 cat misc/scm/process_cvs_commits.php >> %{name}-scm
 install %{name}-scm $RPM_BUILD_ROOT%{_libdir}/scm
 
