@@ -14,7 +14,7 @@
 %bcond_with	pear	# build with system PEAR packages (or use bundled ones)
 
 # snapshot: DATE
-%define _snap 20050221
+%define _snap 20050222
 
 %if 0%{?_snap}
 %define _source http://downloads.mysql.com/snapshots/%{name}/%{name}-nightly-%{_snap}.tar.gz
@@ -22,7 +22,7 @@
 %define _source http://mysql.wildyou.net/Downloads/%{name}/%{name}-%{version}.tar.gz
 %endif
 
-%define _rel 1.152
+%define _rel 1.153
 
 Summary:	Eventum Issue - a bug tracking system
 Summary(pl):	Eventum - system ¶ledzenia spraw/b³êdów
@@ -32,7 +32,7 @@ Release:	%{?_snap:1.%{_snap}.}%{_rel}
 License:	GPL
 Group:		Applications/WWW
 Source0:	%{_source}
-# Source0-md5:	e23e2be92a5eeb584ebf01ea2b9f6b7d
+# Source0-md5:	035bd8f7890260c1c058eaf1d54dcc90
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -48,7 +48,7 @@ Patch3:		%{name}-irc-config.patch
 Patch4:		%{name}-PEAR.patch
 Patch11:		%{name}-scm_checkin_associated.patch
 #Patch12:		%{name}-mail-queue.tpl.patch
-Patch13:		%{name}-maildecode.patch
+#Patch13:		%{name}-maildecode.patch
 #Patch14:		%{name}-send-typo.patch
 #Patch15:		%{name}-fixes.patch
 #Patch16:		%{name}-rss-charset.patch
@@ -86,6 +86,7 @@ Requires:	php-pear-XML_RPC
 Requires:	apache(mod_dir)
 # conflict with non-confdir apache
 Conflicts:	apache1 < 1.3.33-1.1
+BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_sysconfdir	/etc/%{name}
@@ -394,7 +395,7 @@ $,,'
 # bug fixes.
 %patch11 -p1
 #%patch12 -p1
-%patch13 -p1
+#%patch13 -p1
 #%patch14 -p1
 #%patch15 -p1
 #%patch16 -p1
@@ -451,7 +452,7 @@ rm -rf $RPM_BUILD_ROOT%{_appdir}/rpc/xmlrpc_client.php
 # in bindir
 mv $RPM_BUILD_ROOT%{_appdir}/misc/cli/eventum $RPM_BUILD_ROOT%{_bindir}
 rm -f $RPM_BUILD_ROOT%{_appdir}/misc/{cli/eventumrc_example,scm/process_cvs_commits.php}
-cp misc/cli/eventumrc_example eventumrc
+cp -f misc/cli/eventumrc_example eventumrc
 install %{name}-scm $RPM_BUILD_ROOT%{_libdir}/scm
 
 %if %{with pear}
