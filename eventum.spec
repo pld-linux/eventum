@@ -9,7 +9,6 @@
 #  - dynCalendar.js (http://www.phpguru.org/dyncalendar.html)
 #  - overLIB 3.5.1 (http://www.bosrup.com/web/overlib/)
 #  - A few other small javascript libraries
-# - Email Download (misc/download_emails.php)
 # - Reminder System (misc/check_reminders.php)
 # - Heartbeat Monitor (misc/monitor.php)
 # - Email Routing Script (misc/route_emails.php)
@@ -26,7 +25,7 @@
 %define _source http://mysql.wildyou.net/Downloads/%{name}/%{name}-%{version}.tar.gz
 %endif
 
-%define _rel 1.50
+%define _rel 1.53
 
 Summary:	Eventum Issue / Bug Tracking System
 Summary(pl):	Eventum - system ¶ledzenia spraw/b³êdów
@@ -39,6 +38,7 @@ Source0:	%{_source}
 # Source0-md5:	361c1355e46a6bbfa54e420964ec92cf
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.sh
+Source3:	%{name}-mail-download.sh
 Patch0:		%{name}-rpm.patch
 Patch1:		%{name}-clock-status.patch
 URL:		http://dev.mysql.com/downloads/other/eventum/index.html
@@ -94,7 +94,7 @@ pozostawienie plików instalacyjnych mog³oby byæ niebezpieczne.
 %package mail-queue
 Summary:	Eventum Mail Queue Process
 Group:		Applications/WWW
-PreReq:		%{name} = %{epoch}:%{version}-%{release}
+Requires:	%{name} = %{epoch}:%{version}-%{release}
 Requires:	php4 >= 4.1.0
 Requires:	crondaemon
 
@@ -104,6 +104,19 @@ sent out from the various scripts, but rather added to a mail queue
 table that is processed by a cron job. If an email cannot be sent, it
 will be marked as such in the mail queue log, and the cron job script
 will re-try to send it again the next time it runs.
+
+This package contains the cron job.
+
+%package mail-download
+Summary:	Eventum Email Download
+Group:		Applications/WWW
+Requires:	%{name} = %{epoch}:%{version}-%{release}
+Requires:	php4 >= 4.1.0
+Requires:	crondaemon
+
+%description mail-download
+In order for Eventum's email integration feature to work, you need to
+setup a cron job to run the script every so often.
 
 This package contains the cron job.
 
@@ -131,6 +144,7 @@ s,$private_key\s*=\s*".*";,$private_key = "DEFAULTPRIVATEKEYPLEASERUNSETUP!";,
 
 install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/apache.conf
 install %{SOURCE2} $RPM_BUILD_ROOT/etc/cron.d/%{name}-mail-queue
+install %{SOURCE3} $RPM_BUILD_ROOT/etc/cron.d/%{name}-mail-download
 
 # in conf
 mv $RPM_BUILD_ROOT%{_appdir}/{config.inc.php,setup.conf.php} $RPM_BUILD_ROOT%{_sysconfdir}
@@ -270,7 +284,6 @@ fi
 %{_appdir}/misc/scm
 %{_appdir}/misc/blank.html
 %{_appdir}/misc/check_reminders.php
-%{_appdir}/misc/download_emails.php
 %{_appdir}/misc/monitor.php
 %{_appdir}/misc/route_drafts.php
 %{_appdir}/misc/route_emails.php
@@ -283,4 +296,9 @@ fi
 %files mail-queue
 %defattr(644,root,root,755)
 %{_appdir}/misc/process_mail_queue.php
-%attr(755,root,root) /etc/cron.d/%{name}-mail-queue
+%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/cron.d/%{name}-mail-queue
+
+%files mail-download
+%defattr(644,root,root,755)
+%{_appdir}/misc/download_emails.php
+%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/cron.d/%{name}-mail-download
