@@ -35,7 +35,7 @@ start)
 			--exec $PHP \
 			--pidfile $PIDFILE \
 			--chuid http \
-			--chdir /usr/share/eventum/misc/irc \
+			--chdir /usr/share/eventum/irc \
 			--background -- -q bot.php
 
 		RETVAL=$?
