@@ -22,7 +22,10 @@
 %define _source http://mysql.wildyou.net/Downloads/%{name}/%{name}-%{version}.tar.gz
 %endif
 
-%define _rel 2.204
+%define _rel 2.209
+
+%define	uid	146
+%define	gid	146
 
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl):	Eventum - system ¶ledzenia spraw/b³êdów
@@ -57,6 +60,7 @@ Patch16:		%{name}-rss-charset.patch
 Patch17:		%{name}-scm-silence-add.patch
 Patch18:		%{name}-default-TZ.patch
 Patch19:		%{name}-charset-mailsubj.patch
+Patch20:		%{name}-monitor-bot-process.patch
 URL:		http://dev.mysql.com/downloads/other/eventum/index.html
 BuildRequires:	rpmbuild(macros) >= 1.177
 BuildRequires:	sed >= 4.0
@@ -405,6 +409,7 @@ $,,'
 #%patch17 -p1
 #%patch18 -p1
 %patch19 -p1
+%patch20 -p1
 
 # replace in remaining scripts config.inc.php to system one
 grep -rl 'include_once(".*config.inc.php")' . | xargs sed -i -e '
@@ -491,6 +496,9 @@ cp -a include/Smarty/plugins/function.{calendar,get_{display_style,innerhtml,tex
 %clean
 rm -rf $RPM_BUILD_ROOT
 
+%pre
+%addusertogroup http %{name}
+
 %post
 # apache1
 if [ -d %{_apache1dir}/conf.d ]; then
@@ -566,6 +574,16 @@ fi
 # nuke cache
 rm -f /var/cache/eventum/*.php
 
+%pre base
+%groupadd -P %{name}-base %{name}
+%useradd -P %{name}-base -d %{_appdir} -g %{name} %{name} -c "Eventum User"
+
+%postun base
+if [ "$1" = "0" ]; then
+	%userremove %{name}
+	%groupremove %{name}
+fi
+
 %post setup
 chmod 660 %{_sysconfdir}/{config,private_key}.php
 chown root:http %{_sysconfdir}/{config,private_key}.php
@@ -606,18 +624,24 @@ touch /etc/cron.d/eventum-monitor
 sed -i -e 's,%{_appdir}/misc,%{_appdir},' /etc/cron.d/eventum-reminder
 touch /etc/cron.d/eventum-reminder
 
+%triggerpostun -- eventum < 1.4-2.20050222.2.208
+chgrp eventum %{_sysconfdir}/{core,config,private_key,setup}.php
+
+%triggerpostun irc -- eventum-irc < 1.4-2.20050222.2.208
+chgrp eventum %{_sysconfdir}/irc.php
+
 %files
 %defattr(644,root,root,755)
 %doc ChangeLog FAQ INSTALL README UPGRADE
-%doc misc/upgrade docs/* rpc/xmlrpc_client.php setup/schema.sql 
+%doc misc/upgrade docs/* rpc/xmlrpc_client.php setup/schema.sql
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/apache.conf
-%attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/config.php
-%attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/private_key.php
-%attr(660,root,http) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/setup.php
-%attr(640,root,http) %config %verify(not mtime) %{_sysconfdir}/core.php
+%attr(640,root,eventum) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/config.php
+%attr(640,root,eventum) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/private_key.php
+%attr(660,root,eventum) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/setup.php
+%attr(640,root,eventum) %config %verify(not mtime) %{_sysconfdir}/core.php
 
-%dir %attr(731,root,http) /var/log/%{name}
-%attr(620,root,http) %ghost /var/log/%{name}/*
+%dir %attr(731,root,eventum) /var/log/%{name}
+%attr(620,root,eventum) %ghost /var/log/%{name}/*
 
 %dir %{_appdir}/htdocs
 %{_appdir}/htdocs/*.php
@@ -649,8 +673,8 @@ touch /etc/cron.d/eventum-reminder
 %{_appdir}/include/db_access.php
 %{_appdir}/include/jsrsServer.inc.php
 
-%dir %attr(730,root,http) /var/run/%{name}
-%dir %attr(730,root,http) /var/cache/%{name}
+%dir %attr(730,root,eventum) /var/run/%{name}
+%dir %attr(730,root,eventum) /var/cache/%{name}
 
 %files base
 %defattr(644,root,root,755)
@@ -694,8 +718,8 @@ touch /etc/cron.d/eventum-reminder
 
 %files irc
 %defattr(644,root,root,755)
-%attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/irc.php
-%attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/eventum-irc
+%attr(640,root,eventum) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/irc.php
+%attr(640,root,eventum) %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/eventum-irc
 %{_appdir}/irc
 %attr(754,root,root) /etc/rc.d/init.d/%{name}-irc
 
