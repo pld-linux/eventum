@@ -14,7 +14,7 @@
 %bcond_with	pear	# build with system PEAR packages (or use bundled ones)
 
 # snapshot: DATE
-#define _snap 20050217
+%define _snap 20050222
 
 %if 0%{?_snap}
 %define _source http://downloads.mysql.com/snapshots/%{name}/%{name}-nightly-%{_snap}.tar.gz
@@ -22,17 +22,17 @@
 %define _source http://mysql.wildyou.net/Downloads/%{name}/%{name}-%{version}.tar.gz
 %endif
 
-%define _rel 2.194
+%define _rel 2.204
 
-Summary:	Eventum Issue - a bug tracking system
+Summary:	Eventum Issue / Bug tracking system
 Summary(pl):	Eventum - system ¶ledzenia spraw/b³êdów
 Name:		eventum
 Version:	1.4
-Release:	%{?_snap:0.%{_snap}.}%{_rel}
+Release:	%{?_snap:2.%{_snap}.}%{_rel}
 License:	GPL
 Group:		Applications/WWW
 Source0:	%{_source}
-# Source0-md5:	361c1355e46a6bbfa54e420964ec92cf
+# Source0-md5:	035bd8f7890260c1c058eaf1d54dcc90
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -60,7 +60,6 @@ Patch19:		%{name}-charset-mailsubj.patch
 URL:		http://dev.mysql.com/downloads/other/eventum/index.html
 BuildRequires:	rpmbuild(macros) >= 1.177
 BuildRequires:	sed >= 4.0
-# is_a(), which wrapper we removed from config, is from 4.2.0
 Requires:	php >= 4.2.0
 Requires:	php-gd
 Requires:	php-imap
@@ -88,6 +87,7 @@ Requires:	php-pear-XML_RPC
 %endif
 Requires:	apache >= 1.3.33-2
 Requires:	apache(mod_dir)
+Requires(triggerpostun):	sed >= 4.0
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -220,6 +220,7 @@ Summary(pl):	Monitor ¿ycia dla Eventum
 Group:		Applications/WWW
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 Requires:	php >= 4.1.0
+Requires:	php-posix
 Requires:	crondaemon
 
 %description monitor
@@ -396,13 +397,13 @@ $,,'
 
 # bug fixes.
 %patch11 -p1
-%patch12 -p1
-%patch13 -p1
-%patch14 -p1
-%patch15 -p1
-%patch16 -p1
-%patch17 -p1
-%patch18 -p1
+#%patch12 -p1
+#%patch13 -p1
+#%patch14 -p1
+#%patch15 -p1
+#%patch16 -p1
+#%patch17 -p1
+#%patch18 -p1
 %patch19 -p1
 
 # replace in remaining scripts config.inc.php to system one
@@ -589,6 +590,22 @@ sed -i -e '
 s,%{_appdir},%{_appdir}/htdocs,
 ' %{_sysconfdir}/apache.conf
 
+%triggerpostun mail-download -- eventum-mail-download < 1.4-2.20050222.2.200
+sed -i -e 's,%{_appdir}/misc,%{_appdir},' /etc/cron.d/eventum-mail-download
+touch /etc/cron.d/eventum-mail-download
+
+%triggerpostun mail-queue -- eventum-mail-queue < 1.4-2.20050222.2.200
+sed -i -e 's,%{_appdir}/misc,%{_appdir},' /etc/cron.d/eventum-mail-queue
+touch /etc/cron.d/eventum-mail-queue
+
+%triggerpostun monitor -- eventum-monitor < 1.4-2.20050222.2.200
+sed -i -e 's,%{_appdir}/misc,%{_appdir},' /etc/cron.d/eventum-monitor
+touch /etc/cron.d/eventum-monitor
+
+%triggerpostun reminder -- eventum-reminder < 1.4-2.20050222.2.200
+sed -i -e 's,%{_appdir}/misc,%{_appdir},' /etc/cron.d/eventum-reminder
+touch /etc/cron.d/eventum-reminder
+
 %files
 %defattr(644,root,root,755)
 %doc ChangeLog FAQ INSTALL README UPGRADE
@@ -597,7 +614,7 @@ s,%{_appdir},%{_appdir}/htdocs,
 %attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/config.php
 %attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/private_key.php
 %attr(660,root,http) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/setup.php
-%attr(660,root,http) %config %verify(not mtime) %{_sysconfdir}/core.php
+%attr(640,root,http) %config %verify(not mtime) %{_sysconfdir}/core.php
 
 %dir %attr(731,root,http) /var/log/%{name}
 %attr(620,root,http) %ghost /var/log/%{name}/*
@@ -624,7 +641,13 @@ s,%{_appdir},%{_appdir}/htdocs,
 %{_appdir}/include/customer
 %{_appdir}/include/jpgraph
 %{_appdir}/include/workflow
-%{_appdir}/include/*.php
+%{_appdir}/include/class.[^m]*.php
+%{_appdir}/include/class.mail.php
+%{_appdir}/include/class.mail_queue.php
+%{_appdir}/include/class.mime_helper.php
+%{_appdir}/include/class.misc.php
+%{_appdir}/include/db_access.php
+%{_appdir}/include/jsrsServer.inc.php
 
 %dir %attr(730,root,http) /var/run/%{name}
 %dir %attr(730,root,http) /var/cache/%{name}
@@ -656,6 +679,7 @@ s,%{_appdir},%{_appdir}/htdocs,
 
 %files monitor
 %defattr(644,root,root,755)
+%{_appdir}/include/class.monitor.php
 %{_appdir}/monitor.php
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/cron.d/%{name}-monitor
 
