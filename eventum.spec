@@ -46,22 +46,10 @@ Source9:	%{name}-irc.sysconfig
 Source10:	%{name}-config.php
 Source11:	%{name}-router-qmail.sh
 Patch0:		%{name}-paths.patch
-Patch1:		%{name}-scm-encode.patch
 Patch2:		%{name}-cvs-config.patch
 Patch3:		%{name}-irc-config.patch
 Patch4:		%{name}-PEAR.patch
 Patch11:	%{name}-scm_checkin_associated.patch
-Patch12:	%{name}-mail-queue.tpl.patch
-Patch13:	%{name}-maildecode.patch
-Patch14:	%{name}-send-typo.patch
-Patch15:	%{name}-fixes.patch
-Patch16:	%{name}-rss-charset.patch
-Patch17:	%{name}-scm-silence-add.patch
-Patch18:	%{name}-default-TZ.patch
-Patch19:	%{name}-charset-mailsubj.patch
-Patch20:	%{name}-monitor-bot-process.patch
-Patch21:	%{name}-maillock.patch
-Patch22:	%{name}-tpl-multibyte.patch
 Patch23:	%{name}-db-20050227.patch
 URL:		http://dev.mysql.com/downloads/other/eventum/index.html
 BuildRequires:	rpmbuild(macros) >= 1.177
@@ -433,24 +421,12 @@ $,,'
 
 # packaging
 %patch0 -p1 -b .paths
-#%patch1 -p1
 %patch2 -p1
 %patch3 -p1
 %{?with_pear:%patch4 -p1 -b .PEAR}
 
 # bug fixes.
 %patch11 -p1
-#%patch12 -p1
-#%patch13 -p1
-#%patch14 -p1
-#%patch15 -p1
-#%patch16 -p1
-#%patch17 -p1
-#%patch18 -p1
-#%patch19 -p1
-#%patch20 -p1
-#%patch21 -p1
-#%patch22 -p1
 %patch23 -p1
 
 # replace in remaining scripts config.inc.php to system one
