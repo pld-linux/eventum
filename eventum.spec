@@ -302,8 +302,6 @@ Requires:	php4-curl
 %description cli
 The Eventum command-line interface allows you to access most of the
 features of the web interface straight from your command shell.
-order to install it, you will need PHP and if you use SSL, the curl
-and openssl PHP extensions.
 
 %package scm
 Summary:	Eventum SCM integration
