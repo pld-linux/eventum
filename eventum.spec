@@ -19,11 +19,12 @@
 Summary:	Eventum Issue / Bug Tracking System
 Name:		eventum
 Version:	1.4
-Release:	0.7
+Release:	0.8
 License:	GPL
 Group:		Applications/WWW
 Source0:	http://mysql.wildyou.net/Downloads/%{name}/%{name}-%{version}.tar.gz
 # Source0-md5:	361c1355e46a6bbfa54e420964ec92cf
+Patch0:		%{name}-clock-status.patch
 URL:		http://dev.mysql.com/downloads/other/eventum/index.html
 BuildRequires:	sed >= 4.0
 Requires:	php >= 4.1.0
@@ -44,6 +45,7 @@ has allowed us to dramatically improve our response times.
 
 %prep
 %setup -q
+%patch0 -p1
 
 %build
 

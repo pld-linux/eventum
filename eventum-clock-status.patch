@@ -1,0 +1,11 @@
+--- ./templates/en/navigation.tpl.html~	2005-01-05 01:06:03.000000000 +0200
++++ ./templates/en/navigation.tpl.html	2005-01-14 18:19:09.225198958 +0200
+@@ -67,7 +67,7 @@
+           function changeClockStatus()
+           {
+               var features = 'width=420,height=200,top=30,left=30,resizable=yes,scrollbars=yes,toolbar=no,location=no,menubar=no,status=no';
+-              var clockWin = window.open('clock_status.php', '_clock_status', features);
++              var clockWin = window.open('../clock_status.php', '_clock_status', features);
+               clockWin.focus();
+           }
+           //-->
