@@ -9,10 +9,9 @@
 #  - dynCalendar.js (http://www.phpguru.org/dyncalendar.html)
 #  - overLIB 3.5.1 (http://www.bosrup.com/web/overlib/)
 #  - A few other small javascript libraries
-# - IRC Notification Bot (misc/irc/bot.php)
 # - Command-line Interface (misc/cli/eventum)
-# - scm subpackage doesn't work (yet)
 # - eventum-router-qmail, eventum-router-postfix for -route-mails and -route-notes
+# - need start-stop-daemon (dpkg for now)
 
 # snapshot: DATE
 #define _snap 20050117
@@ -218,6 +217,8 @@ Summary:	Eventum IRC Notification Bot
 Group:		Applications/WWW
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 Requires:	php4 >= 4.1.0
+# FIXME just need start-stop-daemon
+Requires:	dpkg
 
 %description irc
 The IRC notification bot is a nice feature for remote teams that want
