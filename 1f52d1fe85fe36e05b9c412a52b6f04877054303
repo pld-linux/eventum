@@ -1,0 +1,5 @@
+- qmail-router fixes
+- add maillock patch
+- fix order of removing group/user
+- router packages require main package
+- router packages obsolete virtual eventum-router
