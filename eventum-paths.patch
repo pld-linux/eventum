@@ -1,8 +1,11 @@
---- eventum-1.4.c/setup/config.inc.php	2005-01-05 01:05:58.000000000 +0200
-+++ eventum-1.4/setup/config.inc.php	2005-01-24 17:21:52.000000000 +0200
-@@ -56,10 +56,10 @@
+--- eventum-1.4.d/setup/config.inc.php	2005-01-05 01:05:58.000000000 +0200
++++ eventum-1.4/setup/config.inc.php	2005-01-25 17:09:33.000000000 +0200
+@@ -54,12 +54,12 @@
+ }
+ @define("APP_PATH", $app_path);
  @define("APP_INC_PATH", APP_PATH . "include/");
- @define("APP_PEAR_PATH", APP_INC_PATH . "pear/");
+-@define("APP_PEAR_PATH", APP_INC_PATH . "pear/");
++@define("APP_PEAR_PATH", "/usr/share/pear/");
  @define("APP_TPL_PATH", APP_PATH . "templates/");
 -@define("APP_SMARTY_PATH", APP_INC_PATH . "Smarty/");
 +@define("APP_SMARTY_PATH", "/usr/share/pear/Smarty/");
@@ -14,13 +17,6 @@
  if (stristr(PHP_OS, 'darwin')) {
      ini_set("include_path", ".:" . APP_PEAR_PATH);
  } elseif (stristr(PHP_OS, 'win')) {
-@@ -153,4 +153,4 @@
- 
- // set charset
- header("content-type: text/html;charset=" . APP_CHARSET);
--?>
-\ No newline at end of file
-+?>
 --- ./misc/cli/eventum~	2005-01-19 02:47:20.000000000 +0200
 +++ ./misc/cli/eventum	2005-01-19 03:02:40.119100405 +0200
 @@ -11,7 +11,7 @@
@@ -131,18 +127,7 @@
  
  $tpl->assign("phpversion", phpversion());
  $tpl->assign("rel_url", $relative_url);
---- misc/cli/eventum~	2005-01-24 17:49:25.000000000 +0200
-+++ ./misc/cli/eventum	2005-01-25 15:48:56.000000000 +0200
-@@ -13,7 +13,7 @@
- //
- include_once("/etc/eventum/cli.php");
- include_once(APP_INC_PATH . "class.command_line.php");
--include_once(APP_PEAR_PATH . "XML_RPC/RPC.php");
-+include_once('XML/RPC.php');
- 
- list($user_email, $user_password, $url, $port, $relative_url) = Command_Line::getEnvironmentSettings();
- if (empty($port)) {
---- misc/cli/config.inc.php~	2005-01-24 17:49:25.000000000 +0200
+--- ./misc/cli/config.inc.php~	2005-01-24 17:49:25.000000000 +0200
 +++ ./misc/cli/config.inc.php	2005-01-25 15:52:07.000000000 +0200
 @@ -47,7 +47,7 @@
  // definitions of path related variables
@@ -153,14 +138,51 @@
  if (stristr(PHP_OS, 'darwin')) {
      ini_set("include_path", ".:" . APP_PEAR_PATH);
  } elseif (stristr(PHP_OS, 'win')) {
---- misc/cli/include/class.command_line.php	2005-01-05 01:06:03.000000000 +0200
+--- ./misc/cli/eventum~	2005-01-24 17:49:25.000000000 +0200
++++ ./misc/cli/eventum	2005-01-25 15:48:56.000000000 +0200
+@@ -13,7 +13,7 @@
+ //
+ include_once("/etc/eventum/cli.php");
+ include_once(APP_INC_PATH . "class.command_line.php");
+-include_once(APP_PEAR_PATH . "XML_RPC/RPC.php");
++include_once(APP_PEAR_PATH . "XML/RPC.php");
+ 
+ list($user_email, $user_password, $url, $port, $relative_url) = Command_Line::getEnvironmentSettings();
+ if (empty($port)) {
+--- ./misc/cli/include/class.command_line.php	2005-01-05 01:06:03.000000000 +0200
 +++ ./misc/cli/include/class.command_line.php	2005-01-25 15:48:56.000000000 +0200
 @@ -29,7 +29,7 @@
  //
  
  include_once(APP_INC_PATH . "class.misc.php");
 -include_once(APP_PEAR_PATH . "XML_RPC/RPC.php");
-+include_once('XML/RPC.php');
++include_once(APP_PEAR_PATH . "XML/RPC.php");
  
  $_displayed_confirmation = false;
  
+--- ./rpc/xmlrpc.php~	2005-01-05 01:06:19.000000000 +0200
++++ ./rpc/xmlrpc.php	2005-01-25 16:35:14.000000000 +0200
+@@ -41,7 +41,7 @@
+ include_once(APP_INC_PATH . "class.template.php");
+ include_once(APP_INC_PATH . "class.customer.php");
+ error_reporting(0);
+-include_once(APP_PEAR_PATH . "XML_RPC/Server.php");
++include_once(APP_PEAR_PATH . "XML/RPC/Server.php");
+ 
+ function authenticate($email, $password)
+ {
+--- ./include/class.notification.php~	2005-01-05 01:06:19.000000000 +0200
++++ ./include/class.notification.php	2005-01-25 16:41:23.000000000 +0200
+@@ -613,9 +613,9 @@
+         }
+         if ($old["iss_description"] != $new["description"]) {
+             // need real diff engine here
+-            include_once 'Text_Diff/Diff.php';
+-            include_once 'Text_Diff/Diff/Renderer.php';
+-            include_once 'Text_Diff/Diff/Renderer/unified.php';
++            include_once 'Text/Diff.php';
++            include_once 'Text/Diff/Renderer.php';
++            include_once 'Text/Diff/Renderer/unified.php';
+             $old['iss_description'] = explode("\n", $old['iss_description']);
+             $new['description'] = explode("\n", $new['description']);
+             $diff = &new Text_Diff($old["iss_description"], $new["description"]);
