@@ -251,7 +251,7 @@ Summary(pl):	Przekazywanie poczty dla Eventum
 Group:		Applications/WWW
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 Requires:	php >= 4.1.0
-Requires:	eventum-router
+Requires:	eventum(router)
 
 %description route-emails
 The email routing feature is used to automatically associate a thread
@@ -277,7 +277,7 @@ Summary(pl):	Przekazywanie notatek dla Eventum
 Group:		Applications/WWW
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 Requires:	php >= 4.1.0
-Requires:	eventum-router
+Requires:	eventum(router)
 
 %description route-notes
 The note routing feature is used to automatically associate a thread
@@ -303,8 +303,8 @@ Summary(pl):	Przekazywanie poczty Eventum - qmail
 Group:		Applications/Mail
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 Requires:	qmail >= 1.03
-Provides:	eventum-router
-Obsoletes:	eventum-router
+Provides:	eventum(router)
+Obsoletes:	eventum(router)
 
 %description router-qmail
 This package provides way of routing notes and emails back to Eventum
@@ -320,8 +320,8 @@ Summary(pl):	Przekazywanie poczty Eventum - Postfix
 Group:		Applications/Mail
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 Requires:	postfix
-Provides:	eventum-router
-Obsoletes:	eventum-router
+Provides:	eventum(router)
+Obsoletes:	eventum(router)
 
 %description router-postfix
 This package provides way of routing notes and emails back to Eventum
