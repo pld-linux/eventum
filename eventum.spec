@@ -26,7 +26,7 @@
 %define _source http://mysql.wildyou.net/Downloads/%{name}/%{name}-%{version}.tar.gz
 %endif
 
-%define _rel 1.59
+%define _rel 1.61
 
 Summary:	Eventum Issue / Bug Tracking System
 Summary(pl):	Eventum - system ¶ledzenia spraw/b³êdów
@@ -252,20 +252,23 @@ if [ "$1" = "0" ]; then
 fi
 
 %post setup
-chmod 660 %{_sysconfdir}/{config.inc,setup.conf,private_key}.php
-chown root:http %{_sysconfdir}/{config.inc,setup.conf,private_key}.php
+chmod 660 %{_sysconfdir}/{config.inc,private_key}.php
+chown root:http %{_sysconfdir}/{config.inc,private_key}.php
 
 %postun setup
 if [ "$1" = "0" ]; then
-	chmod 640 %{_sysconfdir}/{config.inc,setup.conf,private_key}.php
-	chown root:http %{_sysconfdir}/{config.inc,setup.conf,private_key}.php
+	chmod 640 %{_sysconfdir}/{config.inc,private_key}.php
+	chown root:http %{_sysconfdir}/{config.inc,private_key}.php
 fi
 
 %files
 %defattr(644,root,root,755)
 %doc ChangeLog FAQ INSTALL README UPGRADE misc/upgrade docs/*
 %attr(751,root,root) %dir %{_sysconfdir}
-%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/*
+%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/apache.conf
+%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/config.inc.php
+%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/private_key.php
+%attr(660,root,http) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/setup.conf.php
 
 %dir %attr(731,root,http) /var/log/%{name}
 %attr(620,root,http) %ghost /var/log/%{name}/*
