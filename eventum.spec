@@ -1,4 +1,5 @@
 # TODO
+# - system pear is incompatible, at least pear DB class seems broke Eventum
 # - php5 is not tested, but not placing hard conflict on it, as it prevents php4 & php coinstallation
 # - discard bundled packages (from INSTALL):
 #  - JpGraph 1.5.3 (last GPL version)
@@ -10,6 +11,8 @@
 # - need start-stop-daemon (from dpkg for now)
 # - use eventum user for irc bot?
 
+%bcond_with	pear	# build with system PEAR packages (or use bundled ones)
+
 # snapshot: DATE
 #define _snap 20050124
 
@@ -19,7 +22,7 @@
 %define _source http://mysql.wildyou.net/Downloads/%{name}/%{name}-%{version}.tar.gz
 %endif
 
-%define _rel 1.129
+%define _rel 1.136
 
 Summary:	Eventum Issue - a bug tracking system
 Summary(pl):	Eventum - system ¶ledzenia spraw/b³êdów
@@ -38,12 +41,11 @@ Source5:	%{name}-monitor.cron
 Source6:	%{name}-cvs.php
 Source7:	%{name}-irc.php
 Source8:	%{name}-irc.init
-# packaging
 Patch0:		%{name}-paths.patch
 Patch1:		%{name}-scm-encode.patch
 Patch2:		%{name}-cvs-config.patch
 Patch3:		%{name}-irc-config.patch
-# bug fixes
+Patch4:		%{name}-PEAR.patch
 Patch10:		%{name}-clock-status.patch
 Patch11:		%{name}-scm_checkin_associated.patch
 Patch12:		%{name}-mail-queue.tpl.patch
@@ -55,8 +57,9 @@ Requires:	php-gd
 Requires:	php-imap
 Requires:	php-mysql
 Requires:	php-pcre
-Requires:	Smarty >= 2.6.2
 Requires:	%{name}-base = %{epoch}:%{version}-%{release}
+%if %{with pear}
+Requires:	Smarty >= 2.6.2
 Requires:	php-pear-Benchmark
 Requires:	php-pear-DB
 Requires:	php-pear-Date
@@ -73,6 +76,7 @@ Requires:	php-pear-Net_UserAgent_Detect
 Requires:	php-pear-PEAR
 Requires:	php-pear-Text_Diff
 Requires:	php-pear-XML_RPC
+%endif
 #Requires:	apache-mod_dir
 # conflict with non-confdir apache
 Conflicts:	apache1 < 1.3.33-1.1
@@ -369,28 +373,33 @@ Szczegó³y na temat instalacji mo¿na przeczytaæ pod
 
 %prep
 %setup -q %{?_snap:-n %{name}-%{_snap}}
-%patch0 -p1
+# undos the source
+find . -type f -print0 | xargs -0 sed -i -e 's,
+$,,'
+
+# packaging
+%patch0 -p1 -b .paths
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
+%{?with_pear:%patch4 -p1 -b .PEAR}
 
+# bug fixes
 %patch10 -p1
 %patch11 -p1
 %patch12 -p1
 
+rm -f */*~ */*/*~
+
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_sysconfdir},%{_bindir},%{_appdir}} \
-	$RPM_BUILD_ROOT{/etc/{rc.d/init.d,cron.d},/var/log} \
+	$RPM_BUILD_ROOT{/etc/{rc.d/init.d,cron.d},/var/log/%{name}} \
 	$RPM_BUILD_ROOT{/var/run/eventum,/var/cache/eventum}
 
-rm -f eventumrc %{name}-scm
-cp -a . $RPM_BUILD_ROOT%{_appdir}
-# argsh! say no words
-find $RPM_BUILD_ROOT%{_appdir} -type f -print0 | xargs -0 sed -i -e 's,
-$,,'
-sed -e 's,
-$,,' misc/cli/eventumrc_example > eventumrc
+cp -a *.php {css,customer,images,include,js} \
+	{manage,misc,reports,rpc,setup,templates} $RPM_BUILD_ROOT%{_appdir}
+cp -a logs/* $RPM_BUILD_ROOT/var/log/%{name}
 
 > $RPM_BUILD_ROOT%{_appdir}/setup.conf.php
 
@@ -421,29 +430,28 @@ ln -s %{_sysconfdir}/config.php $RPM_BUILD_ROOT%{_appdir}/config.inc.php
 ln -s %{_sysconfdir}/setup.php $RPM_BUILD_ROOT%{_appdir}/setup.conf.php
 ln -s %{_sysconfdir}/private_key.php $RPM_BUILD_ROOT%{_appdir}/include/private_key.php
 
-# log directory
-mv $RPM_BUILD_ROOT%{_appdir}/logs $RPM_BUILD_ROOT/var/log/%{name}
-
 # in doc
-rm -f $RPM_BUILD_ROOT%{_appdir}/{COPYING,ChangeLog,FAQ,INSTALL,README,UPGRADE}
-rm -rf $RPM_BUILD_ROOT%{_appdir}/{docs,misc/upgrade}
-# some sample, not used in eventum
+rm -rf $RPM_BUILD_ROOT%{_appdir}/misc/upgrade
+# sample, not used in eventum
 rm -rf $RPM_BUILD_ROOT%{_appdir}/rpc/xmlrpc_client.php
+
+# in bindir
+mv $RPM_BUILD_ROOT%{_appdir}/misc/cli/eventum $RPM_BUILD_ROOT%{_bindir}
+rm -f $RPM_BUILD_ROOT%{_appdir}/misc/{cli/eventumrc_example,scm/process_cvs_commits.php}
+cp misc/cli/eventumrc_example eventumrc
+install %{name}-scm $RPM_BUILD_ROOT%{_bindir}/%{name}-scm
+
+%if %{with pear}
+# provided by PEAR
+rm -rf $RPM_BUILD_ROOT%{_appdir}/misc/cli/include/pear
+rm -rf $RPM_BUILD_ROOT%{_appdir}/include/pear
 
 # use system Smarty
 rm -rf $RPM_BUILD_ROOT%{_appdir}/include/Smarty
 install -d $RPM_BUILD_ROOT%{_smartyplugindir}
 # These plugins are not in Smarty package (Smarty-2.6.2-3)
-cp -a include/Smarty/plugins/function.{calendar,get_display_style,get_innerhtml,get_textarea_size}.php $RPM_BUILD_ROOT%{_smartyplugindir}
-
-# in bindir
-mv $RPM_BUILD_ROOT%{_appdir}/misc/cli/eventum $RPM_BUILD_ROOT%{_bindir}
-rm -f $RPM_BUILD_ROOT%{_appdir}/misc/{cli/eventumrc_example,scm/process_cvs_commits.php}
-install %{name}-scm $RPM_BUILD_ROOT%{_bindir}/%{name}-scm
-
-# provided by PEAR
-rm -rf $RPM_BUILD_ROOT%{_appdir}/misc/cli/include/pear
-rm -rf $RPM_BUILD_ROOT%{_appdir}/include/pear
+cp -a include/Smarty/plugins/function.{calendar,get_{display_style,innerhtml,textarea_size}}.php $RPM_BUILD_ROOT%{_smartyplugindir}
+%endif
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -543,8 +551,6 @@ fi
 %dir %attr(731,root,http) /var/log/%{name}
 %attr(620,root,http) %ghost /var/log/%{name}/*
 
-%{_smartyplugindir}/*
-
 %{_appdir}/*.php
 %{_appdir}/css
 %{_appdir}/customer
@@ -554,6 +560,13 @@ fi
 %{_appdir}/reports
 %{_appdir}/rpc
 %{_appdir}/templates
+
+%if %{with pear}
+%{_smartyplugindir}/*
+%else
+%{_appdir}/include/pear
+%{_appdir}/include/Smarty
+%endif
 
 %dir %{_appdir}/include
 %{_appdir}/include/customer
