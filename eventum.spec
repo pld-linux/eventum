@@ -28,7 +28,7 @@
 
 %define _rel 1.61
 
-Summary:	Eventum Issue / Bug Tracking System
+Summary:	Eventum Issue - a bug tracking system
 Summary(pl):	Eventum - system ¶ledzenia spraw/b³êdów
 Name:		eventum
 Version:	1.4
@@ -93,7 +93,7 @@ pierwszej instalacji. Potem nale¿y go odinstalowaæ, jako ¿e
 pozostawienie plików instalacyjnych mog³oby byæ niebezpieczne.
 
 %package mail-queue
-Summary:	Eventum Mail Queue Process
+Summary:	Eventum mail queue process
 Summary(pl):	Przetwarzanie kolejki poczty Eventum
 Group:		Applications/WWW
 Requires:	%{name} = %{epoch}:%{version}-%{release}
@@ -116,8 +116,10 @@ Je¶li poczta nie mo¿e byæ wys³ana, bêdzie odpowiednio oznaczona w logu
 kolejki poczty, a skrypt z crona bêdzie próbowa³ wys³aæ j± ponownie
 nastêpnym razem.
 
+Ten pakiet zawiera zadanie dla crona.
+
 %package mail-download
-Summary:	Eventum Email Download
+Summary:	Eventum email download
 Summary(pl):	¦ci±ganie poczty Eventum
 Group:		Applications/WWW
 Requires:	%{name} = %{epoch}:%{version}-%{release}
@@ -138,7 +140,7 @@ czêsto.
 Ten pakiet zawiera zadanie dla crona.
 
 %package scm
-Summary:	Eventum SCM Integration
+Summary:	Eventum SCM integration
 Summary(pl):	Integracja SCM dla Eventum
 Group:		Applications/WWW
 Requires:	%{name} = %{epoch}:%{version}-%{release}
