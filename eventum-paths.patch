@@ -138,7 +138,7 @@
  include_once("/etc/eventum/cli.php");
  include_once(APP_INC_PATH . "class.command_line.php");
 -include_once(APP_PEAR_PATH . "XML_RPC/RPC.php");
-+include_once('/usr/share/pear/XML/RPC.php');
++include_once('XML/RPC.php');
  
  list($user_email, $user_password, $url, $port, $relative_url) = Command_Line::getEnvironmentSettings();
  if (empty($port)) {
@@ -160,7 +160,7 @@
  
  include_once(APP_INC_PATH . "class.misc.php");
 -include_once(APP_PEAR_PATH . "XML_RPC/RPC.php");
-+include_once('/usr/share/pear/XML/RPC.php');
++include_once('XML/RPC.php');
  
  $_displayed_confirmation = false;
  
