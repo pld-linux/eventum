@@ -94,10 +94,11 @@ pozostawienie plików instalacyjnych mog³oby byæ niebezpieczne.
 
 %package mail-queue
 Summary:	Eventum Mail Queue Process
+Summary(pl):	Przetwarzanie kolejki poczty Eventum
 Group:		Applications/WWW
 Requires:	%{name} = %{epoch}:%{version}-%{release}
-Requires:	php4 >= 4.1.0
 Requires:	crondaemon
+Requires:	php4 >= 4.1.0
 
 %description mail-queue
 Beginning with the first release of Eventum, emails are not directly
@@ -108,12 +109,20 @@ will re-try to send it again the next time it runs.
 
 This package contains the cron job.
 
+%description mail-queue -l pl
+Od pierwszego wydania Eventum poczta nie jest wysy³ana bezpo¶rednio z
+ró¿nych skryptów, lecz dodawana do kolejki przetwarzanej z crona.
+Je¶li poczta nie mo¿e byæ wys³ana, bêdzie odpowiednio oznaczona w logu
+kolejki poczty, a skrypt z crona bêdzie próbowa³ wys³aæ j± ponownie
+nastêpnym razem.
+
 %package mail-download
 Summary:	Eventum Email Download
+Summary(pl):	¦ci±ganie poczty Eventum
 Group:		Applications/WWW
 Requires:	%{name} = %{epoch}:%{version}-%{release}
-Requires:	php4 >= 4.1.0
 Requires:	crondaemon
+Requires:	php4 >= 4.1.0
 
 %description mail-download
 In order for Eventum's email integration feature to work, you need to
@@ -121,8 +130,16 @@ setup a cron job to run the script every so often.
 
 This package contains the cron job.
 
+%description mail-download -l pl
+Aby integracja poczty elektronicznej w Eventum dzia³a³a, trzeba
+ustawiæ zadanie crona, aby uruchamia³ odpowiedni skrypt wystarczaj±co
+czêsto.
+
+Ten pakiet zawiera zadanie dla crona.
+
 %package scm
 Summary:	Eventum SCM Integration
+Summary(pl):	Integracja SCM dla Eventum
 Group:		Applications/WWW
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 Requires:	php4 >= 4.1.0
@@ -134,7 +151,19 @@ Source Control Management system with your Issue Tracking System.
 The integration is implemented in such a way that it will be forward
 compatible with pretty much any SCM system, such as CVS.
 
-for installation see /eventum/help.php?topic=scm_integration_installation
+For installation see
+/eventum/help.php?topic=scm_integration_installation .
+
+%description scm -l pl
+Ten pakiet pozwala zespo³om programistów na integracjê systemu
+zarz±dzania ¼ród³ami (SCM - Source Control Management) z systemem
+¶ledzenia spraw.
+
+Integracja jest zaimplementowana tak, aby byæ kompatybilna w przód z
+prawie ka¿dym systemem SCM, jak np. CVS.
+
+Szczegó³y na temat instalacji mo¿na przeczytaæ pod
+/eventum/help.php?topic=scm_integration_installation .
 
 %prep
 %setup -q %{?_snap:-n %{name}-%{_snap}}
