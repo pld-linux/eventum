@@ -8,5 +8,6 @@ $irc_realname = 'EventumBot';
 $irc_username = 'EventumBot';
 
 $irc_default_channel = '#issues';
+$irc_default_project = 'Default Project';
 
 ?>

@@ -1,5 +1,5 @@
---- ../BUILD/eventum-1.4/misc/irc/bot.php	2005-01-05 01:06:16.000000000 +0200
-+++ a/misc/irc/bot.php	2005-01-18 16:09:13.000000000 +0200
+--- ./misc/irc/bot.php	2005-01-05 01:06:16.000000000 +0200
++++ ./misc/irc/bot.php	2005-01-18 16:09:13.000000000 +0200
 @@ -52,10 +52,12 @@
      exit;
  }
@@ -26,10 +26,14 @@
  foreach ($channels as $prj_id => $channel_list) {
      $irc->join($channel_list);
  }
-@@ -366,4 +367,4 @@
+--- ./misc/irc/bot.php~	2005-03-14 14:47:40.000000000 +0200
++++ ./misc/irc/bot.php	2005-03-28 20:58:31.000000000 +0300
+@@ -56,7 +56,7 @@
  
- // release the lock
- Lock::release('irc_bot');
--?>
-\ No newline at end of file
-+?>
+ // SETUP: need to change the project name in here
+ $channels = array(
+-    Project::getID('Default Project') => array(
++    Project::getID($irc_default_project) => array(
+         $irc_default_channel,
+     )
+ );
