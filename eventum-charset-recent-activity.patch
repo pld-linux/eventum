@@ -1,0 +1,22 @@
+--- recent_activity.php	2005-03-03 20:16:11.000000000 +0200
++++ ./reports/recent_activity.php	2005-03-03 21:11:30.000000000 +0200
+@@ -291,9 +291,17 @@
+             $res[$i]["customer"] = @$details['customer_name'];
+         }
+         $res[$i]["date"] = Date_API::getFormattedDate($res[$i][$date_field], Date_API::getPreferredTimezone($usr_id));
++        # need to decode From:, To: mail headers
++        if ($res[$i]["sup_from"]) {
++            $res[$i]["sup_from"] = Mime_Helper::fixEncoding($res[$i]["sup_from"]);
++        }
++        if ($res[$i]["sup_to"]) {
++            $res[$i]["sup_to"] = Mime_Helper::fixEncoding($res[$i]["sup_to"]);
++        }
++
+     }
+     return $res;
+ }
+ 
+ $tpl->displayTemplate();
+-?>
+\ No newline at end of file
++?>
