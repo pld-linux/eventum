@@ -16,7 +16,7 @@
  
  // definitions of path related variables
 -@define("APP_PATH", dirname(__FILE__) . '/');
-+@define("APP_PATH", '/usr/share/eventum/misc/cli/');
++@define("APP_PATH", '/usr/share/eventum/cli/');
  @define("APP_INC_PATH", APP_PATH . "include/");
  @define("APP_PEAR_PATH", APP_INC_PATH . "pear/");
 -if (stristr(PHP_OS, 'darwin')) {
@@ -30,6 +30,54 @@
  
  @define("APP_BENCHMARK", false);
  ?>
+--- eventum-1.4/misc/cli/config.inc.php~	2005-02-22 21:35:52.000000000 +0200
++++ eventum-1.4/misc/cli/config.inc.php	2005-02-22 21:44:10.000000000 +0200
+@@ -46,9 +46,9 @@
+ 
+ // definitions of path related variables
+ @define("APP_PATH", '/usr/share/eventum/cli/');
+-@define("APP_INC_PATH", APP_PATH . "include/");
++@define("APP_INC_PATH", APP_PATH);
+ @define("APP_PEAR_PATH", APP_INC_PATH . "pear/");
+ ini_set("include_path", ".:" . APP_PEAR_PATH);
+ 
+ @define("APP_BENCHMARK", false);
+-?>
+\ No newline at end of file
++?>
+--- ./misc/cli/config.inc.php~	2005-02-22 21:49:37.000000000 +0200
++++ ./misc/cli/config.inc.php	2005-02-22 21:50:01.000000000 +0200
+@@ -47,7 +47,7 @@
+ // definitions of path related variables
+ @define("APP_PATH", '/usr/share/eventum/cli/');
+ @define("APP_INC_PATH", APP_PATH);
+-@define("APP_PEAR_PATH", APP_INC_PATH . "pear/");
++@define("APP_PEAR_PATH", "/usr/share/pear/");
+ ini_set("include_path", ".:" . APP_PEAR_PATH);
+ 
+ @define("APP_BENCHMARK", false);
+--- ./misc/cli/eventum~	2005-01-24 17:49:25.000000000 +0200
++++ ./misc/cli/eventum	2005-01-25 15:48:56.000000000 +0200
+@@ -13,7 +13,7 @@
+ //
+ include_once("/etc/eventum/cli.php");
+ include_once(APP_INC_PATH . "class.command_line.php");
+-include_once(APP_PEAR_PATH . "XML_RPC/RPC.php");
++include_once(APP_PEAR_PATH . "XML/RPC.php");
+ 
+ list($user_email, $user_password, $url, $port, $relative_url) = Command_Line::getEnvironmentSettings();
+ if (empty($port)) {
+--- ./misc/cli/include/class.command_line.php	2005-01-05 01:06:03.000000000 +0200
++++ ./misc/cli/include/class.command_line.php	2005-01-25 15:48:56.000000000 +0200
+@@ -29,7 +29,7 @@
+ //
+ 
+ include_once(APP_INC_PATH . "class.misc.php");
+-include_once(APP_PEAR_PATH . "XML_RPC/RPC.php");
++include_once(APP_PEAR_PATH . "XML/RPC.php");
+ 
+ $_displayed_confirmation = false;
+ 
 --- eventum-1.4.c/include/class.template.php	2005-01-05 01:05:59.000000000 +0200
 +++ eventum-1.4/include/class.template.php	2005-01-24 17:22:35.000000000 +0200
 @@ -60,7 +60,7 @@
@@ -41,6 +89,17 @@
          $this->smarty->config_dir = '';
          $this->smarty->register_modifier("activateLinks", array('Link_Filter', 'processText'));
      }
+--- ./include/class.template.php~	2005-02-22 21:01:00.000000000 +0200
++++ ./include/class.template.php	2005-02-22 21:11:56.000000000 +0200
+@@ -59,7 +59,7 @@
+     function Template_API()
+     {
+         $this->smarty = new Smarty;
+-        $this->smarty->template_dir = APP_PATH . "templates/" . APP_CURRENT_LANG;
++        $this->smarty->template_dir = APP_TPL_PATH . APP_CURRENT_LANG;
+         $this->smarty->compile_dir = "/var/cache/eventum";
+         $this->smarty->config_dir = '';
+         $this->smarty->register_modifier("activateLinks", array('Link_Filter', 'processText'));
 --- eventum-1.4.orig/setup/index.php	2005-01-25 23:42:55.000000000 +0200
 +++ eventum-1.4/setup/index.php	2005-01-25 23:46:14.000000000 +0200
 @@ -114,15 +114,15 @@
