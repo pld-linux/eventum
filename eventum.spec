@@ -22,7 +22,7 @@
 %define _source http://mysql.wildyou.net/Downloads/%{name}/%{name}-%{version}.tar.gz
 %endif
 
-%define _rel 1.153
+%define _rel 2.161
 
 Summary:	Eventum Issue - a bug tracking system
 Summary(pl):	Eventum - system ¶ledzenia spraw/b³êdów
@@ -42,6 +42,7 @@ Source6:	%{name}-cvs.php
 Source7:	%{name}-irc.php
 Source8:	%{name}-irc.init
 Source9:	%{name}-irc.sysconfig
+Source10:	%{name}-config.php
 Patch0:		%{name}-paths.patch
 Patch1:		%{name}-scm-encode.patch
 Patch2:		%{name}-cvs-config.patch
@@ -59,14 +60,15 @@ Patch19:		%{name}-charset-mailsubj.patch
 URL:		http://dev.mysql.com/downloads/other/eventum/index.html
 BuildRequires:	rpmbuild(macros) >= 1.177
 BuildRequires:	sed >= 4.0
-Requires:	php >= 4.1.0
+# is_a(), which wrapper we removed from config, is from 4.2.0
+Requires:	php >= 4.2.0
 Requires:	php-gd
 Requires:	php-imap
 Requires:	php-mysql
 Requires:	php-pcre
 Requires:	%{name}-base = %{epoch}:%{version}-%{release}
-%if %{with pear}
 Requires:	Smarty >= 2.6.2
+%if %{with pear}
 Requires:	php-pear-Benchmark
 Requires:	php-pear-DB
 Requires:	php-pear-Date
@@ -145,7 +147,7 @@ Summary(pl):	Przetwarzanie kolejki poczty Eventum
 Group:		Applications/WWW
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 Requires:	crondaemon
-Requires:	php4 >= 4.1.0
+Requires:	php >= 4.1.0
 
 %description mail-queue
 Beginning with the first release of Eventum, emails are not directly
@@ -191,7 +193,7 @@ Summary:	Eventum Reminder System
 Summary(pl):	System przypominania dla Eventum
 Group:		Applications/WWW
 Requires:	%{name} = %{epoch}:%{version}-%{release}
-Requires:	php4 >= 4.1.0
+Requires:	php >= 4.1.0
 Requires:	crondaemon
 
 %description reminder
@@ -217,7 +219,7 @@ Summary:	Eventum Heartbeat Monitor
 Summary(pl):	Monitor ¿ycia dla Eventum
 Group:		Applications/WWW
 Requires:	%{name} = %{epoch}:%{version}-%{release}
-Requires:	php4 >= 4.1.0
+Requires:	php >= 4.1.0
 Requires:	crondaemon
 
 %description monitor
@@ -251,7 +253,7 @@ Summary:	Eventum Email Routing
 Summary(pl):	Przekazywanie poczty dla Eventum
 Group:		Applications/WWW
 Requires:	%{name} = %{epoch}:%{version}-%{release}
-Requires:	php4 >= 4.1.0
+Requires:	php >= 4.1.0
 #Requires:	eventum-router
 
 %description route-emails
@@ -277,7 +279,7 @@ Summary:	Eventum Note Routing
 Summary(pl):	Przekazywanie notatek dla Eventum
 Group:		Applications/WWW
 Requires:	%{name} = %{epoch}:%{version}-%{release}
-Requires:	php4 >= 4.1.0
+Requires:	php >= 4.1.0
 #Requires:	eventum-router
 
 %description route-notes
@@ -337,10 +339,10 @@ Summary:	Eventum command-line interface
 Summary(pl):	Interfejs linii poleceñ dla Eventum
 Group:		Applications/WWW
 Requires:	%{name} = %{epoch}:%{version}-%{release}
-Requires:	php4 >= 4.1.0
-Requires:	php4-cli
-Requires:	php4-curl
-Requires:	php4-xml
+Requires:	php >= 4.1.0
+Requires:	php-cli
+Requires:	php-curl
+Requires:	php-xml
 Requires:	php-pear-XML_RPC
 
 %description cli
@@ -356,7 +358,7 @@ Summary:	Eventum SCM integration
 Summary(pl):	Integracja SCM dla Eventum
 Group:		Applications/WWW
 Requires:	%{name}-base = %{epoch}:%{version}-%{release}
-Requires:	php4 >= 4.1.0
+Requires:	php >= 4.1.0
 
 %description scm
 This feature allows your software development teams to integrate your
@@ -435,13 +437,14 @@ install %{SOURCE6} $RPM_BUILD_ROOT%{_sysconfdir}/cvs.php
 install %{SOURCE7} $RPM_BUILD_ROOT%{_sysconfdir}/irc.php
 install %{SOURCE8} $RPM_BUILD_ROOT/etc/rc.d/init.d/eventum-irc
 install %{SOURCE9} $RPM_BUILD_ROOT/etc/sysconfig/eventum-irc
+sed -e 's,%%{APP_VERSION}%%,%{version}%{?_snap:-%{_snap}},' %{SOURCE10} > $RPM_BUILD_ROOT%{_sysconfdir}/core.php
 
 # in conf
 mv $RPM_BUILD_ROOT%{_appdir}/config.inc.php $RPM_BUILD_ROOT%{_sysconfdir}/config.php
 mv $RPM_BUILD_ROOT%{_appdir}/setup.conf.php $RPM_BUILD_ROOT%{_sysconfdir}/setup.php
 mv $RPM_BUILD_ROOT%{_appdir}/include/private_key.php $RPM_BUILD_ROOT%{_sysconfdir}
 mv $RPM_BUILD_ROOT%{_appdir}/misc/cli/config.inc.php $RPM_BUILD_ROOT%{_sysconfdir}/cli.php
-ln -s %{_sysconfdir}/config.php $RPM_BUILD_ROOT%{_appdir}/config.inc.php
+ln -s %{_sysconfdir}/core.php $RPM_BUILD_ROOT%{_appdir}/config.inc.php
 ln -s %{_sysconfdir}/setup.php $RPM_BUILD_ROOT%{_appdir}/setup.conf.php
 ln -s %{_sysconfdir}/private_key.php $RPM_BUILD_ROOT%{_appdir}/include/private_key.php
 
@@ -460,13 +463,14 @@ install %{name}-scm $RPM_BUILD_ROOT%{_libdir}/scm
 # provided by PEAR
 rm -rf $RPM_BUILD_ROOT%{_appdir}/misc/cli/include/pear
 rm -rf $RPM_BUILD_ROOT%{_appdir}/include/pear
+%endif
 
 # use system Smarty
 rm -rf $RPM_BUILD_ROOT%{_appdir}/include/Smarty
 install -d $RPM_BUILD_ROOT%{_smartyplugindir}
 # These plugins are not in Smarty package (Smarty-2.6.2-3)
-cp -a include/Smarty/plugins/function.{calendar,get_{display_style,innerhtml,textarea_size}}.php $RPM_BUILD_ROOT%{_smartyplugindir}
-%endif
+cp -a include/Smarty/plugins/function.{calendar,get_{display_style,innerhtml,textarea_size}}.php \
+	$RPM_BUILD_ROOT%{_smartyplugindir}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -552,6 +556,12 @@ if [ "$1" = "0" ]; then
 	chown root:http %{_sysconfdir}/{config,private_key}.php
 fi
 
+%triggerpostun -- eventum < 2.160
+cp -f %{_sysconfdir}/config.php{,.rpmsave}
+# very loose trigger
+sed -i -e '
+/config.php/,/SQL variables/d;/_LOG/d;/APP_VERSION/d;/APP_BENCHMARK/,/content-type:/d' %{_sysconfdir}/config.php
+
 %files
 %defattr(644,root,root,755)
 %doc ChangeLog FAQ INSTALL README UPGRADE
@@ -560,6 +570,7 @@ fi
 %attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/config.php
 %attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/private_key.php
 %attr(660,root,http) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/setup.php
+%attr(660,root,http) %verify(not md5 mtime size) %{_sysconfdir}/core.php
 
 %dir %{_appdir}
 %dir %{_appdir}/misc
@@ -577,11 +588,9 @@ fi
 %{_appdir}/rpc
 %{_appdir}/templates
 
-%if %{with pear}
 %{_smartyplugindir}/*
-%else
+%if %{without pear}
 %{_appdir}/include/pear
-%{_appdir}/include/Smarty
 %endif
 
 %dir %{_appdir}/include
