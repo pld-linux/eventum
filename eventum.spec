@@ -15,7 +15,7 @@
 %define	gid	146
 
 # snapshot: DATE
-%define _snap 20050222
+%define _snap 20050227
 
 %if 0%{?_snap}
 %define _source http://downloads.mysql.com/snapshots/%{name}/%{name}-nightly-%{_snap}.tar.gz
@@ -23,7 +23,7 @@
 %define _source http://mysql.wildyou.net/Downloads/%{name}/%{name}-%{version}.tar.gz
 %endif
 
-%define _rel 232
+%define _rel 233
 
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl):	Eventum - system ¶ledzenia spraw/b³êdów
@@ -33,7 +33,7 @@ Release:	2.%{?_snap:%{_snap}.}%{_rel}
 License:	GPL
 Group:		Applications/WWW
 Source0:	%{_source}
-# Source0-md5:	035bd8f7890260c1c058eaf1d54dcc90
+# Source0-md5:	8bfe164a55d06d95b722dae534ee14c3
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -61,6 +61,7 @@ Patch18:	%{name}-default-TZ.patch
 Patch19:	%{name}-charset-mailsubj.patch
 Patch20:	%{name}-monitor-bot-process.patch
 Patch21:	%{name}-maillock.patch
+Patch22:	%{name}-tpl-multibyte.patch
 URL:		http://dev.mysql.com/downloads/other/eventum/index.html
 BuildRequires:	rpmbuild(macros) >= 1.177
 BuildRequires:	sed >= 4.0
@@ -442,9 +443,10 @@ $,,'
 #%patch16 -p1
 #%patch17 -p1
 #%patch18 -p1
-%patch19 -p1
+#%patch19 -p1
 %patch20 -p1
-%patch21 -p1
+#%patch21 -p1
+%patch22 -p1
 
 # replace in remaining scripts config.inc.php to system one
 grep -rl 'include_once(".*config.inc.php")' . | xargs sed -i -e '
