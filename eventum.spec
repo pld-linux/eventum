@@ -9,8 +9,9 @@
 #  - overLIB 3.5.1 (http://www.bosrup.com/web/overlib/)
 #  - A few other small javascript libraries
 # - Command-line Interface (misc/cli/eventum)
-# - eventum-router-qmail, eventum-router-postfix for -route-mails and -route-notes
-# - need start-stop-daemon (dpkg for now)
+# - create eventum-router-qmail, eventum-router-postfix for -route-mails and -route-notes
+# - need start-stop-daemon (from dpkg for now)
+# - use eventum user for irc bot?
 
 # snapshot: DATE
 #define _snap 20050117
@@ -21,7 +22,7 @@
 %define _source http://mysql.wildyou.net/Downloads/%{name}/%{name}-%{version}.tar.gz
 %endif
 
-%define _rel 1.79
+%define _rel 1.92
 
 Summary:	Eventum Issue - a bug tracking system
 Summary(pl):	Eventum - system ¶ledzenia spraw/b³êdów
@@ -289,6 +290,21 @@ nastêpuj±cych zdarzeniach:
 UWAGA: w celu wprowadzenia w³asnych ustawieñ, takich jak serwer IRC i
 kana³ u¿ywany przez bota, trzeba rêcznie zmodyfikowaæ skrypt bot.php .
 
+%package cli
+Summary:	Eventum command-line interface
+Group:		Applications/WWW
+Requires:	%{name} = %{epoch}:%{version}-%{release}
+Requires:	php4 >= 4.1.0
+Requires:	php4-cli
+Requires:	php4-curl
+#Requires:	php4-openssl
+
+%description cli
+The Eventum command-line interface allows you to access most of the
+features of the web interface straight from your command shell.
+order to install it, you will need PHP and if you use SSL, the curl
+and openssl PHP extensions.
+
 %package scm
 Summary:	Eventum SCM integration
 Summary(pl):	Integracja SCM dla Eventum
@@ -329,9 +345,14 @@ Szczegó³y na temat instalacji mo¿na przeczytaæ pod
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_sysconfdir},/etc/{rc.d/init.d,cron.d},%{_appdir}/{locks,templates_c},/var/log}
+install -d $RPM_BUILD_ROOT{%{_sysconfdir},%{_bindir},/etc/{rc.d/init.d,cron.d},%{_appdir}/{locks,templates_c},/var/log}
 
 cp -a . $RPM_BUILD_ROOT%{_appdir}
+# argsh! say no words
+find $RPM_BUILD_ROOT%{_appdir} -type f -print0 | xargs -0 sed -i -e 's,
+$,,'
+sed -e 's,
+$,,' misc/cli/eventumrc_example > eventumrc
 
 > $RPM_BUILD_ROOT%{_appdir}/setup.conf.php
 
@@ -352,10 +373,12 @@ install %{SOURCE7} $RPM_BUILD_ROOT%{_sysconfdir}/irc.php
 install %{SOURCE8} $RPM_BUILD_ROOT/etc/rc.d/init.d/eventum-irc
 
 # in conf
-mv $RPM_BUILD_ROOT%{_appdir}/{config.inc.php,setup.conf.php} $RPM_BUILD_ROOT%{_sysconfdir}
-ln -s %{_sysconfdir}/config.inc.php $RPM_BUILD_ROOT%{_appdir}
-ln -s %{_sysconfdir}/setup.conf.php $RPM_BUILD_ROOT%{_appdir}
+mv $RPM_BUILD_ROOT%{_appdir}/config.inc.php $RPM_BUILD_ROOT%{_sysconfdir}/config.php
+mv $RPM_BUILD_ROOT%{_appdir}/setup.conf.php $RPM_BUILD_ROOT%{_sysconfdir}/setup.php
 mv $RPM_BUILD_ROOT%{_appdir}/include/private_key.php $RPM_BUILD_ROOT%{_sysconfdir}
+mv $RPM_BUILD_ROOT%{_appdir}/misc/cli/config.inc.php $RPM_BUILD_ROOT%{_sysconfdir}/cli.php
+ln -s %{_sysconfdir}/config.php $RPM_BUILD_ROOT%{_appdir}/config.inc.php
+ln -s %{_sysconfdir}/setup.php $RPM_BUILD_ROOT%{_appdir}/setup.conf.php
 ln -s %{_sysconfdir}/private_key.php $RPM_BUILD_ROOT%{_appdir}/include/private_key.php
 
 # log directory
@@ -370,6 +393,10 @@ rm -rf $RPM_BUILD_ROOT%{_appdir}/include/Smarty
 install -d $RPM_BUILD_ROOT%{_smartyplugindir}
 # These plugins are not in Smarty package (Smarty-2.6.2-3)
 cp -a include/Smarty/plugins/function.{calendar,get_display_style,get_innerhtml,get_textarea_size}.php $RPM_BUILD_ROOT%{_smartyplugindir}
+
+# in _bindir
+mv $RPM_BUILD_ROOT%{_appdir}/misc/cli/eventum $RPM_BUILD_ROOT%{_bindir}
+rm -f $RPM_BUILD_ROOT%{_appdir}/misc/cli/eventumrc_example
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -391,7 +418,7 @@ if [ -d %{_apache2dir}/httpd.conf ]; then
 fi
 
 # check if the package is configured.
-if grep -q 'header("Location: setup/")' %{_sysconfdir}/config.inc.php; then
+if grep -q 'header("Location: setup/")' %{_sysconfdir}/config.php; then
 %banner %{name} -e <<EOF
 
 You haven't yet configured Eventum!
@@ -446,13 +473,13 @@ if [ "$1" = "0" ]; then
 fi
 
 %post setup
-chmod 660 %{_sysconfdir}/{config.inc,private_key}.php
-chown root:http %{_sysconfdir}/{config.inc,private_key}.php
+chmod 660 %{_sysconfdir}/{config,private_key}.php
+chown root:http %{_sysconfdir}/{config,private_key}.php
 
 %postun setup
 if [ "$1" = "0" ]; then
-	chmod 640 %{_sysconfdir}/{config.inc,private_key}.php
-	chown root:http %{_sysconfdir}/{config.inc,private_key}.php
+	chmod 640 %{_sysconfdir}/{config,private_key}.php
+	chown root:http %{_sysconfdir}/{config,private_key}.php
 fi
 
 %files
@@ -460,9 +487,9 @@ fi
 %doc ChangeLog FAQ INSTALL README UPGRADE misc/upgrade docs/*
 %attr(751,root,root) %dir %{_sysconfdir}
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/apache.conf
-%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/config.inc.php
+%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/config.php
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/private_key.php
-%attr(660,root,http) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/setup.conf.php
+%attr(660,root,http) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/setup.php
 
 %dir %attr(731,root,http) /var/log/%{name}
 %attr(620,root,http) %ghost /var/log/%{name}/*
@@ -492,7 +519,6 @@ fi
 %dir %attr(730,root,http) %{_appdir}/templates_c
 
 %dir %{_appdir}/misc
-%{_appdir}/misc/cli
 %{_appdir}/misc/blank.html
 
 %files setup
@@ -533,6 +559,14 @@ fi
 %attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/irc.php
 %{_appdir}/misc/irc
 %attr(754,root,root) /etc/rc.d/init.d/%{name}-irc
+
+%files cli
+%defattr(644,root,root,755)
+%doc eventumrc
+%attr(644,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/cli.php
+%attr(755,root,root) %{_bindir}/*
+%dir %{_appdir}/misc/cli
+%{_appdir}/misc/cli/include
 
 %files scm
 %defattr(644,root,root,755)
