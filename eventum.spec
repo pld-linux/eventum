@@ -22,7 +22,7 @@
 %define _source http://mysql.wildyou.net/Downloads/%{name}/%{name}-%{version}.tar.gz
 %endif
 
-%define _rel 1.141
+%define _rel 1.142
 
 Summary:	Eventum Issue - a bug tracking system
 Summary(pl):	Eventum - system ¶ledzenia spraw/b³êdów
@@ -53,6 +53,7 @@ Patch13:		%{name}-maildecode.patch
 Patch14:		%{name}-send-typo.patch
 Patch15:		%{name}-fixes.patch
 Patch16:		%{name}-rss-charset.patch
+Patch17:		%{name}-scm-silence-add.patch
 URL:		http://dev.mysql.com/downloads/other/eventum/index.html
 BuildRequires:	rpmbuild(macros) >= 1.177
 BuildRequires:	sed >= 4.0
@@ -397,6 +398,7 @@ $,,'
 %patch14 -p1
 %patch15 -p1
 %patch16 -p1
+%patch17 -p1
 %endif
 
 rm -f */*~ */*/*~
