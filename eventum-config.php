@@ -16,30 +16,30 @@ set_time_limit(0);
 ini_set('session.cache_limiter', 'nocache');
 
 // definitions of path related variables
-@define("APP_PATH", '/usr/share/eventum/htdocs/');
-@define("APP_INC_PATH", "/usr/share/eventum/include/");
-@define("APP_PEAR_PATH", APP_INC_PATH . "pear/");
-@define("APP_TPL_PATH", "/usr/share/eventum/templates/");
-@define("APP_SMARTY_PATH", "/usr/share/pear/Smarty/");
-@define("APP_JPGRAPH_PATH", APP_INC_PATH . "jpgraph/");
-@define("APP_LOG_PATH", "/var/log/eventum/");
-@define("APP_LOCKS_PATH", "/var/run/eventum/");
+define("APP_PATH", '/usr/share/eventum/htdocs/');
+define("APP_INC_PATH", "/usr/share/eventum/include/");
+define("APP_PEAR_PATH", APP_INC_PATH . "pear/");
+define("APP_TPL_PATH", "/usr/share/eventum/templates/");
+define("APP_SMARTY_PATH", "/usr/share/pear/Smarty/");
+define("APP_JPGRAPH_PATH", APP_INC_PATH . "jpgraph/");
+define("APP_LOG_PATH", "/var/log/eventum/");
+define("APP_LOCKS_PATH", "/var/run/eventum/");
 ini_set("include_path", ".:" . APP_PEAR_PATH);
 
-@define("APP_SETUP_PATH", APP_PATH);
-@define("APP_SETUP_FILE", "/etc/eventum/setup.php");
+define("APP_SETUP_PATH", APP_PATH);
+define("APP_SETUP_FILE", "/etc/eventum/setup.php");
 
-@define("APP_ERROR_LOG", APP_LOG_PATH . "errors.log");
-@define("APP_CLI_LOG", APP_LOG_PATH . "cli.log");
-@define("APP_IRC_LOG", APP_LOG_PATH . "irc_bot.log");
-@define("APP_LOGIN_LOG", APP_LOG_PATH . "login_attempts.log");
+define("APP_ERROR_LOG", APP_LOG_PATH . "errors.log");
+define("APP_CLI_LOG", APP_LOG_PATH . "cli.log");
+define("APP_IRC_LOG", APP_LOG_PATH . "irc_bot.log");
+define("APP_LOGIN_LOG", APP_LOG_PATH . "login_attempts.log");
 
-@define("APP_VERSION", "%{APP_VERSION}%");
+define("APP_VERSION", "%{APP_VERSION}%");
 
 // define the user_id of system user
-@define("APP_SYSTEM_USER_ID", 1);
+define("APP_SYSTEM_USER_ID", 1);
 
-@define("APP_BENCHMARK", false);
+define("APP_BENCHMARK", false);
 
 # include site config
 include_once '/etc/eventum/config.php';
@@ -71,7 +71,7 @@ $HTTP_GET_VARS =& Misc::dispelMagicQuotes($HTTP_GET_VARS);
 $HTTP_POST_VARS =& Misc::dispelMagicQuotes($HTTP_POST_VARS);
 
 // handle the language preferences now
-@include_once(APP_INC_PATH . "class.language.php");
+include_once(APP_INC_PATH . "class.language.php");
 Language::setPreference();
 
 // set charset
