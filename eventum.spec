@@ -292,6 +292,7 @@ kana³ u¿ywany przez bota, trzeba rêcznie zmodyfikowaæ skrypt bot.php .
 
 %package cli
 Summary:	Eventum command-line interface
+Summary(pl):	Interfejs linii poleceñ dla Eventum
 Group:		Applications/WWW
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 Requires:	php4 >= 4.1.0
@@ -302,6 +303,10 @@ Requires:	php4-curl
 %description cli
 The Eventum command-line interface allows you to access most of the
 features of the web interface straight from your command shell.
+
+%description cli -l pl
+Interfejs linii poleceñ Eventum pozwala na dostêp do wiêkszo¶ci
+funkcji interfejsu WWW prosto z linii poleceñ pow³oki.
 
 %package scm
 Summary:	Eventum SCM integration
