@@ -26,7 +26,7 @@
 %define _source http://mysql.wildyou.net/Downloads/%{name}/%{name}-%{version}.tar.gz
 %endif
 
-%define _rel 1.16
+%define _rel 1.17
 
 Summary:	Eventum Issue / Bug Tracking System
 Name:		eventum
@@ -46,6 +46,7 @@ Requires:	php-pcre
 Requires:	php-mysql
 Requires:	php-gd
 Requires:	php-imap
+#Requires:	apache-mod_dir
 # conflict with non-confdir apache
 Conflicts:	apache1 < 1.3.33-1.1
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -168,7 +169,7 @@ fi
 %{_appdir}/include/jsrsServer.inc.php
 %attr(640,http,root) %{_appdir}/include/private_key.php
 
-%dir %attr(755,http,root) %{_appdir}/logs
+%dir %attr(755,root,root) %{_appdir}/logs
 %attr(640,http,root) %{_appdir}/logs/*
 
 %dir %attr(750,http,root) %{_appdir}/templates_c
