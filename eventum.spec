@@ -9,7 +9,6 @@
 #  - dynCalendar.js (http://www.phpguru.org/dyncalendar.html)
 #  - overLIB 3.5.1 (http://www.bosrup.com/web/overlib/)
 #  - A few other small javascript libraries
-# - Mail Queue Process, cron or separate package (misc/process_mail_queue.php)
 # - Email Download (misc/download_emails.php)
 # - Reminder System (misc/check_reminders.php)
 # - Heartbeat Monitor (misc/monitor.php)
@@ -19,7 +18,7 @@
 # - Command-line Interface (misc/cli/eventum)
 
 # snapshot: DATE
-#define _snap 20050114
+#define _snap 20050115
 
 %if 0%{?_snap}
 %define _source http://downloads.mysql.com/snapshots/%{name}/%{name}-nightly-%{_snap}.tar.gz
@@ -27,7 +26,7 @@
 %define _source http://mysql.wildyou.net/Downloads/%{name}/%{name}-%{version}.tar.gz
 %endif
 
-%define _rel 1.49
+%define _rel 1.50
 
 Summary:	Eventum Issue / Bug Tracking System
 Summary(pl):	Eventum - system ¶ledzenia spraw/b³êdów
@@ -39,6 +38,7 @@ Group:		Applications/WWW
 Source0:	%{_source}
 # Source0-md5:	361c1355e46a6bbfa54e420964ec92cf
 Source1:	%{name}-apache.conf
+Source2:	%{name}-mail-queue.sh
 Patch0:		%{name}-rpm.patch
 Patch1:		%{name}-clock-status.patch
 URL:		http://dev.mysql.com/downloads/other/eventum/index.html
@@ -91,6 +91,22 @@ Ten pakiet nale¿y zainstalowaæ w celu wstêpnej konfiguracji Eventum po
 pierwszej instalacji. Potem nale¿y go odinstalowaæ, jako ¿e
 pozostawienie plików instalacyjnych mog³oby byæ niebezpieczne.
 
+%package mail-queue
+Summary:	Eventum Mail Queue Process
+Group:		Applications/WWW
+PreReq:		%{name} = %{epoch}:%{version}-%{release}
+Requires:	php4 >= 4.1.0
+Requires:	crondaemon
+
+%description mail-queue
+Beginning with the first release of Eventum, emails are not directly
+sent out from the various scripts, but rather added to a mail queue
+table that is processed by a cron job. If an email cannot be sent, it
+will be marked as such in the mail queue log, and the cron job script
+will re-try to send it again the next time it runs.
+
+This package contains the cron job.
+
 %prep
 %setup -q %{?_snap:-n %{name}-%{_snap}}
 %patch0 -p1
@@ -100,7 +116,7 @@ pozostawienie plików instalacyjnych mog³oby byæ niebezpieczne.
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_sysconfdir},%{_appdir}/{locks,templates_c},/var/log}
+install -d $RPM_BUILD_ROOT{%{_sysconfdir},/etc/cron.d,%{_appdir}/{locks,templates_c},/var/log}
 
 cp -a . $RPM_BUILD_ROOT%{_appdir}
 
@@ -114,6 +130,7 @@ s,$private_key\s*=\s*".*";,$private_key = "DEFAULTPRIVATEKEYPLEASERUNSETUP!";,
 ' $RPM_BUILD_ROOT%{_appdir}/include/private_key.php
 
 install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/apache.conf
+install %{SOURCE2} $RPM_BUILD_ROOT/etc/cron.d/%{name}-mail-queue
 
 # in conf
 mv $RPM_BUILD_ROOT%{_appdir}/{config.inc.php,setup.conf.php} $RPM_BUILD_ROOT%{_sysconfdir}
@@ -231,7 +248,6 @@ fi
 %{_appdir}/js
 %{_appdir}/logs
 %{_appdir}/manage
-%{_appdir}/misc
 %{_appdir}/reports
 %{_appdir}/rpc
 %{_appdir}/templates
@@ -248,6 +264,23 @@ fi
 
 %dir %attr(730,root,http) %{_appdir}/templates_c
 
+%dir %{_appdir}/misc
+%{_appdir}/misc/cli
+%{_appdir}/misc/irc
+%{_appdir}/misc/scm
+%{_appdir}/misc/blank.html
+%{_appdir}/misc/check_reminders.php
+%{_appdir}/misc/download_emails.php
+%{_appdir}/misc/monitor.php
+%{_appdir}/misc/route_drafts.php
+%{_appdir}/misc/route_emails.php
+%{_appdir}/misc/route_notes.php
+
 %files setup
 %defattr(644,root,root,755)
 %{_appdir}/setup
+
+%files mail-queue
+%defattr(644,root,root,755)
+%{_appdir}/misc/process_mail_queue.php
+%attr(755,root,root) /etc/cron.d/%{name}-mail-queue
