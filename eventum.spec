@@ -22,7 +22,7 @@
 %define _source http://mysql.wildyou.net/Downloads/%{name}/%{name}-%{version}.tar.gz
 %endif
 
-%define _rel 2.199
+%define _rel 2.200
 
 Summary:	Eventum Issue - a bug tracking system
 Summary(pl):	Eventum - system ¶ledzenia spraw/b³êdów
@@ -590,17 +590,21 @@ sed -i -e '
 s,%{_appdir},%{_appdir}/htdocs,
 ' %{_sysconfdir}/apache.conf
 
-%triggerpostun mail-download -- eventum-mail-download < 1.4-2.20050222.2.199
+%triggerpostun mail-download -- eventum-mail-download < 1.4-2.20050222.2.200
 sed -i -e 's,%{_appdir}/misc,%{_appdir},' /etc/cron.d/eventum-mail-download
+touch /etc/cron.d/eventum-mail-download
 
-%triggerpostun mail-queue -- eventum-mail-queue < 1.4-2.20050222.2.199
+%triggerpostun mail-queue -- eventum-mail-queue < 1.4-2.20050222.2.200
 sed -i -e 's,%{_appdir}/misc,%{_appdir},' /etc/cron.d/eventum-mail-queue
+touch /etc/cron.d/eventum-mail-queue
 
-%triggerpostun monitor -- eventum-monitor < 1.4-2.20050222.2.199
+%triggerpostun monitor -- eventum-monitor < 1.4-2.20050222.2.200
 sed -i -e 's,%{_appdir}/misc,%{_appdir},' /etc/cron.d/eventum-monitor
+touch /etc/cron.d/eventum-monitor
 
-%triggerpostun reminder -- eventum-reminder < 1.4-2.20050222.2.199
+%triggerpostun reminder -- eventum-reminder < 1.4-2.20050222.2.200
 sed -i -e 's,%{_appdir}/misc,%{_appdir},' /etc/cron.d/eventum-reminder
+touch /etc/cron.d/eventum-reminder
 
 %files
 %defattr(644,root,root,755)
