@@ -23,17 +23,17 @@
 %define _source http://mysql.wildyou.net/Downloads/%{name}/%{name}-%{version}.tar.gz
 %endif
 
-%define _rel 245
+%define _rel 255
 
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl):	Eventum - system ¶ledzenia spraw/b³êdów
 Name:		eventum
-Version:	1.5
+Version:	1.5.1
 Release:	0.%{?_snap:%{_snap}.}%{_rel}
 License:	GPL
 Group:		Applications/WWW
 Source0:	%{_source}
-# Source0-md5:	6a467e1a672983f26d72d4eb7568efb6
+# Source0-md5:	d326ef39b52001efcbbc0ae8db5454a5
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -45,25 +45,19 @@ Source8:	%{name}-irc.init
 Source9:	%{name}-irc.sysconfig
 Source10:	%{name}-config.php
 Source11:	%{name}-router-qmail.sh
+Source12:	http://dev.mysql.com/common/favicon.ico
 Patch0:		%{name}-paths.patch
 Patch1:		%{name}-cvs-config.patch
 Patch2:		%{name}-irc-config.patch
 Patch3:		%{name}-PEAR.patch
-Patch10:	%{name}-db-20050227.patch
-Patch11:	%{name}-charset-recent-activity.patch
-# Fixing the mail queue handling script
-Patch12:	http://mysql.bkbits.net:8080/eventum/gnupatch@4225f616OxPaWaC3PObJxe3yNpN0BA
-# Change attachment handling to handle certain attachment types better
-# http://mysql.bkbits.net:8080/eventum/gnupatch@4226b723YMp2Tkh1U5_w7Tc_z0Qq8A
-Patch13:	gnupatch@4226b723YMp2Tkh1U5_w7Tc_z0Qq8A
-# Changed the behavior of the view issue screen to automatically hide tables without any data
-# http://mysql.bkbits.net:8080/eventum/gnupatch@4228c476PFEFwX_LFfvD5y0xkmYqPw
-Patch14:	gnupatch@4228c476PFEFwX_LFfvD5y0xkmYqPw
-# Added some code to prevent people from creating an internal FAQ entry without selecting the project first
-Patch15:	http://mysql.bkbits.net:8080/eventum/gnupatch@422746b1A1Szq1_GufnINJkuc8nlAA
-#Patch16:	http://glen.alkohol.ee/pld/eventum-cli-rpc-base64.patch
-#Patch17:	http://glen.alkohol.ee/pld/eventum-view-email-mail-content-type.patch
-URL:		http://dev.mysql.com/downloads/other/eventum/index.html
+Patch4:		%{name}-db-20050227.patch
+Patch10:	%{name}-charset-recent-activity.patch
+Patch11:	http://glen.alkohol.ee/pld/eventum-cli-rpc-base64.patch
+Patch12:	http://glen.alkohol.ee/pld/eventum-send-height.patch
+Patch13:	http://glen.alkohol.ee/pld/eventum-reply-subject.patch
+Patch14:	http://glen.alkohol.ee/pld/eventum-rss-updates.patch
+Patch15:	http://glen.alkohol.ee/pld/eventum-opera.patch
+URL:		http://dev.mysql.com/downloads/other/eventum/
 BuildRequires:	rpmbuild(macros) >= 1.177
 BuildRequires:	sed >= 4.0
 Requires:	php >= 4.2.0
@@ -433,13 +427,15 @@ $,,'
 %patch1 -p1
 %patch2 -p1
 %{?with_pear:%patch3 -p1 -b .PEAR}
+%patch4 -p1
 
 # bug fixes.
 %patch10 -p1
 %patch11 -p1
-%patch12 -p1
+%patch12 -p0
 %patch13 -p1
 %patch14 -p1
+%patch15 -p1
 
 # replace in remaining scripts config.inc.php to system one
 grep -rl 'include_once(".*config.inc.php")' . | xargs sed -i -e '
@@ -472,6 +468,8 @@ cp -a include/{customer,jpgraph,pear,workflow} $RPM_BUILD_ROOT%{_appdir}/include
 cp -a include/*.php $RPM_BUILD_ROOT%{_appdir}/include
 cp -a logs/* $RPM_BUILD_ROOT/var/log/%{name}
 cp -a misc/upgrade $RPM_BUILD_ROOT%{_appdir}
+
+install %{SOURCE12} $RPM_BUILD_ROOT%{_appdir}/htdocs/favicon.ico
 
 # cli
 install -d $RPM_BUILD_ROOT%{_appdir}/cli
@@ -591,6 +589,9 @@ so that %{name}-setup is able to secure your Eventum installation.
 EOF
 fi
 
+# nuke Smarty templates cache after upgrade
+rm -f /var/cache/eventum/*.php
+
 %preun
 if [ "$1" = "0" ]; then
 	# apache1
@@ -657,67 +658,35 @@ if [ "$1" = "0" ]; then
 	chown root:eventum %{_sysconfdir}/{config,private_key}.php
 fi
 
-%triggerpostun -- eventum < 1.4-2.160
-cp -f %{_sysconfdir}/config.php{,.rpmsave}
-# very loose trigger
-sed -i -e '
-/config.php/,/SQL variables/d;/_LOG/d;/APP_VERSION/d;/APP_BENCHMARK/,/content-type:/d
-' %{_sysconfdir}/config.php
-
-%triggerpostun -- eventum < 1.4-2.174
-cp -f %{_sysconfdir}/apache.conf{,.rpmsave}
-# loosely fix htdocs directory
-sed -i -e '
-s,%{_appdir},%{_appdir}/htdocs,
-' %{_sysconfdir}/apache.conf
-
-%triggerpostun mail-download -- eventum-mail-download < 1.4-2.20050222.232
-sed -i -e '
-s,%{_appdir}/misc,%{_appdir},
-s,http,eventum,
-' /etc/cron.d/eventum-mail-download
-touch /etc/cron.d/eventum-mail-download
-
-%triggerpostun mail-queue -- eventum-mail-queue < 1.4-2.20050222.232
-sed -i -e '
-s,%{_appdir}/misc,%{_appdir},
-s,http,eventum,
-' /etc/cron.d/eventum-mail-queue
-touch /etc/cron.d/eventum-mail-queue
-
-%triggerpostun monitor -- eventum-monitor < 1.4-2.20050222.232
-sed -i -e '
-s,%{_appdir}/misc,%{_appdir},
-s,http,eventum,
-' /etc/cron.d/eventum-monitor
-touch /etc/cron.d/eventum-monitor
-
-%triggerpostun reminder -- eventum-reminder < 1.4-2.20050222.232
-sed -i -e '
-s,%{_appdir}/misc,%{_appdir},
-s,http,eventum,
-' /etc/cron.d/eventum-reminder
-touch /etc/cron.d/eventum-reminder
-
-%triggerpostun -- eventum < 1.4-2.20050222.2.208
-chgrp eventum %{_sysconfdir}/{core,config,private_key,setup}.php
-
-%triggerpostun irc -- eventum-irc < 1.4-2.20050222.2.208
-chgrp eventum %{_sysconfdir}/irc.php
-
 %triggerpostun base -- eventum-base < 1.4-2.20050222.212
 if [ "`getent passwd %{name} | cut -d: -f6`" = "%{_appdir}" ]; then
 	/usr/sbin/usermod -d /var/lib/%{name} %{name}
 fi
 
 %triggerpostun -- eventum < 1.5-0.240
-echo >&2 ""
-echo >&2 "Performing database upgrades!"
-echo >&2 "These will fail if your eventum user doesn't have ALTER privilege to database."
-echo >&2 ""
+%banner %{name}-trigger -e -a <<-EOF
+
+	Running eventum upgrade scripts to 1.5
+	These will fail if your eventum user doesn't have ALTER privilege to database.
+
+EOF
+#'
 
 scriptdir=%{_appdir}/upgrade/v1.4_to_1.5
+/usr/bin/php4 -q $scriptdir/database_changes.php || {
+	echo >&2 "Please run manually: /usr/bin/php4 -q $scriptdir/database_changes.php"
+}
 
+%triggerpostun -- eventum < 1.5.1-0.246
+%banner %{name}-trigger -e -a <<-EOF
+
+	Running eventum upgrade scripts to 1.5.1
+	These will fail if your eventum user doesn't have ALTER privilege to database.
+
+EOF
+#'
+
+scriptdir=%{_appdir}/upgrade/v1.5_to_v1.5.1
 /usr/bin/php4 -q $scriptdir/database_changes.php || {
 	echo >&2 "Please run manually: /usr/bin/php4 -q $scriptdir/database_changes.php"
 }
@@ -737,6 +706,7 @@ scriptdir=%{_appdir}/upgrade/v1.4_to_1.5
 
 %dir %{_appdir}/htdocs
 %{_appdir}/htdocs/*.php
+%{_appdir}/htdocs/*.ico
 %{_appdir}/htdocs/css
 %{_appdir}/htdocs/customer
 %{_appdir}/htdocs/images
