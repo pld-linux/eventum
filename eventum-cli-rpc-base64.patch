@@ -1,0 +1,38 @@
+this patch fixes problem transferring non-ASCII data over xmlrpc.
+the 8bit chars could be anywhere, issue summary, details, reporter, so all fields are base64_encoded
+
+--- ./misc/cli/include/class.command_line.php~	2005-03-05 13:13:13.000000000 +0200
++++ ./misc/cli/include/class.command_line.php	2005-03-07 20:46:16.398657838 +0200
+@@ -439,6 +439,11 @@
+             Command_Line::quit($result->faultString());
+         }
+         $details = XML_RPC_decode($result->value());
++
++        foreach ($details as $k => $v) {
++            $details[$k] = base64_decode($v);
++        }
++
+         // check if the issue the user is trying to change is inside a project viewable to him
+         $found = 0;
+         for ($i = 0; $i < count($projects); $i++) {
+@@ -447,6 +452,7 @@
+                 break;
+             }
+         }
++
+         if (!$found) {
+             Command_Line::quit("The assigned project for issue #$issue_id doesn't match any in the list of projects assigned to you");
+         }
+--- ./rpc/xmlrpc.php~	2005-02-27 17:59:14.000000000 +0200
++++ ./rpc/xmlrpc.php	2005-03-07 20:48:19.000000000 +0200
+@@ -194,6 +196,10 @@
+     createFakeCookie($email, Issue::getProjectID($issue_id));
+     
+     $res = Issue::getDetails($issue_id);
++    foreach ($res as $k => $v) {
++        $res[$k] = base64_encode($v);
++    }
++
+     if (empty($res)) {
+         return new XML_RPC_Response(0, $XML_RPC_erruser+1, "Issue #$issue_id could not be found");
+     } else {
