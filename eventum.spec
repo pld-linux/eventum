@@ -26,7 +26,7 @@
 %define _source http://mysql.wildyou.net/Downloads/%{name}/%{name}-%{version}.tar.gz
 %endif
 
-%define _rel 1.31
+%define _rel 1.32
 
 Summary:	Eventum Issue / Bug Tracking System
 Name:		eventum
@@ -41,6 +41,7 @@ Patch0:		%{name}-rpm.patch
 Patch1:		%{name}-clock-status.patch
 URL:		http://dev.mysql.com/downloads/other/eventum/index.html
 BuildRequires:	sed >= 4.0
+BuildRequires:	rpmbuild(macros) >= 1.177
 Requires:	php >= 4.1.0
 Requires:	php-pcre
 Requires:	php-mysql
@@ -118,9 +119,21 @@ if [ -d %{_apache2dir}/httpd.conf ]; then
 	fi
 fi
 
-echo "If you're installing %{name} for the first time, Install %{name}-setup,"
-echo "and open up http://yourserver/eventum/, and when done,"
-echo "uninstall the package, that will secure the config files."
+# check if the package is configured.
+if grep -q 'header("Location: setup/")' %{_appdir}/config.inc.php; then
+%banner %{name} -e <<EOF
+
+You haven't yet configured Eventum!
+
+Install %{name}-setup and open up http://yourserver/eventum/
+-- that will help you setup initial config.
+
+when have configured Eventum, please uninstall the setup package,
+so that %{name}-setup is able to secure your Eventum installation.
+
+EOF
+#' vim stupidity.
+fi
 
 %preun
 if [ "$1" = "0" ]; then
