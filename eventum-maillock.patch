@@ -1,0 +1,36 @@
+# This is a BitKeeper generated diff -Nru style patch.
+#
+# ChangeSet
+#   2005/02/22 09:53:19-06:00 bryan@mysql.com 
+#   Release lock if connecting to mail server produces error.
+# 
+# ChangeLog
+#   2005/02/22 09:53:18-06:00 bryan@mysql.com +1 -0
+#   Release lock if connecting to mail server produces error.
+# 
+# misc/download_emails.php
+#   2005/02/22 09:53:18-06:00 bryan@mysql.com +1 -0
+#   Release lock if connecting to mail server produces error.
+# 
+diff -Nru a/ChangeLog b/ChangeLog
+--- a/ChangeLog	2005-02-27 05:35:39 -08:00
++++ b/ChangeLog	2005-02-27 05:35:39 -08:00
+@@ -40,6 +40,7 @@
+ - Changed attachment handling to work with inline attachments (Bryan)
+ - Apply encoding fixes in more places (Elan Ruusamäe <glen@delfi.ee>)
+ - Silence console errors when adding new directory to CVS (Elan Ruusamäe <glen@delfi.ee>)
++- If there is an error connecting to mail server when downloading email, release lock (Bryan)
+ 
+ 04 Jan 2005, Version 1.4
+ - Fixed the notification code to properly handle the condition in which the recipient type flag is empty (João)
+diff -Nru a/misc/download_emails.php b/misc/download_emails.php
+--- a/misc/download_emails.php	2005-02-27 05:35:39 -08:00
++++ b/misc/download_emails.php	2005-02-27 05:35:39 -08:00
+@@ -89,6 +89,7 @@
+ $mbox = Support::connectEmailServer($account);
+ if ($mbox == false) {
+     echo "Error: Could not connect to the email server. Please verify your email account settings and try again.\n";
++    Lock::release('download_emails_' . $account_id);
+     exit;
+ } else {
+     $total_emails = Support::getTotalEmails($mbox);
