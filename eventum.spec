@@ -22,7 +22,7 @@
 %define _source http://mysql.wildyou.net/Downloads/%{name}/%{name}-%{version}.tar.gz
 %endif
 
-%define _rel 2.161
+%define _rel 2.194
 
 Summary:	Eventum Issue - a bug tracking system
 Summary(pl):	Eventum - system ¶ledzenia spraw/b³êdów
@@ -338,7 +338,7 @@ kana³ u¿ywany przez bota, trzeba rêcznie zmodyfikowaæ skrypt bot.php .
 Summary:	Eventum command-line interface
 Summary(pl):	Interfejs linii poleceñ dla Eventum
 Group:		Applications/WWW
-Requires:	%{name} = %{epoch}:%{version}-%{release}
+Requires:	%{name}-base = %{epoch}:%{version}-%{release}
 Requires:	php >= 4.1.0
 Requires:	php-cli
 Requires:	php-curl
@@ -405,28 +405,56 @@ $,,'
 %patch18 -p1
 %patch19 -p1
 
+# replace in remaining scripts config.inc.php to system one
+grep -rl 'include_once(".*config.inc.php")' . | xargs sed -i -e '
+	s,include_once(".*config.inc.php"),include_once("%{_sysconfdir}/core.php"),
+'
+sed -i -e '
+	s,include(".*config.inc.php"),include_once("%{_sysconfdir}/core.php"),
+' misc/download_emails.php
+
+grep -rl 'APP_INC_PATH..*"private_key.php"' . | xargs sed -i -e '
+	s,include_once(APP_INC_PATH.*"private_key.php"),include_once("%{_sysconfdir}/private_key.php"),
+'
+
 rm -f */*~ */*/*~
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_sysconfdir},%{_bindir},%{_libdir},%{_appdir}} \
-	$RPM_BUILD_ROOT{/etc/{rc.d/init.d,cron.d},/var/log/%{name}} \
-	$RPM_BUILD_ROOT{/var/run/eventum,/var/cache/eventum,/etc/sysconfig}
+install -d \
+	$RPM_BUILD_ROOT{%{_sysconfdir},%{_bindir},%{_libdir}} \
+	$RPM_BUILD_ROOT/etc/{rc.d/init.d,cron.d,sysconfig} \
+	$RPM_BUILD_ROOT/var/{run,log,cache}/%{name} \
+	$RPM_BUILD_ROOT%{_appdir}/{include,htdocs/misc} \
 
-cp -a *.php {css,customer,images,include,js} \
-	{manage,misc,reports,rpc,setup,templates} $RPM_BUILD_ROOT%{_appdir}
+cp -a *.php css customer images js manage reports rpc setup $RPM_BUILD_ROOT%{_appdir}/htdocs
+cp -a misc/*.html $RPM_BUILD_ROOT%{_appdir}/htdocs/misc
+cp -a misc/*.php $RPM_BUILD_ROOT%{_appdir}
+cp -a misc/irc $RPM_BUILD_ROOT%{_appdir}
+cp -a templates $RPM_BUILD_ROOT%{_appdir}
+cp -a include/{customer,jpgraph,pear,workflow} $RPM_BUILD_ROOT%{_appdir}/include
+cp -a include/*.php $RPM_BUILD_ROOT%{_appdir}/include
 cp -a logs/* $RPM_BUILD_ROOT/var/log/%{name}
 
-> $RPM_BUILD_ROOT%{_appdir}/setup.conf.php
+# cli
+install -d $RPM_BUILD_ROOT%{_appdir}/cli
+install misc/cli/include/class.{misc,command_line}.php $RPM_BUILD_ROOT%{_appdir}/cli
+install misc/cli/config.inc.php $RPM_BUILD_ROOT%{_sysconfdir}/cli.php
+sed -e 's,/usr/local/bin/php,/usr/bin/php4,' misc/cli/eventum \
+	> $RPM_BUILD_ROOT%{_bindir}/%{name}
+cp -f misc/cli/eventumrc_example eventumrc
 
-sed -i -e 's,/usr/local/bin/php,/usr/bin/php4,' $RPM_BUILD_ROOT%{_appdir}/misc/cli/eventum
+# scm
 echo '#!/usr/bin/php4 -q' > %{name}-scm
-cat $RPM_BUILD_ROOT%{_appdir}/misc/scm/process_cvs_commits.php >> %{name}-scm
+cat misc/scm/process_cvs_commits.php >> %{name}-scm
+install %{name}-scm $RPM_BUILD_ROOT%{_libdir}/scm
 
+# private key
+mv $RPM_BUILD_ROOT{%{_appdir}/include/private_key.php,%{_sysconfdir}}
 # change private key, so we can easily grep
 sed -i -e '
 s,$private_key\s*=\s*".*";,$private_key = "DEFAULTPRIVATEKEYPLEASERUNSETUP!";,
-' $RPM_BUILD_ROOT%{_appdir}/include/private_key.php
+' $RPM_BUILD_ROOT%{_sysconfdir}/private_key.php
 
 install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/apache.conf
 install %{SOURCE2} $RPM_BUILD_ROOT/etc/cron.d/%{name}-mail-queue
@@ -437,31 +465,18 @@ install %{SOURCE6} $RPM_BUILD_ROOT%{_sysconfdir}/cvs.php
 install %{SOURCE7} $RPM_BUILD_ROOT%{_sysconfdir}/irc.php
 install %{SOURCE8} $RPM_BUILD_ROOT/etc/rc.d/init.d/eventum-irc
 install %{SOURCE9} $RPM_BUILD_ROOT/etc/sysconfig/eventum-irc
-sed -e 's,%%{APP_VERSION}%%,%{version}%{?_snap:-%{_snap}},' %{SOURCE10} > $RPM_BUILD_ROOT%{_sysconfdir}/core.php
+sed -e 's,%%{APP_VERSION}%%,%{version}%{?_snap:-%{_snap}},' \
+	%{SOURCE10} > $RPM_BUILD_ROOT%{_sysconfdir}/core.php
 
-# in conf
-mv $RPM_BUILD_ROOT%{_appdir}/config.inc.php $RPM_BUILD_ROOT%{_sysconfdir}/config.php
-mv $RPM_BUILD_ROOT%{_appdir}/setup.conf.php $RPM_BUILD_ROOT%{_sysconfdir}/setup.php
-mv $RPM_BUILD_ROOT%{_appdir}/include/private_key.php $RPM_BUILD_ROOT%{_sysconfdir}
-mv $RPM_BUILD_ROOT%{_appdir}/misc/cli/config.inc.php $RPM_BUILD_ROOT%{_sysconfdir}/cli.php
-ln -s %{_sysconfdir}/core.php $RPM_BUILD_ROOT%{_appdir}/config.inc.php
-ln -s %{_sysconfdir}/setup.php $RPM_BUILD_ROOT%{_appdir}/setup.conf.php
-ln -s %{_sysconfdir}/private_key.php $RPM_BUILD_ROOT%{_appdir}/include/private_key.php
+# config
+> $RPM_BUILD_ROOT%{_sysconfdir}/setup.php
+mv $RPM_BUILD_ROOT{%{_appdir}/htdocs/config.inc,%{_sysconfdir}/config}.php
 
-# in doc
-rm -rf $RPM_BUILD_ROOT%{_appdir}/misc/upgrade
 # sample, not used in eventum
-rm -rf $RPM_BUILD_ROOT%{_appdir}/rpc/xmlrpc_client.php
-
-# in bindir
-mv $RPM_BUILD_ROOT%{_appdir}/misc/cli/eventum $RPM_BUILD_ROOT%{_bindir}
-rm -f $RPM_BUILD_ROOT%{_appdir}/misc/{cli/eventumrc_example,scm/process_cvs_commits.php}
-cp -f misc/cli/eventumrc_example eventumrc
-install %{name}-scm $RPM_BUILD_ROOT%{_libdir}/scm
+rm -f $RPM_BUILD_ROOT%{_appdir}/htdocs/rpc/xmlrpc_client.php
 
 %if %{with pear}
 # provided by PEAR
-rm -rf $RPM_BUILD_ROOT%{_appdir}/misc/cli/include/pear
 rm -rf $RPM_BUILD_ROOT%{_appdir}/include/pear
 %endif
 
@@ -546,6 +561,10 @@ if [ "$1" = "0" ]; then
 	fi
 fi
 
+%postun
+# nuke cache
+rm -f /var/cache/eventum/*.php
+
 %post setup
 chmod 660 %{_sysconfdir}/{config,private_key}.php
 chown root:http %{_sysconfdir}/{config,private_key}.php
@@ -556,11 +575,19 @@ if [ "$1" = "0" ]; then
 	chown root:http %{_sysconfdir}/{config,private_key}.php
 fi
 
-%triggerpostun -- eventum < 2.160
+%triggerpostun -- eventum < 1.4-2.160
 cp -f %{_sysconfdir}/config.php{,.rpmsave}
 # very loose trigger
 sed -i -e '
-/config.php/,/SQL variables/d;/_LOG/d;/APP_VERSION/d;/APP_BENCHMARK/,/content-type:/d' %{_sysconfdir}/config.php
+/config.php/,/SQL variables/d;/_LOG/d;/APP_VERSION/d;/APP_BENCHMARK/,/content-type:/d
+' %{_sysconfdir}/config.php
+
+%triggerpostun -- eventum < 1.4-2.174
+cp -f %{_sysconfdir}/apache.conf{,.rpmsave}
+# loosely fix htdocs directory
+sed -i -e '
+s,%{_appdir},%{_appdir}/htdocs,
+' %{_sysconfdir}/apache.conf
 
 %files
 %defattr(644,root,root,755)
@@ -570,22 +597,22 @@ sed -i -e '
 %attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/config.php
 %attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/private_key.php
 %attr(660,root,http) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/setup.php
-%attr(660,root,http) %verify(not md5 mtime size) %{_sysconfdir}/core.php
-
-%dir %{_appdir}
-%dir %{_appdir}/misc
+%attr(660,root,http) %config %verify(not mtime) %{_sysconfdir}/core.php
 
 %dir %attr(731,root,http) /var/log/%{name}
 %attr(620,root,http) %ghost /var/log/%{name}/*
 
-%{_appdir}/*.php
-%{_appdir}/css
-%{_appdir}/customer
-%{_appdir}/images
-%{_appdir}/js
-%{_appdir}/manage
-%{_appdir}/reports
-%{_appdir}/rpc
+%dir %{_appdir}/htdocs
+%{_appdir}/htdocs/*.php
+%{_appdir}/htdocs/css
+%{_appdir}/htdocs/customer
+%{_appdir}/htdocs/images
+%{_appdir}/htdocs/js
+%{_appdir}/htdocs/manage
+%{_appdir}/htdocs/reports
+%{_appdir}/htdocs/rpc
+%{_appdir}/htdocs/misc
+
 %{_appdir}/templates
 
 %{_smartyplugindir}/*
@@ -602,60 +629,58 @@ sed -i -e '
 %dir %attr(730,root,http) /var/run/%{name}
 %dir %attr(730,root,http) /var/cache/%{name}
 
-%{_appdir}/misc/blank.html
-
 %files base
 %defattr(644,root,root,755)
 %attr(751,root,root) %dir %{_sysconfdir}
 %dir %{_libdir}
+%dir %{_appdir}
 
 %files setup
 %defattr(644,root,root,755)
-%{_appdir}/setup
+%{_appdir}/htdocs/setup
 
 %files mail-queue
 %defattr(644,root,root,755)
-%{_appdir}/misc/process_mail_queue.php
+%{_appdir}/process_mail_queue.php
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/cron.d/%{name}-mail-queue
 
 %files mail-download
 %defattr(644,root,root,755)
-%{_appdir}/misc/download_emails.php
+%{_appdir}/download_emails.php
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/cron.d/%{name}-mail-download
 
 %files reminder
 %defattr(644,root,root,755)
-%{_appdir}/misc/check_reminders.php
+%{_appdir}/check_reminders.php
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/cron.d/%{name}-reminder
 
 %files monitor
 %defattr(644,root,root,755)
-%{_appdir}/misc/monitor.php
+%{_appdir}/monitor.php
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/cron.d/%{name}-monitor
 
 %files route-emails
 %defattr(644,root,root,755)
-%{_appdir}/misc/route_emails.php
+%{_appdir}/route_emails.php
 
 %files route-notes
 %defattr(644,root,root,755)
-%{_appdir}/misc/route_drafts.php
-%{_appdir}/misc/route_notes.php
+%{_appdir}/route_drafts.php
+%{_appdir}/route_notes.php
 
 %files irc
 %defattr(644,root,root,755)
 %attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/irc.php
 %attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/eventum-irc
-%{_appdir}/misc/irc
+%{_appdir}/irc
 %attr(754,root,root) /etc/rc.d/init.d/%{name}-irc
 
 %files cli
 %defattr(644,root,root,755)
 %doc eventumrc
-%attr(644,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/cli.php
+%attr(644,root,root) %config %verify(not md5 mtime size) %{_sysconfdir}/cli.php
 %attr(755,root,root) %{_bindir}/%{name}
-%dir %{_appdir}/misc/cli
-%{_appdir}/misc/cli/include
+%{_appdir}/cli
 
 %files scm
 %defattr(644,root,root,755)
