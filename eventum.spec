@@ -22,7 +22,7 @@
 %define _source http://mysql.wildyou.net/Downloads/%{name}/%{name}-%{version}.tar.gz
 %endif
 
-%define _rel 1.151
+%define _rel 1.153
 
 Summary:	Eventum Issue - a bug tracking system
 Summary(pl):	Eventum - system ¶ledzenia spraw/b³êdów
@@ -41,6 +41,7 @@ Source5:	%{name}-monitor.cron
 Source6:	%{name}-cvs.php
 Source7:	%{name}-irc.php
 Source8:	%{name}-irc.init
+Source9:	%{name}-irc.sysconfig
 Patch0:		%{name}-paths.patch
 Patch1:		%{name}-scm-encode.patch
 Patch2:		%{name}-cvs-config.patch
@@ -83,9 +84,8 @@ Requires:	php-pear-PEAR
 Requires:	php-pear-Text_Diff
 Requires:	php-pear-XML_RPC
 %endif
-Requires:	apache-mod_dir
-# conflict with non-confdir apache
-Conflicts:	apache1 < 1.3.33-1.1
+Requires:	apache >= 1.3.33-2
+Requires:	apache(mod_dir)
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -409,7 +409,7 @@ rm -f */*~ */*/*~
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_sysconfdir},%{_bindir},%{_libdir},%{_appdir}} \
 	$RPM_BUILD_ROOT{/etc/{rc.d/init.d,cron.d},/var/log/%{name}} \
-	$RPM_BUILD_ROOT{/var/run/eventum,/var/cache/eventum}
+	$RPM_BUILD_ROOT{/var/run/eventum,/var/cache/eventum,/etc/sysconfig}
 
 cp -a *.php {css,customer,images,include,js} \
 	{manage,misc,reports,rpc,setup,templates} $RPM_BUILD_ROOT%{_appdir}
@@ -434,6 +434,7 @@ install %{SOURCE5} $RPM_BUILD_ROOT/etc/cron.d/%{name}-monitor
 install %{SOURCE6} $RPM_BUILD_ROOT%{_sysconfdir}/cvs.php
 install %{SOURCE7} $RPM_BUILD_ROOT%{_sysconfdir}/irc.php
 install %{SOURCE8} $RPM_BUILD_ROOT/etc/rc.d/init.d/eventum-irc
+install %{SOURCE9} $RPM_BUILD_ROOT/etc/sysconfig/eventum-irc
 
 # in conf
 mv $RPM_BUILD_ROOT%{_appdir}/config.inc.php $RPM_BUILD_ROOT%{_sysconfdir}/config.php
@@ -635,6 +636,7 @@ fi
 %files irc
 %defattr(644,root,root,755)
 %attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/irc.php
+%attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/eventum-irc
 %{_appdir}/misc/irc
 %attr(754,root,root) /etc/rc.d/init.d/%{name}-irc
 
