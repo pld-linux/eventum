@@ -1,0 +1,11 @@
+--- eventum-1.4/setup/config.inc.php~	2005-01-05 01:05:58.000000000 +0200
++++ eventum-1.4/setup/config.inc.php	2005-01-19 01:43:21.000000000 +0200
+@@ -56,7 +56,7 @@
+ @define("APP_INC_PATH", APP_PATH . "include/");
+ @define("APP_PEAR_PATH", APP_INC_PATH . "pear/");
+ @define("APP_TPL_PATH", APP_PATH . "templates/");
+-@define("APP_SMARTY_PATH", APP_INC_PATH . "Smarty/");
++@define("APP_SMARTY_PATH", "/usr/share/pear/Smarty/");
+ @define("APP_JPGRAPH_PATH", APP_INC_PATH . "jpgraph/");
+ @define("APP_LOG_PATH", APP_PATH . "logs/");
+ @define("APP_LOCKS_PATH", APP_PATH . "locks/");
