@@ -23,7 +23,7 @@
 %define _source http://mysql.wildyou.net/Downloads/%{name}/%{name}-%{version}.tar.gz
 %endif
 
-%define _rel 238
+%define _rel 240
 
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl):	Eventum - system ¶ledzenia spraw/b³êdów
@@ -92,9 +92,6 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_apache1dir	/etc/apache
 %define		_apache2dir	/etc/httpd
-
-# don't compress upgrade scripts
-%define		_noautocompressdoc  *.php
 
 %description
 Eventum is a user-friendly and flexible issue tracking system that can
@@ -429,6 +426,9 @@ $,,'
 %patch10 -p1
 %patch11 -p1
 
+# version that we support upgrading from
+mv misc/upgrade/v1.4_to_1.5 upgrade
+
 # replace in remaining scripts config.inc.php to system one
 grep -rl 'include_once(".*config.inc.php")' . | xargs sed -i -e '
 	s,include_once(".*config.inc.php"),include_once("%{_sysconfdir}/core.php"),
@@ -449,7 +449,7 @@ install -d \
 	$RPM_BUILD_ROOT{%{_sysconfdir},%{_bindir},%{_libdir}} \
 	$RPM_BUILD_ROOT/etc/{rc.d/init.d,cron.d,sysconfig} \
 	$RPM_BUILD_ROOT/var/{run,log,cache,lib}/%{name} \
-	$RPM_BUILD_ROOT%{_appdir}/{include,htdocs/misc} \
+	$RPM_BUILD_ROOT%{_appdir}/{include,htdocs/misc,upgrade} \
 
 cp -a *.php css customer images js manage reports rpc setup $RPM_BUILD_ROOT%{_appdir}/htdocs
 cp -a misc/*.html $RPM_BUILD_ROOT%{_appdir}/htdocs/misc
@@ -459,6 +459,7 @@ cp -a templates $RPM_BUILD_ROOT%{_appdir}
 cp -a include/{customer,jpgraph,pear,workflow} $RPM_BUILD_ROOT%{_appdir}/include
 cp -a include/*.php $RPM_BUILD_ROOT%{_appdir}/include
 cp -a logs/* $RPM_BUILD_ROOT/var/log/%{name}
+cp -a upgrade $RPM_BUILD_ROOT%{_appdir}
 
 # cli
 install -d $RPM_BUILD_ROOT%{_appdir}/cli
@@ -697,24 +698,17 @@ if [ "`getent passwd %{name} | cut -d: -f6`" = "%{_appdir}" ]; then
 	/usr/sbin/usermod -d /var/lib/%{name} %{name}
 fi
 
-%triggerpostun -- eventum < 1.5-0.237
+%triggerpostun -- eventum < 1.5-0.240
 echo >&2 ""
-echo >&2 "* Performing database upgrades!"
+echo >&2 "Performing database upgrades!"
 echo >&2 "These will fail if your eventum user doesn't have ALTER privilege to database."
 echo >&2 ""
-# i hope it's not too evil to do these in trigger
-scriptdir=%{_docdir}/%{name}-%{version}/upgrade/v1.4_to_1.5
-# don't fail if --excludedocs used
-if [ -d $scriptdir ]; then
-	/usr/bin/php4 -q $scriptdir/database_changes.php || {
-		echo >&2 "Please run manually: /usr/bin/php4 -q $scriptdir/database_changes.php"
-	}
-	# user roles already applied in snapshot. skip it
-#	/usr/bin/php4 -q $scriptdir/set_user_roles.php || {
-#		echo >&2 "Please run manually: /usr/bin/php4 -q $scriptdir/set_user_roles.php"
-#	}
-	# no config file changes. skip it
-fi
+
+scriptdir=%{_appdir}/upgrade
+
+/usr/bin/php4 -q $scriptdir/database_changes.php || {
+	echo >&2 "Please run manually: /usr/bin/php4 -q $scriptdir/database_changes.php"
+}
 
 %files
 %defattr(644,root,root,755)
@@ -741,6 +735,7 @@ fi
 %{_appdir}/htdocs/misc
 
 %{_appdir}/templates
+%{_appdir}/upgrade
 
 %{_smartyplugindir}/*
 %if %{without pear}
