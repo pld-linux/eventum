@@ -23,7 +23,7 @@
 %define _source http://mysql.wildyou.net/Downloads/%{name}/%{name}-%{version}.tar.gz
 %endif
 
-%define _rel 222
+%define _rel 231
 
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl):	Eventum - system ¶ledzenia spraw/b³êdów
@@ -60,6 +60,7 @@ Patch17:	%{name}-scm-silence-add.patch
 Patch18:	%{name}-default-TZ.patch
 Patch19:	%{name}-charset-mailsubj.patch
 Patch20:	%{name}-monitor-bot-process.patch
+Patch21:	%{name}-maillock.patch
 URL:		http://dev.mysql.com/downloads/other/eventum/index.html
 BuildRequires:	rpmbuild(macros) >= 1.177
 BuildRequires:	sed >= 4.0
@@ -308,8 +309,9 @@ spraw± i rozprowadzane do cz³onków personelu listy og³oszeniowej.
 Summary:	Eventum Mail Routing - qmail
 Summary(pl):	Przekazywanie poczty Eventum - qmail
 Group:		Applications/Mail
-Requires:	%{name}-base = %{epoch}:%{version}-%{release}
+Requires:	%{name} = %{epoch}:%{version}-%{release}
 Requires:	qmail >= 1.03
+Obsoletes:	eventum-router
 Provides:	eventum-router
 
 %description router-qmail
@@ -324,8 +326,9 @@ przez qmaila.
 Summary:	Eventum Mail Routing - Postfix
 Summary(pl):	Przekazywanie poczty Eventum - Postfix
 Group:		Applications/Mail
-Requires:	%{name}-base = %{epoch}:%{version}-%{release}
+Requires:	%{name} = %{epoch}:%{version}-%{release}
 Requires:	postfix
+Obsoletes:	eventum-router
 Provides:	eventum-router
 
 %description router-postfix
@@ -441,6 +444,7 @@ $,,'
 #%patch18 -p1
 %patch19 -p1
 %patch20 -p1
+%patch21 -p1
 
 # replace in remaining scripts config.inc.php to system one
 grep -rl 'include_once(".*config.inc.php")' . | xargs sed -i -e '
@@ -619,14 +623,15 @@ rm -f /var/cache/eventum/*.php
 
 %postun base
 if [ "$1" = "0" ]; then
-	%groupremove %{name}
 	%userremove %{name}
+	%groupremove %{name}
 fi
 
 %post router-qmail
 CF=/etc/qmail/control/virtualdomains
 if ! grep -q ':%{name}\b' $CF 2>/dev/null; then
-	FQDN=$(hostname -f 2>/dev/null || echo localhost)
+	FQDN=$(awk -F'"' '/define/ && $2 ~ /APP_HOSTNAME/ {print $4}' %{_sysconfdir}/config.php 2>/dev/null)
+	[ "$FQDN" ] || FQDN=$(hostname -f 2>/dev/null || echo localhost)
 	umask 022
 	echo "#${FQDN}:%{name}" >> $CF
 
@@ -636,7 +641,7 @@ Added "#${FQDN}:%{name}" to $CF,
 Please verify that it is correct and restart qmail:
 # service qmail reload
 
-Consult qmail-send(8) for more details on virtualdomains.
+Consult qmail-send(8) for more information on virtualdomains.
 
 EOF
 fi
@@ -748,7 +753,8 @@ fi
 %attr(751,root,root) %dir %{_sysconfdir}
 %dir %{_libdir}
 %dir %{_appdir}
-%attr(750,root,eventum) %dir /var/lib/%{name}
+# qmail will ignore user, if it's home directory is not owned
+%attr(750,eventum,eventum) %dir /var/lib/%{name}
 
 %files setup
 %defattr(644,root,root,755)
