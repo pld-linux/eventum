@@ -27,7 +27,7 @@
 %define _source http://mysql.wildyou.net/Downloads/%{name}/%{name}-%{version}.tar.gz
 %endif
 
-%define _rel 1.38
+%define _rel 1.42
 
 Summary:	Eventum Issue / Bug Tracking System
 Summary(pl):	Eventum - system ¶ledzenia spraw/b³êdów
@@ -114,6 +114,8 @@ install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/apache.conf
 mv $RPM_BUILD_ROOT%{_appdir}/{config.inc.php,setup.conf.php} $RPM_BUILD_ROOT%{_sysconfdir}
 ln -s %{_sysconfdir}/config.inc.php $RPM_BUILD_ROOT%{_appdir}
 ln -s %{_sysconfdir}/setup.conf.php $RPM_BUILD_ROOT%{_appdir}
+mv $RPM_BUILD_ROOT%{_appdir}/include/private_key.php $RPM_BUILD_ROOT%{_sysconfdir}
+ln -s %{_sysconfdir}/private_key.php $RPM_BUILD_ROOT%{_appdir}/include/private_key.php
 
 # log directory
 mv $RPM_BUILD_ROOT%{_appdir}/logs $RPM_BUILD_ROOT/var/log/%{name}
@@ -186,15 +188,13 @@ if [ "$1" = "0" ]; then
 fi
 
 %post setup
-# RACE possible? chmod just in case
-chmod 640 %{_sysconfdir}/{config.inc,setup.conf}.php
-chown http:root %{_sysconfdir}/{config.inc,setup.conf}.php
+chmod 660 %{_sysconfdir}/{config.inc,setup.conf,private_key}.php
+chown root:http %{_sysconfdir}/{config.inc,setup.conf,private_key}.php
 
 %postun setup
 if [ "$1" = "0" ]; then
-	# RACE condition possible?
-	chmod 640 %{_sysconfdir}/{config.inc,setup.conf}.php
-	chown root:http %{_sysconfdir}/{config.inc,setup.conf}.php
+	chmod 640 %{_sysconfdir}/{config.inc,setup.conf,private_key}.php
+	chown root:http %{_sysconfdir}/{config.inc,setup.conf,private_key}.php
 fi
 
 %files
@@ -204,7 +204,7 @@ fi
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/*
 
 %dir %attr(731,root,http) /var/log/%{name}
-%attr(640,http,root) %ghost /var/log/%{name}/*
+%attr(620,root,http) %ghost /var/log/%{name}/*
 
 %dir %{_appdir}
 %{_appdir}/*.php
@@ -219,7 +219,7 @@ fi
 %{_appdir}/rpc
 %{_appdir}/templates
 
-%dir %attr(750,http,root) %{_appdir}/locks
+%dir %attr(730,root,http) %{_appdir}/locks
 
 %dir %{_appdir}/include
 %{_appdir}/include/customer
@@ -227,12 +227,9 @@ fi
 %{_appdir}/include/pear
 %{_appdir}/include/Smarty
 %{_appdir}/include/workflow
-%{_appdir}/include/class.*
-%{_appdir}/include/db_access.php
-%{_appdir}/include/jsrsServer.inc.php
-%attr(640,http,root) %{_appdir}/include/private_key.php
+%{_appdir}/include/*.php
 
-%dir %attr(750,http,root) %{_appdir}/templates_c
+%dir %attr(730,root,http) %{_appdir}/templates_c
 
 %files setup
 %defattr(644,root,root,755)
