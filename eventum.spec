@@ -311,8 +311,8 @@ Summary(pl):	Przekazywanie poczty Eventum - qmail
 Group:		Applications/Mail
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 Requires:	qmail >= 1.03
-Obsoletes:	eventum-router
 Provides:	eventum-router
+Obsoletes:	eventum-router
 
 %description router-qmail
 This package provides way of routing notes and emails back to Eventum
@@ -328,8 +328,8 @@ Summary(pl):	Przekazywanie poczty Eventum - Postfix
 Group:		Applications/Mail
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 Requires:	postfix
-Obsoletes:	eventum-router
 Provides:	eventum-router
+Obsoletes:	eventum-router
 
 %description router-postfix
 This package provides way of routing notes and emails back to Eventum
