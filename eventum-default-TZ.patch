@@ -5,7 +5,7 @@
  include_once(APP_PEAR_PATH . "Date.php");
  
 -define('APP_DEFAULT_TIMEZONE', 'UTC');
-+if (!defined(APP_DEFAULT_TIMEZONE)) {
++if (!defined('APP_DEFAULT_TIMEZONE')) {
 +    define('APP_DEFAULT_TIMEZONE', 'UTC');
 +}
  define("SECOND", 1);
