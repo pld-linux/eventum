@@ -7,11 +7,12 @@
 #  - dynCalendar.js (http://www.phpguru.org/dyncalendar.html)
 #  - overLIB 3.5.1 (http://www.bosrup.com/web/overlib/)
 #  - A few other small javascript libraries
-# - create eventum-router-qmail, eventum-router-postfix for -route-mails and -route-notes
 # - need start-stop-daemon (from dpkg for now)
-# - use eventum user for irc bot?
 
 %bcond_with	pear	# build with system PEAR packages (or use bundled ones)
+
+%define	uid	146
+%define	gid	146
 
 # snapshot: DATE
 %define _snap 20050222
@@ -22,16 +23,13 @@
 %define _source http://mysql.wildyou.net/Downloads/%{name}/%{name}-%{version}.tar.gz
 %endif
 
-%define _rel 2.209
-
-%define	uid	146
-%define	gid	146
+%define _rel 222
 
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl):	Eventum - system ¶ledzenia spraw/b³êdów
 Name:		eventum
 Version:	1.4
-Release:	%{?_snap:2.%{_snap}.}%{_rel}
+Release:	2.%{?_snap:%{_snap}.}%{_rel}
 License:	GPL
 Group:		Applications/WWW
 Source0:	%{_source}
@@ -46,6 +44,7 @@ Source7:	%{name}-irc.php
 Source8:	%{name}-irc.init
 Source9:	%{name}-irc.sysconfig
 Source10:	%{name}-config.php
+Source11:	%{name}-router-qmail.sh
 Patch0:		%{name}-paths.patch
 Patch1:		%{name}-scm-encode.patch
 Patch2:		%{name}-cvs-config.patch
@@ -259,7 +258,7 @@ Summary(pl):	Przekazywanie poczty dla Eventum
 Group:		Applications/WWW
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 Requires:	php >= 4.1.0
-#Requires:	eventum-router
+Requires:	eventum-router
 
 %description route-emails
 The email routing feature is used to automatically associate a thread
@@ -285,7 +284,7 @@ Summary(pl):	Przekazywanie notatek dla Eventum
 Group:		Applications/WWW
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 Requires:	php >= 4.1.0
-#Requires:	eventum-router
+Requires:	eventum-router
 
 %description route-notes
 The note routing feature is used to automatically associate a thread
@@ -304,6 +303,28 @@ note-<numer>@<domena>) na powy¿szy skrypt, u¿ytkownicy bêd± mogli
 u¿ywaæ klientów pocztowych do odpowiadania na wewnêtrzne notatki
 pochodz±ce od Eventu, a odpowiedzi te bêd± automatycznie wi±zane ze
 spraw± i rozprowadzane do cz³onków personelu listy og³oszeniowej.
+
+%package router-qmail
+Summary:	Eventum Mail Routing - qmail
+Group:		Applications/Mail
+Requires:	%{name}-base = %{epoch}:%{version}-%{release}
+Requires:	qmail >= 1.03
+Provides:	eventum-router
+
+%description router-qmail
+This package provides way of routing notes and emails back to Eventum
+via qmail.
+
+%package router-postfix
+Summary:	Eventum Mail Routing - Postfix
+Group:		Applications/Mail
+Requires:	%{name}-base = %{epoch}:%{version}-%{release}
+Requires:	postfix
+Provides:	eventum-router
+
+%description router-postfix
+This package provides way of routing notes and emails back to Eventum
+via Postfix.
 
 %package irc
 Summary:	Eventum IRC Notification Bot
@@ -430,7 +451,7 @@ rm -rf $RPM_BUILD_ROOT
 install -d \
 	$RPM_BUILD_ROOT{%{_sysconfdir},%{_bindir},%{_libdir}} \
 	$RPM_BUILD_ROOT/etc/{rc.d/init.d,cron.d,sysconfig} \
-	$RPM_BUILD_ROOT/var/{run,log,cache}/%{name} \
+	$RPM_BUILD_ROOT/var/{run,log,cache,lib}/%{name} \
 	$RPM_BUILD_ROOT%{_appdir}/{include,htdocs/misc} \
 
 cp -a *.php css customer images js manage reports rpc setup $RPM_BUILD_ROOT%{_appdir}/htdocs
@@ -493,6 +514,15 @@ install -d $RPM_BUILD_ROOT%{_smartyplugindir}
 cp -a include/Smarty/plugins/function.{calendar,get_{display_style,innerhtml,textarea_size}}.php \
 	$RPM_BUILD_ROOT%{_smartyplugindir}
 
+# qmail router
+d=$RPM_BUILD_ROOT/var/lib/%{name}
+echo 'root' > $d/.qmail
+echo 'root' > $d/.qmail-default
+echo '| %{_libdir}/router-qmail drafts' > $d/.qmail-draft-default
+echo '| %{_libdir}/router-qmail emails 1' > $d/.qmail-issue-default
+echo '| %{_libdir}/router-qmail notes' > $d/.qmail-note-default
+install %{SOURCE11} $RPM_BUILD_ROOT%{_libdir}/router-qmail
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -551,7 +581,6 @@ so that %{name}-setup is able to secure your Eventum installation.
 EOF
 fi
 
-
 %preun
 if [ "$1" = "0" ]; then
 	# apache1
@@ -576,22 +605,45 @@ rm -f /var/cache/eventum/*.php
 
 %pre base
 %groupadd -P %{name}-base %{name}
-%useradd -P %{name}-base -d %{_appdir} -g %{name} %{name} -c "Eventum User"
+%useradd -P %{name}-base -d /var/lib/%{name} -g %{name} %{name} -c "Eventum User"
 
 %postun base
 if [ "$1" = "0" ]; then
-	%userremove %{name}
 	%groupremove %{name}
+	%userremove %{name}
+fi
+
+%post router-qmail
+CF=/etc/qmail/control/virtualdomains
+if ! grep -q ':%{name}\b' $CF 2>/dev/null; then
+	FQDN=$(hostname -f 2>/dev/null || echo localhost)
+	umask 022
+	echo "#${FQDN}:%{name}" >> $CF
+
+%banner %{name}-qmail -e <<EOF
+
+Added "#${FQDN}:%{name}" to $CF,
+Please verify that it is correct and restart qmail:
+# service qmail reload
+
+Consult qmail-send(8) for more details on virtualdomains.
+
+EOF
+fi
+
+%preun router-qmail
+if [ "$1" = "0" ]; then
+	sed -i -e '/:%{name}\b/d' /etc/qmail/control/virtualdomains
 fi
 
 %post setup
 chmod 660 %{_sysconfdir}/{config,private_key}.php
-chown root:http %{_sysconfdir}/{config,private_key}.php
+chown root:eventum %{_sysconfdir}/{config,private_key}.php
 
 %postun setup
 if [ "$1" = "0" ]; then
 	chmod 640 %{_sysconfdir}/{config,private_key}.php
-	chown root:http %{_sysconfdir}/{config,private_key}.php
+	chown root:eventum %{_sysconfdir}/{config,private_key}.php
 fi
 
 %triggerpostun -- eventum < 1.4-2.160
@@ -629,6 +681,11 @@ chgrp eventum %{_sysconfdir}/{core,config,private_key,setup}.php
 
 %triggerpostun irc -- eventum-irc < 1.4-2.20050222.2.208
 chgrp eventum %{_sysconfdir}/irc.php
+
+%triggerpostun base -- eventum-base < 1.4-2.20050222.212
+if [ "`getent passwd %{name} | cut -d: -f6`" = "%{_appdir}" ]; then
+	/usr/sbin/usermod -d /var/lib/%{name} %{name}
+fi
 
 %files
 %defattr(644,root,root,755)
@@ -681,6 +738,7 @@ chgrp eventum %{_sysconfdir}/irc.php
 %attr(751,root,root) %dir %{_sysconfdir}
 %dir %{_libdir}
 %dir %{_appdir}
+%attr(750,root,eventum) %dir /var/lib/%{name}
 
 %files setup
 %defattr(644,root,root,755)
@@ -715,6 +773,14 @@ chgrp eventum %{_sysconfdir}/irc.php
 %defattr(644,root,root,755)
 %{_appdir}/route_drafts.php
 %{_appdir}/route_notes.php
+
+%files router-qmail
+%defattr(644,root,root,755)
+%attr(640,root,eventum) %config(noreplace) %verify(not md5 mtime size) /var/lib/%{name}/.qmail*
+%attr(755,root,root) %{_libdir}/router-qmail
+
+%files router-postfix
+%defattr(644,root,root,755)
 
 %files irc
 %defattr(644,root,root,755)
