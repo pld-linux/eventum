@@ -14,7 +14,7 @@
 %bcond_with	pear	# build with system PEAR packages (or use bundled ones)
 
 # snapshot: DATE
-#define _snap 20050124
+#define _snap 20050215
 
 %if 0%{?_snap}
 %define _source http://downloads.mysql.com/snapshots/%{name}/%{name}-nightly-%{_snap}.tar.gz
@@ -22,7 +22,7 @@
 %define _source http://mysql.wildyou.net/Downloads/%{name}/%{name}-%{version}.tar.gz
 %endif
 
-%define _rel 1.140
+%define _rel 1.141
 
 Summary:	Eventum Issue - a bug tracking system
 Summary(pl):	Eventum - system ¶ledzenia spraw/b³êdów
@@ -81,7 +81,7 @@ Requires:	php-pear-PEAR
 Requires:	php-pear-Text_Diff
 Requires:	php-pear-XML_RPC
 %endif
-#Requires:	apache-mod_dir
+Requires:	apache-mod_dir
 # conflict with non-confdir apache
 Conflicts:	apache1 < 1.3.33-1.1
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -388,7 +388,8 @@ $,,'
 %patch3 -p1
 %{?with_pear:%patch4 -p1 -b .PEAR}
 
-# bug fixes
+# bug fixes. do not apply if building snap
+%if %{undefined snap}
 %patch10 -p1
 %patch11 -p1
 %patch12 -p1
@@ -396,6 +397,7 @@ $,,'
 %patch14 -p1
 %patch15 -p1
 %patch16 -p1
+%endif
 
 rm -f */*~ */*/*~
 
