@@ -78,28 +78,17 @@
  
  $_displayed_confirmation = false;
  
---- eventum-1.4.c/include/class.template.php	2005-01-05 01:05:59.000000000 +0200
-+++ eventum-1.4/include/class.template.php	2005-01-24 17:22:35.000000000 +0200
+--- ./include/class.template.php~	2005-02-27 17:49:54.000000000 +0200
++++ ./include/class.template.php	2005-02-27 17:51:00.000000000 +0200
 @@ -60,7 +60,7 @@
      {
          $this->smarty = new Smarty;
-         $this->smarty->template_dir = APP_PATH . "templates/" . APP_CURRENT_LANG;
+         $this->smarty->template_dir = APP_TPL_PATH . APP_CURRENT_LANG;
 -        $this->smarty->compile_dir = APP_PATH . "templates_c";
 +        $this->smarty->compile_dir = "/var/cache/eventum";
          $this->smarty->config_dir = '';
-         $this->smarty->register_modifier("activateLinks", array('Link_Filter', 'processText'));
+         $this->smarty->register_modifier("activateLinks", array('Link_Filter', 'activateLinks'));
      }
---- ./include/class.template.php~	2005-02-22 21:01:00.000000000 +0200
-+++ ./include/class.template.php	2005-02-22 21:11:56.000000000 +0200
-@@ -59,7 +59,7 @@
-     function Template_API()
-     {
-         $this->smarty = new Smarty;
--        $this->smarty->template_dir = APP_PATH . "templates/" . APP_CURRENT_LANG;
-+        $this->smarty->template_dir = APP_TPL_PATH . APP_CURRENT_LANG;
-         $this->smarty->compile_dir = "/var/cache/eventum";
-         $this->smarty->config_dir = '';
-         $this->smarty->register_modifier("activateLinks", array('Link_Filter', 'processText'));
 --- eventum-1.4.orig/setup/index.php	2005-01-25 23:42:55.000000000 +0200
 +++ eventum-1.4/setup/index.php	2005-01-25 23:46:14.000000000 +0200
 @@ -114,15 +114,15 @@
