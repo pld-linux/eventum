@@ -14,7 +14,7 @@
 %bcond_with	pear	# build with system PEAR packages (or use bundled ones)
 
 # snapshot: DATE
-#define _snap 20050215
+#define _snap 20050217
 
 %if 0%{?_snap}
 %define _source http://downloads.mysql.com/snapshots/%{name}/%{name}-nightly-%{_snap}.tar.gz
@@ -22,7 +22,7 @@
 %define _source http://mysql.wildyou.net/Downloads/%{name}/%{name}-%{version}.tar.gz
 %endif
 
-%define _rel 1.142
+%define _rel 1.145
 
 Summary:	Eventum Issue - a bug tracking system
 Summary(pl):	Eventum - system ¶ledzenia spraw/b³êdów
@@ -46,7 +46,6 @@ Patch1:		%{name}-scm-encode.patch
 Patch2:		%{name}-cvs-config.patch
 Patch3:		%{name}-irc-config.patch
 Patch4:		%{name}-PEAR.patch
-Patch10:		%{name}-clock-status.patch
 Patch11:		%{name}-scm_checkin_associated.patch
 Patch12:		%{name}-mail-queue.tpl.patch
 Patch13:		%{name}-maildecode.patch
@@ -88,6 +87,7 @@ Conflicts:	apache1 < 1.3.33-1.1
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_sysconfdir	/etc/%{name}
+%define		_libdir		%{_prefix}/%{_lib}/%{name}
 %define		_appdir	%{_datadir}/%{name}
 %define		_smartyplugindir	%{php_pear_dir}/Smarty/plugins
 
@@ -363,7 +363,7 @@ The integration is implemented in such a way that it will be forward
 compatible with pretty much any SCM system, such as CVS.
 
 For installation see
-/eventum/help.php?topic=scm_integration_installation .
+</eventum/help.php?topic=scm_integration_installation>.
 
 %description scm -l pl
 Ten pakiet pozwala zespo³om programistów na integracjê systemu
@@ -374,7 +374,7 @@ Integracja jest zaimplementowana tak, aby byæ kompatybilna w przód z
 prawie ka¿dym systemem SCM, jak np. CVS.
 
 Szczegó³y na temat instalacji mo¿na przeczytaæ pod
-/eventum/help.php?topic=scm_integration_installation .
+</eventum/help.php?topic=scm_integration_installation>.
 
 %prep
 %setup -q %{?_snap:-n %{name}-%{_snap}}
@@ -389,9 +389,7 @@ $,,'
 %patch3 -p1
 %{?with_pear:%patch4 -p1 -b .PEAR}
 
-# bug fixes. do not apply if building snap
-%if %{undefined snap}
-%patch10 -p1
+# bug fixes.
 %patch11 -p1
 %patch12 -p1
 %patch13 -p1
@@ -399,13 +397,12 @@ $,,'
 %patch15 -p1
 %patch16 -p1
 %patch17 -p1
-%endif
 
 rm -f */*~ */*/*~
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_sysconfdir},%{_bindir},%{_appdir}} \
+install -d $RPM_BUILD_ROOT{%{_sysconfdir},%{_bindir},%{_libdir},%{_appdir}} \
 	$RPM_BUILD_ROOT{/etc/{rc.d/init.d,cron.d},/var/log/%{name}} \
 	$RPM_BUILD_ROOT{/var/run/eventum,/var/cache/eventum}
 
@@ -451,7 +448,7 @@ rm -rf $RPM_BUILD_ROOT%{_appdir}/rpc/xmlrpc_client.php
 mv $RPM_BUILD_ROOT%{_appdir}/misc/cli/eventum $RPM_BUILD_ROOT%{_bindir}
 rm -f $RPM_BUILD_ROOT%{_appdir}/misc/{cli/eventumrc_example,scm/process_cvs_commits.php}
 cp misc/cli/eventumrc_example eventumrc
-install %{name}-scm $RPM_BUILD_ROOT%{_bindir}/%{name}-scm
+install %{name}-scm $RPM_BUILD_ROOT%{_libdir}/scm
 
 %if %{with pear}
 # provided by PEAR
@@ -551,7 +548,8 @@ fi
 
 %files
 %defattr(644,root,root,755)
-%doc ChangeLog FAQ INSTALL README UPGRADE misc/upgrade docs/* rpc/xmlrpc_client.php
+%doc ChangeLog FAQ INSTALL README UPGRADE
+%doc misc/upgrade docs/* rpc/xmlrpc_client.php setup/schema.sql 
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/apache.conf
 %attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/config.php
 %attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/private_key.php
@@ -594,6 +592,7 @@ fi
 %files base
 %defattr(644,root,root,755)
 %attr(751,root,root) %dir %{_sysconfdir}
+%dir %{_libdir}
 
 %files setup
 %defattr(644,root,root,755)
@@ -645,5 +644,4 @@ fi
 %files scm
 %defattr(644,root,root,755)
 %attr(644,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/cvs.php
-# FIXME: not sure about this naming.
-%attr(755,root,root) %{_bindir}/%{name}-scm
+%attr(755,root,root) %{_libdir}/scm
