@@ -15,9 +15,10 @@
 # - Note Routing Script (misc/route_notes.php)
 # - IRC Notification Bot (misc/irc/bot.php)
 # - Command-line Interface (misc/cli/eventum)
+# - scm subpackage doesn't work (yet)
 
 # snapshot: DATE
-#define _snap 20050115
+#define _snap 20050117
 
 %if 0%{?_snap}
 %define _source http://downloads.mysql.com/snapshots/%{name}/%{name}-nightly-%{_snap}.tar.gz
@@ -25,7 +26,7 @@
 %define _source http://mysql.wildyou.net/Downloads/%{name}/%{name}-%{version}.tar.gz
 %endif
 
-%define _rel 1.53
+%define _rel 1.59
 
 Summary:	Eventum Issue / Bug Tracking System
 Summary(pl):	Eventum - system ¶ledzenia spraw/b³êdów
@@ -119,6 +120,21 @@ In order for Eventum's email integration feature to work, you need to
 setup a cron job to run the script every so often.
 
 This package contains the cron job.
+
+%package scm
+Summary:	Eventum SCM Integration
+Group:		Applications/WWW
+Requires:	%{name} = %{epoch}:%{version}-%{release}
+Requires:	php4 >= 4.1.0
+
+%description scm
+This feature allows your software development teams to integrate your
+Source Control Management system with your Issue Tracking System.
+
+The integration is implemented in such a way that it will be forward
+compatible with pretty much any SCM system, such as CVS.
+
+for installation see /eventum/help.php?topic=scm_integration_installation
 
 %prep
 %setup -q %{?_snap:-n %{name}-%{_snap}}
@@ -281,7 +297,6 @@ fi
 %dir %{_appdir}/misc
 %{_appdir}/misc/cli
 %{_appdir}/misc/irc
-%{_appdir}/misc/scm
 %{_appdir}/misc/blank.html
 %{_appdir}/misc/check_reminders.php
 %{_appdir}/misc/monitor.php
@@ -302,3 +317,8 @@ fi
 %defattr(644,root,root,755)
 %{_appdir}/misc/download_emails.php
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/cron.d/%{name}-mail-download
+
+%files scm
+%defattr(644,root,root,755)
+%dir %{_appdir}/misc/scm
+%attr(644,root,root) %config(noreplace) %verify(not md5 mtime size) %{_appdir}/misc/scm/process_cvs_commits.php
