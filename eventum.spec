@@ -15,7 +15,7 @@
 %define	gid	146
 
 # snapshot: DATE
-%define _snap 20050227
+#define _snap 20050227
 
 %if 0%{?_snap}
 %define _source http://downloads.mysql.com/snapshots/%{name}/%{name}-nightly-%{_snap}.tar.gz
@@ -23,17 +23,17 @@
 %define _source http://mysql.wildyou.net/Downloads/%{name}/%{name}-%{version}.tar.gz
 %endif
 
-%define _rel 233
+%define _rel 237
 
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl):	Eventum - system ¶ledzenia spraw/b³êdów
 Name:		eventum
-Version:	1.4
-Release:	2.%{?_snap:%{_snap}.}%{_rel}
+Version:	1.5
+Release:	0.%{?_snap:%{_snap}.}%{_rel}
 License:	GPL
 Group:		Applications/WWW
 Source0:	%{_source}
-# Source0-md5:	8bfe164a55d06d95b722dae534ee14c3
+# Source0-md5:	6a467e1a672983f26d72d4eb7568efb6
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -62,6 +62,7 @@ Patch19:	%{name}-charset-mailsubj.patch
 Patch20:	%{name}-monitor-bot-process.patch
 Patch21:	%{name}-maillock.patch
 Patch22:	%{name}-tpl-multibyte.patch
+Patch23:	%{name}-db-20050227.patch
 URL:		http://dev.mysql.com/downloads/other/eventum/index.html
 BuildRequires:	rpmbuild(macros) >= 1.177
 BuildRequires:	sed >= 4.0
@@ -103,6 +104,9 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_apache1dir	/etc/apache
 %define		_apache2dir	/etc/httpd
+
+# don't compress upgrade scripts
+%define		_noautocompressdoc  *.php
 
 %description
 Eventum is a user-friendly and flexible issue tracking system that can
@@ -429,7 +433,7 @@ $,,'
 
 # packaging
 %patch0 -p1 -b .paths
-%patch1 -p1
+#%patch1 -p1
 %patch2 -p1
 %patch3 -p1
 %{?with_pear:%patch4 -p1 -b .PEAR}
@@ -444,9 +448,10 @@ $,,'
 #%patch17 -p1
 #%patch18 -p1
 #%patch19 -p1
-%patch20 -p1
+#%patch20 -p1
 #%patch21 -p1
-%patch22 -p1
+#%patch22 -p1
+%patch23 -p1
 
 # replace in remaining scripts config.inc.php to system one
 grep -rl 'include_once(".*config.inc.php")' . | xargs sed -i -e '
@@ -714,6 +719,25 @@ chgrp eventum %{_sysconfdir}/irc.php
 %triggerpostun base -- eventum-base < 1.4-2.20050222.212
 if [ "`getent passwd %{name} | cut -d: -f6`" = "%{_appdir}" ]; then
 	/usr/sbin/usermod -d /var/lib/%{name} %{name}
+fi
+
+%triggerpostun -- eventum < 1.5-0.237
+echo >&2 ""
+echo >&2 "* Performing database upgrades!"
+echo >&2 "These will fail if your eventum user doesn't have ALTER privilege to database."
+echo >&2 ""
+# i hope it's not too evil to do these in trigger
+scriptdir=%{_docdir}/%{name}-%{version}/upgrade/v1.4_to_1.5
+# don't fail if --excludedocs used
+if [ -d $scriptdir ]; then
+	/usr/bin/php4 -q $scriptdir/database_changes.php || {
+		echo >&2 "Please run manually: /usr/bin/php4 -q $scriptdir/database_changes.php"
+	}
+	# user roles already applied in snapshot. skip it
+#	/usr/bin/php4 -q $scriptdir/set_user_roles.php || {
+#		echo >&2 "Please run manually: /usr/bin/php4 -q $scriptdir/set_user_roles.php"
+#	}
+	# no config file changes. skip it
 fi
 
 %files
