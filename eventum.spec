@@ -1,4 +1,5 @@
 # TODO
+# - php5 is not tested, but not placing hard conflict on it, as it prevents php4 & php coinstallation
 # - discard bundled packages (from INSTALL):
 #  - JpGraph 1.5.3 (last GPL version)
 #  - Smarty 2.3.0 (http://smarty.php.net)
@@ -18,7 +19,7 @@
 Summary:	Eventum Issue / Bug Tracking System
 Name:		eventum
 Version:	1.4
-Release:	0.5
+Release:	0.7
 License:	GPL
 Group:		Applications/WWW
 Source0:	http://mysql.wildyou.net/Downloads/%{name}/%{name}-%{version}.tar.gz
@@ -26,14 +27,13 @@ Source0:	http://mysql.wildyou.net/Downloads/%{name}/%{name}-%{version}.tar.gz
 URL:		http://dev.mysql.com/downloads/other/eventum/index.html
 BuildRequires:	sed >= 4.0
 Requires:	php >= 4.1.0
-Conflicts:	php >= 5.0.0
 Requires:	php-pcre
 Requires:	php-mysql
 Requires:	php-gd
 Requires:	php-imap
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
-%define		_htmldir	%{_datadir}/%{name}
+%define		_appdir	%{_datadir}/%{name}
 
 %description
 Eventum is a user-friendly and flexible issue tracking system that can
@@ -50,17 +50,17 @@ has allowed us to dramatically improve our response times.
 %install
 rm -rf $RPM_BUILD_ROOT
 
-install -d $RPM_BUILD_ROOT%{_htmldir}/locks
+install -d $RPM_BUILD_ROOT%{_appdir}/locks
 
 # TODO: php4
 sed -i -e 's,/usr/local/bin/php,/usr/bin/php,' misc/cli/eventum
 
-cp -a . $RPM_BUILD_ROOT%{_htmldir}
+cp -a . $RPM_BUILD_ROOT%{_appdir}
 
-> $RPM_BUILD_ROOT%{_htmldir}/setup.conf.php
+> $RPM_BUILD_ROOT%{_appdir}/setup.conf.php
 
 # in doc
-rm -f $RPM_BUILD_ROOT%{_htmldir}/{COPYING,ChangeLog,FAQ,INSTALL,README,UPGRADE}
+rm -f $RPM_BUILD_ROOT%{_appdir}/{COPYING,ChangeLog,FAQ,INSTALL,README,UPGRADE}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -68,37 +68,37 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(644,root,root,755)
 %doc ChangeLog FAQ INSTALL README UPGRADE
-%dir %{_htmldir}
-%attr(640,http,root) %config(noreplace) %{_htmldir}/config.inc.php
-%attr(640,http,root) %config(noreplace) %{_htmldir}/setup.conf.php
-%{_htmldir}/*[!cf].php
+%dir %{_appdir}
+%attr(640,http,root) %config(noreplace) %{_appdir}/config.inc.php
+%attr(640,http,root) %config(noreplace) %{_appdir}/setup.conf.php
+%{_appdir}/*[!cf].php
 
-%{_htmldir}/css
-%{_htmldir}/customer
-%{_htmldir}/docs
-%{_htmldir}/images
-%{_htmldir}/js
-%{_htmldir}/manage
-%{_htmldir}/misc
-%{_htmldir}/reports
-%{_htmldir}/rpc
-%{_htmldir}/setup
-%{_htmldir}/templates
+%{_appdir}/css
+%{_appdir}/customer
+%{_appdir}/docs
+%{_appdir}/images
+%{_appdir}/js
+%{_appdir}/manage
+%{_appdir}/misc
+%{_appdir}/reports
+%{_appdir}/rpc
+%{_appdir}/setup
+%{_appdir}/templates
 
-%dir %attr(755,http,root) %{_htmldir}/locks
+%dir %attr(755,http,root) %{_appdir}/locks
 
-%dir %{_htmldir}/include
-%{_htmldir}/include/customer
-%{_htmldir}/include/jpgraph
-%{_htmldir}/include/pear
-%{_htmldir}/include/Smarty
-%{_htmldir}/include/workflow
-%{_htmldir}/include/class.*
-%{_htmldir}/include/db_access.php
-%{_htmldir}/include/jsrsServer.inc.php
-%attr(640,http,root) %{_htmldir}/include/private_key.php
+%dir %{_appdir}/include
+%{_appdir}/include/customer
+%{_appdir}/include/jpgraph
+%{_appdir}/include/pear
+%{_appdir}/include/Smarty
+%{_appdir}/include/workflow
+%{_appdir}/include/class.*
+%{_appdir}/include/db_access.php
+%{_appdir}/include/jsrsServer.inc.php
+%attr(640,http,root) %{_appdir}/include/private_key.php
 
-%dir %attr(755,http,root) %{_htmldir}/logs
-%attr(640,http,root) %{_htmldir}/logs/*
+%dir %attr(755,http,root) %{_appdir}/logs
+%attr(640,http,root) %{_appdir}/logs/*
 
-%dir %attr(750,http,root) %{_htmldir}/templates_c
+%dir %attr(750,http,root) %{_appdir}/templates_c
