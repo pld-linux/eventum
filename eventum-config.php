@@ -16,10 +16,10 @@ set_time_limit(0);
 ini_set('session.cache_limiter', 'nocache');
 
 // definitions of path related variables
-@define("APP_PATH", '/usr/share/eventum/');
-@define("APP_INC_PATH", APP_PATH . "include/");
+@define("APP_PATH", '/usr/share/eventum/htdocs/');
+@define("APP_INC_PATH", "/usr/share/eventum/include/");
 @define("APP_PEAR_PATH", APP_INC_PATH . "pear/");
-@define("APP_TPL_PATH", APP_PATH . "templates/");
+@define("APP_TPL_PATH", "/usr/share/eventum/templates/");
 @define("APP_SMARTY_PATH", "/usr/share/pear/Smarty/");
 @define("APP_JPGRAPH_PATH", APP_INC_PATH . "jpgraph/");
 @define("APP_LOG_PATH", "/var/log/eventum/");
@@ -27,7 +27,7 @@ ini_set('session.cache_limiter', 'nocache');
 ini_set("include_path", ".:" . APP_PEAR_PATH);
 
 @define("APP_SETUP_PATH", APP_PATH);
-@define("APP_SETUP_FILE", APP_SETUP_PATH . "setup.conf.php");
+@define("APP_SETUP_FILE", "/etc/eventum/setup.php");
 
 @define("APP_ERROR_LOG", APP_LOG_PATH . "errors.log");
 @define("APP_CLI_LOG", APP_LOG_PATH . "cli.log");
