@@ -26,7 +26,7 @@
 %define _source http://mysql.wildyou.net/Downloads/%{name}/%{name}-%{version}.tar.gz
 %endif
 
-%define _rel 1.33
+%define _rel 1.35
 
 Summary:	Eventum Issue / Bug Tracking System
 Name:		eventum
@@ -96,6 +96,11 @@ sed -i -e 's,/usr/local/bin/php,/usr/bin/php4,' $RPM_BUILD_ROOT%{_appdir}/misc/c
 
 install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/apache.conf
 
+# in conf
+mv $RPM_BUILD_ROOT%{_appdir}/{config.inc.php,setup.conf.php} $RPM_BUILD_ROOT%{_sysconfdir}
+ln -s %{_sysconfdir}/config.inc.php $RPM_BUILD_ROOT%{_appdir}
+ln -s %{_sysconfdir}/setup.conf.php $RPM_BUILD_ROOT%{_appdir}
+
 # in doc
 rm -f $RPM_BUILD_ROOT%{_appdir}/{COPYING,ChangeLog,FAQ,INSTALL,README,UPGRADE}
 rm -rf $RPM_BUILD_ROOT%{_appdir}/misc/upgrade
@@ -120,7 +125,7 @@ if [ -d %{_apache2dir}/httpd.conf ]; then
 fi
 
 # check if the package is configured.
-if grep -q 'header("Location: setup/")' %{_appdir}/config.inc.php; then
+if grep -q 'header("Location: setup/")' %{_sysconfdir}/config.inc.php; then
 %banner %{name} -e <<EOF
 
 You haven't yet configured Eventum!
@@ -164,27 +169,24 @@ fi
 
 %post setup
 # RACE possible? chmod just in case
-chmod 640 %{_appdir}/{config.inc,setup.conf}.php
-chown http:root %{_appdir}/{config.inc,setup.conf}.php
+chmod 640 %{_sysconfdir}/{config.inc,setup.conf}.php
+chown http:root %{_sysconfdir}/{config.inc,setup.conf}.php
 
 %postun setup
 if [ "$1" = "0" ]; then
 	# RACE condition possible?
-	chmod 640 %{_appdir}/{config.inc,setup.conf}.php
-	chown root:http %{_appdir}/{config.inc,setup.conf}.php
+	chmod 640 %{_sysconfdir}/{config.inc,setup.conf}.php
+	chown root:http %{_sysconfdir}/{config.inc,setup.conf}.php
 fi
 
 %files
 %defattr(644,root,root,755)
 %doc ChangeLog FAQ INSTALL README UPGRADE misc/upgrade
 %dir %{_sysconfdir}
-%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/apache.conf
+%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/*
 
 %dir %{_appdir}
-%attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_appdir}/config.inc.php
-%attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_appdir}/setup.conf.php
-%{_appdir}/*[!cf].php
-
+%{_appdir}/*.php
 %{_appdir}/css
 %{_appdir}/customer
 %{_appdir}/docs
