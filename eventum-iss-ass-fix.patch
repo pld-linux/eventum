@@ -1,0 +1,30 @@
+http://mysql.bkbits.net:8080/eventum/cset@1.503?nav=index.html|ChangeSet@-7d
+
+Fixed the issue assignment feature of the listing screen to work again
+
+diff -Naru a/include/class.issue.php b/include/class.issue.php
+--- a/include/class.issue.php	2005-03-17 07:58:05 -08:00
++++ b/include/class.issue.php	2005-03-17 07:58:05 -08:00
+@@ -2781,7 +2781,7 @@
+             } else {
+                 
+                 // make sure issue is not in another project
+-                if (Issue::getProjectID($HTTP_POST_VARS['items'][$i]) != Auth::getCurrentProject()) {
++                if (Issue::getProjectID($HTTP_POST_VARS['item'][$i]) != Auth::getCurrentProject()) {
+                     return -1;
+                 }
+                 
+# This is a BitKeeper generated diff -Nru style patch.
+#
+# ChangeSet
+#   2005/03/14 15:44:44-06:00 jpm@mysql.com 
+#   Fixed the issue assignment feature of the listing screen to work again
+# 
+# ChangeLog
+#   2005/03/14 15:44:43-06:00 jpm@mysql.com +1 -0
+#   Fixed the issue assignment feature of the listing screen to work again
+# 
+# include/class.issue.php
+#   2005/03/14 15:44:43-06:00 jpm@mysql.com +1 -1
+#   Fixed the issue assignment feature of the listing screen to work again
+# 
