@@ -102,10 +102,14 @@ reakcji.
 
 %package base
 Summary:	Eventum base package
+Summary(pl):	Podstawowy pakiet Eventum
 Group:		Applications/WWW
 
 %description base
 This package contains base directory structure for Eventum.
+
+%description base -l pl
+Ten pakiet zawiera podstawow± strukturê katalogów dla Eventum.
 
 %package setup
 Summary:	Eventum setup package
@@ -373,8 +377,6 @@ Szczegó³y na temat instalacji mo¿na przeczytaæ pod
 %patch10 -p1
 %patch11 -p1
 %patch12 -p1
-
-%build
 
 %install
 rm -rf $RPM_BUILD_ROOT
