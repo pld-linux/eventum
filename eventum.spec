@@ -20,7 +20,7 @@
 %define _source http://mysql.wildyou.net/Downloads/%{name}/%{name}-%{version}.tar.gz
 %endif
 
-%define _rel 1.106
+%define _rel 1.109
 
 Summary:	Eventum Issue - a bug tracking system
 Summary(pl):	Eventum - system ¶ledzenia spraw/b³êdów
@@ -272,7 +272,8 @@ Summary:	Eventum IRC Notification Bot
 Summary(pl):	IRC-owy bot powiadamiaj±cy dla Eventum
 Group:		Applications/WWW
 Requires:	%{name} = %{epoch}:%{version}-%{release}
-Requires:	php4 >= 4.1.0
+Requires:	php >= 4.1.0
+Requires:	php-sockets
 # FIXME just need start-stop-daemon
 Requires:	dpkg
 
