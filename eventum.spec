@@ -8,6 +8,7 @@
 #  - overLIB 3.5.1 (http://www.bosrup.com/web/overlib/)
 #  - A few other small javascript libraries
 # - need start-stop-daemon (from dpkg for now)
+# - 64bit platforms beware? http://bugs.php.net/bug.php?id=30215 (it's actually Smarty related problem)
 
 %bcond_with	pear	# build with system PEAR packages (or use bundled ones)
 
