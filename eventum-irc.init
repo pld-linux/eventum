@@ -1,0 +1,79 @@
+#!/bin/sh
+#
+# chkconfig:	345 29 69
+# description:	Eventum IRC Notification Bot
+
+# Source function library
+. /etc/rc.d/init.d/functions
+
+# Get network config
+. /etc/sysconfig/network
+
+PHP=/usr/bin/php4
+PIDFILE=/usr/share/eventum/locks/irc_bot.pid
+
+# Get service config
+[ -f /etc/sysconfig/eventum-irc ] && . /etc/sysconfig/eventum-irc
+
+# Check that networking is up.
+if is_yes "${NETWORKING}"; then
+	if [ ! -f /var/lock/subsys/network -a "$1" != stop -a "$1" != status -a "$1" != init ]; then
+		msg_network_down eventum-irc
+		exit 1
+	fi
+else
+	exit 0
+fi
+
+RETVAL=0
+# See how we were called.
+case "$1" in
+start)
+	if [ ! -f /var/lock/subsys/eventum-irc ]; then
+		msg_starting eventum-irc
+		start-stop-daemon --start \
+			 --exec $PHP \
+			 --pidfile $PIDFILE \
+			 --chuid http \
+			 --chdir /usr/share/eventum/misc/irc \
+			 --background -- -q bot.php
+
+		RETVAL=$?
+		if [ $RETVAL -eq 0 ]; then
+			touch /var/lock/subsys/eventum-irc
+			ok
+		else
+			fail
+		fi
+	else
+		msg_already_running eventum-irc
+	fi
+;;
+stop)
+	if [ -f /var/lock/subsys/eventum-irc ]; then
+		msg_stopping eventum-irc
+		if start-stop-daemon --stop --pidfile $PIDFILE; then
+			rm -f $PIDFILE /var/lock/subsys/eventum-irc >/dev/null 2>&1
+			ok
+		else
+			fail
+		fi
+	else
+		msg_not_running eventum-irc
+	fi
+;;
+restart)
+	$0 stop
+	$0 start
+	exit $?
+;;
+status)
+	status eventum-irc
+	exit $?
+;;
+*)
+	msg_usage "$0 {start|stop|restart|status}"
+	exit 3
+esac
+
+exit $RETVAL
