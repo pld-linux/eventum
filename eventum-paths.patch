@@ -127,23 +127,3 @@
  
  $tpl->assign("phpversion", phpversion());
  $tpl->assign("rel_url", $relative_url);
---- eventum-1.4.orig/setup/config.inc.php	2005-01-25 23:42:55.000000000 +0200
-+++ eventum-1.4/setup/config.inc.php	2005-01-25 23:57:55.000000000 +0200
-@@ -58,15 +58,9 @@
- @define("APP_TPL_PATH", APP_PATH . "templates/");
- @define("APP_SMARTY_PATH", APP_INC_PATH . "Smarty/");
- @define("APP_JPGRAPH_PATH", APP_INC_PATH . "jpgraph/");
--@define("APP_LOG_PATH", APP_PATH . "logs/");
--@define("APP_LOCKS_PATH", APP_PATH . "locks/");
--if (stristr(PHP_OS, 'darwin')) {
-+@define("APP_LOG_PATH", "/var/log/eventum/");
-+@define("APP_LOCKS_PATH", "/var/run/eventum/");
-     ini_set("include_path", ".:" . APP_PEAR_PATH);
--} elseif (stristr(PHP_OS, 'win')) {
--    ini_set("include_path", ".;" . APP_PEAR_PATH);
--} else {
--    ini_set("include_path", ".:" . APP_PEAR_PATH);
--}
- 
- @define("APP_SETUP_PATH", APP_PATH);
- @define("APP_SETUP_FILE", APP_SETUP_PATH . "setup.conf.php");
