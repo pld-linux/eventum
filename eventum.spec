@@ -22,7 +22,7 @@
 %define _source http://mysql.wildyou.net/Downloads/%{name}/%{name}-%{version}.tar.gz
 %endif
 
-%define _rel 1.92
+%define _rel 1.93
 
 Summary:	Eventum Issue - a bug tracking system
 Summary(pl):	Eventum - system ¶ledzenia spraw/b³êdów
@@ -390,6 +390,8 @@ mv $RPM_BUILD_ROOT%{_appdir}/logs $RPM_BUILD_ROOT/var/log/%{name}
 # in doc
 rm -f $RPM_BUILD_ROOT%{_appdir}/{COPYING,ChangeLog,FAQ,INSTALL,README,UPGRADE}
 rm -rf $RPM_BUILD_ROOT%{_appdir}/{docs,misc/upgrade}
+# some sample, not used in eventum
+rm -rf $RPM_BUILD_ROOT%{_appdir}/rpc/xmlrpc_client.php
 
 # use system Smarty
 rm -rf $RPM_BUILD_ROOT%{_appdir}/include/Smarty
@@ -487,7 +489,7 @@ fi
 
 %files
 %defattr(644,root,root,755)
-%doc ChangeLog FAQ INSTALL README UPGRADE misc/upgrade docs/*
+%doc ChangeLog FAQ INSTALL README UPGRADE misc/upgrade docs/* rpc/xmlrpc_client.php
 %attr(751,root,root) %dir %{_sysconfdir}
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/apache.conf
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/config.php
