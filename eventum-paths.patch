@@ -1,22 +1,24 @@
---- eventum-1.4.d/setup/config.inc.php	2005-01-05 01:05:58.000000000 +0200
-+++ eventum-1.4/setup/config.inc.php	2005-01-25 17:09:33.000000000 +0200
-@@ -54,12 +54,12 @@
- }
- @define("APP_PATH", $app_path);
- @define("APP_INC_PATH", APP_PATH . "include/");
--@define("APP_PEAR_PATH", APP_INC_PATH . "pear/");
-+@define("APP_PEAR_PATH", "/usr/share/pear/");
+--- eventum-1.4.orig/setup/config.inc.php	2005-01-25 23:42:55.000000000 +0200
++++ eventum-1.4/setup/config.inc.php	2005-01-25 23:57:55.000000000 +0200
+@@ -58,15 +58,9 @@
  @define("APP_TPL_PATH", APP_PATH . "templates/");
--@define("APP_SMARTY_PATH", APP_INC_PATH . "Smarty/");
-+@define("APP_SMARTY_PATH", "/usr/share/pear/Smarty/");
+ @define("APP_SMARTY_PATH", APP_INC_PATH . "Smarty/");
  @define("APP_JPGRAPH_PATH", APP_INC_PATH . "jpgraph/");
 -@define("APP_LOG_PATH", APP_PATH . "logs/");
 -@define("APP_LOCKS_PATH", APP_PATH . "locks/");
+-if (stristr(PHP_OS, 'darwin')) {
+-    ini_set("include_path", ".:" . APP_PEAR_PATH);
+-} elseif (stristr(PHP_OS, 'win')) {
+-    ini_set("include_path", ".;" . APP_PEAR_PATH);
+-} else {
+-    ini_set("include_path", ".:" . APP_PEAR_PATH);
+-}
 +@define("APP_LOG_PATH", "/var/log/eventum/");
 +@define("APP_LOCKS_PATH", "/var/run/eventum/");
- if (stristr(PHP_OS, 'darwin')) {
-     ini_set("include_path", ".:" . APP_PEAR_PATH);
- } elseif (stristr(PHP_OS, 'win')) {
++ini_set("include_path", ".:" . APP_PEAR_PATH);
+ 
+ @define("APP_SETUP_PATH", APP_PATH);
+ @define("APP_SETUP_FILE", APP_SETUP_PATH . "setup.conf.php");
 --- ./misc/cli/eventum~	2005-01-19 02:47:20.000000000 +0200
 +++ ./misc/cli/eventum	2005-01-19 03:02:40.119100405 +0200
 @@ -11,7 +11,7 @@
@@ -28,9 +30,9 @@
  include_once(APP_INC_PATH . "class.command_line.php");
  include_once(APP_PEAR_PATH . "XML_RPC/RPC.php");
  
---- eventum-1.4/misc/cli/config.inc.php~	2005-01-05 01:06:01.000000000 +0200
-+++ eventum-1.4/misc/cli/config.inc.php	2005-01-19 03:25:10.000000000 +0200
-@@ -45,7 +45,7 @@
+--- eventum-1.4.orig/misc/cli/config.inc.php	2005-01-26 00:00:58.000000000 +0200
++++ eventum-1.4/misc/cli/config.inc.php	2005-01-25 23:57:39.000000000 +0200
+@@ -45,16 +45,10 @@
  }
  
  // definitions of path related variables
@@ -38,14 +40,17 @@
 +@define("APP_PATH", '/usr/share/eventum/misc/cli/');
  @define("APP_INC_PATH", APP_PATH . "include/");
  @define("APP_PEAR_PATH", APP_INC_PATH . "pear/");
- if (stristr(PHP_OS, 'darwin')) {
-@@ -57,4 +57,4 @@
- }
+-if (stristr(PHP_OS, 'darwin')) {
+-    ini_set("include_path", ".:" . APP_PEAR_PATH);
+-} elseif (stristr(PHP_OS, 'win')) {
+-    ini_set("include_path", ".;" . APP_PEAR_PATH);
+-} else {
+-    ini_set("include_path", ".:" . APP_PEAR_PATH);
+-}
++ini_set("include_path", ".:" . APP_PEAR_PATH);
  
  @define("APP_BENCHMARK", false);
--?>
-\ No newline at end of file
-+?>
+ ?>
 --- eventum-1.4.c/include/class.template.php	2005-01-05 01:05:59.000000000 +0200
 +++ eventum-1.4/include/class.template.php	2005-01-24 17:22:35.000000000 +0200
 @@ -60,7 +60,7 @@
@@ -57,8 +62,8 @@
          $this->smarty->config_dir = '';
          $this->smarty->register_modifier("activateLinks", array('Link_Filter', 'processText'));
      }
---- index.php	2005-01-05 01:05:52.000000000 +0200
-+++ eventum-1.4/setup/index.php	2005-01-24 17:47:16.000000000 +0200
+--- eventum-1.4.orig/setup/index.php	2005-01-25 23:42:55.000000000 +0200
++++ eventum-1.4/setup/index.php	2005-01-25 23:46:14.000000000 +0200
 @@ -114,15 +114,15 @@
      if (ini_get('allow_call_time_pass_reference') != "1") {
          $errors[] = "The 'allow_call_time_pass_reference' directive needs to be enabled in your PHP.INI file in order for Eventum to work properly.";
@@ -87,12 +92,7 @@
      if (!empty($error)) {
          $errors[] = $error;
      }
-@@ -199,11 +199,11 @@
- }
- 
- ini_set("include_path", '.');
--include_once("../include/Smarty/Smarty.class.php");
-+include_once('/usr/share/pear/Smarty/Smarty.class.php');
+@@ -203,7 +203,7 @@
  
  $tpl = new Smarty();
  $tpl->template_dir = '../templates/en';
@@ -127,62 +127,23 @@
  
  $tpl->assign("phpversion", phpversion());
  $tpl->assign("rel_url", $relative_url);
---- ./misc/cli/config.inc.php~	2005-01-24 17:49:25.000000000 +0200
-+++ ./misc/cli/config.inc.php	2005-01-25 15:52:07.000000000 +0200
-@@ -47,7 +47,7 @@
- // definitions of path related variables
- @define("APP_PATH", '/usr/share/eventum/misc/cli/');
- @define("APP_INC_PATH", APP_PATH . "include/");
--@define("APP_PEAR_PATH", APP_INC_PATH . "pear/");
-+@define("APP_PEAR_PATH", "/usr/share/pear/");
- if (stristr(PHP_OS, 'darwin')) {
+--- eventum-1.4.orig/setup/config.inc.php	2005-01-25 23:42:55.000000000 +0200
++++ eventum-1.4/setup/config.inc.php	2005-01-25 23:57:55.000000000 +0200
+@@ -58,15 +58,9 @@
+ @define("APP_TPL_PATH", APP_PATH . "templates/");
+ @define("APP_SMARTY_PATH", APP_INC_PATH . "Smarty/");
+ @define("APP_JPGRAPH_PATH", APP_INC_PATH . "jpgraph/");
+-@define("APP_LOG_PATH", APP_PATH . "logs/");
+-@define("APP_LOCKS_PATH", APP_PATH . "locks/");
+-if (stristr(PHP_OS, 'darwin')) {
++@define("APP_LOG_PATH", "/var/log/eventum/");
++@define("APP_LOCKS_PATH", "/var/run/eventum/");
      ini_set("include_path", ".:" . APP_PEAR_PATH);
- } elseif (stristr(PHP_OS, 'win')) {
---- ./misc/cli/eventum~	2005-01-24 17:49:25.000000000 +0200
-+++ ./misc/cli/eventum	2005-01-25 15:48:56.000000000 +0200
-@@ -13,7 +13,7 @@
- //
- include_once("/etc/eventum/cli.php");
- include_once(APP_INC_PATH . "class.command_line.php");
--include_once(APP_PEAR_PATH . "XML_RPC/RPC.php");
-+include_once(APP_PEAR_PATH . "XML/RPC.php");
+-} elseif (stristr(PHP_OS, 'win')) {
+-    ini_set("include_path", ".;" . APP_PEAR_PATH);
+-} else {
+-    ini_set("include_path", ".:" . APP_PEAR_PATH);
+-}
  
- list($user_email, $user_password, $url, $port, $relative_url) = Command_Line::getEnvironmentSettings();
- if (empty($port)) {
---- ./misc/cli/include/class.command_line.php	2005-01-05 01:06:03.000000000 +0200
-+++ ./misc/cli/include/class.command_line.php	2005-01-25 15:48:56.000000000 +0200
-@@ -29,7 +29,7 @@
- //
- 
- include_once(APP_INC_PATH . "class.misc.php");
--include_once(APP_PEAR_PATH . "XML_RPC/RPC.php");
-+include_once(APP_PEAR_PATH . "XML/RPC.php");
- 
- $_displayed_confirmation = false;
- 
---- ./rpc/xmlrpc.php~	2005-01-05 01:06:19.000000000 +0200
-+++ ./rpc/xmlrpc.php	2005-01-25 16:35:14.000000000 +0200
-@@ -41,7 +41,7 @@
- include_once(APP_INC_PATH . "class.template.php");
- include_once(APP_INC_PATH . "class.customer.php");
- error_reporting(0);
--include_once(APP_PEAR_PATH . "XML_RPC/Server.php");
-+include_once(APP_PEAR_PATH . "XML/RPC/Server.php");
- 
- function authenticate($email, $password)
- {
---- ./include/class.notification.php~	2005-01-05 01:06:19.000000000 +0200
-+++ ./include/class.notification.php	2005-01-25 16:41:23.000000000 +0200
-@@ -613,9 +613,9 @@
-         }
-         if ($old["iss_description"] != $new["description"]) {
-             // need real diff engine here
--            include_once 'Text_Diff/Diff.php';
--            include_once 'Text_Diff/Diff/Renderer.php';
--            include_once 'Text_Diff/Diff/Renderer/unified.php';
-+            include_once 'Text/Diff.php';
-+            include_once 'Text/Diff/Renderer.php';
-+            include_once 'Text/Diff/Renderer/unified.php';
-             $old['iss_description'] = explode("\n", $old['iss_description']);
-             $new['description'] = explode("\n", $new['description']);
-             $diff = &new Text_Diff($old["iss_description"], $new["description"]);
+ @define("APP_SETUP_PATH", APP_PATH);
+ @define("APP_SETUP_FILE", APP_SETUP_PATH . "setup.conf.php");
