@@ -19,7 +19,7 @@
 Summary:	Eventum Issue / Bug Tracking System
 Name:		eventum
 Version:	1.4
-Release:	0.8
+Release:	0.9
 License:	GPL
 Group:		Applications/WWW
 Source0:	http://mysql.wildyou.net/Downloads/%{name}/%{name}-%{version}.tar.gz
@@ -63,13 +63,14 @@ cp -a . $RPM_BUILD_ROOT%{_appdir}
 
 # in doc
 rm -f $RPM_BUILD_ROOT%{_appdir}/{COPYING,ChangeLog,FAQ,INSTALL,README,UPGRADE}
+rm -rf $RPM_BUILD_ROOT%{_appdir}/misc/upgrade
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc ChangeLog FAQ INSTALL README UPGRADE
+%doc ChangeLog FAQ INSTALL README UPGRADE misc/upgrade
 %dir %{_appdir}
 %attr(640,http,root) %config(noreplace) %{_appdir}/config.inc.php
 %attr(640,http,root) %config(noreplace) %{_appdir}/setup.conf.php
