@@ -11,6 +11,6 @@ MAILTO=root
 # 
 # Administration >>> Manage Email Accounts
 
-#0 * * * * http cd /usr/share/eventum && /usr/bin/php4 -q download_emails.php username_here mail.domain.com INBOX
+#0 * * * * eventum cd /usr/share/eventum && /usr/bin/php4 -q download_emails.php username_here mail.domain.com INBOX
 
 # vim:syn=crontab
