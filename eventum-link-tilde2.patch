@@ -1,0 +1,16 @@
+include tilde into url when activating links, so that urls like
+http://www.example.com/~user also work
+
+--- ./include/class.misc.php	2005-03-31 01:48:36.000000000 +0300
++++ ./include/class.misc.php~	2005-03-31 01:48:34.000000000 +0300
+@@ -480,8 +480,8 @@
+      */
+     function activateLinks($text, $class = "link")
+     {
+-        $text = preg_replace("'(\w+)://([\w\+\-\@\=\?\.\%\/\:\&\;]+)(\.)?'", "<a title=\"open \\1://\\2 in a new window\" class=\"$class\" href=\"\\1://\\2\" target=\"_\\2\">\\1://\\2</a>", $text);
+-        $text = preg_replace("'(\s+)www.([\w\+\-\@\=\?\.\%\/\:\&\;]+)(\.\s|\s)'", "\\1<a title=\"open http://www.\\2 in a new window\" class=\"$class\" href=\"http://www.\\2\" target=\"_\\2\">www.\\2</a>\\3" , $text);
++        $text = preg_replace("'(\w+)://([\w\+\-\@\=\?\.\%\/\:\&\;~]+)(\.)?'", "<a title=\"open \\1://\\2 in a new window\" class=\"$class\" href=\"\\1://\\2\" target=\"_\\2\">\\1://\\2</a>", $text);
++        $text = preg_replace("'(\s+)www.([\w\+\-\@\=\?\.\%\/\:\&\;~]+)(\.\s|\s)'", "\\1<a title=\"open http://www.\\2 in a new window\" class=\"$class\" href=\"http://www.\\2\" target=\"_\\2\">www.\\2</a>\\3" , $text);
+         return $text;
+     }
+ 
