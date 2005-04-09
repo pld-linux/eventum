@@ -656,8 +656,8 @@ if [ "$1" = "0" ]; then
 fi
 
 %pre base
-%groupadd -P %{name}-base %{name}
-%useradd -P %{name}-base -d /var/lib/%{name} -g %{name} %{name} -c "Eventum User"
+%groupadd -P %{name}-base -g %{gid} %{name}
+%useradd -P %{name}-base -u %{uid} -d /var/lib/%{name} -g %{name} -c "Eventum User" %{name}
 
 %postun base
 if [ "$1" = "0" ]; then
