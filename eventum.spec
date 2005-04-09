@@ -131,6 +131,10 @@ reakcji.
 Summary:	Eventum base package
 Summary(pl):	Podstawowy pakiet Eventum
 Group:		Applications/WWW
+Requires(pre):  /bin/id
+Requires(pre):  /usr/bin/getgid
+Requires(pre):  /usr/sbin/useradd
+Requires(pre):  /usr/sbin/groupadd
 Provides:	user(eventum)
 Provides:	group(eventum)
 
