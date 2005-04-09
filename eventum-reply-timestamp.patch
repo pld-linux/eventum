@@ -1,0 +1,81 @@
+Fixes invalid unix_timestamp() usage and does the timestamp field conversion in php code.
+
+also fixes formatReplyDate() to return valid date formatting.
+
+No more things like:
+On Wed, Mar 09, 2005 at 13:53:17PM +0000, blaah wrote:
+
+--- ./include/class.support.php~	2005-03-30 11:53:44.000000000 +0300
++++ ./include/class.support.php	2005-04-01 20:02:50.000000000 +0300
+@@ -1209,8 +1209,7 @@
+     {
+         $stmt = "SELECT
+                     " . APP_TABLE_PREFIX . "support_email.*,
+-                    " . APP_TABLE_PREFIX . "support_email_body.*,
+-                    UNIX_TIMESTAMP(sup_date) AS timestamp
++                    " . APP_TABLE_PREFIX . "support_email_body.*
+                  FROM
+                     " . APP_DEFAULT_DB . "." . APP_TABLE_PREFIX . "support_email,
+                     " . APP_DEFAULT_DB . "." . APP_TABLE_PREFIX . "support_email_body
+@@ -1227,6 +1226,7 @@
+             $output = Mime_Helper::decode($res["seb_full_email"], true);
+             $res["message"] = Mime_Helper::getMessageBody($output); // XXX: check which code relies on this var
+             $res["attachments"] = Mime_Helper::getAttachmentCIDs($res["seb_full_email"]);
++            $res["timestamp"] = Date_API::getUnixTimestamp($res['sup_date'], 'GMT');
+             $res["sup_date"] = Date_API::getFormattedDate($res["sup_date"]);
+             $res["sup_subject"] = Mime_Helper::fixEncoding($res["sup_subject"]);
+             // remove extra 'Re: ' from subject
+--- ./include/class.misc.php~	2005-03-30 11:53:44.000000000 +0300
++++ ./include/class.misc.php	2005-04-01 20:11:40.000000000 +0300
+@@ -526,10 +526,9 @@
+      */
+     function formatReplyDate($ts)
+     {
+-        // Sat, Sep 28, 2002 at 06:28:58PM -0400
+-        $first = date("D, M d, Y", $ts);
+-        $rest = date("H:i:sA O", $ts);
+-        return $first . " at " . $rest;
++        // On Fri, 01 Apr 2005, 17:07:44 EET
++        $res = Date_API::getFormattedDate($ts);
++        return $res;
+     }
+ }
+ 
+--- ./include/class.issue.php~	2005-03-30 11:53:45.000000000 +0300
++++ ./include/class.issue.php	2005-04-01 20:16:43.000000000 +0300
+@@ -481,7 +481,7 @@
+     function getReplyDetails($issue_id)
+     {
+         $stmt = "SELECT
+-                    UNIX_TIMESTAMP(iss_created_date) AS created_date_ts,
++                    iss_created_date,
+                     usr_full_name AS reporter,
+                     usr_email AS reporter_email,
+                     iss_description AS description,
+@@ -498,6 +498,7 @@
+             return '';
+         } else {
+             $res['reply_subject'] = 'Re: [#' . $issue_id . '] ' . $res["sup_subject"];
++            $res['created_date_ts'] = Date_API::getUnixTimestamp($res['iss_created_date'], 'GMT');
+             return $res;
+         }
+     }
+--- ./include/class.note.php~	2005-03-30 11:53:44.000000000 +0300
++++ ./include/class.note.php	2005-04-01 20:23:43.000000000 +0300
+@@ -102,7 +102,7 @@
+     {
+         $stmt = "SELECT
+                     " . APP_TABLE_PREFIX . "note.*,
+-                    UNIX_TIMESTAMP(not_created_date) timestamp,
++                    not_created_date,
+                     not_blocked_message,
+                     usr_full_name
+                  FROM
+@@ -117,6 +117,7 @@
+             return '';
+         } else {
+             if (count($res) > 0) {
++                $res['timestamp'] = Date_API::getUnixTimestamp($res['not_created_date'], 'GMT');
+                 $res['not_created_date'] = Date_API::getFormattedDate($res['not_created_date']);
+                 if (!empty($res['not_blocked_message'])) {
+                     $res['has_blocked_message'] = true;
