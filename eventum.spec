@@ -26,7 +26,7 @@
 %define _source http://mysql.wildyou.net/Downloads/%{name}/%{name}-%{version}.tar.gz
 %endif
 
-%define _rel 282
+%define _rel 283
 
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl):	Eventum - system ¶ledzenia spraw/b³êdów
@@ -71,6 +71,7 @@ Patch22:	http://glen.alkohol.ee/pld/eventum-reply-timestamp.patch
 Patch23:	http://glen.alkohol.ee/pld/eventum-lf-checkins.patch
 Patch24:	eventum-strip-bcc.patch
 Patch25:	php-pear-Date-tz-baltic-hasdst.patch
+Patch26:	http://glen.alkohol.ee/pld/eventum-maq_queued_date-local.patch
 URL:		http://dev.mysql.com/downloads/other/eventum/
 BuildRequires:	rpmbuild(macros) >= 1.177
 BuildRequires:	sed >= 4.0
@@ -464,6 +465,7 @@ $,,'
 %patch22 -p1
 %patch23 -p1
 %patch24 -p1
+%patch26 -p1
 
 # replace in remaining scripts config.inc.php to system one
 grep -rl 'include_once(".*config.inc.php")' . | xargs sed -i -e '
