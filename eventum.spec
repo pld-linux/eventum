@@ -26,7 +26,7 @@
 %define _source http://mysql.wildyou.net/Downloads/%{name}/%{name}-%{version}.tar.gz
 %endif
 
-%define _rel 281
+%define _rel 282
 
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl):	Eventum - system ¶ledzenia spraw/b³êdów
@@ -70,6 +70,7 @@ Patch21:	http://glen.alkohol.ee/pld/eventum-link-tilde2.patch
 Patch22:	http://glen.alkohol.ee/pld/eventum-reply-timestamp.patch
 Patch23:	http://glen.alkohol.ee/pld/eventum-lf-checkins.patch
 Patch24:	eventum-strip-bcc.patch
+Patch25:	php-pear-Date-tz-baltic-hasdst.patch
 URL:		http://dev.mysql.com/downloads/other/eventum/
 BuildRequires:	rpmbuild(macros) >= 1.177
 BuildRequires:	sed >= 4.0
@@ -475,6 +476,10 @@ sed -i -e '
 grep -rl 'APP_INC_PATH..*"private_key.php"' . | xargs sed -i -e '
 	s,include_once(APP_INC_PATH.*"private_key.php"),include_once("%{_sysconfdir}/private_key.php"),
 '
+
+# reuse pear patch
+cd include/pear
+%patch25 -p1
 
 rm -f */*~ */*/*~
 
