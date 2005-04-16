@@ -1,6 +1,6 @@
---- recent_activity.php	2005-03-03 20:16:11.000000000 +0200
-+++ ./reports/recent_activity.php	2005-03-03 21:11:30.000000000 +0200
-@@ -291,9 +291,17 @@
+--- ../../eventum-1.5.2.orig/reports/recent_activity.php	2005-04-16 05:53:27.000000000 +0300
++++ ./reports/recent_activity.php	2005-04-16 06:02:20.000000000 +0300
+@@ -297,10 +297,18 @@
              $res[$i]["customer"] = @$details['customer_name'];
          }
          $res[$i]["date"] = Date_API::getFormattedDate($res[$i][$date_field], Date_API::getPreferredTimezone($usr_id));
@@ -12,8 +12,9 @@
 +            $res[$i]["sup_to"] = Mime_Helper::fixEncoding($res[$i]["sup_to"]);
 +        }
 +
+         $data[] = $res[$i];
      }
-     return $res;
+     return $data;
  }
  
  $tpl->displayTemplate();

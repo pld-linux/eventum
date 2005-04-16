@@ -26,17 +26,17 @@
 %define _source http://mysql.wildyou.net/Downloads/%{name}/%{name}-%{version}.tar.gz
 %endif
 
-%define _rel 283
+%define _rel 289
 
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl):	Eventum - system ¶ledzenia spraw/b³êdów
 Name:		eventum
-Version:	1.5.1
+Version:	1.5.2
 Release:	0.%{?_snap:%{_snap}.}%{_rel}
 License:	GPL
 Group:		Applications/WWW
 Source0:	%{_source}
-# Source0-md5:	d326ef39b52001efcbbc0ae8db5454a5
+# Source0-md5:	b46d7414eddc4795e8eb24a1fe26ac3c
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -54,22 +54,15 @@ Patch0:		%{name}-paths.patch
 Patch1:		%{name}-cvs-config.patch
 Patch2:		%{name}-irc-config.patch
 Patch3:		%{name}-PEAR.patch
-Patch4:		%{name}-db-20050227.patch
 Patch10:	%{name}-charset-recent-activity.patch
-Patch11:	http://glen.alkohol.ee/pld/%{name}-cli-rpc-base64.patch
 Patch12:	http://glen.alkohol.ee/pld/%{name}-send-height.patch
 Patch13:	http://glen.alkohol.ee/pld/%{name}-reply-subject.patch
-Patch14:	http://glen.alkohol.ee/pld/%{name}-rss-updates.patch
-Patch15:	http://glen.alkohol.ee/pld/%{name}-opera.patch
 Patch16:	%{name}-lf.patch
-Patch17:	%{name}-iss-ass-fix.patch
-Patch18:	%{name}-iss-close.patch
 Patch19:	http://glen.alkohol.ee/pld/%{name}-attach-activate-links.patch
 Patch20:	%{name}-irc-memlimit.patch
 Patch21:	http://glen.alkohol.ee/pld/eventum-link-tilde2.patch
 Patch22:	http://glen.alkohol.ee/pld/eventum-reply-timestamp.patch
 Patch23:	http://glen.alkohol.ee/pld/eventum-lf-checkins.patch
-Patch24:	eventum-strip-bcc.patch
 Patch25:	php-pear-Date-tz-baltic-hasdst.patch
 Patch26:	http://glen.alkohol.ee/pld/eventum-maq_queued_date-local.patch
 URL:		http://dev.mysql.com/downloads/other/eventum/
@@ -447,24 +440,17 @@ $,,'
 %patch1 -p1
 %patch2 -p1
 %{?with_pear:%patch3 -p1 -b .PEAR}
-%patch4 -p1
 
 # bug fixes.
 %patch10 -p1
-%patch11 -p1
 %patch12 -p0
 %patch13 -p1
-%patch14 -p1
-%patch15 -p1
 %patch16 -p1
-%patch17 -p1
-%patch18 -p1
 %patch19 -p1
 %patch20 -p1
 %patch21 -p1
 %patch22 -p1
 %patch23 -p1
-%patch24 -p1
 %patch26 -p1
 
 # replace in remaining scripts config.inc.php to system one
@@ -483,7 +469,7 @@ grep -rl 'APP_INC_PATH..*"private_key.php"' . | xargs sed -i -e '
 cd include/pear
 %patch25 -p1
 
-rm -f */*~ */*/*~
+find -name '*~' | xargs rm -v
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -710,25 +696,6 @@ if [ "$1" = "0" ]; then
 	chown root:eventum %{_sysconfdir}/{config,private_key}.php
 fi
 
-%triggerpostun base -- eventum-base < 1.4-2.20050222.212
-if [ "`getent passwd %{name} | cut -d: -f6`" = "%{_appdir}" ]; then
-	/usr/sbin/usermod -d /var/lib/%{name} %{name}
-fi
-
-%triggerpostun -- eventum < 1.5-0.240
-scriptdir=%{_appdir}/upgrade/v1.4_to_1.5
-%banner %{name}-trigger-1.5 -e <<-EOF
-
-	Running eventum upgrade scripts to 1.5 in $scriptdir
-	These will fail if your eventum user doesn't have ALTER privilege to database.
-
-EOF
-#'
-
-/usr/bin/php4 -q $scriptdir/database_changes.php || {
-	echo >&2 "Please run manually: /usr/bin/php4 -q $scriptdir/database_changes.php"
-}
-
 %triggerpostun -- eventum < 1.5.1-0.257
 scriptdir=%{_appdir}/upgrade/v1.5_to_v1.5.1
 %banner %{name}-trigger-1.5.1 -e <<-EOF
@@ -742,6 +709,39 @@ EOF
 /usr/bin/php4 -q $scriptdir/database_changes.php || {
 	echo >&2 "Please run manually: /usr/bin/php4 -q $scriptdir/database_changes.php"
 }
+
+%triggerpostun -- eventum < 1.5.2-0.289
+scriptdir=%{_appdir}/upgrade/v1.5.1_to_v1.5.2
+%banner %{name}-trigger-1.5.2 -e <<-EOF
+
+	Running eventum upgrade scripts to 1.5.2 in $scriptdir
+	These will fail if your eventum user doesn't have ALTER privilege to database.
+
+	!!! Proceeding in 10 seconds !!!
+
+EOF
+#'
+
+sleep 10s
+if [ -x /usr/bin/php4 ]; then
+	php=/usr/bin/php4
+else
+	php=/usr/bin/php
+fi
+
+upgrade_script() {
+	script="$1"; shift
+
+	echo -n "Eventum upgrade: $@..."
+	if ! $php -q $scriptdir/$script; then
+		echo >&2 ""
+		echo >&2 "Please run manually: $php -q $scriptdir/$script"
+	fi
+	echo ""
+}
+
+upgrade_script "database_changes.php" "Perform database changes"
+upgrade_script "set_priority_ranks.php" "Fix the ranking of priority values"
 
 %files
 %defattr(644,root,root,755)

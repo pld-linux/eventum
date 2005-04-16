@@ -89,174 +89,6 @@
          $this->smarty->config_dir = '';
          $this->smarty->register_modifier("activateLinks", array('Link_Filter', 'activateLinks'));
      }
---- eventum-1.4.orig/setup/index.php	2005-01-25 23:42:55.000000000 +0200
-+++ eventum-1.4/setup/index.php	2005-01-25 23:46:14.000000000 +0200
-@@ -114,15 +114,15 @@
-     if (ini_get('allow_call_time_pass_reference') != "1") {
-         $errors[] = "The 'allow_call_time_pass_reference' directive needs to be enabled in your PHP.INI file in order for Eventum to work properly.";
-     }
--    $error = checkPermissions('../locks', "Directory 'locks'", TRUE);
-+    $error = checkPermissions('/var/run/eventum', "Directory '/var/run/eventum'", TRUE);
-     if (!empty($error)) {
-         $errors[] = $error;
-     }
--    $error = checkPermissions('../logs', "Directory 'logs'", TRUE);
-+    $error = checkPermissions('/var/log/eventum', "Directory '/var/log/eventum'", TRUE);
-     if (!empty($error)) {
-         $errors[] = $error;
-     }
--    $error = checkPermissions('../templates_c', "Directory 'templates_c'", TRUE);
-+    $error = checkPermissions('/var/cache/eventum', "Directory '/var/cache/eventum'", TRUE);
-     if (!empty($error)) {
-         $errors[] = $error;
-     }
-@@ -130,7 +130,7 @@
-     if (!empty($error)) {
-         $errors[] = $error;
-     }
--    $error = checkPermissions('../logs/errors.log', "File 'logs/errors.log'");
-+    $error = checkPermissions('/var/log/eventum/errors.log', "File '/var/log/eventum/errors.log'");
-     if (!empty($error)) {
-         $errors[] = $error;
-     }
-@@ -203,7 +203,7 @@
- 
- $tpl = new Smarty();
- $tpl->template_dir = '../templates/en';
--$tpl->compile_dir = "../templates_c";
-+$tpl->compile_dir = "/var/cache/eventum";
- $tpl->config_dir = '';
- 
- function replace_table_prefix($str)
-@@ -417,23 +417,8 @@
-     $tpl->assign('is_imap_enabled', function_exists('imap_open'));
- }
- 
--
--$full_url = dirname($HTTP_SERVER_VARS['PHP_SELF']);
--$pieces = explode("/", $full_url);
--$relative_url = array();
--$relative_url[] = '';
--foreach ($pieces as $piece) {
--    if ((!empty($piece)) && ($piece != 'setup')) {
--        $relative_url[] = $piece;
--    }
--}
--$relative_url[] = '';
--$relative_url = implode("/", $relative_url);
--
--if (substr($HTTP_SERVER_VARS['DOCUMENT_ROOT'], -1) == '/') {
--    $HTTP_SERVER_VARS['DOCUMENT_ROOT'] = substr($HTTP_SERVER_VARS['DOCUMENT_ROOT'], 0, -1);
--}
--$installation_path = $HTTP_SERVER_VARS['DOCUMENT_ROOT'] . $relative_url;
-+$installation_path = "/usr/share/eventum";
-+$relative_url = "/eventum/";
- 
- $tpl->assign("phpversion", phpversion());
- $tpl->assign("rel_url", $relative_url);
---- eventum-1.4/setup/index.php~	2005-01-25 23:52:31.000000000 +0200
-+++ eventum-1.4/setup/index.php	2005-01-25 23:52:33.000000000 +0200
-@@ -199,7 +199,7 @@
- }
- 
- ini_set("include_path", '.');
--include_once("../include/Smarty/Smarty.class.php");
-+include_once("/usr/share/pear/Smarty/Smarty.class.php");
- 
- $tpl = new Smarty();
- $tpl->template_dir = '../templates/en';
---- ./setup/index.php~	2005-02-22 21:50:50.000000000 +0200
-+++ ./setup/index.php	2005-03-28 23:01:03.000000000 +0300
-@@ -126,7 +126,7 @@
-     if (!empty($error)) {
-         $errors[] = $error;
-     }
--    $error = checkPermissions('../config.inc.php', "File 'config.inc.php'");
-+    $error = checkPermissions('/etc/eventum/config.php', "File '/etc/eventum/config.php'");
-     if (!empty($error)) {
-         $errors[] = $error;
-     }
-@@ -134,11 +134,11 @@
-     if (!empty($error)) {
-         $errors[] = $error;
-     }
--    $error = checkPermissions('../setup.conf.php', "File 'setup.conf.php'");
-+    $error = checkPermissions('/etc/eventum/setup.php', "File '/etc/eventum/setup.php'");
-     if (!empty($error)) {
-         $errors[] = $error;
-     }
--    $error = checkPermissions('../include/private_key.php', "File 'include/private_key.php'");
-+    $error = checkPermissions('/etc/eventum/private_key.php', "File '/etc/eventum/private_key.php'");
-     if (!empty($error)) {
-         $errors[] = $error;
-     }
-@@ -202,7 +202,7 @@
- include_once("/usr/share/pear/Smarty/Smarty.class.php");
- 
- $tpl = new Smarty();
--$tpl->template_dir = '../templates/en';
-+$tpl->template_dir = '/usr/share/eventum/templates/en';
- $tpl->compile_dir = "/var/cache/eventum";
- $tpl->config_dir = '';
- 
-@@ -272,8 +272,8 @@
- 
-     clearstatcache();
-     // check if config.inc.php in the root directory is writable
--    if (!is_writable('../config.inc.php')) {
--        return "The file 'config.inc.php' in Eventum's root directory needs to be writable by the web server user. Please correct this problem and try again.";
-+    if (!is_writable('/etc/eventum/config.php')) {
-+        return "The file '/etc/eventum/config.php' needs to be writable by the web server user. Please correct this problem and try again.";
-     }
-     // gotta check and see if the provided installation path really exists...
-     if (!file_exists($HTTP_POST_VARS['path'])) {
-@@ -283,16 +283,16 @@
-     $private_key = '<?php
- $private_key = "' . md5(microtime()) . '";
- ?>';
--    if (!is_writable('../include/private_key.php')) {
--        return "The file 'include/private_key.php' needs to be writable by the web server user. Please correct this problem and try again.";
-+    if (!is_writable('/etc/eventum/private_key.php')) {
-+        return "The file '/etc/eventum/private_key.php' needs to be writable by the web server user. Please correct this problem and try again.";
-     }
--    $fp = @fopen('../include/private_key.php', 'w');
-+    $fp = @fopen('/etc/eventum/private_key.php', 'w');
-     if ($fp === FALSE) {
--        return "Could not open the file 'include/private_key.php' for writing. The permissions on the file should be set as to allow the user that the web server runs as to open it. Please correct this problem and try again.";
-+        return "Could not open the file '/etc/eventum/private_key.php' for writing. The permissions on the file should be set as to allow the user that the web server runs as to open it. Please correct this problem and try again.";
-     }
-     $res = fwrite($fp, $private_key);
-     if ($fp === FALSE) {
--        return "Could not write the configuration information to 'include/private_key.php'. The file should be writable by the user that the web server runs as. Please correct this problem and try again.";
-+        return "Could not write the configuration information to '/etc/eventum/private_key.php'. The file should be writable by the user that the web server runs as. Please correct this problem and try again.";
-     }
-     fclose($fp);
-     // check if we can connect
-@@ -385,20 +385,20 @@
-     $config_contents = str_replace("%{APP_TABLE_PREFIX}%", $HTTP_POST_VARS['db_table_prefix'], $config_contents);
-     $config_contents = str_replace("%{APP_HOSTNAME}%", $HTTP_POST_VARS['hostname'], $config_contents);
-     $config_contents = str_replace("%{APP_RELATIVE_URL}%", $HTTP_POST_VARS['relative_url'], $config_contents);
--    $config_contents = str_replace("%{APP_VERSION}%", "1.5.1", $config_contents);
-+    $config_contents = str_replace("%{APP_VERSION}%", "1.5.1", $config_contents);
-     if (@$HTTP_POST_VARS['is_ssl'] == 'yes') {
-         $protocol_type = 'https://';
-     } else {
-         $protocol_type = 'http://';
-     }
-     $config_contents = str_replace("%{PROTOCOL_TYPE}%", $protocol_type, $config_contents);
--    $fp = @fopen('../config.inc.php', 'w');
-+    $fp = @fopen('/etc/eventum/config.php', 'w');
-     if ($fp === FALSE) {
--        return "Could not open the file 'config.inc.php' for writing. The permissions on the file should be set as to allow the user that the web server runs as to open it. Please correct this problem and try again.";
-+        return "Could not open the file '/etc/eventum/config.php' for writing. The permissions on the file should be set as to allow the user that the web server runs as to open it. Please correct this problem and try again.";
-     }
-     $res = fwrite($fp, $config_contents);
-     if ($fp === FALSE) {
--        return "Could not write the configuration information to 'config.inc.php'. The file should be writable by the user that the web server runs as. Please correct this problem and try again.";
-+        return "Could not write the configuration information to '/etc/eventum/config.php'. The file should be writable by the user that the web server runs as. Please correct this problem and try again.";
-     }
-     fclose($fp);
-     
 --- eventum-1.5.1/setup/config.inc.php~	2005-03-14 15:21:18.000000000 +0200
 +++ eventum-1.5.1/setup/config.inc.php	2005-03-14 15:20:22.000000000 +0200
 @@ -27,49 +27,6 @@
@@ -373,44 +205,6 @@
 \ No newline at end of file
 --- ./include/class.monitor.php~	2005-02-22 21:50:49.000000000 +0200
 +++ ./include/class.monitor.php	2005-02-22 23:04:50.000000000 +0200
-@@ -100,21 +100,29 @@
-     function checkConfiguration()
-     {
-         $required_files = array(
--            APP_PATH . 'config.inc.php' => array(
-+            '/etc/eventum/config.php' => array(
-                 'check_owner'      => true,
--                'owner'            => 'apache',
-+                'owner'            => 'root',
-                 'check_group'      => true,
--                'group'            => 'apache',
-+                'group'            => 'eventum',
-                 'check_permission' => true,
--                'permission'       => 755,
-+                'permission'       => 640,
-             ),
--            APP_PATH . 'setup.conf.php' => array(
-+            '/etc/eventum/core.php' => array(
-                 'check_owner'      => true,
--                'owner'            => 'apache',
-+                'owner'            => 'root',
-                 'check_group'      => true,
--                'group'            => 'apache',
-+                'group'            => 'eventum',
-                 'check_permission' => true,
--                'permission'       => 750,
-+                'permission'       => 640,
-+            ),
-+            '/etc/eventum/setup.php' => array(
-+                'check_owner'      => true,
-+                'owner'            => 'root',
-+                'check_group'      => true,
-+                'group'            => 'eventum',
-+                'check_permission' => true,
-+                'permission'       => 660,
-                 'check_filesize'   => true,
-                 'filesize'         => 1024
-             ),
 @@ -157,6 +165,7 @@
                  'permission'       => 100,
              ),
@@ -419,3 +213,127 @@
          foreach ($required_directories as $dir_path => $options) {
              // check if directory exists
              if (!file_exists($dir_path)) {
+--- ./setup/index.php	2005-04-16 05:53:27.000000000 +0300
++++ eventum-1.5.2.patched/setup/index.php	2005-04-16 05:53:05.000000000 +0300
+@@ -118,31 +118,31 @@
+     if (ini_get('allow_call_time_pass_reference') != "1") {
+         $errors[] = "The 'allow_call_time_pass_reference' directive needs to be enabled in your PHP.INI file in order for Eventum to work properly.";
+     }
+-    $error = checkPermissions('../locks', "Directory 'locks'", TRUE);
++    $error = checkPermissions('/var/run/eventum', "Directory '/var/run/eventum'", TRUE);
+     if (!empty($error)) {
+         $errors[] = $error;
+     }
+-    $error = checkPermissions('../logs', "Directory 'logs'", TRUE);
++    $error = checkPermissions('/var/log/eventum', "Directory '/var/log/eventum'", TRUE);
+     if (!empty($error)) {
+         $errors[] = $error;
+     }
+-    $error = checkPermissions('../templates_c', "Directory 'templates_c'", TRUE);
++    $error = checkPermissions('/var/cache/eventum', "Directory '/var/cache/eventum'", TRUE);
+     if (!empty($error)) {
+         $errors[] = $error;
+     }
+-    $error = checkPermissions('../config.inc.php', "File 'config.inc.php'");
++    $error = checkPermissions('/etc/eventum/config.php', "File '/etc/eventum/config.php'");
+     if (!empty($error)) {
+         $errors[] = $error;
+     }
+-    $error = checkPermissions('../logs/errors.log', "File 'logs/errors.log'");
++    $error = checkPermissions('/var/log/eventum/errors.log', "File '/var/log/eventum/errors.log'");
+     if (!empty($error)) {
+         $errors[] = $error;
+     }
+-    $error = checkPermissions('../setup.conf.php', "File 'setup.conf.php'");
++    $error = checkPermissions('/etc/eventum/setup.php', "File '/etc/eventum/setup.php'");
+     if (!empty($error)) {
+         $errors[] = $error;
+     }
+-    $error = checkPermissions('../include/private_key.php', "File 'include/private_key.php'");
++    $error = checkPermissions('/etc/eventum/private_key.php', "File '/etc/eventum/private_key.php'");
+     if (!empty($error)) {
+         $errors[] = $error;
+     }
+@@ -203,11 +203,11 @@
+ }
+ 
+ ini_set("include_path", '.');
+-include_once("../include/Smarty/Smarty.class.php");
++include_once("/usr/share/pear/Smarty/Smarty.class.php");
+ 
+ $tpl = new Smarty();
+-$tpl->template_dir = '../templates/en';
+-$tpl->compile_dir = "../templates_c";
++$tpl->template_dir = '/usr/share/eventum/templates/en';
++$tpl->compile_dir = "/var/cache/eventum";
+ $tpl->config_dir = '';
+ 
+ function replace_table_prefix($str)
+@@ -276,8 +276,8 @@
+ 
+     clearstatcache();
+     // check if config.inc.php in the root directory is writable
+-    if (!is_writable('../config.inc.php')) {
+-        return "The file 'config.inc.php' in Eventum's root directory needs to be writable by the web server user. Please correct this problem and try again.";
++    if (!is_writable('/etc/eventum/config.php')) {
++        return "The file '/etc/eventum/config.php' needs to be writable by the web server user. Please correct this problem and try again.";
+     }
+     // gotta check and see if the provided installation path really exists...
+     if (!file_exists($HTTP_POST_VARS['path'])) {
+@@ -287,16 +287,16 @@
+     $private_key = '<?php
+ $private_key = "' . md5(microtime()) . '";
+ ?>';
+-    if (!is_writable('../include/private_key.php')) {
+-        return "The file 'include/private_key.php' needs to be writable by the web server user. Please correct this problem and try again.";
++    if (!is_writable('/etc/eventum/private_key.php')) {
++        return "The file '/etc/eventum/private_key.php' needs to be writable by the web server user. Please correct this problem and try again.";
+     }
+-    $fp = @fopen('../include/private_key.php', 'w');
++    $fp = @fopen('/etc/eventum/private_key.php', 'w');
+     if ($fp === FALSE) {
+-        return "Could not open the file 'include/private_key.php' for writing. The permissions on the file should be set as to allow the user that the web server runs as to open it. Please correct this problem and try again.";
++        return "Could not open the file '/etc/eventum/private_key.php' for writing. The permissions on the file should be set as to allow the user that the web server runs as to open it. Please correct this problem and try again.";
+     }
+     $res = fwrite($fp, $private_key);
+     if ($fp === FALSE) {
+-        return "Could not write the configuration information to 'include/private_key.php'. The file should be writable by the user that the web server runs as. Please correct this problem and try again.";
++        return "Could not write the configuration information to '/etc/eventum/private_key.php'. The file should be writable by the user that the web server runs as. Please correct this problem and try again.";
+     }
+     fclose($fp);
+     // check if we can connect
+@@ -396,7 +396,7 @@
+         $protocol_type = 'http://';
+     }
+     $config_contents = str_replace("%{PROTOCOL_TYPE}%", $protocol_type, $config_contents);
+-    $fp = @fopen('../config.inc.php', 'w');
++    $fp = @fopen('/etc/eventum/config.php', 'w');
+     if ($fp === FALSE) {
+         return "Could not open the file 'config.inc.php' for writing. The permissions on the file should be set as to allow the user that the web server runs as to open it. Please correct this problem and try again.";
+     }
+@@ -425,23 +425,8 @@
+     $tpl->assign('is_imap_enabled', function_exists('imap_open'));
+ }
+ 
+-
+-$full_url = dirname($HTTP_SERVER_VARS['PHP_SELF']);
+-$pieces = explode("/", $full_url);
+-$relative_url = array();
+-$relative_url[] = '';
+-foreach ($pieces as $piece) {
+-    if ((!empty($piece)) && ($piece != 'setup')) {
+-        $relative_url[] = $piece;
+-    }
+-}
+-$relative_url[] = '';
+-$relative_url = implode("/", $relative_url);
+-
+-if (substr($HTTP_SERVER_VARS['DOCUMENT_ROOT'], -1) == '/') {
+-    $HTTP_SERVER_VARS['DOCUMENT_ROOT'] = substr($HTTP_SERVER_VARS['DOCUMENT_ROOT'], 0, -1);
+-}
+-$installation_path = $HTTP_SERVER_VARS['DOCUMENT_ROOT'] . $relative_url;
++$installation_path = "/usr/share/eventum";
++$relative_url = "/eventum/";
+ 
+ $tpl->assign("phpversion", phpversion());
+ $tpl->assign("rel_url", $relative_url);
