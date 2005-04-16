@@ -470,7 +470,7 @@ grep -rl 'APP_INC_PATH..*"private_key.php"' . | xargs sed -i -e '
 cd include/pear
 %patch25 -p1
 
-find -name '*~' | xargs rm -v
+find -name '*~' | xargs -r rm -v
 
 %install
 rm -rf $RPM_BUILD_ROOT
