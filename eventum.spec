@@ -7,10 +7,7 @@
 #  - dynCalendar.js (http://www.phpguru.org/dyncalendar.html)
 #  - overLIB 3.5.1 (http://www.bosrup.com/web/overlib/)
 #  - A few other small javascript libraries
-# - need start-stop-daemon (from dpkg for now)
 # - 64bit platforms beware? http://bugs.php.net/bug.php?id=30215 (it's actually Smarty related problem)
-# before STBR:
-# - put useradd/groupadd macros into PLD rpm
 # - php4-pgsql crashes php (at least 4.3.11-1)
 
 %bcond_with	pear	# build with system PEAR packages (or use bundled ones)
@@ -27,7 +24,7 @@
 %define _source http://mysql.dataphone.se/Downloads/%{name}/%{name}-%{version}.tar.gz
 %endif
 
-%define _rel 289
+%define _rel 290
 
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl):	Eventum - system ¶ledzenia spraw/b³êdów
@@ -67,7 +64,7 @@ Patch23:	http://glen.alkohol.ee/pld/eventum-lf-checkins.patch
 Patch25:	php-pear-Date-tz-baltic-hasdst.patch
 Patch26:	http://glen.alkohol.ee/pld/eventum-maq_queued_date-local.patch
 URL:		http://dev.mysql.com/downloads/other/eventum/
-BuildRequires:	rpmbuild(macros) >= 1.177
+BuildRequires:	rpmbuild(macros) >= 1.200
 BuildRequires:	sed >= 4.0
 Requires:	php >= 4.2.0
 Requires:	php-gd
