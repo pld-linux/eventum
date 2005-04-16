@@ -11,6 +11,7 @@
 # - 64bit platforms beware? http://bugs.php.net/bug.php?id=30215 (it's actually Smarty related problem)
 # before STBR:
 # - put useradd/groupadd macros into PLD rpm
+# - php4-pgsql crashes php (at least 4.3.11-1)
 
 %bcond_with	pear	# build with system PEAR packages (or use bundled ones)
 
@@ -23,7 +24,7 @@
 %if 0%{?_snap}
 %define _source http://downloads.mysql.com/snapshots/%{name}/%{name}-nightly-%{_snap}.tar.gz
 %else
-%define _source http://mysql.wildyou.net/Downloads/%{name}/%{name}-%{version}.tar.gz
+%define _source http://mysql.dataphone.se/Downloads/%{name}/%{name}-%{version}.tar.gz
 %endif
 
 %define _rel 289
