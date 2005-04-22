@@ -1,0 +1,12 @@
+fix quoted-printable display of mail queue mail subjects
+
+--- ./include/class.mail_queue.php~	2005-04-22 18:14:03.774947195 +0300
++++ ./include/class.mail_queue.php	2005-04-22 18:14:05.421676713 +0300
+@@ -366,6 +366,7 @@
+             for ($i = 0; $i < count($res); $i++) {
+                 $res[$i]['maq_recipient'] = Mime_Helper::decodeAddress($res[$i]['maq_recipient']);
+                 $res[$i]['maq_queued_date'] = Date_API::getFormattedDate(Date_API::getUnixTimestamp($res[$i]['maq_queued_date'], 'GMT'));
++                $res[$i]['maq_subject'] = Mime_Helper::fixEncoding($res[$i]['maq_subject']);
+             }
+         }
+         return $res;
