@@ -24,17 +24,17 @@
 %define _source http://mysql.dataphone.se/Downloads/%{name}/%{name}-%{version}.tar.gz
 %endif
 
-%define _rel 290
+%define _rel 294
 
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl):	Eventum - system ¶ledzenia spraw/b³êdów
 Name:		eventum
-Version:	1.5.2
+Version:	1.5.3
 Release:	0.%{?_snap:%{_snap}.}%{_rel}
 License:	GPL
 Group:		Applications/WWW
 Source0:	%{_source}
-# Source0-md5:	b46d7414eddc4795e8eb24a1fe26ac3c
+# Source0-md5:	e8a5ac661d7ebdd71c8b38695c6e4af8
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -48,21 +48,14 @@ Source10:	%{name}-config.php
 Source11:	%{name}-router-qmail.sh
 Source12:	http://dev.mysql.com/common/favicon.ico
 # Source12-md5:	858be0130832da4144c08d4b59116411
+Source13:	%{name}-config-setup.php
+Source14:	%{name}-upgrade.sh
 Patch0:		%{name}-paths.patch
 Patch1:		%{name}-cvs-config.patch
 Patch2:		%{name}-irc-config.patch
 Patch3:		%{name}-PEAR.patch
-Patch10:	%{name}-charset-recent-activity.patch
-Patch12:	http://glen.alkohol.ee/pld/%{name}-send-height.patch
 Patch13:	http://glen.alkohol.ee/pld/%{name}-reply-subject.patch
 Patch16:	%{name}-lf.patch
-Patch19:	http://glen.alkohol.ee/pld/%{name}-attach-activate-links.patch
-Patch20:	%{name}-irc-memlimit.patch
-Patch21:	http://glen.alkohol.ee/pld/eventum-link-tilde2.patch
-Patch22:	http://glen.alkohol.ee/pld/eventum-reply-timestamp.patch
-Patch23:	http://glen.alkohol.ee/pld/eventum-lf-checkins.patch
-Patch25:	php-pear-Date-tz-baltic-hasdst.patch
-Patch26:	http://glen.alkohol.ee/pld/eventum-maq_queued_date-local.patch
 URL:		http://dev.mysql.com/downloads/other/eventum/
 BuildRequires:	rpmbuild(macros) >= 1.200
 BuildRequires:	sed >= 4.0
@@ -440,16 +433,8 @@ $,,'
 %{?with_pear:%patch3 -p1 -b .PEAR}
 
 # bug fixes.
-%patch10 -p1
-%patch12 -p0
 %patch13 -p1
 %patch16 -p1
-%patch19 -p1
-%patch20 -p1
-%patch21 -p1
-%patch22 -p1
-%patch23 -p1
-%patch26 -p1
 
 # replace in remaining scripts config.inc.php to system one
 grep -rl 'include_once(".*config.inc.php")' . | xargs sed -i -e '
@@ -462,11 +447,6 @@ sed -i -e '
 grep -rl 'APP_INC_PATH..*"private_key.php"' . | xargs sed -i -e '
 	s,include_once(APP_INC_PATH.*"private_key.php"),include_once("%{_sysconfdir}/private_key.php"),
 '
-
-# reuse pear patch
-cd include/pear
-%patch25 -p1
-
 find -name '*~' | xargs -r rm -v
 
 %install
@@ -488,6 +468,8 @@ cp -a logs/* $RPM_BUILD_ROOT/var/log/%{name}
 cp -a misc/upgrade $RPM_BUILD_ROOT%{_appdir}
 
 install %{SOURCE12} $RPM_BUILD_ROOT%{_appdir}/htdocs/favicon.ico
+install %{SOURCE13} $RPM_BUILD_ROOT%{_appdir}/htdocs/setup/config.inc.php
+install %{SOURCE14} $RPM_BUILD_ROOT%{_appdir}/upgrade/upgrade.sh
 
 # cli
 install -d $RPM_BUILD_ROOT%{_appdir}/cli
@@ -694,52 +676,25 @@ if [ "$1" = "0" ]; then
 	chown root:eventum %{_sysconfdir}/{config,private_key}.php
 fi
 
+# FIXME
+# only one upgrade trigger is called if you're upgrading over two
+# versions, say 1.5 to 1.5.3, only 1.5.3 trigger is called.
+# use common trigger (the highest version and rpmvercmp from poldek?)
 %triggerpostun -- eventum < 1.5.1-0.257
-scriptdir=%{_appdir}/upgrade/v1.5_to_v1.5.1
-%banner %{name}-trigger-1.5.1 -e <<-EOF
-
-	Running eventum upgrade scripts to 1.5.1 in $scriptdir
-	These will fail if your eventum user doesn't have ALTER privilege to database.
-
+%{_appdir}/upgrade/upgrade.sh %{_appdir}/upgrade/v1.5_to_v1.5.1 <<EOF
+database_changes.php Perform database changes
 EOF
-#'
-
-/usr/bin/php4 -q $scriptdir/database_changes.php || {
-	echo >&2 "Please run manually: /usr/bin/php4 -q $scriptdir/database_changes.php"
-}
 
 %triggerpostun -- eventum < 1.5.2-0.289
-scriptdir=%{_appdir}/upgrade/v1.5.1_to_v1.5.2
-%banner %{name}-trigger-1.5.2 -e <<-EOF
-
-	Running eventum upgrade scripts to 1.5.2 in $scriptdir
-	These will fail if your eventum user doesn't have ALTER privilege to database.
-
-	!!! Proceeding in 10 seconds !!!
-
+%{_appdir}/upgrade/upgrade.sh %{_appdir}/upgrade/v1.5.1_to_v1.5.2 <<EOF
+database_changes.php Perform database changes
+set_priority_ranks.php Fix the ranking of priority values
 EOF
-#'
 
-sleep 10s
-if [ -x /usr/bin/php4 ]; then
-	php=/usr/bin/php4
-else
-	php=/usr/bin/php
-fi
-
-upgrade_script() {
-	script="$1"; shift
-
-	echo -n "Eventum upgrade: $@..."
-	if ! $php -q $scriptdir/$script; then
-		echo >&2 ""
-		echo >&2 "Please run manually: $php -q $scriptdir/$script"
-	fi
-	echo ""
-}
-
-upgrade_script "database_changes.php" "Perform database changes"
-upgrade_script "set_priority_ranks.php" "Fix the ranking of priority values"
+%triggerpostun -- eventum < 1.5.3-0.291
+%{_appdir}/upgrade/upgrade.sh %{_appdir}/upgrade/v1.5.2_to_v1.5.3 <<EOF
+database_changes.php Perform database changes
+EOF
 
 %files
 %defattr(644,root,root,755)
@@ -767,7 +722,9 @@ upgrade_script "set_priority_ranks.php" "Fix the ranking of priority values"
 %{_appdir}/htdocs/misc
 
 %{_appdir}/templates
-%{_appdir}/upgrade
+%dir %{_appdir}/upgrade
+%attr(755,root,root) %{_appdir}/upgrade/upgrade.sh
+%{_appdir}/upgrade/[!u]*
 
 %{_smartyplugindir}/*
 %if %{without pear}
