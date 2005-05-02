@@ -56,7 +56,7 @@ Patch2:		%{name}-irc-config.patch
 Patch3:		%{name}-PEAR.patch
 Patch4:		http://glen.alkohol.ee/pld/%{name}-reply-subject.patch
 Patch5:		%{name}-lf.patch
-Patch6:		http://glen.alkohol.ee/pld/eventum-maq-subject.patch
+Patch6:		http://glen.alkohol.ee/pld/%{name}-maq-subject.patch
 URL:		http://dev.mysql.com/downloads/other/eventum/
 BuildRequires:	rpmbuild(macros) >= 1.200
 BuildRequires:	sed >= 4.0
@@ -118,10 +118,10 @@ reakcji.
 Summary:	Eventum base package
 Summary(pl):	Podstawowy pakiet Eventum
 Group:		Applications/WWW
-Requires(pre):  /bin/id
-Requires(pre):  /usr/bin/getgid
-Requires(pre):  /usr/sbin/useradd
-Requires(pre):  /usr/sbin/groupadd
+Requires(pre):	/bin/id
+Requires(pre):	/usr/bin/getgid
+Requires(pre):	/usr/sbin/useradd
+Requires(pre):	/usr/sbin/groupadd
 Provides:	user(eventum)
 Provides:	group(eventum)
 
