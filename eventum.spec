@@ -24,13 +24,13 @@
 %define _source http://mysql.dataphone.se/Downloads/%{name}/%{name}-%{version}.tar.gz
 %endif
 
-%define _rel 297
+%define _rel 1
 
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl):	Eventum - system ¶ledzenia spraw/b³êdów
 Name:		eventum
 Version:	1.5.3
-Release:	0.%{?_snap:%{_snap}.}%{_rel}
+Release:	%{?_snap:0.%{_snap}.}%{_rel}
 License:	GPL
 Group:		Applications/WWW
 Source0:	%{_source}
