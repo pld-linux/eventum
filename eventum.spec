@@ -35,6 +35,7 @@ License:	GPL
 Group:		Applications/WWW
 Source0:	%{_source}
 # Source0-md5:	31114d5fd4ea8d39f75834fd5bc860de
+%{?_snap:NoSource:	0}
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
