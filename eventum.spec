@@ -11,20 +11,21 @@
 # - php4-pgsql crashes php (at least 4.3.11-1)
 
 %bcond_with	pear	# build with system PEAR packages (or use bundled ones)
+%bcond_with	qmail	# build the router-qmail subpackage	
 
 %define	uid	146
 %define	gid	146
 
 # snapshot: DATE
-#define _snap 20050227
+#define	_snap 20050227
 
 %if 0%{?_snap}
-%define _source http://downloads.mysql.com/snapshots/%{name}/%{name}-nightly-%{_snap}.tar.gz
+%define	_source http://downloads.mysql.com/snapshots/%{name}/%{name}-nightly-%{_snap}.tar.gz
 %else
-%define _source http://mysql.dataphone.se/Downloads/%{name}/%{name}-%{version}.tar.gz
+%define	_source http://mysql.dataphone.se/Downloads/%{name}/%{name}-%{version}.tar.gz
 %endif
 
-%define _rel 1
+%define	_rel	2
 
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl):	Eventum - system ¶ledzenia spraw/b³êdów
@@ -646,6 +647,7 @@ if [ "$1" = "0" ]; then
 	%groupremove %{name}
 fi
 
+%if {with qmail}
 %post router-qmail
 CF=/etc/qmail/control/virtualdomains
 if ! grep -q ':%{name}\b' $CF 2>/dev/null; then
@@ -669,6 +671,7 @@ fi
 if [ "$1" = "0" ]; then
 	sed -i -e '/:%{name}\b/d' /etc/qmail/control/virtualdomains
 fi
+%endif
 
 %post setup
 chmod 660 %{_sysconfdir}/{config,private_key}.php
@@ -792,10 +795,12 @@ EOF
 %{_appdir}/route_drafts.php
 %{_appdir}/route_notes.php
 
+%if {with qmail}
 %files router-qmail
 %defattr(644,root,root,755)
 %attr(640,root,eventum) %config(noreplace) %verify(not md5 mtime size) /var/lib/%{name}/.qmail*
 %attr(755,root,root) %{_libdir}/router-qmail
+%endif
 
 %files router-postfix
 %defattr(644,root,root,755)
