@@ -647,7 +647,7 @@ if [ "$1" = "0" ]; then
 	%groupremove %{name}
 fi
 
-%if {with qmail}
+%if %{with qmail}
 %post router-qmail
 CF=/etc/qmail/control/virtualdomains
 if ! grep -q ':%{name}\b' $CF 2>/dev/null; then
@@ -795,7 +795,7 @@ EOF
 %{_appdir}/route_drafts.php
 %{_appdir}/route_notes.php
 
-%if {with qmail}
+%if %{with qmail}
 %files router-qmail
 %defattr(644,root,root,755)
 %attr(640,root,eventum) %config(noreplace) %verify(not md5 mtime size) /var/lib/%{name}/.qmail*
