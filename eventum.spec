@@ -58,7 +58,8 @@ Patch3:		%{name}-PEAR.patch
 Patch4:		http://glen.alkohol.ee/pld/%{name}-reply-subject.patch
 Patch5:		%{name}-lf.patch
 Patch6:		http://glen.alkohol.ee/pld/%{name}-maq-subject.patch
-Patch7:		%{name}-auth-repliers.patch
+Patch7:		%{name}-auth-repliers2.patch
+Patch8:		http://glen.alkohol.ee/pld/eventum-error-loop.patch
 URL:		http://dev.mysql.com/downloads/other/eventum/
 BuildRequires:	rpmbuild(macros) >= 1.200
 BuildRequires:	sed >= 4.0
@@ -401,6 +402,7 @@ Summary(pl):	Integracja SCM dla Eventum
 Group:		Applications/WWW
 Requires:	%{name}-base = %{epoch}:%{version}-%{release}
 Requires:	php >= 4.1.0
+Requires:	php-pcre
 
 %description scm
 This feature allows your software development teams to integrate your
@@ -439,7 +441,8 @@ $,,'
 %patch4 -p1
 %patch5 -p1
 %patch6 -p1
-#%patch7 -p1
+%patch7 -p1
+%patch8 -p1
 
 # replace in remaining scripts config.inc.php to system one
 grep -rl 'include_once(".*config.inc.php")' . | xargs sed -i -e '
