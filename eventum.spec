@@ -24,7 +24,7 @@
 %define _source http://mysql.dataphone.se/Downloads/%{name}/%{name}-%{version}.tar.gz
 %endif
 
-%define _rel 3
+%define	_rel	4
 
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl):	Eventum - system ¶ledzenia spraw/b³êdów
@@ -59,7 +59,7 @@ Patch4:		http://glen.alkohol.ee/pld/%{name}-reply-subject.patch
 Patch5:		%{name}-lf.patch
 Patch6:		http://glen.alkohol.ee/pld/%{name}-maq-subject.patch
 Patch7:		%{name}-bot-reconnect.patch
-Patch8:		http://glen.alkohol.ee/pld/%{name}-mime-decode-tmpvar.patch
+Patch8:		http://mysql.bkbits.net:8080/eventum/gnupatch@42963494pNQcDg4a5h5Mtp3272oFQQ
 URL:		http://dev.mysql.com/downloads/other/eventum/
 BuildRequires:	rpmbuild(macros) >= 1.200
 BuildRequires:	sed >= 4.0
