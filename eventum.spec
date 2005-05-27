@@ -401,7 +401,7 @@ Summary:	Eventum SCM integration
 Summary(pl):	Integracja SCM dla Eventum
 Group:		Applications/WWW
 Requires:	%{name}-base = %{epoch}:%{version}-%{release}
-Requires:	php >= 4.1.0
+Requires:	php-cli >= 4.1.0
 Requires:	php-pcre
 
 %description scm
