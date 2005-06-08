@@ -59,8 +59,7 @@ Patch3:		%{name}-PEAR.patch
 Patch4:		http://glen.alkohol.ee/pld/%{name}-reply-subject.patch
 Patch5:		%{name}-lf.patch
 Patch6:		http://glen.alkohol.ee/pld/%{name}-maq-subject.patch
-Patch7:		%{name}-auth-repliers.patch
-Patch8:		%{name}-bot-reconnect.patch
+Patch7:		%{name}-bot-reconnect.patch
 URL:		http://dev.mysql.com/downloads/other/eventum/
 BuildRequires:	rpmbuild(macros) >= 1.200
 BuildRequires:	sed >= 4.0
@@ -445,7 +444,6 @@ $,,'
 %patch5 -p1
 %patch6 -p1
 %patch7 -p1
-%patch8 -p1
 
 # replace in remaining scripts config.inc.php to system one
 grep -rl 'include_once(".*config.inc.php")' . | xargs sed -i -e '
@@ -534,6 +532,7 @@ cp -a include/Smarty/plugins/function.{calendar,get_{display_style,innerhtml,tex
 	$RPM_BUILD_ROOT%{_smartyplugindir}
 
 # qmail router
+%if %{with qmail}
 d=$RPM_BUILD_ROOT/var/lib/%{name}
 echo 'root' > $d/.qmail
 echo 'root' > $d/.qmail-default
@@ -541,6 +540,7 @@ echo '| %{_libdir}/router-qmail drafts' > $d/.qmail-draft-default
 echo '| %{_libdir}/router-qmail emails 1' > $d/.qmail-issue-default
 echo '| %{_libdir}/router-qmail notes' > $d/.qmail-note-default
 install %{SOURCE11} $RPM_BUILD_ROOT%{_libdir}/router-qmail
+%endif
 
 %clean
 rm -rf $RPM_BUILD_ROOT
