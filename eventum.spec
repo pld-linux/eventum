@@ -25,7 +25,7 @@
 %define	_source http://mysql.dataphone.se/Downloads/%{name}/%{name}-%{version}.tar.gz
 %endif
 
-%define	_rel	0.1
+%define	_rel	1.5
 
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl):	Eventum - system ¶ledzenia spraw/b³êdów
@@ -68,6 +68,7 @@ Requires:	php-gd
 Requires:	php-imap
 Requires:	php-mysql
 Requires:	php-pcre
+Requires:	php-session
 Requires:	%{name}-base = %{epoch}:%{version}-%{release}
 Requires:	Smarty >= 2.6.2
 %if %{with pear}
@@ -706,6 +707,11 @@ EOF
 
 %triggerpostun -- eventum < 1.5.3-0.291
 %{_appdir}/upgrade/upgrade.sh %{_appdir}/upgrade/v1.5.2_to_v1.5.3 <<EOF
+database_changes.php Perform database changes
+EOF
+
+%triggerpostun -- eventum < 1.5.4-1.5
+%{_appdir}/upgrade/upgrade.sh %{_appdir}/upgrade/v1.5.3_to_v1.5.4 <<EOF
 database_changes.php Perform database changes
 EOF
 
