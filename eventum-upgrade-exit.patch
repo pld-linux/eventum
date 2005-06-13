@@ -1,0 +1,152 @@
+diff -ur ../misc/upgrade.orig/v1.1_to_v1.2/database_changes.php ../misc/upgrade/v1.1_to_v1.2/database_changes.php
+--- ../misc/upgrade.orig/v1.1_to_v1.2/database_changes.php	2005-06-13 13:19:39.000000000 +0300
++++ ../misc/upgrade/v1.1_to_v1.2/database_changes.php	2005-06-13 13:26:40.000000000 +0300
+@@ -24,7 +24,7 @@
+     $update = $GLOBALS["db_api"]->dbh->query($stmt);
+     if (PEAR::isError($update)) {
+         echo "<pre>";var_dump($update);echo "</pre>";
+-        exit;
++        exit(1);
+     }
+ }
+ echo "complete<br />\n\n";
+diff -ur ../misc/upgrade.orig/v1.2.1_to_v1.2.2/database_changes.php ../misc/upgrade/v1.2.1_to_v1.2.2/database_changes.php
+--- ../misc/upgrade.orig/v1.2.1_to_v1.2.2/database_changes.php	2005-06-13 13:19:39.000000000 +0300
++++ ../misc/upgrade/v1.2.1_to_v1.2.2/database_changes.php	2005-06-13 13:26:44.000000000 +0300
+@@ -13,7 +13,7 @@
+     $update = $GLOBALS["db_api"]->dbh->query($stmt);
+     if (PEAR::isError($update)) {
+         echo "<pre>";var_dump($update);echo "</pre>";
+-        exit;
++        exit(1);
+     }
+ }
+ echo "complete<br />\n\n";
+diff -ur ../misc/upgrade.orig/v1.2.2_to_v1.3/database_changes.php ../misc/upgrade/v1.2.2_to_v1.3/database_changes.php
+--- ../misc/upgrade.orig/v1.2.2_to_v1.3/database_changes.php	2005-06-13 13:19:39.000000000 +0300
++++ ../misc/upgrade/v1.2.2_to_v1.3/database_changes.php	2005-06-13 13:26:51.000000000 +0300
+@@ -144,10 +144,10 @@
+     $update = $GLOBALS["db_api"]->dbh->query($stmt);
+     if (PEAR::isError($update)) {
+         echo "<pre>";var_dump($update);echo "</pre>";
+-        exit;
++        exit(1);
+     }
+ }
+ 
+ 
+ ?>
+-done
+\ No newline at end of file
++done
+diff -ur ../misc/upgrade.orig/v1.3.1_to_v1.4/database_changes.php ../misc/upgrade/v1.3.1_to_v1.4/database_changes.php
+--- ../misc/upgrade.orig/v1.3.1_to_v1.4/database_changes.php	2005-06-13 13:19:39.000000000 +0300
++++ ../misc/upgrade/v1.3.1_to_v1.4/database_changes.php	2005-06-13 13:26:56.000000000 +0300
+@@ -87,9 +87,9 @@
+     $res = $GLOBALS["db_api"]->dbh->query($stmt);
+     if (PEAR::isError($res)) {
+         echo "<pre>";var_dump($res);echo "</pre>";
+-        exit;
++        exit(1);
+     }
+ }
+ 
+ ?>
+-done
+\ No newline at end of file
++done
+diff -ur ../misc/upgrade.orig/v1.3_to_v1.3.1/database_changes.php ../misc/upgrade/v1.3_to_v1.3.1/database_changes.php
+--- ../misc/upgrade.orig/v1.3_to_v1.3.1/database_changes.php	2005-06-13 13:19:39.000000000 +0300
++++ ../misc/upgrade/v1.3_to_v1.3.1/database_changes.php	2005-06-13 13:27:02.000000000 +0300
+@@ -34,8 +34,8 @@
+     $update = $GLOBALS["db_api"]->dbh->query($stmt);
+     if (PEAR::isError($update)) {
+         echo "<pre>";var_dump($update);echo "</pre>";
+-        exit;
++        exit(1);
+     }
+ }
+ ?>
+-done
+\ No newline at end of file
++done
+diff -ur ../misc/upgrade.orig/v1.4_to_1.5/database_changes.php ../misc/upgrade/v1.4_to_1.5/database_changes.php
+--- ../misc/upgrade.orig/v1.4_to_1.5/database_changes.php	2005-06-13 13:19:39.000000000 +0300
++++ ../misc/upgrade/v1.4_to_1.5/database_changes.php	2005-06-13 13:27:10.000000000 +0300
+@@ -31,9 +31,9 @@
+     $res = $GLOBALS["db_api"]->dbh->query($stmt);
+     if (PEAR::isError($res)) {
+         echo "<pre>";var_dump($res);echo "</pre>";
+-        exit;
++        exit(1);
+     }
+ }
+ 
+ ?>
+-done
+\ No newline at end of file
++done
+diff -ur ../misc/upgrade.orig/v1.5.1_to_v1.5.2/database_changes.php ../misc/upgrade/v1.5.1_to_v1.5.2/database_changes.php
+--- ../misc/upgrade.orig/v1.5.1_to_v1.5.2/database_changes.php	2005-06-13 13:19:39.000000000 +0300
++++ ../misc/upgrade/v1.5.1_to_v1.5.2/database_changes.php	2005-06-13 13:27:14.000000000 +0300
+@@ -12,9 +12,9 @@
+     $res = $GLOBALS["db_api"]->dbh->query($stmt);
+     if (PEAR::isError($res)) {
+         echo "<pre>";var_dump($res);echo "</pre>";
+-        exit;
++        exit(1);
+     }
+ }
+ 
+ ?>
+-done
+\ No newline at end of file
++done
+diff -ur ../misc/upgrade.orig/v1.5.2_to_v1.5.3/database_changes.php ../misc/upgrade/v1.5.2_to_v1.5.3/database_changes.php
+--- ../misc/upgrade.orig/v1.5.2_to_v1.5.3/database_changes.php	2005-06-13 13:19:39.000000000 +0300
++++ ../misc/upgrade/v1.5.2_to_v1.5.3/database_changes.php	2005-06-13 13:27:21.000000000 +0300
+@@ -12,9 +12,9 @@
+     $res = $GLOBALS["db_api"]->dbh->query($stmt);
+     if (PEAR::isError($res)) {
+         echo "<pre>";var_dump($res);echo "</pre>";
+-        exit;
++        exit(1);
+     }
+ }
+ 
+ ?>
+-done
+\ No newline at end of file
++done
+diff -ur ../misc/upgrade.orig/v1.5.3_to_v1.5.4/database_changes.php ../misc/upgrade/v1.5.3_to_v1.5.4/database_changes.php
+--- ../misc/upgrade.orig/v1.5.3_to_v1.5.4/database_changes.php	2005-06-13 13:19:39.000000000 +0300
++++ ../misc/upgrade/v1.5.3_to_v1.5.4/database_changes.php	2005-06-13 13:27:28.000000000 +0300
+@@ -17,9 +17,9 @@
+     $res = $GLOBALS["db_api"]->dbh->query($stmt);
+     if (PEAR::isError($res)) {
+         echo "<pre>";var_dump($res);echo "</pre>";
+-        exit;
++        exit(1);
+     }
+ }
+ 
+ ?>
+-done
+\ No newline at end of file
++done
+diff -ur ../misc/upgrade.orig/v1.5_to_v1.5.1/database_changes.php ../misc/upgrade/v1.5_to_v1.5.1/database_changes.php
+--- ../misc/upgrade.orig/v1.5_to_v1.5.1/database_changes.php	2005-06-13 13:19:39.000000000 +0300
++++ ../misc/upgrade/v1.5_to_v1.5.1/database_changes.php	2005-06-13 13:27:32.000000000 +0300
+@@ -71,9 +71,9 @@
+     $res = $GLOBALS["db_api"]->dbh->query($stmt);
+     if (PEAR::isError($res)) {
+         echo "<pre>";var_dump($res);echo "</pre>";
+-        exit;
++        exit(1);
+     }
+ }
+ 
+ ?>
+-done
+\ No newline at end of file
++done
