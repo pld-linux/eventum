@@ -1,0 +1,26 @@
+diff -Naru a/include/class.misc.php b/include/class.misc.php
+--- a/include/class.misc.php	2005-06-13 02:17:46 -07:00
++++ b/include/class.misc.php	2005-06-13 02:17:46 -07:00
+@@ -501,7 +501,7 @@
+     function activateLinks($text, $class = "link")
+     {
+         $text = preg_replace("'(\w+)://([\w\+\-\@\=\?\.\%\/\:\&\;~]+)(\.)?'", "<a title=\"open \\1://\\2 in a new window\" class=\"$class\" href=\"\\1://\\2\" target=\"_\\2\">\\1://\\2</a>", $text);
+-        $text = preg_replace("'(\s+)www.([\w\+\-\@\=\?\.\%\/\:\&\;~]+)(\.\s|\s)'", "\\1<a title=\"open http://www.\\2 in a new window\" class=\"$class\" href=\"http://www.\\2\" target=\"_\\2\">www.\\2</a>\\3" , $text);
++        $text = preg_replace("'(\s+)www\.([\w\+\-\@\=\?\.\%\/\:\&\;~]+)(\.\s|\s)'", "\\1<a title=\"open http://www.\\2 in a new window\" class=\"$class\" href=\"http://www.\\2\" target=\"_\\2\">www.\\2</a>\\3" , $text);
+         return $text;
+     }
+ 
+# This is a BitKeeper generated diff -Nru style patch.
+#
+# ChangeSet
+#   2005/06/07 09:25:15-05:00 jpm@mysql.com 
+#   Fixed the link activation code to properly parse and ignore certain words (Bug #10263)
+# 
+# ChangeLog
+#   2005/06/07 09:25:14-05:00 jpm@mysql.com +1 -0
+#   Fixed the link activation code to properly parse and ignore certain words (Bug #10263)
+# 
+# include/class.misc.php
+#   2005/06/07 09:25:14-05:00 jpm@mysql.com +1 -1
+#   Fixed the link activation code to properly parse and ignore certain words (Bug #10263)
+# 
