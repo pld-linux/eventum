@@ -11,6 +11,8 @@
 ini_set('allow_url_fopen', 0);
 ini_set("display_errors", 0);
 set_time_limit(0);
+set_magic_quotes_runtime(0);
+
 // prevent session from messing up the browser cache
 ini_set('session.cache_limiter', 'nocache');
 
@@ -41,6 +43,11 @@ include_once '/etc/eventum/config.php';
 // define the user_id of system user
 if (!defined('APP_SYSTEM_USER_ID')) {
     define("APP_SYSTEM_USER_ID", 1);
+}
+
+// if full text searching is enabled
+if (!defined('APP_ENABLE_FULLTEXT')) {
+    define("APP_ENABLE_FULLTEXT", false);
 }
 
 if (!defined('APP_BENCHMARK')) {

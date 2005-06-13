@@ -65,5 +65,7 @@
 @define("APP_INTERNAL_COLOR", "#9C494B");
 
 @define("APP_BENCHMARK", false);
+// if full text searching is enabled
+@define("APP_ENABLE_FULLTEXT", false);
 
 ?>
