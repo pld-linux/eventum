@@ -11,7 +11,7 @@
 # - php4-pgsql crashes php (at least 4.3.11-1)
 
 %bcond_with	pear	# build with system PEAR packages (or use bundled ones)
-%bcond_with	qmail	# build the router-qmail subpackage	
+%bcond_with	qmail	# build the router-qmail subpackage
 
 %define	uid	146
 %define	gid	146
@@ -25,7 +25,7 @@
 %define	_source http://mysql.dataphone.se/Downloads/%{name}/%{name}-%{version}.tar.gz
 %endif
 
-%define	_rel	1.5
+%define	_rel	1.8
 
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl):	Eventum - system ¶ledzenia spraw/b³êdów
@@ -60,6 +60,9 @@ Patch4:		http://glen.alkohol.ee/pld/%{name}-reply-subject.patch
 Patch5:		%{name}-lf.patch
 Patch6:		http://glen.alkohol.ee/pld/%{name}-maq-subject.patch
 Patch7:		%{name}-bot-reconnect.patch
+Patch8:		%{name}-bug-10464.patch
+Patch9:		%{name}-bug-10263.patch
+Patch10:	%{name}-ft-enable.patch
 URL:		http://dev.mysql.com/downloads/other/eventum/
 BuildRequires:	rpmbuild(macros) >= 1.200
 BuildRequires:	sed >= 4.0
@@ -445,6 +448,9 @@ $,,'
 %patch5 -p1
 %patch6 -p1
 %patch7 -p1
+%patch8 -p1
+%patch9 -p1
+%patch10 -p1
 
 # replace in remaining scripts config.inc.php to system one
 grep -rl 'include_once(".*config.inc.php")' . | xargs sed -i -e '
