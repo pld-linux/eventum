@@ -28,7 +28,7 @@ diff -Naru a/setup/index.php b/setup/index.php
 +        $config_contents = str_replace("%{APP_ENABLE_FULLTEXT}%", "false", $config_contents);
 +    }
 +
-     $fp = @fopen('../config.inc.php', 'w');
+     $fp = @fopen('/etc/eventum/config.php', 'w');
      if ($fp === FALSE) {
          return "Could not open the file 'config.inc.php' for writing. The permissions on the file should be set as to allow the user that the web server runs as to open it. Please correct this problem and try again.";
 # This is a BitKeeper generated diff -Nru style patch.
