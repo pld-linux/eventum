@@ -1,0 +1,7 @@
+- use system Smarty (bundled one is identical version)
+- separate distribution specific config (core.php) and installation
+  specific config (config.php), so it would be possible to have at
+  least some kind of updates to file paths
+- raise php version requirement to 4.2.0, not to create wrapper is_a()
+  function in config
+- allow installation with php5 (never tested altho)
