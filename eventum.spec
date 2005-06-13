@@ -25,7 +25,7 @@
 %define	_source http://mysql.dataphone.se/Downloads/%{name}/%{name}-%{version}.tar.gz
 %endif
 
-%define	_rel	1.8
+%define	_rel	1.12
 
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl):	Eventum - system ¶ledzenia spraw/b³êdów
@@ -63,6 +63,7 @@ Patch7:		%{name}-bot-reconnect.patch
 Patch8:		%{name}-bug-10464.patch
 Patch9:		%{name}-bug-10263.patch
 Patch10:	%{name}-ft-enable.patch
+Patch11:	%{name}-upgrade-exit.patch
 URL:		http://dev.mysql.com/downloads/other/eventum/
 BuildRequires:	rpmbuild(macros) >= 1.200
 BuildRequires:	sed >= 4.0
@@ -451,6 +452,7 @@ $,,'
 %patch8 -p1
 %patch9 -p1
 %patch10 -p1
+%patch11 -p1
 
 # replace in remaining scripts config.inc.php to system one
 grep -rl 'include_once(".*config.inc.php")' . | xargs sed -i -e '
@@ -716,7 +718,7 @@ EOF
 database_changes.php Perform database changes
 EOF
 
-%triggerpostun -- eventum < 1.5.4-1.5
+%triggerpostun -- eventum < 1.5.4-1.12
 %{_appdir}/upgrade/upgrade.sh %{_appdir}/upgrade/v1.5.3_to_v1.5.4 <<EOF
 database_changes.php Perform database changes
 EOF
