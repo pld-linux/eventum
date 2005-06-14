@@ -8,7 +8,6 @@
 #  - overLIB 3.5.1 (http://www.bosrup.com/web/overlib/)
 #  - A few other small javascript libraries
 # - 64bit platforms beware? http://bugs.php.net/bug.php?id=30215 (it's actually Smarty related problem)
-# - php4-pgsql crashes php (at least 4.3.11-1)
 
 %bcond_with	pear	# build with system PEAR packages (or use bundled ones)
 %bcond_with	qmail	# build the router-qmail subpackage
@@ -25,7 +24,7 @@
 %define	_source http://mysql.dataphone.se/Downloads/%{name}/%{name}-%{version}.tar.gz
 %endif
 
-%define	_rel	2
+%define	_rel	3
 
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl):	Eventum - system ¶ledzenia spraw/b³êdów
@@ -465,7 +464,7 @@ sed -i -e '
 grep -rl 'APP_INC_PATH..*"private_key.php"' . | xargs sed -i -e '
 	s,include_once(APP_INC_PATH.*"private_key.php"),include_once("%{_sysconfdir}/private_key.php"),
 '
-find -name '*~' | xargs -r rm -v
+find '(' -name '*~' -o -name '*.orig' ')' | xargs -r rm -v
 
 %install
 rm -rf $RPM_BUILD_ROOT
