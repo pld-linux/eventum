@@ -1,8 +1,0 @@
-# $Id$
-# Config file for Eventum IRC Bot
-
-# nice level
-#SERVICE_RUN_NICE_LEVEL="+1"
-
-# give it 16mb memory and 16m stack
-SERVICE_LIMITS="$DEFAULT_SERVICE_LIMITS -m 16384 -s 16384"
