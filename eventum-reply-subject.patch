@@ -5,7 +5,7 @@
              "parent_email_id" => $HTTP_GET_VARS["id"]
          ));
 +    } else {
-+        $email["reply_subject"] = "[#" . $HTTP_GET_VARS['issue_id'] . "] ";
++        $email["reply_subject"] = "[#" . @$HTTP_GET_VARS['issue_id'] . "] ";
 +        $tpl->bulkAssign(array(
 +            "email"           => $email,
 +        ));
