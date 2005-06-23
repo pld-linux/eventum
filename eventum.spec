@@ -25,7 +25,7 @@
 %define	_source http://mysql.dataphone.se/Downloads/%{name}/%{name}-%{version}.tar.gz
 %endif
 
-%define	_rel	3.6
+%define	_rel	3.7
 
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl):	Eventum - system ¶ledzenia spraw/b³êdów
@@ -68,6 +68,8 @@ Patch12:	http://glen.alkohol.ee/pld/eventum-scm-double-linkfilter.patch
 Patch13:	http://glen.alkohol.ee/pld/eventum-getworkflow-backups.patch
 Patch14:	http://glen.alkohol.ee/pld/eventum-missing-content-type.patch
 Patch15:	http://glen.alkohol.ee/pld/eventum-link-pipe.patch
+Patch16:	%{name}-ft-fix.patch
+Patch17:	http://glen.alkohol.ee/pld/eventum-scm-workflow.patch
 URL:		http://dev.mysql.com/downloads/other/eventum/
 BuildRequires:	rpmbuild(macros) >= 1.200
 BuildRequires:	sed >= 4.0
@@ -461,6 +463,8 @@ $,,'
 %patch13 -p1
 %patch14 -p1
 %patch15 -p1
+%patch16 -p1
+%patch17 -p1
 
 # replace in remaining scripts config.inc.php to system one
 grep -rl 'include_once(".*config.inc.php")' . | xargs sed -i -e '
