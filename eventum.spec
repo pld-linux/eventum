@@ -25,7 +25,7 @@
 %define	_source http://mysql.dataphone.se/Downloads/%{name}/%{name}-%{version}.tar.gz
 %endif
 
-%define	_rel	3.5
+%define	_rel	3.6
 
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl):	Eventum - system ¶ledzenia spraw/b³êdów
@@ -104,7 +104,7 @@ BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_sysconfdir	/etc/%{name}
-%define		_libdir		%{_prefix}/%{_lib}/%{name}
+%define		_libdir		%{_prefix}/lib/%{name}
 %define		_appdir	%{_datadir}/%{name}
 %define		_smartyplugindir	%{php_pear_dir}/Smarty/plugins
 
