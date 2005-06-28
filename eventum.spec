@@ -25,7 +25,7 @@
 %define	_source http://mysql.dataphone.se/Downloads/%{name}/%{name}-%{version}.tar.gz
 %endif
 
-%define	_rel	3.12
+%define	_rel	3.15
 
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl):	Eventum - system ¶ledzenia spraw/b³êdów
@@ -73,7 +73,7 @@ Patch17:	http://glen.alkohol.ee/pld/eventum-scm-workflow.patch
 Patch18:	http://glen.alkohol.ee/pld/eventum-bot-reconnect-join.patch
 Patch19:	http://glen.alkohol.ee/pld/eventum-routing-pattern-fix.patch
 URL:		http://dev.mysql.com/downloads/other/eventum/
-BuildRequires:	rpmbuild(macros) >= 1.200
+BuildRequires:	rpmbuild(macros) >= 1.223
 BuildRequires:	sed >= 4.0
 Requires:	php >= 4.2.0
 Requires:	php-gd
@@ -111,9 +111,6 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define		_libdir		%{_prefix}/lib/%{name}
 %define		_appdir	%{_datadir}/%{name}
 %define		_smartyplugindir	%{php_pear_dir}/Smarty/plugins
-
-%define		_apache1dir	/etc/apache
-%define		_apache2dir	/etc/httpd
 
 %description
 Eventum is a user-friendly and flexible issue tracking system that can
@@ -574,21 +571,6 @@ rm -rf $RPM_BUILD_ROOT
 %addusertogroup http %{name}
 
 %post
-# apache1
-if [ -d %{_apache1dir}/conf.d ]; then
-	ln -sf %{_sysconfdir}/apache.conf %{_apache1dir}/conf.d/99_%{name}.conf
-	if [ -f /var/lock/subsys/apache ]; then
-		/etc/rc.d/init.d/apache restart 1>&2
-	fi
-fi
-# apache2
-if [ -d %{_apache2dir}/httpd.conf ]; then
-	ln -sf %{_sysconfdir}/apache.conf %{_apache2dir}/httpd.conf/99_%{name}.conf
-	if [ -f /var/lock/subsys/httpd ]; then
-		/etc/rc.d/init.d/httpd restart 1>&2
-	fi
-fi
-
 # check if the package is configured.
 if grep -q 'header("Location: setup/")' %{_sysconfdir}/config.php; then
 if [ -f %{_appdir}/htdocs/setup/index.php ]; then
@@ -649,21 +631,6 @@ rm -f /var/cache/eventum/*.php
 
 %preun
 if [ "$1" = "0" ]; then
-	# apache1
-	if [ -f %{_apache1dir}/apache.conf ]; then
-		rm -f %{_apache1dir}/conf.d/99_%{name}.conf
-		if [ -f /var/lock/subsys/apache ]; then
-			/etc/rc.d/init.d/apache restart 1>&2
-		fi
-	fi
-	# apache2
-	if [ -d %{_apache2dir}/httpd.conf ]; then
-		rm -f %{_apache2dir}/httpd.conf/99_%{name}.conf
-		if [ -f /var/lock/subsys/httpd ]; then
-			/etc/rc.d/init.d/httpd restart 1>&2
-		fi
-	fi
-
 	# nuke cache
 	rm -f /var/cache/eventum/*.php 2>/dev/null || :
 fi
@@ -713,6 +680,18 @@ if [ "$1" = "0" ]; then
 	chmod 640 %{_sysconfdir}/{config,private_key}.php
 	chown root:eventum %{_sysconfdir}/{config,private_key}.php
 fi
+
+%triggerin -- apache1 >= 1.3.33-2
+%apache_config_install -v 1 -c %{_sysconfdir}/apache.conf
+
+%triggerun -- apache1 >= 1.3.33-2
+%apache_config_uninstall -v 1
+
+%triggerin -- apache >= 2.0.0
+%apache_config_install -v 2 -c %{_sysconfdir}/apache.conf
+
+%triggerun -- apache >= 2.0.0
+%apache_config_uninstall -v 2
 
 # FIXME
 # only one upgrade trigger is called if you're upgrading over two
