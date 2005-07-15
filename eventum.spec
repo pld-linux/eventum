@@ -25,7 +25,7 @@
 %define	_source http://mysql.dataphone.se/Downloads/%{name}/%{name}-%{version}.tar.gz
 %endif
 
-%define	_rel	3.17
+%define	_rel	3.20
 
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl):	Eventum - system ¶ledzenia spraw/b³êdów
@@ -488,6 +488,7 @@ install -d \
 	$RPM_BUILD_ROOT{%{_sysconfdir},%{_bindir},%{_libdir}} \
 	$RPM_BUILD_ROOT/etc/{rc.d/init.d,cron.d,sysconfig} \
 	$RPM_BUILD_ROOT/var/{run,log,cache,lib}/%{name} \
+	$RPM_BUILD_ROOT/var/lib/%{name}/routed_emails \
 	$RPM_BUILD_ROOT%{_appdir}/{include,htdocs/misc,upgrade} \
 
 cp -a *.php css customer images js manage reports rpc setup $RPM_BUILD_ROOT%{_appdir}/htdocs
@@ -777,6 +778,8 @@ EOF
 %dir %{_appdir}
 # qmail will ignore user, if it's home directory is not owned
 %attr(750,eventum,eventum) %dir /var/lib/%{name}
+# for saved routed emails
+%attr(770,root,eventum) %dir /var/lib/%{name}/routed_emails
 
 %files setup
 %defattr(644,root,root,755)
