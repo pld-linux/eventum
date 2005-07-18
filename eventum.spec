@@ -13,9 +13,6 @@
 %bcond_with	pear	# build with system PEAR packages (or use bundled ones)
 %bcond_with	qmail	# build the router-qmail subpackage
 
-%define	uid	146
-%define	gid	146
-
 # snapshot: DATE
 #define	_snap 20050227
 
@@ -25,7 +22,7 @@
 %define	_source http://mysql.dataphone.se/Downloads/%{name}/%{name}-%{version}.tar.gz
 %endif
 
-%define	_rel	3.20
+%define	_rel	3.21
 
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl):	Eventum - system ¶ledzenia spraw/b³êdów
@@ -364,7 +361,7 @@ Group:		Applications/WWW
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 Requires:	php >= 4.1.0
 Requires:	php-sockets
-Requires:	rc-scripts >= 0.4.0.18
+PreReq:		rc-scripts >= 0.4.0.18
 
 %description irc
 The IRC notification bot is a nice feature for remote teams that want
@@ -639,8 +636,8 @@ if [ "$1" = "0" ]; then
 fi
 
 %pre base
-%groupadd -P %{name}-base -g %{gid} %{name}
-%useradd -P %{name}-base -u %{uid} -d /var/lib/%{name} -g %{name} -c "Eventum User" %{name}
+%groupadd -P %{name}-base -g 146 %{name}
+%useradd -P %{name}-base -u 146 -d /var/lib/%{name} -g %{name} -c "Eventum User" %{name}
 
 %postun base
 if [ "$1" = "0" ]; then
