@@ -236,3 +236,14 @@
      Misc::displayRequirementErrors($errors);
      exit;
  }
+--- ../include/class.support.php~	2005-07-10 15:40:57.000000000 +0300
++++ ../include/class.support.php	2005-07-14 22:47:58.665843734 +0300
+@@ -259,7 +259,7 @@
+      */
+     function saveRoutedEmail($message)
+     {
+-        $path = APP_PATH . "misc/routed_emails/";
++        $path = "/var/lib/eventum/routed_emails/";
+         list($usec,) = explode(" ", microtime());
+         $filename = date('dmY.His.') . $usec . '.email.txt';
+         $fp = @fopen($path . $filename, 'w');
