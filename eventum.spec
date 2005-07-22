@@ -8,7 +8,6 @@
 #  - overLIB 3.5.1 (http://www.bosrup.com/web/overlib/)
 #  - A few other small javascript libraries
 # - 64bit platforms beware? http://bugs.php.net/bug.php?id=30215 (it's actually Smarty related problem)
-# - route mails actually saves incoming mails to directory, which doesn't exist in PLD. create it
 
 %bcond_with	pear	# build with system PEAR packages (or use bundled ones)
 %bcond_with	qmail	# build the router-qmail subpackage
@@ -22,7 +21,7 @@
 %define	_source http://mysql.dataphone.se/Downloads/%{name}/%{name}-%{version}.tar.gz
 %endif
 
-%define	_rel	3.31
+%define	_rel	3.33
 
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl):	Eventum - system ¶ledzenia spraw/b³êdów
@@ -73,6 +72,7 @@ Patch20:	http://glen.alkohol.ee/pld/eventum-weekly-reports-xss.patch
 Patch21:	http://glen.alkohol.ee/pld/eventum-rpc-wr.patch
 Patch22:	http://glen.alkohol.ee/pld/eventum-cli-wr-separated.patch
 Patch23:	http://glen.alkohol.ee/pld/eventum-xmlrpc-log-encode.patch
+Patch24:	http://glen.alkohol.ee/pld/eventum-workflow-issueClosed-complete.patch
 URL:		http://dev.mysql.com/downloads/other/eventum/
 BuildRequires:	rpmbuild(macros) >= 1.223
 BuildRequires:	sed >= 4.0
@@ -471,6 +471,7 @@ $,,'
 %patch21 -p1
 %patch22 -p1
 %patch23 -p1
+%patch24 -p1
 
 # replace in remaining scripts config.inc.php to system one
 grep -rl 'include_once(".*config.inc.php")' . | xargs sed -i -e '
