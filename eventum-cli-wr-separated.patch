@@ -1,0 +1,93 @@
+--- ./rpc/xmlrpc.php	2005-07-19 16:33:54.000000000 +0300
++++ /tmp/xmlrpc.php	2005-07-19 17:41:28.000000000 +0300
+@@ -650,7 +650,7 @@
+     }
+ }
+ 
+-$getWeeklyReport_sig = array(array($XML_RPC_String, $XML_RPC_String, $XML_RPC_String, $XML_RPC_Int, $XML_RPC_String, $XML_RPC_String));
++$getWeeklyReport_sig = array(array($XML_RPC_String, $XML_RPC_String, $XML_RPC_String, $XML_RPC_Int, $XML_RPC_String, $XML_RPC_String, $XML_RPC_Int));
+ function getWeeklyReport($p)
+ {
+     $email = XML_RPC_decode($p->getParam(0));
+@@ -662,6 +662,7 @@
+     $week = abs(XML_RPC_decode($p->getParam(2)));
+     $start = XML_RPC_decode($p->getParam(3));
+     $end = XML_RPC_decode($p->getParam(4));
++    $separate_closed = XML_RPC_decode($p->getParam(5));
+     
+     // we have to set a project so the template class works, even though the weekly report doesn't actually need it
+     $projects = Project::getAssocList(Auth::getUserID());
+--- ./misc/cli/eventum	2005-07-19 16:33:54.000000000 +0300
++++ /tmp/eventum	2005-07-19 17:43:37.000000000 +0300
+@@ -218,15 +218,19 @@
+         }
+         Command_Line::lookupCustomer(&$client, $auth, $HTTP_SERVER_VARS['argv'][2], $HTTP_SERVER_VARS['argv'][3]);
+     } elseif (($HTTP_SERVER_VARS['argv'][1] == 'weekly-report') || ($HTTP_SERVER_VARS['argv'][1] == 'wr')) {
+-        if (count(@$HTTP_SERVER_VARS['argv']) == 4) {
++        if (count(@$HTTP_SERVER_VARS['argv']) >= 4 and $HTTP_SERVER_VARS['argv'][3] != '--separate-closed') {
++            $separate_closed = (@$HTTP_SERVER_VARS['argv'][4] == '--separate-closed');
+             // date range
+-            Command_Line::getWeeklyReport(&$client, $auth, 0, $HTTP_SERVER_VARS['argv'][2], $HTTP_SERVER_VARS['argv'][3]);
++            Command_Line::getWeeklyReport(&$client, $auth, 0, $HTTP_SERVER_VARS['argv'][2], $HTTP_SERVER_VARS['argv'][3], $separate_closed);
+         } else {
+             // weekly
+             if (@$HTTP_SERVER_VARS['argv'][2] == '') {
++                $separate_closed = false;
+                 @$HTTP_SERVER_VARS['argv'][2] = 0;
++            } else {
++                $separate_closed = (@$HTTP_SERVER_VARS['argv'][3] == '--separate-closed' or @$HTTP_SERVER_VARS['argv'][2] == '--separate-closed');
+             }
+-            Command_Line::getWeeklyReport(&$client, $auth, $HTTP_SERVER_VARS['argv'][2]);
++            Command_Line::getWeeklyReport(&$client, $auth, $HTTP_SERVER_VARS['argv'][2], '', '', $separate_closed);
+         }
+     } elseif ($HTTP_SERVER_VARS['argv'][1] == 'clock') {
+         Command_Line::timeClock(&$client, $auth, @$HTTP_SERVER_VARS['argv'][2]);
+--- ./misc/cli/include/class.command_line.php	2005-07-19 16:33:54.000000000 +0300
++++ /tmp/class.command_line.php	2005-07-19 17:43:37.000000000 +0300
+@@ -1144,15 +1144,17 @@
+      * @param   integer $week The week for the report. If start and end date are set, this is ignored.
+      * @param   string $start_date The start date of the report. (optional)
+      * @param   string $end_date The end_date of the report. (optional)
++     * @param   boolean If closed issues should be separated from other issues. 
+      */
+-    function getWeeklyReport($rpc_conn, $auth, $week, $start_date = '', $end_date = '')
++    function getWeeklyReport($rpc_conn, $auth, $week, $start_date = '', $end_date = '', $separate_closed = false)
+     {
+         $msg = new XML_RPC_Message("getWeeklyReport", array(
+             new XML_RPC_Value($auth[0], 'string'), 
+             new XML_RPC_Value($auth[1], 'string'),
+             new XML_RPC_Value($week, "int"), 
+             new XML_RPC_Value($start_date, "string"), 
+-            new XML_RPC_Value($end_date, "string")
++            new XML_RPC_Value($end_date, "string"),
++            new XML_RPC_Value($separate_closed ? 1 : 0, 'int'), 
+         ));
+         $result = $rpc_conn->send($msg);
+         if ($result->faultCode()) {
+@@ -1686,7 +1688,7 @@
+             "help"      =>  "Looks up a customer's record information."
+         );
+         $usage[] = array(
+-            "command"   =>  array("weekly-report ([<week>])|([<start>] [<end>])", "wr ([<week>])|([<start>] [<end>])"),
++            "command"   =>  array("weekly-report ([<week>] [--separate-closed])|([<start>] [<end>] [--separate-closed])", "wr ([<week>])|([<start>] [<end>] [--separate-closed])"),
+             "help"      =>  "Fetches the weekly report. Week is specified as an integer with 0 representing
+      the current week, -1 the previous week and so on. If the week is omitted it defaults 
+      to the current week. Alternately, a date range can be set. Dates should be in the format 'YYYY-MM-DD'."
+--- ../rpc/xmlrpc.php~	2005-07-26 20:19:37.000000000 +0300
++++ ../rpc/xmlrpc.php	2005-07-26 20:21:11.000000000 +0300
+@@ -681,9 +681,14 @@
+         $start = date("Y-m-d", $start);
+     }
+     
++    if ($separate_closed) {
++        // emulate smarty value for reports/weekly_data.tpl.tmpl:
++        // {if $smarty.post.separate_closed == 1}
++        $_POST['separate_closed'] = true;
++    }
+     $tpl = new Template_API();
+     $tpl->setTemplate("reports/weekly_data.tpl.html");
+-    $tpl->assign("data", Report::getWeeklyReport(User::getUserIDByEmail($email), $start, $end));
++    $tpl->assign("data", Report::getWeeklyReport(User::getUserIDByEmail($email), $start, $end, $separate_closed));
+     
+     $ret = $tpl->getTemplateContents(). "\n";
+     return new XML_RPC_Response(XML_RPC_Encode(base64_encode($ret)));
