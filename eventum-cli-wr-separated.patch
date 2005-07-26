@@ -17,22 +17,6 @@
      
      // we have to set a project so the template class works, even though the weekly report doesn't actually need it
      $projects = Project::getAssocList(Auth::getUserID());
-@@ -677,9 +678,14 @@
-         $start = date("Y-m-d", $start);
-     }
-     
-+    if ($separate_closed) {
-+        // emulate smarty value for reports/weekly_data.tpl.tmpl:
-+        // {if $smarty.post.separate_closed == 1}
-+        $_POST['separate_closed'] = true;
-+    }
-     $tpl = new Template_API();
-     $tpl->setTemplate("reports/weekly_data.tpl.html");
--    $tpl->assign("data", Report::getWeeklyReport(User::getUserIDByEmail($email), $start, $end));
-+    $tpl->assign("data", Report::getWeeklyReport(User::getUserIDByEmail($email), $start, $end, $separate_closed));
- 
-     $ret = $tpl->getTemplateContents(). "\n";
-     return new XML_RPC_Response(XML_RPC_Encode(base64_encode($ret)));
 --- ./misc/cli/eventum	2005-07-19 16:33:54.000000000 +0300
 +++ /tmp/eventum	2005-07-19 17:43:37.000000000 +0300
 @@ -218,15 +218,19 @@
@@ -89,3 +73,21 @@
              "help"      =>  "Fetches the weekly report. Week is specified as an integer with 0 representing
       the current week, -1 the previous week and so on. If the week is omitted it defaults 
       to the current week. Alternately, a date range can be set. Dates should be in the format 'YYYY-MM-DD'."
+--- ../rpc/xmlrpc.php~	2005-07-26 20:19:37.000000000 +0300
++++ ../rpc/xmlrpc.php	2005-07-26 20:21:11.000000000 +0300
+@@ -681,9 +681,14 @@
+         $start = date("Y-m-d", $start);
+     }
+     
++    if ($separate_closed) {
++        // emulate smarty value for reports/weekly_data.tpl.tmpl:
++        // {if $smarty.post.separate_closed == 1}
++        $_POST['separate_closed'] = true;
++    }
+     $tpl = new Template_API();
+     $tpl->setTemplate("reports/weekly_data.tpl.html");
+-    $tpl->assign("data", Report::getWeeklyReport(User::getUserIDByEmail($email), $start, $end));
++    $tpl->assign("data", Report::getWeeklyReport(User::getUserIDByEmail($email), $start, $end, $separate_closed));
+     
+     $ret = $tpl->getTemplateContents(). "\n";
+     return new XML_RPC_Response(XML_RPC_Encode(base64_encode($ret)));
