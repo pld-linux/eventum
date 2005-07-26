@@ -262,7 +262,7 @@
 -} else {
 -    ini_set("include_path", ".:./../include/pear/");
 -}
-+ini_set("include_path", ".:./../include/pear/");
++ini_set("include_path", ".:../../include/pear/");
  include_once("File/Util.php");
  
  $html = checkRequirements();
