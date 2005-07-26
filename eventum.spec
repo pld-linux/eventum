@@ -21,7 +21,7 @@
 %define	_source http://mysql.dataphone.se/Downloads/%{name}/%{name}-%{version}.tar.gz
 %endif
 
-%define	_rel	0.2
+%define	_rel	0.8
 
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl):	Eventum - system ¶ledzenia spraw/b³êdów
@@ -31,7 +31,7 @@ Release:	%{?_snap:0.%{_snap}.}%{_rel}
 License:	GPL
 Group:		Applications/WWW
 Source0:	%{_source}
-# Source0-md5:	fcf0d12dd64ff03b86557a908b566fac
+# Source0-md5:	cadc9530b5fa905fb6d9d61ce837ca3a
 %{?_snap:NoSource:	0}
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
