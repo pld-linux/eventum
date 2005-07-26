@@ -14,18 +14,6 @@
      )
  );
  
-@@ -355,9 +357,8 @@
- $irc->registerActionhandler(SMARTIRC_TYPE_QUERY, '^!?list-clocked-in', $bot, 'listClockedInUsers');
- $irc->registerActionhandler(SMARTIRC_TYPE_QUERY, '^!?list-quarantined', $bot, 'listQuarantinedIssues');
- 
--
--$irc->connect('localhost', 6667);
--$irc->login('EventumBOT', 'EventumBOT', 0, 'EventumBOT');
-+$irc->connect($irc_host, $irc_port);
-+$irc->login($irc_nick, $irc_realname, 0, $irc_username, $irc_password);
- foreach ($channels as $prj_id => $channel_list) {
-     $irc->join($channel_list);
- }
 --- ./misc/irc/bot.php~	2005-03-14 14:47:40.000000000 +0200
 +++ ./misc/irc/bot.php	2005-03-28 20:58:31.000000000 +0300
 @@ -56,7 +56,7 @@
@@ -37,3 +25,21 @@
          $irc_default_channel,
      )
  );
+--- ./misc/irc/bot.php~	2005-07-26 19:15:02.000000000 +0300
++++ ./misc/irc/bot.php	2005-07-26 19:15:45.000000000 +0300
+@@ -395,11 +395,11 @@
+ $irc->registerActionhandler(SMARTIRC_TYPE_QUERY, '^!?list-quarantined', $bot, 'listQuarantinedIssues');
+ 
+ 
+-$irc->connect('localhost', 6667);
+-$irc->login('EventumBOT', 'EventumBOT', 0, 'EventumBOT');
++$irc->connect($irc_host, $irc_port);
++$irc->login($irc_nick, $irc_realname, 0, $irc_username, $irc_password);
+ $irc->listen();
+ $irc->disconnect();
+ 
+ // release the lock
+ Lock::release('irc_bot');
+-?>
+\ No newline at end of file
++?>
