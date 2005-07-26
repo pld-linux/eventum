@@ -21,17 +21,17 @@
 %define	_source http://mysql.dataphone.se/Downloads/%{name}/%{name}-%{version}.tar.gz
 %endif
 
-%define	_rel	3.33
+%define	_rel	0.2
 
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl):	Eventum - system ¶ledzenia spraw/b³êdów
 Name:		eventum
-Version:	1.5.4
+Version:	1.5.5
 Release:	%{?_snap:0.%{_snap}.}%{_rel}
 License:	GPL
 Group:		Applications/WWW
 Source0:	%{_source}
-# Source0-md5:	0de0b1cfe4b92179cb7a52a819871856
+# Source0-md5:	fcf0d12dd64ff03b86557a908b566fac
 %{?_snap:NoSource:	0}
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
@@ -56,23 +56,7 @@ Patch4:		http://glen.alkohol.ee/pld/%{name}-reply-subject.patch
 Patch5:		%{name}-lf.patch
 Patch6:		http://glen.alkohol.ee/pld/%{name}-maq-subject.patch
 Patch7:		%{name}-bot-reconnect.patch
-Patch8:		%{name}-bug-10464.patch
-Patch9:		%{name}-bug-10263.patch
-Patch10:	%{name}-ft-enable.patch
-Patch11:	%{name}-upgrade-exit.patch
-Patch12:	http://glen.alkohol.ee/pld/eventum-scm-double-linkfilter.patch
-Patch13:	http://glen.alkohol.ee/pld/eventum-getworkflow-backups.patch
-Patch14:	http://glen.alkohol.ee/pld/eventum-missing-content-type.patch
-Patch15:	http://glen.alkohol.ee/pld/eventum-link-pipe.patch
-Patch16:	%{name}-ft-fix.patch
-Patch17:	http://glen.alkohol.ee/pld/eventum-scm-workflow.patch
-Patch18:	http://glen.alkohol.ee/pld/eventum-bot-reconnect-join.patch
-Patch19:	http://glen.alkohol.ee/pld/eventum-routing-pattern-fix.patch
-Patch20:	http://glen.alkohol.ee/pld/eventum-weekly-reports-xss.patch
-Patch21:	http://glen.alkohol.ee/pld/eventum-rpc-wr.patch
-Patch22:	http://glen.alkohol.ee/pld/eventum-cli-wr-separated.patch
-Patch23:	http://glen.alkohol.ee/pld/eventum-xmlrpc-log-encode.patch
-Patch24:	http://glen.alkohol.ee/pld/eventum-workflow-issueClosed-complete.patch
+Patch22:	eventum-cli-wr-separated.patch
 URL:		http://dev.mysql.com/downloads/other/eventum/
 BuildRequires:	rpmbuild(macros) >= 1.223
 BuildRequires:	sed >= 4.0
@@ -444,6 +428,8 @@ Szczegó³y na temat instalacji mo¿na przeczytaæ pod
 find . -type f -print0 | xargs -0 sed -i -e 's,
 $,,'
 
+rm -f setup.conf.php
+
 # packaging
 %patch0 -p1 -b .paths
 %patch1 -p1
@@ -455,23 +441,7 @@ $,,'
 %patch5 -p1
 %patch6 -p1
 %patch7 -p1
-%patch8 -p1
-%patch9 -p1
-%patch10 -p1
-%patch11 -p1
-%patch12 -p1
-%patch13 -p1
-%patch14 -p1
-%patch15 -p1
-%patch16 -p1
-%patch17 -p1
-%patch18 -p1
-%patch19 -p1
-%patch20 -p1
-%patch21 -p1
 %patch22 -p1
-%patch23 -p1
-%patch24 -p1
 
 # replace in remaining scripts config.inc.php to system one
 grep -rl 'include_once(".*config.inc.php")' . | xargs sed -i -e '
