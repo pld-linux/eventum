@@ -12,9 +12,6 @@
 %bcond_with	pear	# build with system PEAR packages (or use bundled ones)
 %bcond_with	qmail	# build the router-qmail subpackage
 
-%define	uid	146
-%define	gid	146
-
 # snapshot: DATE
 #define	_snap 20050227
 
@@ -24,17 +21,17 @@
 %define	_source http://mysql.dataphone.se/Downloads/%{name}/%{name}-%{version}.tar.gz
 %endif
 
-%define	_rel	3
+%define	_rel	1
 
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl):	Eventum - system ¶ledzenia spraw/b³êdów
 Name:		eventum
-Version:	1.5.4
+Version:	1.5.5
 Release:	%{?_snap:0.%{_snap}.}%{_rel}
 License:	GPL
 Group:		Applications/WWW
 Source0:	%{_source}
-# Source0-md5:	0de0b1cfe4b92179cb7a52a819871856
+# Source0-md5:	cadc9530b5fa905fb6d9d61ce837ca3a
 %{?_snap:NoSource:	0}
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
@@ -59,12 +56,9 @@ Patch4:		http://glen.alkohol.ee/pld/%{name}-reply-subject.patch
 Patch5:		%{name}-lf.patch
 Patch6:		http://glen.alkohol.ee/pld/%{name}-maq-subject.patch
 Patch7:		%{name}-bot-reconnect.patch
-Patch8:		%{name}-bug-10464.patch
-Patch9:		%{name}-bug-10263.patch
-Patch10:	%{name}-ft-enable.patch
-Patch11:	%{name}-upgrade-exit.patch
+Patch22:	eventum-cli-wr-separated.patch
 URL:		http://dev.mysql.com/downloads/other/eventum/
-BuildRequires:	rpmbuild(macros) >= 1.200
+BuildRequires:	rpmbuild(macros) >= 1.223
 BuildRequires:	sed >= 4.0
 Requires:	php >= 4.2.0
 Requires:	php-gd
@@ -99,12 +93,9 @@ BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_sysconfdir	/etc/%{name}
-%define		_libdir		%{_prefix}/%{_lib}/%{name}
+%define		_libdir		%{_prefix}/lib/%{name}
 %define		_appdir	%{_datadir}/%{name}
 %define		_smartyplugindir	%{php_pear_dir}/Smarty/plugins
-
-%define		_apache1dir	/etc/apache
-%define		_apache2dir	/etc/httpd
 
 %description
 Eventum is a user-friendly and flexible issue tracking system that can
@@ -357,7 +348,7 @@ Group:		Applications/WWW
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 Requires:	php >= 4.1.0
 Requires:	php-sockets
-Requires:	rc-scripts >= 0.4.0.18
+PreReq:		rc-scripts >= 0.4.0.18
 
 %description irc
 The IRC notification bot is a nice feature for remote teams that want
@@ -437,6 +428,8 @@ Szczegó³y na temat instalacji mo¿na przeczytaæ pod
 find . -type f -print0 | xargs -0 sed -i -e 's,
 $,,'
 
+rm -f setup.conf.php
+
 # packaging
 %patch0 -p1 -b .paths
 %patch1 -p1
@@ -448,10 +441,7 @@ $,,'
 %patch5 -p1
 %patch6 -p1
 %patch7 -p1
-%patch8 -p1
-%patch9 -p1
-%patch10 -p1
-%patch11 -p1
+%patch22 -p1
 
 # replace in remaining scripts config.inc.php to system one
 grep -rl 'include_once(".*config.inc.php")' . | xargs sed -i -e '
@@ -472,6 +462,7 @@ install -d \
 	$RPM_BUILD_ROOT{%{_sysconfdir},%{_bindir},%{_libdir}} \
 	$RPM_BUILD_ROOT/etc/{rc.d/init.d,cron.d,sysconfig} \
 	$RPM_BUILD_ROOT/var/{run,log,cache,lib}/%{name} \
+	$RPM_BUILD_ROOT/var/lib/%{name}/routed_emails \
 	$RPM_BUILD_ROOT%{_appdir}/{include,htdocs/misc,upgrade} \
 
 cp -a *.php css customer images js manage reports rpc setup $RPM_BUILD_ROOT%{_appdir}/htdocs
@@ -557,21 +548,6 @@ rm -rf $RPM_BUILD_ROOT
 %addusertogroup http %{name}
 
 %post
-# apache1
-if [ -d %{_apache1dir}/conf.d ]; then
-	ln -sf %{_sysconfdir}/apache.conf %{_apache1dir}/conf.d/99_%{name}.conf
-	if [ -f /var/lock/subsys/apache ]; then
-		/etc/rc.d/init.d/apache restart 1>&2
-	fi
-fi
-# apache2
-if [ -d %{_apache2dir}/httpd.conf ]; then
-	ln -sf %{_sysconfdir}/apache.conf %{_apache2dir}/httpd.conf/99_%{name}.conf
-	if [ -f /var/lock/subsys/httpd ]; then
-		/etc/rc.d/init.d/httpd restart 1>&2
-	fi
-fi
-
 # check if the package is configured.
 if grep -q 'header("Location: setup/")' %{_sysconfdir}/config.php; then
 if [ -f %{_appdir}/htdocs/setup/index.php ]; then
@@ -632,28 +608,13 @@ rm -f /var/cache/eventum/*.php
 
 %preun
 if [ "$1" = "0" ]; then
-	# apache1
-	if [ -f %{_apache1dir}/apache.conf ]; then
-		rm -f %{_apache1dir}/conf.d/99_%{name}.conf
-		if [ -f /var/lock/subsys/apache ]; then
-			/etc/rc.d/init.d/apache restart 1>&2
-		fi
-	fi
-	# apache2
-	if [ -d %{_apache2dir}/httpd.conf ]; then
-		rm -f %{_apache2dir}/httpd.conf/99_%{name}.conf
-		if [ -f /var/lock/subsys/httpd ]; then
-			/etc/rc.d/init.d/httpd restart 1>&2
-		fi
-	fi
-
 	# nuke cache
 	rm -f /var/cache/eventum/*.php 2>/dev/null || :
 fi
 
 %pre base
-%groupadd -P %{name}-base -g %{gid} %{name}
-%useradd -P %{name}-base -u %{uid} -d /var/lib/%{name} -g %{name} -c "Eventum User" %{name}
+%groupadd -P %{name}-base -g 146 %{name}
+%useradd -P %{name}-base -u 146 -d /var/lib/%{name} -g %{name} -c "Eventum User" %{name}
 
 %postun base
 if [ "$1" = "0" ]; then
@@ -696,6 +657,18 @@ if [ "$1" = "0" ]; then
 	chmod 640 %{_sysconfdir}/{config,private_key}.php
 	chown root:eventum %{_sysconfdir}/{config,private_key}.php
 fi
+
+%triggerin -- apache1 >= 1.3.33-2
+%apache_config_install -v 1 -c %{_sysconfdir}/apache.conf
+
+%triggerun -- apache1 >= 1.3.33-2
+%apache_config_uninstall -v 1
+
+%triggerin -- apache >= 2.0.0
+%apache_config_install -v 2 -c %{_sysconfdir}/apache.conf
+
+%triggerun -- apache >= 2.0.0
+%apache_config_uninstall -v 2
 
 # FIXME
 # only one upgrade trigger is called if you're upgrading over two
@@ -779,6 +752,8 @@ EOF
 %dir %{_appdir}
 # qmail will ignore user, if it's home directory is not owned
 %attr(750,eventum,eventum) %dir /var/lib/%{name}
+# for saved routed emails
+%attr(770,root,eventum) %dir /var/lib/%{name}/routed_emails
 
 %files setup
 %defattr(644,root,root,755)
