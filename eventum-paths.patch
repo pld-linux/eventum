@@ -140,21 +140,6 @@
      if (!empty($error)) {
          $errors[] = $error;
      }
-@@ -203,11 +203,11 @@
- }
- 
- ini_set("include_path", '.');
--include_once("../include/Smarty/Smarty.class.php");
-+include_once("/usr/share/pear/Smarty/Smarty.class.php");
- 
- $tpl = new Smarty();
--$tpl->template_dir = '../templates/en';
--$tpl->compile_dir = "../templates_c";
-+$tpl->template_dir = '/usr/share/eventum/templates/en';
-+$tpl->compile_dir = "/var/cache/eventum";
- $tpl->config_dir = '';
- 
- function replace_table_prefix($str)
 @@ -276,8 +276,8 @@
  
      clearstatcache();
@@ -188,15 +173,6 @@
      }
      fclose($fp);
      // check if we can connect
-@@ -396,7 +396,7 @@
-         $protocol_type = 'http://';
-     }
-     $config_contents = str_replace("%{PROTOCOL_TYPE}%", $protocol_type, $config_contents);
--    $fp = @fopen('../config.inc.php', 'w');
-+    $fp = @fopen('/etc/eventum/config.php', 'w');
-     if ($fp === FALSE) {
-         return "Could not open the file 'config.inc.php' for writing. The permissions on the file should be set as to allow the user that the web server runs as to open it. Please correct this problem and try again.";
-     }
 @@ -425,23 +425,8 @@
      $tpl->assign('is_imap_enabled', function_exists('imap_open'));
  }
@@ -236,3 +212,57 @@
      Misc::displayRequirementErrors($errors);
      exit;
  }
+--- ../include/class.support.php~	2005-07-10 15:40:57.000000000 +0300
++++ ../include/class.support.php	2005-07-14 22:47:58.665843734 +0300
+@@ -259,7 +259,7 @@
+      */
+     function saveRoutedEmail($message)
+     {
+-        $path = APP_PATH . "misc/routed_emails/";
++        $path = "/var/lib/eventum/routed_emails/";
+         list($usec,) = explode(" ", microtime());
+         $filename = date('dmY.His.') . $usec . '.email.txt';
+         $fp = @fopen($path . $filename, 'w');
+--- ../setup/index.php~	2005-07-26 18:49:37.000000000 +0300
++++ ../setup/index.php	2005-07-26 19:12:57.000000000 +0300
+@@ -213,11 +213,11 @@
+     exit;
+ }
+ 
+-include_once("../include/Smarty/Smarty.class.php");
++include_once("/usr/share/pear/Smarty/Smarty.class.php");
+ 
+ $tpl = new Smarty();
+-$tpl->template_dir = '../templates/en';
+-$tpl->compile_dir = "../templates_c";
++$tpl->template_dir = '/usr/share/eventum/templates/en';
++$tpl->compile_dir = "/var/cache/eventum";
+ $tpl->config_dir = '';
+ 
+ function replace_table_prefix($str)
+@@ -417,7 +417,7 @@
+         $config_contents = str_replace("%{APP_ENABLE_FULLTEXT}%", "false", $config_contents);
+     }
+ 
+-    $fp = @fopen('../config.inc.php', 'w');
++    $fp = @fopen('/etc/eventum/config.php', 'w');
+     if ($fp === FALSE) {
+         return "Could not open the file 'config.inc.php' for writing. The permissions on the file should be set as to allow the user that the web server runs as to open it. Please correct this problem and try again.";
+     }
+--- eventum-1.5.5/setup/index.php~	2005-07-26 20:22:06.000000000 +0300
++++ eventum-1.5.5/setup/index.php	2005-07-26 20:35:31.000000000 +0300
+@@ -198,13 +198,7 @@
+     return $html;
+ }
+ 
+-if (stristr(PHP_OS, 'darwin')) {
+-    ini_set("include_path", ".:./../include/pear/");
+-} elseif (stristr(PHP_OS, 'win')) {
+-    ini_set("include_path", ".;./../include/pear/");
+-} else {
+-    ini_set("include_path", ".:./../include/pear/");
+-}
++ini_set("include_path", ".:../../include/pear/");
+ include_once("File/Util.php");
+ 
+ $html = checkRequirements();
