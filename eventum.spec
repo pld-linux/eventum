@@ -16,9 +16,9 @@
 #define	_snap 20050227
 
 # release candidate
-%define _rc		RC2
+#define _rc		RC2
 
-%define	_rel	6
+%define	_rel	1
 
 %if 0%{?_snap}
 %if 0%{?_rc}
