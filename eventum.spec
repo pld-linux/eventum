@@ -15,23 +15,30 @@
 # snapshot: DATE
 #define	_snap 20050227
 
+# release candidate
+%define _rc		RC2
+
+%define	_rel	6
+
 %if 0%{?_snap}
+%if 0%{?_rc}
+%define	_source http://pessoal.org/%{name}-%{version}-%{_rc}.tar.gz
+%else
 %define	_source http://downloads.mysql.com/snapshots/%{name}/%{name}-nightly-%{_snap}.tar.gz
+%endif
 %else
 %define	_source http://mysql.dataphone.se/Downloads/%{name}/%{name}-%{version}.tar.gz
 %endif
 
-%define	_rel	1
-
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl):	Eventum - system ¶ledzenia spraw/b³êdów
 Name:		eventum
-Version:	1.5.5
-Release:	%{?_snap:0.%{_snap}.}%{_rel}
+Version:	1.6.0
+Release:	%{?_snap:0.%{_snap}.}%{?_rc:%{_rc}.}%{_rel}
 License:	GPL
 Group:		Applications/WWW
 Source0:	%{_source}
-# Source0-md5:	cadc9530b5fa905fb6d9d61ce837ca3a
+# Source0-md5:	a13d95ff52264d7460c688419794ffcc
 %{?_snap:NoSource:	0}
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
@@ -429,6 +436,7 @@ find . -type f -print0 | xargs -0 sed -i -e 's,
 $,,'
 
 rm -f setup.conf.php
+rm -rf misc/upgrade/*v1.[123]* # too old to support in PLD
 
 # packaging
 %patch0 -p1 -b .paths
@@ -695,6 +703,12 @@ EOF
 database_changes.php Perform database changes
 EOF
 
+%triggerpostun -- eventum < 1.6.0-RC2.6
+%{_appdir}/upgrade/upgrade.sh %{_appdir}/upgrade/v1.5.5_to_v1.6.0 <<EOF
+database_changes.php Perform database changes
+upgrade_saved_searches.php Upgrade existing custom filters (saved searches)
+EOF
+
 %files
 %defattr(644,root,root,755)
 %doc ChangeLog FAQ INSTALL README UPGRADE
@@ -740,7 +754,6 @@ EOF
 %{_appdir}/include/class.mime_helper.php
 %{_appdir}/include/class.misc.php
 %{_appdir}/include/db_access.php
-%{_appdir}/include/jsrsServer.inc.php
 
 %dir %attr(730,root,eventum) /var/run/%{name}
 %dir %attr(730,root,eventum) /var/cache/%{name}
