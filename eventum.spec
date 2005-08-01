@@ -18,7 +18,7 @@
 # release candidate
 #define _rc		RC2
 
-%define	_rel	1
+%define	_rel	2
 
 %if 0%{?_snap}
 %if 0%{?_rc}
@@ -63,6 +63,8 @@ Patch4:		http://glen.alkohol.ee/pld/%{name}-reply-subject.patch
 Patch5:		%{name}-lf.patch
 Patch6:		http://glen.alkohol.ee/pld/%{name}-maq-subject.patch
 Patch7:		%{name}-bot-reconnect.patch
+Patch8:		http://glen.alkohol.ee/pld/eventum-priv-index.patch
+Patch9:		http://glen.alkohol.ee/pld/eventum-httpclient-clientside.patch
 Patch22:	eventum-cli-wr-separated.patch
 URL:		http://dev.mysql.com/downloads/other/eventum/
 BuildRequires:	rpmbuild(macros) >= 1.223
@@ -449,6 +451,8 @@ rm -rf misc/upgrade/*v1.[123]* # too old to support in PLD
 %patch5 -p1
 %patch6 -p1
 %patch7 -p1
+%patch8 -p1
+%patch9 -p1
 %patch22 -p1
 
 # replace in remaining scripts config.inc.php to system one
