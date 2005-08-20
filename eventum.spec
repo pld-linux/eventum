@@ -16,30 +16,29 @@
 #define	_snap 20050227
 
 # release candidate
-#define _rc		RC2
+#define _rc		RC1
 
-%define	_rel	2
+%define	_rel	1
 
-%if 0%{?_snap}
-%if 0%{?_rc}
+%if 0%{?_rc:1}
 %define	_source http://pessoal.org/%{name}-%{version}-%{_rc}.tar.gz
 %else
+%if 0%{?_snap}
 %define	_source http://downloads.mysql.com/snapshots/%{name}/%{name}-nightly-%{_snap}.tar.gz
-%endif
 %else
 %define	_source http://mysql.dataphone.se/Downloads/%{name}/%{name}-%{version}.tar.gz
+%endif
 %endif
 
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl):	Eventum - system ¶ledzenia spraw/b³êdów
 Name:		eventum
-Version:	1.6.0
+Version:	1.6.1
 Release:	%{?_snap:0.%{_snap}.}%{?_rc:%{_rc}.}%{_rel}
 License:	GPL
 Group:		Applications/WWW
 Source0:	%{_source}
-# Source0-md5:	a13d95ff52264d7460c688419794ffcc
-%{?_snap:NoSource:	0}
+# Source0-md5:	bb05ecdb46b02580ffe892e270e536b3
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -63,7 +62,6 @@ Patch4:		http://glen.alkohol.ee/pld/%{name}-reply-subject.patch
 Patch5:		%{name}-lf.patch
 Patch6:		http://glen.alkohol.ee/pld/%{name}-maq-subject.patch
 Patch7:		%{name}-bot-reconnect.patch
-Patch8:		http://glen.alkohol.ee/pld/eventum-priv-index.patch
 Patch9:		http://glen.alkohol.ee/pld/eventum-httpclient-clientside.patch
 Patch22:	eventum-cli-wr-separated.patch
 URL:		http://dev.mysql.com/downloads/other/eventum/
@@ -357,6 +355,7 @@ Group:		Applications/WWW
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 Requires:	php >= 4.1.0
 Requires:	php-sockets
+Requires(triggerpostun):	sed >= 4.0
 PreReq:		rc-scripts >= 0.4.0.18
 
 %description irc
@@ -451,7 +450,6 @@ rm -rf misc/upgrade/*v1.[123]* # too old to support in PLD
 %patch5 -p1
 %patch6 -p1
 %patch7 -p1
-%patch8 -p1
 %patch9 -p1
 %patch22 -p1
 
@@ -712,6 +710,20 @@ EOF
 database_changes.php Perform database changes
 upgrade_saved_searches.php Upgrade existing custom filters (saved searches)
 EOF
+
+%triggerpostun -- eventum < 1.6.1-0.2
+%{_appdir}/upgrade/upgrade.sh %{_appdir}/upgrade/v1.6.0_to_v1.6.1 <<EOF
+database_changes.php Perform database changes
+EOF
+
+%triggerpostun irc -- eventum-irc < 1.6.1
+sed -i -e '
+s,\$irc_host,$irc_server_hostname,
+s,\$irc_port,$irc_server_port,
+s,\$irc_nick,$nickname,
+s,\$irc_realname,$realname,
+s,\$irc_username,$username,
+' /etc/eventum/irc.php
 
 %files
 %defattr(644,root,root,755)
