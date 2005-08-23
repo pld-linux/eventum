@@ -18,7 +18,7 @@
 # release candidate
 #define _rc		RC1
 
-%define	_rel	1
+%define	_rel	2
 
 %if 0%{?_rc:1}
 %define	_source http://pessoal.org/%{name}-%{version}-%{_rc}.tar.gz
@@ -537,7 +537,9 @@ rm -rf $RPM_BUILD_ROOT%{_appdir}/include/pear
 rm -rf $RPM_BUILD_ROOT%{_appdir}/include/Smarty
 install -d $RPM_BUILD_ROOT%{_smartyplugindir}
 # These plugins are not in Smarty package (Smarty-2.6.2-3)
-cp -a include/Smarty/plugins/function.{calendar,get_{display_style,innerhtml,textarea_size}}.php \
+cp -a \
+	include/Smarty/plugins/function.{calendar,get_{display_style,innerhtml,textarea_size}}.php \
+	include/Smarty/plugins/modifier.highlight_quoted.php \
 	$RPM_BUILD_ROOT%{_smartyplugindir}
 
 # qmail router
