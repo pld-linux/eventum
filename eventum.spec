@@ -18,7 +18,7 @@
 # release candidate
 #define _rc		RC1
 
-%define	_rel	3
+%define	_rel	3.2
 
 %if 0%{?_rc:1}
 %define	_source http://pessoal.org/%{name}-%{version}-%{_rc}.tar.gz
@@ -64,6 +64,7 @@ Patch6:		http://glen.alkohol.ee/pld/%{name}-maq-subject.patch
 Patch7:		%{name}-bot-reconnect.patch
 Patch9:		http://glen.alkohol.ee/pld/eventum-httpclient-clientside.patch
 Patch10:	%{name}-hl-quot-fix.patch
+Patch11:	http://glen.alkohol.ee/pld/eventum-htmloptions-truncate.patch
 Patch22:	eventum-cli-wr-separated.patch
 URL:		http://dev.mysql.com/downloads/other/eventum/
 BuildRequires:	rpmbuild(macros) >= 1.223
