@@ -1,6 +1,6 @@
 diff -u ./modifier.highlight_quoted.php /tmp/modifier.highlight_quoted.php
---- ./modifier.highlight_quoted.php	2005-08-24 11:27:20.000000000 +0300
-+++ /tmp/modifier.highlight_quoted.php	2005-08-24 11:26:33.000000000 +0300
+--- ./include/Smarty/plugins/modifier.highlight_quoted.php	2005-08-24 11:27:20.000000000 +0300
++++ ./modifier.highlight_quoted.php	2005-08-24 11:26:33.000000000 +0300
 @@ -56,18 +56,19 @@
          if ($escape) {
              $match[2]    =    htmlspecialchars($match[2]);
