@@ -1,5 +1,5 @@
 --- eventum-1.6.1/misc/irc/bot.php.orig	2005-09-17 17:28:04.000000000 +0300
-+++ eventum-1.6.1/misc/irc/bot.php	2005-09-17 17:28:53.000000000 +0300
++++ eventum-1.6.1/misc/irc/bot.php	2005-09-17 17:49:09.000000000 +0300
 @@ -27,8 +27,9 @@
  //
  // @(#) $Id$
@@ -54,3 +54,25 @@
      }
      
      
+@@ -410,14 +408,16 @@
+ $irc->registerActionhandler(SMARTIRC_TYPE_QUERY, '^!?list-quarantined', $bot, 'listQuarantinedIssues');
+ 
+ $irc->connect($irc_server_hostname, $irc_server_port);
+-if (!empty($username)) {
+-    $irc->login($nickname, $realname, 0, $username, $password);
+-} else {
++if (empty($username)) {
+     $irc->login($nickname, $realname);
++} elseif (empty($password) {
++    $irc->login($nickname, $realname, 0, $username);
++} else {
++    $irc->login($nickname, $realname, 0, $username, $password);
+ }
+ $irc->listen();
+ $irc->disconnect();
+ 
+ // release the lock
+ Lock::release('irc_bot');
+-?>
+\ No newline at end of file
++?>
