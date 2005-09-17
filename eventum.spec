@@ -18,7 +18,7 @@
 # release candidate
 #define _rc		RC1
 
-%define	_rel	3.2
+%define	_rel	4
 
 %if 0%{?_rc:1}
 %define	_source http://pessoal.org/%{name}-%{version}-%{_rc}.tar.gz
@@ -87,7 +87,6 @@ Requires:	php-pear-Math_Stats
 Requires:	php-pear-Net_DIME
 Requires:	php-pear-Net_POP3
 Requires:	php-pear-Net_SMTP
-Requires:	php-pear-Net_SmartIRC
 Requires:	php-pear-Net_Socket
 Requires:	php-pear-Net_URL
 Requires:	php-pear-Net_UserAgent_Detect
@@ -354,11 +353,12 @@ przez Postfiksa.
 Summary:	Eventum IRC Notification Bot
 Summary(pl):	IRC-owy bot powiadamiaj±cy dla Eventum
 Group:		Applications/WWW
+Requires(triggerpostun):	sed >= 4.0
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 Requires:	php >= 4.1.0
 Requires:	php-sockets
-Requires(triggerpostun):	sed >= 4.0
-PreReq:		rc-scripts >= 0.4.0.18
+#Requires:	php-pear-Net_SmartIRC
+Requires:	rc-scripts >= 0.4.0.18
 
 %description irc
 The IRC notification bot is a nice feature for remote teams that want
@@ -440,11 +440,15 @@ $,,'
 
 rm -f setup.conf.php
 rm -rf misc/upgrade/*v1.[123]* # too old to support in PLD
+rm -rf misc/upgrade/flush_compiled_templates.php
+
+# using system package
+#rm -rf include/pear/Net/SmartIRC*
 
 # packaging
 %patch0 -p1 -b .paths
 %patch1 -p1
-%patch2 -p1
+%patch2 -p1 -b .irc-config
 %{?with_pear:%patch3 -p1 -b .PEAR}
 
 # bug fixes.
@@ -460,9 +464,6 @@ rm -rf misc/upgrade/*v1.[123]* # too old to support in PLD
 grep -rl 'include_once(".*config.inc.php")' . | xargs sed -i -e '
 	s,include_once(".*config.inc.php"),include_once("%{_sysconfdir}/core.php"),
 '
-sed -i -e '
-	s,include(".*config.inc.php"),include_once("%{_sysconfdir}/core.php"),
-' misc/download_emails.php
 
 grep -rl 'APP_INC_PATH..*"private_key.php"' . | xargs sed -i -e '
 	s,include_once(APP_INC_PATH.*"private_key.php"),include_once("%{_sysconfdir}/private_key.php"),
@@ -673,6 +674,14 @@ if [ "$1" = "0" ]; then
 	chown root:eventum %{_sysconfdir}/{config,private_key}.php
 fi
 
+%post irc
+/sbin/chkconfig --add eventum-irc
+if [ -f /var/lock/subsys/eventum-irc ]; then
+	/etc/rc.d/init.d/eventum-irc restart >&2
+else
+	echo "Run \"/etc/rc.d/init.d/eventum-irc start\" to start Eventum IRC Bot." >&2
+fi
+
 %triggerin -- apache1 >= 1.3.33-2
 %apache_config_install -v 1 -c %{_sysconfdir}/apache.conf
 
@@ -721,13 +730,14 @@ EOF
 database_changes.php Perform database changes
 EOF
 
-%triggerpostun irc -- eventum-irc < 1.6.1
+%triggerpostun irc -- eventum-irc < 1.6.1-3.14
 sed -i -e '
 s,\$irc_host,$irc_server_hostname,
 s,\$irc_port,$irc_server_port,
 s,\$irc_nick,$nickname,
 s,\$irc_realname,$realname,
 s,\$irc_username,$username,
+s,\$irc_password,$password,
 ' /etc/eventum/irc.php
 
 %files
