@@ -63,7 +63,7 @@
 -} else {
 +if (empty($username)) {
      $irc->login($nickname, $realname);
-+} elseif (empty($password) {
++} elseif (empty($password)) {
 +    $irc->login($nickname, $realname, 0, $username);
 +} else {
 +    $irc->login($nickname, $realname, 0, $username, $password);
