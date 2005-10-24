@@ -45,3 +45,31 @@
 -?>
 \ No newline at end of file
 +?>
+--- ./misc/check_reminders.php	2005-10-25 00:56:14.000000000 +0300
++++ /tmp/check_reminders.php	2005-10-25 01:23:56.000000000 +0300
+@@ -64,7 +64,7 @@
+ **/
+ $triggered_issues = array();
+ 
+-$reminders = Reminder::getList();
++$reminders = @Reminder::getList();
+ for ($i = 0; $i < count($reminders); $i++) {
+     // if this is the weekend and this reminder isn't supposed to run on weekends skip
+     if (($reminders[$i]['rem_skip_weekend'] == 1) && (in_array(date("w"), array(0,6)))) {
+@@ -80,14 +80,14 @@
+         if (Reminder::isDebug()) {
+             echo "Processing Reminder Action '" . $reminders[$i]['actions'][$y]['rma_title'] . "'\n";
+         }
+-        $conditions = Reminder_Condition::getList($reminders[$i]['actions'][$y]['rma_id']);
++        $conditions = @Reminder_Condition::getList($reminders[$i]['actions'][$y]['rma_id']);
+         if (count($conditions) == 0) {
+             if (Reminder::isDebug()) {
+                 echo "  - Skipping Reminder because there were no reminder conditions found\n";
+             }
+             continue;
+         }
+-        $issues = Reminder::getTriggeredIssues($reminders[$i], $conditions);
++        $issues = @Reminder::getTriggeredIssues($reminders[$i], $conditions);
+         // avoid repeating reminder actions, so get the list of issues 
+         // that were last triggered with this reminder action ID
+         $repeat_issues = Reminder_Action::getRepeatActions($issues, $reminders[$i]['actions'][$y]['rma_id']);
