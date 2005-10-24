@@ -27,3 +27,21 @@
          }
      }
      imap_expunge($mbox);
+--- ./misc/process_mail_queue.php	2005-10-25 00:56:14.000000000 +0300
++++ /tmp/process_mail_queue.php	2005-10-25 01:20:51.000000000 +0300
+@@ -63,11 +63,11 @@
+ 
+ // handle only pending emails
+ $limit = 50;
+-Mail_Queue::send('pending', $limit);
++@Mail_Queue::send('pending', $limit);
+ 
+ // handle emails that we tried to send before, but an error happened...
+ $limit = 50;
+-Mail_Queue::send('error', $limit);
++@Mail_Queue::send('error', $limit);
+ 
+ Mail_Queue::removeProcessFile();
+-?>
+\ No newline at end of file
++?>
