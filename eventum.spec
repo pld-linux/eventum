@@ -18,7 +18,7 @@
 # release candidate
 #define _rc		RC1
 
-%define	_rel	4
+%define	_rel	4.1
 
 %if 0%{?_rc:1}
 %define	_source http://pessoal.org/%{name}-%{version}-%{_rc}.tar.gz
@@ -319,7 +319,9 @@ spraw± i rozprowadzane do cz³onków personelu listy og³oszeniowej.
 Summary:	Eventum Mail Routing - qmail
 Summary(pl):	Przekazywanie poczty Eventum - qmail
 Group:		Applications/Mail
-Requires:	%{name} = %{epoch}:%{version}-%{release}
+# loose dep is intentional. qmail subpackage isn't built on PLD
+# builders and there really nothing changes.
+Requires:	%{name} >= %{epoch}:%{version}-%{release}
 Requires:	qmail >= 1.03
 Provides:	eventum(router)
 Obsoletes:	eventum(router)
