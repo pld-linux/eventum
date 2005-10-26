@@ -18,7 +18,7 @@
 # release candidate
 #define _rc		RC1
 
-%define	_rel	4.7
+%define	_rel	4.9
 
 %if 0%{?_rc:1}
 %define	_source http://pessoal.org/%{name}-%{version}-%{_rc}.tar.gz
@@ -66,6 +66,7 @@ Patch9:		http://glen.alkohol.ee/pld/eventum-httpclient-clientside.patch
 Patch10:	%{name}-hl-quot-fix.patch
 Patch11:	eventum-cli-wr-separated.patch
 Patch12:	eventum-php440.patch
+Patch13:	eventum-htmloptions-truncate.patch
 URL:		http://dev.mysql.com/downloads/other/eventum/
 BuildRequires:	rpmbuild(macros) >= 1.223
 BuildRequires:	sed >= 4.0
@@ -462,6 +463,7 @@ rm -rf misc/upgrade/flush_compiled_templates.php
 %patch10 -p1
 %patch11 -p1
 %patch12 -p1
+%patch13 -p1
 
 # replace in remaining scripts config.inc.php to system one
 grep -rl 'include_once(".*config.inc.php")' . | xargs sed -i -e '
