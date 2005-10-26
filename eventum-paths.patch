@@ -272,7 +272,18 @@
          $this->smarty->compile_dir = "/var/cache/eventum";
          $this->smarty->config_dir = '';
          $this->smarty->register_modifier("activateLinks", array('Link_Filter', 'activateLinks'));
-+        $this->smarty->plugins_dir  = array('/usr/share/eventum/smarty', 'plugins');
++        $this->smarty->plugins_dir  = array('/usr/share/eventum/include/smarty', 'plugins');
      }
  
+ 
+--- ./include/class.misc.php	2005-10-26 17:17:17.000000000 +0300
++++ /tmp/class.misc.php	2005-10-26 17:30:12.000000000 +0300
+@@ -607,7 +607,7 @@
+      */
+     function highlightQuotedReply($text)
+     {
+-        include_once(APP_SMARTY_PATH . "plugins/modifier.highlight_quoted.php");
++        include_once(APP_INC_PATH. "smarty/modifier.highlight_quoted.php");
+         return smarty_modifier_highlight_quoted($text);
+     }
  
