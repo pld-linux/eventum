@@ -18,7 +18,7 @@
 # release candidate
 #define _rc		RC1
 
-%define	_rel	4.4
+%define	_rel	4.6
 
 %if 0%{?_rc:1}
 %define	_source http://pessoal.org/%{name}-%{version}-%{_rc}.tar.gz
@@ -103,7 +103,7 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define		_sysconfdir	/etc/%{name}
 %define		_libdir		%{_prefix}/lib/%{name}
 %define		_appdir	%{_datadir}/%{name}
-%define		_smartyplugindir	%{php_pear_dir}/Smarty/plugins
+%define		_smartyplugindir	%{_appdir}/smarty
 
 %description
 Eventum is a user-friendly and flexible issue tracking system that can
@@ -773,7 +773,7 @@ s,\$irc_password,$password,
 %attr(755,root,root) %{_appdir}/upgrade/upgrade.sh
 %{_appdir}/upgrade/[!u]*
 
-%{_smartyplugindir}/*
+%{_smartyplugindir}
 %if %{without pear}
 %{_appdir}/include/pear
 %endif
