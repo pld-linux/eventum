@@ -1,0 +1,20 @@
+issues with long summary corrupt look and feel
+
+
+--- ./templates/en/manage/reminders.tpl.html	2005-08-24 11:32:04.000000000 +0300
++++ /tmp/reminders.tpl.html	2005-08-24 12:19:23.000000000 +0300
+@@ -227,7 +227,7 @@
+                       {/if}
+                       <td>
+                         <select name="issues[]" class="default" size="4" multiple>
+-                          {html_options options=$issues selected=$info.rer_iss_id}
++                          {html_options options=$issues|truncate:70 selected=$info.rer_iss_id}
+                         </select>
+                       </td>
+                     </tr>
+--- ./templates/en/lookup_layer.tpl.html	2005-08-24 11:32:04.000000000 +0300
++++ /tmp/lookup_layer.tpl.html	2005-08-24 12:24:08.000000000 +0300
+@@ -1 +1 @@
+-<select size=\'6\' {if $multiple}multiple{/if} name=\'lookup{if $multiple}[]{/if}\' class=\'default_overlib\'>{foreach key=key item=item from=$list}<option value=\'{$key|replace:"'":"&#146;"|replace:"\"":"&quot;"}\'>{$item|replace:"'":"&#146;"|replace:"\"":"&quot;"|htmlspecialchars}</option>{/foreach}</select>
+\ No newline at end of file
++<select size=\'6\' {if $multiple}multiple{/if} name=\'lookup{if $multiple}[]{/if}\' class=\'default_overlib\'>{foreach key=key item=item from=$list}<option value=\'{$key|replace:"'":"&#146;"|replace:"\"":"&quot;"}\'>{$item|truncate:70|replace:"'":"&#146;"|replace:"\"":"&quot;"|htmlspecialchars}</option>{/foreach}</select>
