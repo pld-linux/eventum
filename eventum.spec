@@ -13,12 +13,12 @@
 %bcond_with	qmail	# build the router-qmail subpackage
 
 # snapshot: DATE
-#define	_snap 20050227
+#define	_snap 20051030
 
 # release candidate
 #define _rc		RC1
 
-%define	_rel	4.9
+%define	_rel	4.10
 
 %if 0%{?_rc:1}
 %define	_source http://pessoal.org/%{name}-%{version}-%{_rc}.tar.gz
@@ -67,6 +67,7 @@ Patch10:	%{name}-hl-quot-fix.patch
 Patch11:	eventum-cli-wr-separated.patch
 Patch12:	eventum-php440.patch
 Patch13:	eventum-htmloptions-truncate.patch
+Patch14:	http://glen.alkohol.ee/pld/eventum-httpclient.patch
 URL:		http://dev.mysql.com/downloads/other/eventum/
 BuildRequires:	rpmbuild(macros) >= 1.223
 BuildRequires:	sed >= 4.0
