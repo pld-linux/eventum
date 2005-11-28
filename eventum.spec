@@ -18,7 +18,7 @@
 # release candidate
 #define _rc		RC1
 
-%define	_rel	4.17
+%define	_rel	4.19
 
 %if 0%{?_rc:1}
 %define	_source http://pessoal.org/%{name}-%{version}-%{_rc}.tar.gz
@@ -437,8 +437,7 @@ Szczegó³y na temat instalacji mo¿na przeczytaæ pod
 %prep
 %setup -q %{?_snap:-n %{name}-%{_snap}}
 # undos the source
-find . -type f -print0 | xargs -0 sed -i -e 's,
-$,,'
+find . -type f -print0 | xargs -0 sed -i -e 's,\r$,,'
 
 rm -f setup.conf.php
 rm -rf misc/upgrade/*v1.[123]* # too old to support in PLD
@@ -745,7 +744,7 @@ s,\$irc_username,$username,
 s,\$irc_password,$password,
 ' /etc/eventum/irc.php
 
-%triggerpostun -- %{name} < 1.6.1-4.16
+%triggerpostun -- %{name} < 1.6.1-4.18
 # migrate from apache-config macros
 if [ -f /etc/%{name}/apache.conf.rpmsave ]; then
 	if [ -d /etc/apache/webapps.d ]; then
@@ -756,6 +755,21 @@ if [ -f /etc/%{name}/apache.conf.rpmsave ]; then
 	if [ -d /etc/httpd/webapps.d ]; then
 		cp -f %{_webapps}/%{_webapp}/httpd.conf{,.rpmnew}
 		cp -f /etc/%{name}/apache.conf.rpmsave %{_webapps}/%{_webapp}/httpd.conf
+	fi
+fi
+
+if [ -L /etc/apache/conf.d/99_%{_webapp}.conf ]; then
+	/usr/sbin/webapp register apache %{_webapp}
+	rm -f /etc/apache/conf.d/99_%{_webapp}.conf
+	if [ -f /var/lock/subsys/apache ]; then
+		/etc/rc.d/init.d/apache reload 1>&2
+	fi
+fi
+if [ -L /etc/httpd/httpd.conf/99_%{_webapp}.conf ]; then
+	/usr/sbin/webapp register httpd %{_webapp}
+	rm -f /etc/httpd/httpd.conf/99_%{_webapp}.conf
+	if [ -f /var/lock/subsys/httpd ]; then
+		/etc/rc.d/init.d/httpd reload 1>&2
 	fi
 fi
 
