@@ -13,12 +13,12 @@
 %bcond_with	qmail	# build the router-qmail subpackage
 
 # snapshot: DATE
-#define	_snap 20051030
+#define	_snap 20051113
 
 # release candidate
 #define _rc		RC1
 
-%define	_rel	4.10
+%define	_rel	4.17
 
 %if 0%{?_rc:1}
 %define	_source http://pessoal.org/%{name}-%{version}-%{_rc}.tar.gz
@@ -71,7 +71,7 @@ Patch14:	http://glen.alkohol.ee/pld/eventum-httpclient.patch
 URL:		http://dev.mysql.com/downloads/other/eventum/
 BuildRequires:	rpmbuild(macros) >= 1.223
 BuildRequires:	sed >= 4.0
-Requires:	php >= 4.2.0
+Requires:	php >= 3:4.2.0
 Requires:	php-gd
 Requires:	php-imap
 Requires:	php-mysql
@@ -96,16 +96,20 @@ Requires:	php-pear-PEAR
 Requires:	php-pear-Text_Diff
 Requires:	php-pear-XML_RPC
 %endif
-Requires:	apache >= 1.3.33-2
+Requires:	webapps
+Requires:	webserver = apache
 Requires:	apache(mod_dir)
 Requires(triggerpostun):	sed >= 4.0
+Conflicts:	apache1 < 1.3.33-2
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
-%define		_sysconfdir	/etc/%{name}
 %define		_libdir		%{_prefix}/lib/%{name}
 %define		_appdir	%{_datadir}/%{name}
 %define		_smartyplugindir	%{_appdir}/include/smarty
+%define		_webapps	/etc/webapps
+%define		_webapp		%{name}
+%define		_sysconfdir	%{_webapps}/%{_webapp}
 
 %description
 Eventum is a user-friendly and flexible issue tracking system that can
@@ -163,7 +167,6 @@ Summary(pl):	Przetwarzanie kolejki poczty Eventum
 Group:		Applications/WWW
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 Requires:	crondaemon
-Requires:	php >= 4.1.0
 
 %description mail-queue
 Beginning with the first release of Eventum, emails are not directly
@@ -189,7 +192,6 @@ Summary(pl):	¦ci±ganie poczty Eventum
 Group:		Applications/WWW
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 Requires:	crondaemon
-Requires:	php >= 4.1.0
 
 %description mail-download
 In order for Eventum's email integration feature to work, you need to
@@ -209,7 +211,6 @@ Summary:	Eventum Reminder System
 Summary(pl):	System przypominania dla Eventum
 Group:		Applications/WWW
 Requires:	%{name} = %{epoch}:%{version}-%{release}
-Requires:	php >= 4.1.0
 Requires:	crondaemon
 
 %description reminder
@@ -235,7 +236,6 @@ Summary:	Eventum Heartbeat Monitor
 Summary(pl):	Monitor ¿ycia dla Eventum
 Group:		Applications/WWW
 Requires:	%{name} = %{epoch}:%{version}-%{release}
-Requires:	php >= 4.1.0
 Requires:	php-posix
 Requires:	crondaemon
 
@@ -270,7 +270,6 @@ Summary:	Eventum Email Routing
 Summary(pl):	Przekazywanie poczty dla Eventum
 Group:		Applications/WWW
 Requires:	%{name} = %{epoch}:%{version}-%{release}
-Requires:	php >= 4.1.0
 Requires:	eventum(router)
 
 %description route-emails
@@ -296,7 +295,6 @@ Summary:	Eventum Note Routing
 Summary(pl):	Przekazywanie notatek dla Eventum
 Group:		Applications/WWW
 Requires:	%{name} = %{epoch}:%{version}-%{release}
-Requires:	php >= 4.1.0
 Requires:	eventum(router)
 
 %description route-notes
@@ -359,7 +357,6 @@ Summary(pl):	IRC-owy bot powiadamiaj±cy dla Eventum
 Group:		Applications/WWW
 Requires(triggerpostun):	sed >= 4.0
 Requires:	%{name} = %{epoch}:%{version}-%{release}
-Requires:	php >= 4.1.0
 Requires:	php-sockets
 #Requires:	php-pear-Net_SmartIRC
 Requires:	rc-scripts >= 0.4.0.18
@@ -393,7 +390,7 @@ Summary:	Eventum command-line interface
 Summary(pl):	Interfejs linii poleceñ dla Eventum
 Group:		Applications/WWW
 Requires:	%{name}-base = %{epoch}:%{version}-%{release}
-Requires:	php >= 4.1.0
+Requires:	php-common >= 3:4.1.0
 Requires:	php-cli
 Requires:	php-curl
 Requires:	php-xml
@@ -412,7 +409,8 @@ Summary:	Eventum SCM integration
 Summary(pl):	Integracja SCM dla Eventum
 Group:		Applications/WWW
 Requires:	%{name}-base = %{epoch}:%{version}-%{release}
-Requires:	php-cli >= 4.1.0
+Requires:	php-common >= 3:4.1.0
+Requires:	php-cli
 Requires:	php-pcre
 
 %description scm
@@ -520,6 +518,7 @@ s,$private_key\s*=\s*".*";,$private_key = "DEFAULTPRIVATEKEYPLEASERUNSETUP!";,
 ' $RPM_BUILD_ROOT%{_sysconfdir}/private_key.php
 
 install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/apache.conf
+install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/httpd.conf
 install %{SOURCE2} $RPM_BUILD_ROOT/etc/cron.d/%{name}-mail-queue
 install %{SOURCE3} $RPM_BUILD_ROOT/etc/cron.d/%{name}-mail-download
 install %{SOURCE4} $RPM_BUILD_ROOT/etc/cron.d/%{name}-reminder
@@ -688,17 +687,17 @@ else
 	echo "Run \"/etc/rc.d/init.d/eventum-irc start\" to start Eventum IRC Bot." >&2
 fi
 
-%triggerin -- apache1 >= 1.3.33-2
-%apache_config_install -v 1 -c %{_sysconfdir}/apache.conf
+%triggerin -- apache1
+%webapp_register apache %{_webapp}
 
-%triggerun -- apache1 >= 1.3.33-2
-%apache_config_uninstall -v 1
+%triggerun -- apache1
+%webapp_unregister apache %{_webapp}
 
 %triggerin -- apache >= 2.0.0
-%apache_config_install -v 2 -c %{_sysconfdir}/apache.conf
+%webapp_register httpd %{_webapp}
 
 %triggerun -- apache >= 2.0.0
-%apache_config_uninstall -v 2
+%webapp_unregister httpd %{_webapp}
 
 # FIXME
 # only one upgrade trigger is called if you're upgrading over two
@@ -746,11 +745,46 @@ s,\$irc_username,$username,
 s,\$irc_password,$password,
 ' /etc/eventum/irc.php
 
+%triggerpostun -- %{name} < 1.6.1-4.16
+# migrate from apache-config macros
+if [ -f /etc/%{name}/apache.conf.rpmsave ]; then
+	if [ -d /etc/apache/webapps.d ]; then
+		cp -f %{_webapps}/%{_webapp}/apache.conf{,.rpmnew}
+		cp -f /etc/%{name}/apache.conf.rpmsave %{_webapps}/%{_webapp}/apache.conf
+	fi
+
+	if [ -d /etc/httpd/webapps.d ]; then
+		cp -f %{_webapps}/%{_webapp}/httpd.conf{,.rpmnew}
+		cp -f /etc/%{name}/apache.conf.rpmsave %{_webapps}/%{_webapp}/httpd.conf
+	fi
+fi
+
+# regular configs
+for i in apache.conf config.php core.php private_key.php setup.php; do
+	if [ -f /etc/eventum/$i.rpmsave ]; then
+		mv -f %{_sysconfdir}/$i{,.rpmnew}
+		mv -f /etc/eventum/$i.rpmsave %{_sysconfdir}/$i
+	fi
+done
+
+%triggerpostun cli -- %{name}-cli < 1.6.1-4.16
+if [ -f /etc/eventum/cli.php.rpmsave ]; then
+	mv -f %{_sysconfdir}/cli.php{,.rpmnew}
+	mv -f /etc/eventum/cli.php.rpmsave %{_sysconfdir}/cli.php
+fi
+
+%triggerpostun irc -- %{name}-irc < 1.6.1-4.17
+if [ -f /etc/eventum/irc.php.rpmsave ]; then
+	mv -f %{_sysconfdir}/irc.php{,.rpmnew}
+	mv -f /etc/eventum/irc.php.rpmsave %{_sysconfdir}/irc.php
+fi
+
 %files
 %defattr(644,root,root,755)
 %doc ChangeLog FAQ INSTALL README UPGRADE
 %doc docs/* rpc/xmlrpc_client.php setup/schema.sql
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/apache.conf
+%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/httpd.conf
 %attr(640,root,eventum) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/config.php
 %attr(640,root,eventum) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/private_key.php
 %attr(660,root,eventum) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/setup.php
