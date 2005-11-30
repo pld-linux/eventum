@@ -18,7 +18,7 @@
 # release candidate
 #define _rc		RC1
 
-%define	_rel	4.21
+%define	_rel	4.24
 
 %if 0%{?_rc:1}
 %define	_source http://pessoal.org/%{name}-%{version}-%{_rc}.tar.gz
@@ -66,7 +66,7 @@ Patch9:		http://glen.alkohol.ee/pld/eventum-httpclient-clientside.patch
 Patch11:	eventum-cli-wr-separated.patch
 Patch12:	eventum-php440.patch
 Patch13:	eventum-htmloptions-truncate.patch
-Patch14:	http://glen.alkohol.ee/pld/eventum-httpclient.patch
+Patch15:	eventum-db-1.7.0.patch
 URL:		http://dev.mysql.com/downloads/other/eventum/
 BuildRequires:	rpmbuild(macros) >= 1.223
 BuildRequires:	sed >= 4.0
@@ -460,6 +460,7 @@ rm -rf misc/upgrade/flush_compiled_templates.php
 %patch11 -p1
 %patch12 -p1
 %patch13 -p1
+%patch15 -p1
 
 # replace in remaining scripts config.inc.php to system one
 grep -rl 'include_once(".*config.inc.php")' . | xargs sed -i -e '
@@ -790,6 +791,12 @@ if [ -f /etc/eventum/irc.php.rpmsave ]; then
 	mv -f %{_sysconfdir}/irc.php{,.rpmnew}
 	mv -f /etc/eventum/irc.php.rpmsave %{_sysconfdir}/irc.php
 fi
+
+%triggerpostun -- eventum < 1.7.0-0.20051130.4.24
+%{_appdir}/upgrade/upgrade.sh %{_appdir}/upgrade/v1.6.1_to_v1.7.0 <<EOF
+database_changes.php Perform database changes
+set_root_message_ids.php Set iss_root_message_id
+EOF
 
 %files
 %defattr(644,root,root,755)
