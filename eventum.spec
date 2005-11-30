@@ -18,7 +18,7 @@
 # release candidate
 #define _rc		RC1
 
-%define	_rel	4.19
+%define	_rel	4.21
 
 %if 0%{?_rc:1}
 %define	_source http://pessoal.org/%{name}-%{version}-%{_rc}.tar.gz
@@ -774,7 +774,7 @@ if [ -L /etc/httpd/httpd.conf/99_%{_webapp}.conf ]; then
 fi
 
 # regular configs
-for i in apache.conf config.php core.php private_key.php setup.php; do
+for i in apache.conf config.php private_key.php setup.php; do
 	if [ -f /etc/eventum/$i.rpmsave ]; then
 		mv -f %{_sysconfdir}/$i{,.rpmnew}
 		mv -f /etc/eventum/$i.rpmsave %{_sysconfdir}/$i
