@@ -18,7 +18,7 @@
 # release candidate
 #define _rc		RC1
 
-%define	_rel	4.24
+%define	_rel	4.26
 
 %if 0%{?_rc:1}
 %define	_source http://pessoal.org/%{name}-%{version}-%{_rc}.tar.gz
@@ -743,7 +743,7 @@ s,\$irc_username,$username,
 s,\$irc_password,$password,
 ' /etc/eventum/irc.php
 
-%triggerpostun -- %{name} < 1.6.1-4.18
+%triggerpostun -- eventum < 1.7.0-0.20051130.4.25
 # migrate from apache-config macros
 if [ -f /etc/%{name}/apache.conf.rpmsave ]; then
 	if [ -d /etc/apache/webapps.d ]; then
@@ -772,6 +772,11 @@ if [ -L /etc/httpd/httpd.conf/99_%{_webapp}.conf ]; then
 	fi
 fi
 
+%{_appdir}/upgrade/upgrade.sh %{_appdir}/upgrade/v1.6.1_to_v1.7.0 <<EOF
+database_changes.php Perform database changes
+set_root_message_ids.php Set iss_root_message_id
+EOF
+
 # regular configs
 for i in apache.conf config.php private_key.php setup.php; do
 	if [ -f /etc/eventum/$i.rpmsave ]; then
@@ -791,12 +796,6 @@ if [ -f /etc/eventum/irc.php.rpmsave ]; then
 	mv -f %{_sysconfdir}/irc.php{,.rpmnew}
 	mv -f /etc/eventum/irc.php.rpmsave %{_sysconfdir}/irc.php
 fi
-
-%triggerpostun -- eventum < 1.7.0-0.20051130.4.24
-%{_appdir}/upgrade/upgrade.sh %{_appdir}/upgrade/v1.6.1_to_v1.7.0 <<EOF
-database_changes.php Perform database changes
-set_root_message_ids.php Set iss_root_message_id
-EOF
 
 %files
 %defattr(644,root,root,755)
