@@ -4,7 +4,7 @@
  *
  * This configuration file sets up system paths for eventum.
  * You shouldn't be needing to change anything in this file.
- * All changes should go to /etc/eventum/config.php
+ * All changes should go to /etc/webapps/eventum/config.php
  * But, if You do need to change something in this config, please let us know!
  */
 
@@ -28,7 +28,7 @@ define("APP_LOCKS_PATH", "/var/run/eventum/");
 ini_set("include_path", ".:" . APP_PEAR_PATH);
 
 define("APP_SETUP_PATH", APP_PATH);
-define("APP_SETUP_FILE", "/etc/eventum/setup.php");
+define("APP_SETUP_FILE", "/etc/webapps/eventum/setup.php");
 
 define("APP_ERROR_LOG", APP_LOG_PATH . "errors.log");
 define("APP_CLI_LOG", APP_LOG_PATH . "cli.log");
@@ -38,7 +38,7 @@ define("APP_LOGIN_LOG", APP_LOG_PATH . "login_attempts.log");
 define("APP_VERSION", "%{APP_VERSION}%");
 
 # include site config
-include_once '/etc/eventum/config.php';
+include_once '/etc/webapps/eventum/config.php';
 
 // define the user_id of system user
 if (!defined('APP_SYSTEM_USER_ID')) {
