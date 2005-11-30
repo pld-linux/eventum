@@ -2,7 +2,7 @@
 /*
  * Eventum setup for PLD Linux.
  *
- * This configuration file sets up system paths for eventum.
+ * This configuration file sets up system paths for Eventum.
  * You shouldn't be needing to change anything in this file.
  * All changes should go to /etc/webapps/eventum/config.php
  * But, if You do need to change something in this config, please let us know!
