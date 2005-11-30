@@ -13,7 +13,7 @@
 %bcond_with	qmail	# build the router-qmail subpackage
 
 # snapshot: DATE
-#define	_snap 20051113
+%define	_snap 20051130
 
 # release candidate
 #define _rc		RC1
@@ -33,12 +33,12 @@
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl):	Eventum - system ¶ledzenia spraw/b³êdów
 Name:		eventum
-Version:	1.6.1
+Version:	1.7.0
 Release:	%{?_snap:0.%{_snap}.}%{?_rc:%{_rc}.}%{_rel}
 License:	GPL
 Group:		Applications/WWW
 Source0:	%{_source}
-# Source0-md5:	bb05ecdb46b02580ffe892e270e536b3
+# Source0-md5:	9fdc64a7b6c194062759281caf576226
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -63,7 +63,6 @@ Patch5:		%{name}-lf.patch
 Patch6:		http://glen.alkohol.ee/pld/%{name}-maq-subject.patch
 Patch7:		%{name}-bot-reconnect.patch
 Patch9:		http://glen.alkohol.ee/pld/eventum-httpclient-clientside.patch
-Patch10:	%{name}-hl-quot-fix.patch
 Patch11:	eventum-cli-wr-separated.patch
 Patch12:	eventum-php440.patch
 Patch13:	eventum-htmloptions-truncate.patch
@@ -458,7 +457,6 @@ rm -rf misc/upgrade/flush_compiled_templates.php
 %patch6 -p1
 %patch7 -p1
 %patch9 -p1
-%patch10 -p1
 %patch11 -p1
 %patch12 -p1
 %patch13 -p1
