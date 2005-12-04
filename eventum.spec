@@ -13,12 +13,12 @@
 %bcond_with	qmail	# build the router-qmail subpackage
 
 # snapshot: DATE
-%define	_snap 20051130
+%define	_snap 20051204
 
 # release candidate
 #define _rc		RC1
 
-%define	_rel	4.26
+%define	_rel	4.28
 
 %if 0%{?_rc:1}
 %define	_source http://pessoal.org/%{name}-%{version}-%{_rc}.tar.gz
@@ -38,7 +38,7 @@ Release:	%{?_snap:0.%{_snap}.}%{?_rc:%{_rc}.}%{_rel}
 License:	GPL
 Group:		Applications/WWW
 Source0:	%{_source}
-# Source0-md5:	9fdc64a7b6c194062759281caf576226
+# Source0-md5:	c7929f3f3b6c479f6600930f820cf36c
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -66,7 +66,6 @@ Patch9:		http://glen.alkohol.ee/pld/eventum-httpclient-clientside.patch
 Patch10:	eventum-cli-wr-separated.patch
 Patch11:	eventum-php440.patch
 Patch12:	eventum-htmloptions-truncate.patch
-Patch13:	http://glen.alkohol.ee/pld/eventum-db-1.7.0.patch
 URL:		http://dev.mysql.com/downloads/other/eventum/
 BuildRequires:	rpmbuild(macros) >= 1.223
 BuildRequires:	sed >= 4.0
@@ -460,7 +459,6 @@ rm -rf misc/upgrade/flush_compiled_templates.php
 %patch10 -p1
 %patch11 -p1
 %patch12 -p1
-%patch13 -p1
 
 # replace in remaining scripts config.inc.php to system one
 grep -rl 'include_once(".*config.inc.php")' . | xargs sed -i -e '
