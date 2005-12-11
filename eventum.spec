@@ -13,7 +13,7 @@
 %bcond_with	qmail	# build the router-qmail subpackage
 
 # snapshot: DATE
-%define	_snap 20051204
+%define	_snap 20051209
 
 # release candidate
 #define _rc		RC1
@@ -38,7 +38,7 @@ Release:	%{?_snap:0.%{_snap}.}%{?_rc:%{_rc}.}%{_rel}
 License:	GPL
 Group:		Applications/WWW
 Source0:	%{_source}
-# Source0-md5:	c7929f3f3b6c479f6600930f820cf36c
+# Source0-md5:	439586216294bfb6f949b5fd057b0fe0
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -62,10 +62,10 @@ Patch4:		http://glen.alkohol.ee/pld/%{name}-reply-subject.patch
 Patch5:		%{name}-lf.patch
 Patch6:		http://glen.alkohol.ee/pld/%{name}-maq-subject.patch
 Patch7:		%{name}-bot-reconnect.patch
-Patch9:		http://glen.alkohol.ee/pld/eventum-httpclient-clientside.patch
-Patch10:	eventum-cli-wr-separated.patch
-Patch11:	eventum-php440.patch
-Patch12:	eventum-htmloptions-truncate.patch
+Patch9:		http://glen.alkohol.ee/pld/%{name}-httpclient-clientside.patch
+Patch10:	%{name}-cli-wr-separated.patch
+Patch11:	%{name}-php440.patch
+Patch12:	%{name}-htmloptions-truncate.patch
 URL:		http://dev.mysql.com/downloads/other/eventum/
 BuildRequires:	rpmbuild(macros) >= 1.223
 BuildRequires:	sed >= 4.0
@@ -147,7 +147,7 @@ Ten pakiet zawiera podstawow± strukturê katalogów dla Eventum.
 Summary:	Eventum setup package
 Summary(pl):	Pakiet do wstêpnej konfiguracji Eventum
 Group:		Applications/WWW
-PreReq:		%{name} = %{epoch}:%{version}-%{release}
+Requires:	%{name} = %{epoch}:%{version}-%{release}
 
 %description setup
 Install this package to configure initial Eventum installation. You
