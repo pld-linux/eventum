@@ -5,7 +5,7 @@
  // @(#) $Id$
  //
 -include_once("config.inc.php");
-+include_once("/etc/eventum/cli.php");
++include_once("/etc/webapps/eventum/cli.php");
  include_once(APP_INC_PATH . "class.command_line.php");
  include_once(APP_PEAR_PATH . "XML_RPC/RPC.php");
  
@@ -60,7 +60,7 @@
 +++ ./misc/cli/eventum	2005-01-25 15:48:56.000000000 +0200
 @@ -13,7 +13,7 @@
  //
- include_once("/etc/eventum/cli.php");
+ include_once("/etc/webapps/eventum/cli.php");
  include_once(APP_INC_PATH . "class.command_line.php");
 -include_once(APP_PEAR_PATH . "XML_RPC/RPC.php");
 +include_once(APP_PEAR_PATH . "XML/RPC.php");
@@ -121,7 +121,7 @@
          $errors[] = $error;
      }
 -    $error = checkPermissions('../config.inc.php', "File 'config.inc.php'");
-+    $error = checkPermissions('/etc/eventum/config.php', "File '/etc/eventum/config.php'");
++    $error = checkPermissions('/etc/webapps/eventum/config.php', "File '/etc/webapps/eventum/config.php'");
      if (!empty($error)) {
          $errors[] = $error;
      }
@@ -131,12 +131,12 @@
          $errors[] = $error;
      }
 -    $error = checkPermissions('../setup.conf.php', "File 'setup.conf.php'");
-+    $error = checkPermissions('/etc/eventum/setup.php', "File '/etc/eventum/setup.php'");
++    $error = checkPermissions('/etc/webapps/eventum/setup.php', "File '/etc/webapps/eventum/setup.php'");
      if (!empty($error)) {
          $errors[] = $error;
      }
 -    $error = checkPermissions('../include/private_key.php', "File 'include/private_key.php'");
-+    $error = checkPermissions('/etc/eventum/private_key.php', "File '/etc/eventum/private_key.php'");
++    $error = checkPermissions('/etc/webapps/eventum/private_key.php', "File '/etc/webapps/eventum/private_key.php'");
      if (!empty($error)) {
          $errors[] = $error;
      }
@@ -146,8 +146,8 @@
      // check if config.inc.php in the root directory is writable
 -    if (!is_writable('../config.inc.php')) {
 -        return "The file 'config.inc.php' in Eventum's root directory needs to be writable by the web server user. Please correct this problem and try again.";
-+    if (!is_writable('/etc/eventum/config.php')) {
-+        return "The file '/etc/eventum/config.php' needs to be writable by the web server user. Please correct this problem and try again.";
++    if (!is_writable('/etc/webapps/eventum/config.php')) {
++        return "The file '/etc/webapps/eventum/config.php' needs to be writable by the web server user. Please correct this problem and try again.";
      }
      // gotta check and see if the provided installation path really exists...
      if (!file_exists($HTTP_POST_VARS['path'])) {
@@ -157,19 +157,19 @@
  ?>';
 -    if (!is_writable('../include/private_key.php')) {
 -        return "The file 'include/private_key.php' needs to be writable by the web server user. Please correct this problem and try again.";
-+    if (!is_writable('/etc/eventum/private_key.php')) {
-+        return "The file '/etc/eventum/private_key.php' needs to be writable by the web server user. Please correct this problem and try again.";
++    if (!is_writable('/etc/webapps/eventum/private_key.php')) {
++        return "The file '/etc/webapps/eventum/private_key.php' needs to be writable by the web server user. Please correct this problem and try again.";
      }
 -    $fp = @fopen('../include/private_key.php', 'w');
-+    $fp = @fopen('/etc/eventum/private_key.php', 'w');
++    $fp = @fopen('/etc/webapps/eventum/private_key.php', 'w');
      if ($fp === FALSE) {
 -        return "Could not open the file 'include/private_key.php' for writing. The permissions on the file should be set as to allow the user that the web server runs as to open it. Please correct this problem and try again.";
-+        return "Could not open the file '/etc/eventum/private_key.php' for writing. The permissions on the file should be set as to allow the user that the web server runs as to open it. Please correct this problem and try again.";
++        return "Could not open the file '/etc/webapps/eventum/private_key.php' for writing. The permissions on the file should be set as to allow the user that the web server runs as to open it. Please correct this problem and try again.";
      }
      $res = fwrite($fp, $private_key);
      if ($fp === FALSE) {
 -        return "Could not write the configuration information to 'include/private_key.php'. The file should be writable by the user that the web server runs as. Please correct this problem and try again.";
-+        return "Could not write the configuration information to '/etc/eventum/private_key.php'. The file should be writable by the user that the web server runs as. Please correct this problem and try again.";
++        return "Could not write the configuration information to '/etc/webapps/eventum/private_key.php'. The file should be writable by the user that the web server runs as. Please correct this problem and try again.";
      }
      fclose($fp);
      // check if we can connect
@@ -245,7 +245,7 @@
      }
  
 -    $fp = @fopen('../config.inc.php', 'w');
-+    $fp = @fopen('/etc/eventum/config.php', 'w');
++    $fp = @fopen('/etc/webapps/eventum/config.php', 'w');
      if ($fp === FALSE) {
          return "Could not open the file 'config.inc.php' for writing. The permissions on the file should be set as to allow the user that the web server runs as to open it. Please correct this problem and try again.";
      }
