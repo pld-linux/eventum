@@ -12,17 +12,6 @@
  @define("APP_JPGRAPH_PATH", APP_INC_PATH . "jpgraph/");
  @define("APP_LOG_PATH", "/var/log/eventum/");
  @define("APP_LOCKS_PATH", "/var/run/eventum/");
---- eventum-1.4/setup/index.php~	2005-01-25 23:52:31.000000000 +0200
-+++ eventum-1.4/setup/index.php	2005-01-25 23:52:33.000000000 +0200
-@@ -199,7 +199,7 @@
- }
- 
- ini_set("include_path", '.');
--include_once("../include/Smarty/Smarty.class.php");
-+include_once("/usr/share/pear/Smarty/Smarty.class.php");
- 
- $tpl = new Smarty();
- $tpl->template_dir = '../templates/en';
 --- ./rpc/xmlrpc.php~	2005-01-05 01:06:19.000000000 +0200
 +++ ./rpc/xmlrpc.php	2005-01-25 16:35:14.000000000 +0200
 @@ -41,7 +41,7 @@
