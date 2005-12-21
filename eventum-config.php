@@ -3,13 +3,16 @@
  * Eventum setup for PLD Linux.
  *
  * This configuration file sets up system paths for Eventum.
- * You shouldn't be needing to change anything in this file.
- * All changes should go to /etc/webapps/eventum/config.php
- * But, if You do need to change something in this config, please let us know!
+ * You should not change anything in this file.
+ *
+ * All changes should go to %{SYSCONFDIR}%/config.php instead.
+ *
+ * But, if You do need to change something in this config, open bug on that in
+ * http://bugs.pld-linux.org.
  */
 
 ini_set('allow_url_fopen', 0);
-ini_set("display_errors", 0);
+ini_set('display_errors', 0);
 set_time_limit(0);
 set_magic_quotes_runtime(0);
 
@@ -17,51 +20,51 @@ set_magic_quotes_runtime(0);
 ini_set('session.cache_limiter', 'nocache');
 
 // definitions of path related variables
-define("APP_PATH", '/usr/share/eventum/htdocs/');
-define("APP_INC_PATH", "/usr/share/eventum/include/");
-define("APP_PEAR_PATH", APP_INC_PATH . "pear/");
-define("APP_TPL_PATH", "/usr/share/eventum/templates/");
-define("APP_SMARTY_PATH", "/usr/share/pear/Smarty/");
-define("APP_JPGRAPH_PATH", APP_INC_PATH . "jpgraph/");
-define("APP_LOG_PATH", "/var/log/eventum/");
-define("APP_LOCKS_PATH", "/var/run/eventum/");
-ini_set("include_path", ".:" . APP_PEAR_PATH);
+define('APP_PATH', '%{APP_PATH}%/htdocs/');
+define('APP_INC_PATH', '%{APP_PATH}%/include/');
+define('APP_PEAR_PATH', '%{PHP_PEAR_DIR}%/');
+define('APP_TPL_PATH', '%{APP_PATH}%/templates/');
+define('APP_SMARTY_PATH', '%{SMARTY_DIR}%/');
+define('APP_JPGRAPH_PATH', APP_INC_PATH . "jpgraph/");
+define('APP_LOG_PATH', '/var/log/eventum/');
+define('APP_LOCKS_PATH', '/var/run/eventum/');
+ini_set('include_path', '.:' . APP_PEAR_PATH);
 
-define("APP_SETUP_PATH", APP_PATH);
-define("APP_SETUP_FILE", "/etc/webapps/eventum/setup.php");
+define('APP_SETUP_PATH', APP_PATH);
+define('APP_SETUP_FILE', '%{SYSCONFDIR}%/setup.php');
 
-define("APP_ERROR_LOG", APP_LOG_PATH . "errors.log");
-define("APP_CLI_LOG", APP_LOG_PATH . "cli.log");
-define("APP_IRC_LOG", APP_LOG_PATH . "irc_bot.log");
-define("APP_LOGIN_LOG", APP_LOG_PATH . "login_attempts.log");
+define('APP_ERROR_LOG', APP_LOG_PATH . 'errors.log');
+define('APP_CLI_LOG', APP_LOG_PATH . 'cli.log');
+define('APP_IRC_LOG', APP_LOG_PATH . 'irc_bot.log');
+define('APP_LOGIN_LOG', APP_LOG_PATH . 'login_attempts.log');
 
-define("APP_VERSION", "%{APP_VERSION}%");
+define('APP_VERSION', '%{APP_VERSION}%');
 
 # include site config
-include_once '/etc/webapps/eventum/config.php';
+include_once '%{SYSCONFDIR}%/config.php';
 
 // define the user_id of system user
 if (!defined('APP_SYSTEM_USER_ID')) {
-    define("APP_SYSTEM_USER_ID", 1);
+    define('APP_SYSTEM_USER_ID', 1);
 }
 
 // if full text searching is enabled
 if (!defined('APP_ENABLE_FULLTEXT')) {
-    define("APP_ENABLE_FULLTEXT", false);
+    define('APP_ENABLE_FULLTEXT', false);
 }
 
 if (!defined('APP_BENCHMARK')) {
-    define("APP_BENCHMARK", false);
+    define('APP_BENCHMARK', false);
 }
 
 if (APP_BENCHMARK) {
     // always benchmark the scripts
-    include_once("Benchmark/Timer.php");
+    require_once 'Benchmark/Timer.php';
     $bench = new Benchmark_Timer;
     $bench->start();
 }
 
-include_once(APP_INC_PATH . "class.misc.php");
+include_once APP_INC_PATH . 'class.misc.php';
 
 if (isset($_GET)) {
     $HTTP_POST_VARS = $_POST;
@@ -82,11 +85,11 @@ $HTTP_POST_VARS = Misc::dispelMagicQuotes($HTTP_POST_VARS);
 $_REQUEST = Misc::dispelMagicQuotes($_REQUEST);
 
 // handle the language preferences now
-include_once(APP_INC_PATH . "class.language.php");
+include_once(APP_INC_PATH . 'class.language.php');
 Language::setPreference();
 
 // set charset
-header("Content-Type: text/html; charset=" . APP_CHARSET);
+header('Content-Type: text/html; charset=' . APP_CHARSET);
 
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
 ?>
