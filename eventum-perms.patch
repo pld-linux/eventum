@@ -1,0 +1,80 @@
+diff -ur eventum-20051221/include/class.draft.php eventum-20051221.perms/include/class.draft.php
+--- eventum-20051221/include/class.draft.php	2005-12-21 17:54:59.000000000 +0200
++++ eventum-20051221.perms/include/class.draft.php	2005-12-21 17:54:24.000000000 +0200
+@@ -46,7 +46,7 @@
+         $fp = @fopen($path . $filename, 'w');
+         @fwrite($fp, $message);
+         @fclose($fp);
+-        @chmod($path . $filename, 0777);
++        @chmod($path . $filename, 0750);
+     }
+ 
+ 
+diff -ur eventum-20051221/include/class.misc.php eventum-20051221.perms/include/class.misc.php
+--- eventum-20051221/include/class.misc.php	2005-12-21 17:55:00.000000000 +0200
++++ eventum-20051221.perms/include/class.misc.php	2005-12-21 17:53:59.000000000 +0200
+@@ -577,7 +577,7 @@
+         if (!is_writable($file)) {
+             if (!stristr(PHP_OS, "win")) {
+                 // let's try to change the permissions ourselves
+-                @chmod($file, 0777);
++                @chmod($file, 0750);
+                 clearstatcache();
+                 if (!is_writable($file)) {
+                     return false;
+diff -ur eventum-20051221/include/class.note.php eventum-20051221.perms/include/class.note.php
+--- eventum-20051221/include/class.note.php	2005-12-21 17:55:00.000000000 +0200
++++ eventum-20051221.perms/include/class.note.php	2005-12-21 17:54:30.000000000 +0200
+@@ -261,7 +261,7 @@
+         $fp = @fopen($path . $filename, 'w');
+         @fwrite($fp, $message);
+         @fclose($fp);
+-        @chmod($path . $filename, 0777);
++        @chmod($path . $filename, 0750);
+     }
+ 
+ 
+diff -ur eventum-20051221/include/class.support.php eventum-20051221.perms/include/class.support.php
+--- eventum-20051221/include/class.support.php	2005-12-21 17:55:00.000000000 +0200
++++ eventum-20051221.perms/include/class.support.php	2005-12-21 17:49:55.000000000 +0200
+@@ -264,7 +264,6 @@
+         $fp = @fopen($path . $filename, 'w');
+         @fwrite($fp, $message);
+         @fclose($fp);
+-        @chmod($path . $filename, 0777);
+         return $filename;
+     }
+ 
+diff -ur eventum-20051221/include/jpgraph/jpgraph.php eventum-20051221.perms/include/jpgraph/jpgraph.php
+--- eventum-20051221/include/jpgraph/jpgraph.php	2005-12-21 17:54:59.000000000 +0200
++++ eventum-20051221.perms/include/jpgraph/jpgraph.php	2005-12-21 17:53:53.000000000 +0200
+@@ -4086,7 +4086,7 @@
+ 	    $aFile = dirname($aFile);
+ 	}
+ 	for ($i = sizeof($dirs)-1; $i>=0; $i--) {
+-	    if(! @mkdir($dirs[$i],0777) )
++	    if(! @mkdir($dirs[$i],0750) )
+ 		JpGraphError::Raise("<b>JpGraph Error:</b> Can't create directory in $aFile. Permission problems?");
+ 				
+ 	    // We also specify mode here after we have changed group. 
+@@ -4096,7 +4096,7 @@
+ 	    if( CACHE_FILE_GROUP != "" ) {
+ 		$res=true;
+ 		$res =@chgrp($dirs[$i],CACHE_FILE_GROUP);
+-		$res &= @chmod($dirs[$i],0777);
++		$res &= @chmod($dirs[$i],0750);
+ 		if( !$res )
+ 		    JpGraphError::Raise("<b>JpGraph Error:</b> Can't set permissions for $aFile. Permission problems?");
+ 	    }
+diff -ur eventum-20051221/setup/index.php eventum-20051221.perms/setup/index.php
+--- eventum-20051221/setup/index.php	2005-12-21 17:55:00.000000000 +0200
++++ eventum-20051221.perms/setup/index.php	2005-12-21 17:53:18.000000000 +0200
+@@ -68,7 +68,7 @@
+     if (!is_writable($file)) {
+         if (!stristr(PHP_OS, "win")) {
+             // let's try to change the permissions ourselves
+-            @chmod($file, 0777);
++            @chmod($file, 0750);
+             clearstatcache();
+             if (!is_writable($file)) {
+                 return "$desc is not writable";
