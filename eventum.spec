@@ -11,12 +11,12 @@
 %bcond_with	qmail	# build the router-qmail subpackage
 
 # snapshot: DATE
-%define	_snap 20051220
+%define	_snap 20051221
 
 # release candidate
 #define _rc		RC1
 
-%define	_rel	4.40
+%define	_rel	4.42
 
 %if 0%{?_rc:1}
 %define	_source http://pessoal.org/%{name}-%{version}-%{_rc}.tar.gz
@@ -37,7 +37,7 @@ Release:	%{?_snap:0.%{_snap}.}%{?_rc:%{_rc}.}%{_rel}
 License:	GPL
 Group:		Applications/WWW
 Source0:	%{_source}
-# Source0-md5:	c5b20fbfc2fdb5da490f6acac8897818
+# Source0-md5:	96b6fa8fb2e288a6b2121ac24128da5a
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -61,6 +61,7 @@ Patch4:		http://glen.alkohol.ee/pld/%{name}-reply-subject.patch
 Patch5:		%{name}-lf.patch
 Patch6:		http://glen.alkohol.ee/pld/%{name}-maq-subject.patch
 Patch7:		%{name}-bot-reconnect.patch
+Patch8:		%{name}-perms.patch
 Patch9:		http://glen.alkohol.ee/pld/%{name}-httpclient-clientside.patch
 Patch10:	%{name}-cli-wr-separated.patch
 Patch11:	%{name}-php440.patch
@@ -457,6 +458,7 @@ rm -rf misc/upgrade/flush_compiled_templates.php
 %patch5 -p1
 %patch6 -p1
 %patch7 -p1
+%patch8 -p1
 %patch9 -p1
 %patch10 -p1
 %patch11 -p1
@@ -478,7 +480,7 @@ install -d \
 	$RPM_BUILD_ROOT{%{_sysconfdir},%{_bindir},%{_libdir}} \
 	$RPM_BUILD_ROOT/etc/{rc.d/init.d,cron.d,sysconfig} \
 	$RPM_BUILD_ROOT/var/{run,log,cache,lib}/%{name} \
-	$RPM_BUILD_ROOT/var/lib/%{name}/routed_emails \
+	$RPM_BUILD_ROOT/var/lib/%{name}/routed_{emails,drafts,notes} \
 	$RPM_BUILD_ROOT%{_appdir}/{include,htdocs/misc,upgrade} \
 
 cp -a *.php css customer images js manage reports rpc setup $RPM_BUILD_ROOT%{_appdir}/htdocs
@@ -860,8 +862,10 @@ fi
 %dir %{_appdir}
 # qmail will ignore user, if it's home directory is not owned
 %attr(750,eventum,eventum) %dir /var/lib/%{name}
-# for saved routed emails
+# saved mail copies
 %attr(770,root,eventum) %dir /var/lib/%{name}/routed_emails
+%attr(770,root,eventum) %dir /var/lib/%{name}/routed_drafts
+%attr(770,root,eventum) %dir /var/lib/%{name}/routed_notes
 
 %files setup
 %defattr(644,root,root,755)
