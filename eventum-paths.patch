@@ -223,6 +223,28 @@
          list($usec,) = explode(" ", microtime());
          $filename = date('dmY.His.') . $usec . '.email.txt';
          $fp = @fopen($path . $filename, 'w');
+--- eventum-20051221/include/class.draft.php~	2005-12-21 17:56:27.000000000 +0200
++++ eventum-20051221/include/class.draft.php	2005-12-21 17:59:26.000000000 +0200
+@@ -40,7 +40,7 @@
+      */
+     function saveRoutedMessage($message)
+     {
+-        $path = APP_PATH . "misc/routed_drafts/";
++        $path = "/var/lib/eventum/routed_drafts/";
+         list($usec,) = explode(" ", microtime());
+         $filename = date('dmY.His.') . $usec . '.draft.txt';
+         $fp = @fopen($path . $filename, 'w');
+--- eventum-20051221/include/class.note.php~	2005-12-21 17:56:27.000000000 +0200
++++ eventum-20051221/include/class.note.php	2005-12-21 17:59:57.000000000 +0200
+@@ -255,7 +255,7 @@
+      */
+     function saveRoutedNote($message)
+     {
+-        $path = APP_PATH . "misc/routed_notes/";
++        $path = "/var/lib/eventum/routed_notes/";
+         list($usec,) = explode(" ", microtime());
+         $filename = date('dmY.His.') . $usec . '.note.txt';
+         $fp = @fopen($path . $filename, 'w');
 --- ../setup/index.php~	2005-07-26 18:49:37.000000000 +0300
 +++ ../setup/index.php	2005-07-26 19:12:57.000000000 +0300
 @@ -213,11 +213,11 @@
