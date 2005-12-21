@@ -1,6 +1,4 @@
 # TODO
-# - system pear is incompatible, at least pear DB class seems broke Eventum
-# - php5 is not tested, but not placing hard conflict on it, as it prevents php4 & php coinstallation
 # - discard bundled packages (from INSTALL):
 #  - JpGraph 1.5.3 (last GPL version)
 #  - dTree 2.0.5 (http://www.destroydrop.com/javascript/tree/)
@@ -9,16 +7,16 @@
 #  - A few other small javascript libraries
 # - 64bit platforms beware? http://bugs.php.net/bug.php?id=30215 (it's actually Smarty related problem)
 
-%bcond_with	pear	# build with system PEAR packages (or use bundled ones)
+%bcond_without	pear	# build with system PEAR packages (or use bundled ones)
 %bcond_with	qmail	# build the router-qmail subpackage
 
 # snapshot: DATE
-%define	_snap 20051209
+%define	_snap 20051220
 
 # release candidate
 #define _rc		RC1
 
-%define	_rel	4.28
+%define	_rel	4.40
 
 %if 0%{?_rc:1}
 %define	_source http://pessoal.org/%{name}-%{version}-%{_rc}.tar.gz
@@ -30,6 +28,7 @@
 %endif
 %endif
 
+%{?with_pear:%include	/usr/lib/rpm/macros.php}
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl):	Eventum - system ¶ledzenia spraw/b³êdów
 Name:		eventum
@@ -38,7 +37,7 @@ Release:	%{?_snap:0.%{_snap}.}%{?_rc:%{_rc}.}%{_rel}
 License:	GPL
 Group:		Applications/WWW
 Source0:	%{_source}
-# Source0-md5:	439586216294bfb6f949b5fd057b0fe0
+# Source0-md5:	c5b20fbfc2fdb5da490f6acac8897818
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -67,16 +66,17 @@ Patch10:	%{name}-cli-wr-separated.patch
 Patch11:	%{name}-php440.patch
 Patch12:	%{name}-htmloptions-truncate.patch
 URL:		http://dev.mysql.com/downloads/other/eventum/
+%{?with_pear:BuildRequires:	rpm-php-pearprov >= 4.0.2-98}
 BuildRequires:	rpmbuild(macros) >= 1.223
 BuildRequires:	sed >= 4.0
-Requires:	php >= 3:4.2.0
+Requires:	%{name}-base = %{epoch}:%{version}-%{release}
+Requires:	Smarty >= 2.6.2
 Requires:	php-gd
 Requires:	php-imap
 Requires:	php-mysql
 Requires:	php-pcre
 Requires:	php-session
-Requires:	%{name}-base = %{epoch}:%{version}-%{release}
-Requires:	Smarty >= 2.6.2
+Requires:	php >= 3:4.2.0
 %if %{with pear}
 Requires:	php-pear-Benchmark
 Requires:	php-pear-DB
@@ -85,26 +85,28 @@ Requires:	php-pear-HTTP_Request
 Requires:	php-pear-Mail
 Requires:	php-pear-Math_Stats
 Requires:	php-pear-Net_DIME
-Requires:	php-pear-Net_POP3
 Requires:	php-pear-Net_SMTP
 Requires:	php-pear-Net_Socket
 Requires:	php-pear-Net_URL
 Requires:	php-pear-Net_UserAgent_Detect
-Requires:	php-pear-PEAR
+Requires:	php-pear-PEAR-core
 Requires:	php-pear-Text_Diff
 Requires:	php-pear-XML_RPC
+#Suggests:	php-pear-Net_POP3
 %endif
+Requires(triggerpostun):	sed >= 4.0
+Requires:	apache(mod_dir)
 Requires:	webapps
 Requires:	webserver = apache
-Requires:	apache(mod_dir)
-Requires(triggerpostun):	sed >= 4.0
-Conflicts:	apache1 < 1.3.33-2
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
+
+%define		_noautoreq	'pear(/etc/webapps/.*)' 'pear(jpgraph_dir.php)' 'pear(.*Smarty.class.php)' 'pear(Net/POP3.php)'
 
 %define		_libdir		%{_prefix}/lib/%{name}
 %define		_appdir	%{_datadir}/%{name}
 %define		_smartyplugindir	%{_appdir}/include/smarty
+%define		_smartydir	/usr/share/php/Smarty
 %define		_webapps	/etc/webapps
 %define		_webapp		%{name}
 %define		_sysconfdir	%{_webapps}/%{_webapp}
@@ -128,12 +130,12 @@ reakcji.
 Summary:	Eventum base package
 Summary(pl):	Podstawowy pakiet Eventum
 Group:		Applications/WWW
+Requires(postun):	/usr/sbin/groupdel
+Requires(postun):	/usr/sbin/userdel
 Requires(pre):	/bin/id
 Requires(pre):	/usr/bin/getgid
-Requires(pre):	/usr/sbin/useradd
 Requires(pre):	/usr/sbin/groupadd
-Requires(postun):	/usr/sbin/userdel
-Requires(postun):	/usr/sbin/groupdel
+Requires(pre):	/usr/sbin/useradd
 Provides:	user(eventum)
 Provides:	group(eventum)
 
@@ -234,8 +236,8 @@ Summary:	Eventum Heartbeat Monitor
 Summary(pl):	Monitor ¿ycia dla Eventum
 Group:		Applications/WWW
 Requires:	%{name} = %{epoch}:%{version}-%{release}
-Requires:	php-posix
 Requires:	crondaemon
+Requires:	php-posix
 
 %description monitor
 The heartbeat monitor is a feature designed for the administrator that
@@ -355,8 +357,8 @@ Summary(pl):	IRC-owy bot powiadamiaj±cy dla Eventum
 Group:		Applications/WWW
 Requires(triggerpostun):	sed >= 4.0
 Requires:	%{name} = %{epoch}:%{version}-%{release}
-Requires:	php-sockets
 #Requires:	php-pear-Net_SmartIRC
+Requires:	php-sockets
 Requires:	rc-scripts >= 0.4.0.18
 
 %description irc
@@ -388,11 +390,11 @@ Summary:	Eventum command-line interface
 Summary(pl):	Interfejs linii poleceñ dla Eventum
 Group:		Applications/WWW
 Requires:	%{name}-base = %{epoch}:%{version}-%{release}
-Requires:	php-common >= 3:4.1.0
 Requires:	php-cli
+Requires:	php-common >= 3:4.1.0
 Requires:	php-curl
-Requires:	php-xml
 Requires:	php-pear-XML_RPC
+Requires:	php-xml
 
 %description cli
 The Eventum command-line interface allows you to access most of the
@@ -407,8 +409,8 @@ Summary:	Eventum SCM integration
 Summary(pl):	Integracja SCM dla Eventum
 Group:		Applications/WWW
 Requires:	%{name}-base = %{epoch}:%{version}-%{release}
-Requires:	php-common >= 3:4.1.0
 Requires:	php-cli
+Requires:	php-common >= 3:4.1.0
 Requires:	php-pcre
 
 %description scm
@@ -497,12 +499,12 @@ install %{SOURCE14} $RPM_BUILD_ROOT%{_appdir}/upgrade/upgrade.sh
 install -d $RPM_BUILD_ROOT%{_appdir}/cli
 install misc/cli/include/class.{misc,command_line}.php $RPM_BUILD_ROOT%{_appdir}/cli
 install misc/cli/config.inc.php $RPM_BUILD_ROOT%{_sysconfdir}/cli.php
-sed -e '1s,#!.*/bin/php,#!%{_bindir}/php4,' \
+sed -e '1s,#!.*/bin/php,#!%{_bindir}/php,' \
 	misc/cli/eventum > $RPM_BUILD_ROOT%{_bindir}/%{name}
 cp -f misc/cli/eventumrc_example eventumrc
 
 # scm
-echo '#!%{_bindir}/php4 -q' > %{name}-scm
+echo '#!%{_bindir}/php' > %{name}-scm
 cat misc/scm/process_cvs_commits.php >> %{name}-scm
 install %{name}-scm $RPM_BUILD_ROOT%{_libdir}/scm
 
@@ -523,8 +525,14 @@ install %{SOURCE6} $RPM_BUILD_ROOT%{_sysconfdir}/cvs.php
 install %{SOURCE7} $RPM_BUILD_ROOT%{_sysconfdir}/irc.php
 install %{SOURCE8} $RPM_BUILD_ROOT/etc/rc.d/init.d/eventum-irc
 install %{SOURCE9} $RPM_BUILD_ROOT/etc/sysconfig/eventum-irc
-sed -e 's,%%{APP_VERSION}%%,%{version}%{?_snap:-%{_snap}},' \
-	%{SOURCE10} > $RPM_BUILD_ROOT%{_sysconfdir}/core.php
+
+sed -e '
+s,%%{APP_VERSION}%%,%{version}%{?_snap:-%{_snap}},
+s,%%{PHP_PEAR_DIR}%%,%{?with_pear:%{php_pear_dir}}%{!?with_pear:%{_appdir}/includes/pear},
+s,%%{APP_PATH}%%,%{_appdir},
+s,%%{SMARTY_DIR}%%,%{_smartydir},
+s,%%{SYSCONFDIR}%%,%{_sysconfdir},
+' %{SOURCE10} > $RPM_BUILD_ROOT%{_sysconfdir}/core.php
 
 # config
 > $RPM_BUILD_ROOT%{_sysconfdir}/setup.php
