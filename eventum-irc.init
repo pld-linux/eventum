@@ -9,7 +9,6 @@
 # Get network config
 . /etc/sysconfig/network
 
-PHP=/usr/bin/php4
 PIDFILE=/var/run/eventum/irc_bot.pid
 
 # Get service config
@@ -32,7 +31,7 @@ start)
 	if [ ! -f /var/lock/subsys/eventum-irc ]; then
 		msg_starting eventum-irc
 		start-stop-daemon --start \
-			--exec $PHP \
+			--exec /usr/bin/php \
 			--pidfile $PIDFILE \
 			--chuid http \
 			--chdir /usr/share/eventum/irc \

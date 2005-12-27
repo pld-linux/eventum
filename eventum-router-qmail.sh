@@ -18,7 +18,7 @@ drafts|emails|notes)
 esac
 
 cd /usr/share/eventum
-/usr/bin/php4 -q route_$TYPE.php "$@" && exit $OK
+/usr/bin/php -q route_$TYPE.php "$@" && exit $OK
 rc=$?
 
 # exit does are for postfix, based on /usr/include/sysexits.h
