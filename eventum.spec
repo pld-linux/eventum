@@ -11,12 +11,12 @@
 %bcond_with	qmail	# build the router-qmail subpackage
 
 # snapshot: DATE
-%define	_snap 20051221
+%define	_snap 20051227
 
 # release candidate
 #define _rc		RC1
 
-%define	_rel	4.42
+%define	_rel	4.45
 
 %if 0%{?_rc:1}
 %define	_source http://pessoal.org/%{name}-%{version}-%{_rc}.tar.gz
@@ -37,7 +37,7 @@ Release:	%{?_snap:0.%{_snap}.}%{?_rc:%{_rc}.}%{_rel}
 License:	GPL
 Group:		Applications/WWW
 Source0:	%{_source}
-# Source0-md5:	96b6fa8fb2e288a6b2121ac24128da5a
+# Source0-md5:	37185deab6f5a1e388800e1fe182e64c
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -66,18 +66,19 @@ Patch9:		http://glen.alkohol.ee/pld/%{name}-httpclient-clientside.patch
 Patch10:	%{name}-cli-wr-separated.patch
 Patch11:	%{name}-php440.patch
 Patch12:	%{name}-htmloptions-truncate.patch
+Patch13:	http://glen.alkohol.ee/pld/%{name}-link_filter-updates.patch
 URL:		http://dev.mysql.com/downloads/other/eventum/
 %{?with_pear:BuildRequires:	rpm-php-pearprov >= 4.0.2-98}
 BuildRequires:	rpmbuild(macros) >= 1.223
 BuildRequires:	sed >= 4.0
 Requires:	%{name}-base = %{epoch}:%{version}-%{release}
 Requires:	Smarty >= 2.6.2
+Requires:	php >= 3:4.2.0
 Requires:	php-gd
 Requires:	php-imap
 Requires:	php-mysql
 Requires:	php-pcre
 Requires:	php-session
-Requires:	php >= 3:4.2.0
 %if %{with pear}
 Requires:	php-pear-Benchmark
 Requires:	php-pear-DB
@@ -95,6 +96,7 @@ Requires:	php-pear-Text_Diff
 Requires:	php-pear-XML_RPC
 #Suggests:	php-pear-Net_POP3
 %endif
+Requires(triggerpostun):	/usr/bin/php
 Requires(triggerpostun):	sed >= 4.0
 Requires:	apache(mod_dir)
 Requires:	webapps
@@ -137,8 +139,8 @@ Requires(pre):	/bin/id
 Requires(pre):	/usr/bin/getgid
 Requires(pre):	/usr/sbin/groupadd
 Requires(pre):	/usr/sbin/useradd
-Provides:	user(eventum)
 Provides:	group(eventum)
+Provides:	user(eventum)
 
 %description base
 This package contains base directory structure for Eventum.
@@ -167,6 +169,7 @@ Summary:	Eventum mail queue process
 Summary(pl):	Przetwarzanie kolejki poczty Eventum
 Group:		Applications/WWW
 Requires:	%{name} = %{epoch}:%{version}-%{release}
+Requires:	/usr/bin/php
 Requires:	crondaemon
 
 %description mail-queue
@@ -192,6 +195,7 @@ Summary:	Eventum email download
 Summary(pl):	¦ci±ganie poczty Eventum
 Group:		Applications/WWW
 Requires:	%{name} = %{epoch}:%{version}-%{release}
+Requires:	/usr/bin/php
 Requires:	crondaemon
 
 %description mail-download
@@ -212,6 +216,7 @@ Summary:	Eventum Reminder System
 Summary(pl):	System przypominania dla Eventum
 Group:		Applications/WWW
 Requires:	%{name} = %{epoch}:%{version}-%{release}
+Requires:	/usr/bin/php
 Requires:	crondaemon
 
 %description reminder
@@ -237,6 +242,7 @@ Summary:	Eventum Heartbeat Monitor
 Summary(pl):	Monitor ¿ycia dla Eventum
 Group:		Applications/WWW
 Requires:	%{name} = %{epoch}:%{version}-%{release}
+Requires:	/usr/bin/php
 Requires:	crondaemon
 Requires:	php-posix
 
@@ -271,6 +277,7 @@ Summary:	Eventum Email Routing
 Summary(pl):	Przekazywanie poczty dla Eventum
 Group:		Applications/WWW
 Requires:	%{name} = %{epoch}:%{version}-%{release}
+Requires:	/usr/bin/php
 Requires:	eventum(router)
 
 %description route-emails
@@ -296,6 +303,7 @@ Summary:	Eventum Note Routing
 Summary(pl):	Przekazywanie notatek dla Eventum
 Group:		Applications/WWW
 Requires:	%{name} = %{epoch}:%{version}-%{release}
+Requires:	/usr/bin/php
 Requires:	eventum(router)
 
 %description route-notes
@@ -358,6 +366,7 @@ Summary(pl):	IRC-owy bot powiadamiaj±cy dla Eventum
 Group:		Applications/WWW
 Requires(triggerpostun):	sed >= 4.0
 Requires:	%{name} = %{epoch}:%{version}-%{release}
+Requires:	/usr/bin/php
 #Requires:	php-pear-Net_SmartIRC
 Requires:	php-sockets
 Requires:	rc-scripts >= 0.4.0.18
@@ -444,6 +453,9 @@ rm -f setup.conf.php
 rm -rf misc/upgrade/*v1.[123]* # too old to support in PLD
 rm -rf misc/upgrade/flush_compiled_templates.php
 
+sed -e '1s,#!.*/bin/php -q,#!%{_bindir}/php,' misc/cli/eventum > %{name}-cli
+sed -e '1i#!%{_bindir}/php' misc/scm/process_cvs_commits.php > %{name}-scm
+
 # using system package
 #rm -rf include/pear/Net/SmartIRC*
 
@@ -463,6 +475,7 @@ rm -rf misc/upgrade/flush_compiled_templates.php
 %patch10 -p1
 %patch11 -p1
 %patch12 -p1
+%patch13 -p1
 
 # replace in remaining scripts config.inc.php to system one
 grep -rl 'include_once(".*config.inc.php")' . | xargs sed -i -e '
@@ -501,13 +514,10 @@ install %{SOURCE14} $RPM_BUILD_ROOT%{_appdir}/upgrade/upgrade.sh
 install -d $RPM_BUILD_ROOT%{_appdir}/cli
 install misc/cli/include/class.{misc,command_line}.php $RPM_BUILD_ROOT%{_appdir}/cli
 install misc/cli/config.inc.php $RPM_BUILD_ROOT%{_sysconfdir}/cli.php
-sed -e '1s,#!.*/bin/php,#!%{_bindir}/php,' \
-	misc/cli/eventum > $RPM_BUILD_ROOT%{_bindir}/%{name}
+install %{name}-cli $RPM_BUILD_ROOT%{_bindir}/%{name}
 cp -f misc/cli/eventumrc_example eventumrc
 
 # scm
-echo '#!%{_bindir}/php' > %{name}-scm
-cat misc/scm/process_cvs_commits.php >> %{name}-scm
 install %{name}-scm $RPM_BUILD_ROOT%{_libdir}/scm
 
 # private key
