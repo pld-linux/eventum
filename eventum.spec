@@ -16,7 +16,7 @@
 # release candidate
 %define _rc		2
 
-%define	_rel	0.49
+%define	_rel	0.54
 
 %if 0%{?_rc:1}
 %define	_source http://eventum.mysql.org/eventum-1.7.0.tar.gz
@@ -67,6 +67,7 @@ Patch10:	%{name}-cli-wr-separated.patch
 Patch11:	%{name}-php440.patch
 Patch12:	%{name}-htmloptions-truncate.patch
 Patch13:	http://glen.alkohol.ee/pld/%{name}-link_filter-updates.patch
+Patch14:	http://glen.alkohol.ee/pld/%{name}-irc-mem.patch
 URL:		http://dev.mysql.com/downloads/other/eventum/
 %{?with_pear:BuildRequires:	rpm-php-pearprov >= 4.0.2-98}
 BuildRequires:	rpmbuild(macros) >= 1.223
@@ -107,7 +108,7 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define		_noautoreq	'pear(/etc/webapps/.*)' 'pear(jpgraph_dir.php)' 'pear(.*Smarty.class.php)' 'pear(Net/POP3.php)'
 
 %define		_libdir		%{_prefix}/lib/%{name}
-%define		_appdir	%{_datadir}/%{name}
+%define		_appdir		%{_datadir}/%{name}
 %define		_smartyplugindir	%{_appdir}/include/smarty
 %define		_smartydir	/usr/share/php/Smarty
 %define		_webapps	/etc/webapps
@@ -280,11 +281,12 @@ Requires:	/usr/bin/php
 Requires:	eventum(router)
 
 %description route-drafts
-The draft routing feature is used to automatically associate a thread of drafts
-into an Eventum issue. By setting up qmail (or even postfix) to deliver emails
-sent to a specific address (usually draft-<number>@<domain>) to the above
-script, users are able to send drafts written in their mail client to be stored
-in Eventum. These drafts will NOT broadcasted to the notification list.
+The draft routing feature is used to automatically associate a thread
+of drafts into an Eventum issue. By setting up qmail (or even postfix)
+to deliver emails sent to a specific address (usually
+draft-<number>@<domain>) to the above script, users are able to send
+drafts written in their mail client to be stored in Eventum. These
+drafts will NOT broadcasted to the notification list.
 
 %package route-emails
 Summary:	Eventum Email Routing
@@ -381,7 +383,7 @@ Group:		Applications/WWW
 Requires(triggerpostun):	sed >= 4.0
 Requires:	%{name} = %{version}-%{release}
 Requires:	/usr/bin/php
-#Requires:	php-pear-Net_SmartIRC
+Requires:	php-pear-Net_SmartIRC
 Requires:	php-sockets
 Requires:	rc-scripts >= 0.4.0.18
 
@@ -471,21 +473,10 @@ rm -rf misc/upgrade/*/upgrade_config.php # not needed nor supported in PLD Linux
 # sample, not used in eventum
 rm -f rpc/xmlrpc_client.php
 
-sed -e '1s,#!.*/bin/php -q,#!%{_bindir}/php,' misc/cli/eventum > %{name}-cli
-sed -e '1i#!%{_bindir}/php' misc/scm/process_cvs_commits.php > %{name}-scm
-mv misc/cli/eventumrc_example eventumrc
-
-sed -e '
-s,$private_key\s*=\s*".*";,$private_key = "DEFAULTPRIVATEKEYPLEASERUNSETUP!";,
-' < include/private_key.php > private_key.php.in
-rm -f include/private_key.php
-
-# using system package FIXME?
-#rm -rf include/pear/Net/SmartIRC*
-
 # packaging
 %patch0 -p1
 %patch1 -p1
+%patch14 -p1
 %patch2 -p1
 %{?with_pear:%patch3 -p1}
 
@@ -500,6 +491,16 @@ rm -f include/private_key.php
 %patch11 -p1
 %patch12 -p1
 %patch13 -p1
+
+sed -e '1s,#!.*/bin/php -q,#!%{_bindir}/php,' misc/cli/eventum > %{name}-cli
+sed -e '1i#!%{_bindir}/php' misc/scm/process_cvs_commits.php > %{name}-scm
+sed -e '1i#!%{_bindir}/php' misc/irc/bot.php > %{name}-bot
+mv misc/cli/eventumrc_example eventumrc
+
+sed -e '
+s,$private_key\s*=\s*".*";,$private_key = "DEFAULTPRIVATEKEYPLEASERUNSETUP!";,
+' < include/private_key.php > private_key.php.in
+rm -f include/private_key.php
 
 # replace in remaining scripts config.inc.php to system one
 grep -rl 'include_once(".*config.inc.php")' . | xargs sed -i -e '
@@ -516,7 +517,7 @@ find '(' -name '*~' -o -name '*.orig' ')' | xargs -r rm -v
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d \
-	$RPM_BUILD_ROOT{%{_sysconfdir},%{_bindir},%{_libdir}} \
+	$RPM_BUILD_ROOT{%{_sysconfdir},%{_bindir},%{_sbindir},%{_libdir}} \
 	$RPM_BUILD_ROOT/etc/{rc.d/init.d,cron.d,sysconfig} \
 	$RPM_BUILD_ROOT/var/{run,log,cache,lib}/%{name} \
 	$RPM_BUILD_ROOT/var/lib/%{name}/routed_{emails,drafts,notes} \
@@ -525,7 +526,6 @@ install -d \
 cp -a *.php css customer images js manage reports rpc setup $RPM_BUILD_ROOT%{_appdir}/htdocs
 cp -a misc/*.html $RPM_BUILD_ROOT%{_appdir}/htdocs/misc
 cp -a misc/*.php $RPM_BUILD_ROOT%{_appdir}
-cp -a misc/irc $RPM_BUILD_ROOT%{_appdir}
 cp -a templates $RPM_BUILD_ROOT%{_appdir}
 cp -a include/{customer,jpgraph,pear,workflow} $RPM_BUILD_ROOT%{_appdir}/include
 cp -a include/*.php $RPM_BUILD_ROOT%{_appdir}/include
@@ -541,6 +541,7 @@ install -d $RPM_BUILD_ROOT%{_appdir}/cli
 cp -a misc/cli/include/class.{misc,command_line}.php $RPM_BUILD_ROOT%{_appdir}/cli
 cp -a misc/cli/config.inc.php $RPM_BUILD_ROOT%{_sysconfdir}/cli.php
 install %{name}-cli $RPM_BUILD_ROOT%{_bindir}/%{name}
+install %{name}-bot $RPM_BUILD_ROOT%{_sbindir}
 
 # scm
 install %{name}-scm $RPM_BUILD_ROOT%{_libdir}/scm
@@ -944,7 +945,7 @@ fi
 %defattr(644,root,root,755)
 %attr(640,root,eventum) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/irc.php
 %attr(640,root,eventum) %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/eventum-irc
-%{_appdir}/irc
+%attr(755,root,root) %{_sbindir}/%{name}-bot
 %attr(754,root,root) /etc/rc.d/init.d/%{name}-irc
 
 %files cli
