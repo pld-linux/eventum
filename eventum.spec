@@ -14,9 +14,9 @@
 #define	_snap 20051227
 
 # release candidate
-%define _rc		2
+#define _rc		2
 
-%define	_rel	0.54
+%define	_rel	1
 
 %if 0%{?_rc:1}
 %define	_source http://eventum.mysql.org/eventum-1.7.0.tar.gz
@@ -36,7 +36,7 @@ Version:	1.7.0
 Release:	%{?_snap:0.%{_snap}.}%{?_rc:%{_rc}.}%{_rel}
 License:	GPL
 Group:		Applications/WWW
-Source0:	%{_source}
+Source0:	http://eventum.mysql.org/eventum-1.7.0.tar.gz
 # Source0-md5:	d0869fd0ceda5f12974e16399493cd64
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
