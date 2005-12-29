@@ -31,11 +31,10 @@ start)
 	if [ ! -f /var/lock/subsys/eventum-irc ]; then
 		msg_starting eventum-irc
 		start-stop-daemon --start \
-			--exec /usr/bin/php \
+			--exec /usr/sbin/eventum-bot \
 			--pidfile $PIDFILE \
-			--chuid http \
-			--chdir /usr/share/eventum/irc \
-			--background -- -q bot.php
+			--chuid eventum \
+			--background
 
 		RETVAL=$?
 		if [ $RETVAL -eq 0 ]; then
