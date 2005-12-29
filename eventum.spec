@@ -11,15 +11,15 @@
 %bcond_with	qmail	# build the router-qmail subpackage
 
 # snapshot: DATE
-%define	_snap 20051227
+#define	_snap 20051227
 
 # release candidate
-#define _rc		RC1
+%define _rc		2
 
-%define	_rel	4.45
+%define	_rel	0.49
 
 %if 0%{?_rc:1}
-%define	_source http://pessoal.org/%{name}-%{version}-%{_rc}.tar.gz
+%define	_source http://eventum.mysql.org/eventum-1.7.0.tar.gz
 %else
 %if 0%{?_snap}
 %define	_source http://downloads.mysql.com/snapshots/%{name}/%{name}-nightly-%{_snap}.tar.gz
@@ -37,7 +37,7 @@ Release:	%{?_snap:0.%{_snap}.}%{?_rc:%{_rc}.}%{_rel}
 License:	GPL
 Group:		Applications/WWW
 Source0:	%{_source}
-# Source0-md5:	37185deab6f5a1e388800e1fe182e64c
+# Source0-md5:	d0869fd0ceda5f12974e16399493cd64
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -71,7 +71,7 @@ URL:		http://dev.mysql.com/downloads/other/eventum/
 %{?with_pear:BuildRequires:	rpm-php-pearprov >= 4.0.2-98}
 BuildRequires:	rpmbuild(macros) >= 1.223
 BuildRequires:	sed >= 4.0
-Requires:	%{name}-base = %{epoch}:%{version}-%{release}
+Requires:	%{name}-base = %{version}-%{release}
 Requires:	Smarty >= 2.6.2
 Requires:	php >= 3:4.2.0
 Requires:	php-gd
@@ -152,7 +152,7 @@ Ten pakiet zawiera podstawow± strukturê katalogów dla Eventum.
 Summary:	Eventum setup package
 Summary(pl):	Pakiet do wstêpnej konfiguracji Eventum
 Group:		Applications/WWW
-Requires:	%{name} = %{epoch}:%{version}-%{release}
+Requires:	%{name} = %{version}-%{release}
 
 %description setup
 Install this package to configure initial Eventum installation. You
@@ -168,7 +168,7 @@ pozostawienie plików instalacyjnych mog³oby byæ niebezpieczne.
 Summary:	Eventum mail queue process
 Summary(pl):	Przetwarzanie kolejki poczty Eventum
 Group:		Applications/WWW
-Requires:	%{name} = %{epoch}:%{version}-%{release}
+Requires:	%{name} = %{version}-%{release}
 Requires:	/usr/bin/php
 Requires:	crondaemon
 
@@ -194,7 +194,7 @@ Ten pakiet zawiera zadanie dla crona.
 Summary:	Eventum email download
 Summary(pl):	¦ci±ganie poczty Eventum
 Group:		Applications/WWW
-Requires:	%{name} = %{epoch}:%{version}-%{release}
+Requires:	%{name} = %{version}-%{release}
 Requires:	/usr/bin/php
 Requires:	crondaemon
 
@@ -215,7 +215,7 @@ Ten pakiet zawiera zadanie dla crona.
 Summary:	Eventum Reminder System
 Summary(pl):	System przypominania dla Eventum
 Group:		Applications/WWW
-Requires:	%{name} = %{epoch}:%{version}-%{release}
+Requires:	%{name} = %{version}-%{release}
 Requires:	/usr/bin/php
 Requires:	crondaemon
 
@@ -241,7 +241,7 @@ Ten pakiet zawiera zadanie dla crona.
 Summary:	Eventum Heartbeat Monitor
 Summary(pl):	Monitor ¿ycia dla Eventum
 Group:		Applications/WWW
-Requires:	%{name} = %{epoch}:%{version}-%{release}
+Requires:	%{name} = %{version}-%{release}
 Requires:	/usr/bin/php
 Requires:	crondaemon
 Requires:	php-posix
@@ -272,11 +272,25 @@ testów uprawnieñ i plików w Monitor::checkConfiguration().
 
 Ten pakiet zawiera zadanie dla crona.
 
+%package route-drafts
+Summary:	Eventum Draft Routing
+Group:		Applications/WWW
+Requires:	%{name} = %{version}-%{release}
+Requires:	/usr/bin/php
+Requires:	eventum(router)
+
+%description route-drafts
+The draft routing feature is used to automatically associate a thread of drafts
+into an Eventum issue. By setting up qmail (or even postfix) to deliver emails
+sent to a specific address (usually draft-<number>@<domain>) to the above
+script, users are able to send drafts written in their mail client to be stored
+in Eventum. These drafts will NOT broadcasted to the notification list.
+
 %package route-emails
 Summary:	Eventum Email Routing
 Summary(pl):	Przekazywanie poczty dla Eventum
 Group:		Applications/WWW
-Requires:	%{name} = %{epoch}:%{version}-%{release}
+Requires:	%{name} = %{version}-%{release}
 Requires:	/usr/bin/php
 Requires:	eventum(router)
 
@@ -302,7 +316,7 @@ rozprowadzane do ca³ej listy og³oszeniowej.
 Summary:	Eventum Note Routing
 Summary(pl):	Przekazywanie notatek dla Eventum
 Group:		Applications/WWW
-Requires:	%{name} = %{epoch}:%{version}-%{release}
+Requires:	%{name} = %{version}-%{release}
 Requires:	/usr/bin/php
 Requires:	eventum(router)
 
@@ -330,7 +344,7 @@ Summary(pl):	Przekazywanie poczty Eventum - qmail
 Group:		Applications/Mail
 # loose dep is intentional. qmail subpackage isn't built on PLD
 # builders and there really nothing changes.
-Requires:	%{name} >= %{epoch}:%{version}-%{release}
+Requires:	%{name} >= %{version}-%{release}
 Requires:	qmail >= 1.03
 Provides:	eventum(router)
 Obsoletes:	eventum(router)
@@ -347,7 +361,7 @@ przez qmaila.
 Summary:	Eventum Mail Routing - Postfix
 Summary(pl):	Przekazywanie poczty Eventum - Postfix
 Group:		Applications/Mail
-Requires:	%{name} = %{epoch}:%{version}-%{release}
+Requires:	%{name} = %{version}-%{release}
 Requires:	postfix
 Provides:	eventum(router)
 Obsoletes:	eventum(router)
@@ -365,7 +379,7 @@ Summary:	Eventum IRC Notification Bot
 Summary(pl):	IRC-owy bot powiadamiaj±cy dla Eventum
 Group:		Applications/WWW
 Requires(triggerpostun):	sed >= 4.0
-Requires:	%{name} = %{epoch}:%{version}-%{release}
+Requires:	%{name} = %{version}-%{release}
 Requires:	/usr/bin/php
 #Requires:	php-pear-Net_SmartIRC
 Requires:	php-sockets
@@ -399,7 +413,7 @@ kana³ u¿ywany przez bota, trzeba rêcznie zmodyfikowaæ skrypt bot.php .
 Summary:	Eventum command-line interface
 Summary(pl):	Interfejs linii poleceñ dla Eventum
 Group:		Applications/WWW
-Requires:	%{name}-base = %{epoch}:%{version}-%{release}
+Requires:	%{name}-base = %{version}-%{release}
 Requires:	php-cli
 Requires:	php-common >= 3:4.1.0
 Requires:	php-curl
@@ -418,7 +432,7 @@ funkcji interfejsu WWW prosto z linii poleceñ pow³oki.
 Summary:	Eventum SCM integration
 Summary(pl):	Integracja SCM dla Eventum
 Group:		Applications/WWW
-Requires:	%{name}-base = %{epoch}:%{version}-%{release}
+Requires:	%{name}-base = %{version}-%{release}
 Requires:	php-cli
 Requires:	php-common >= 3:4.1.0
 Requires:	php-pcre
@@ -449,21 +463,31 @@ Szczegó³y na temat instalacji mo¿na przeczytaæ pod
 # undos the source
 find . -type f -print0 | xargs -0 sed -i -e 's,\r$,,'
 
-rm -f setup.conf.php
-rm -rf misc/upgrade/*v1.[123]* # too old to support in PLD
-rm -rf misc/upgrade/flush_compiled_templates.php
+rm -f setup.conf.php # not to be installed by *.php glob
+rm -rf misc/upgrade/*v1.[123]* # too old to support in PLD Linux
+rm -f misc/upgrade/flush_compiled_templates.php
+rm -rf misc/upgrade/*/upgrade_config.php # not needed nor supported in PLD Linux
+
+# sample, not used in eventum
+rm -f rpc/xmlrpc_client.php
 
 sed -e '1s,#!.*/bin/php -q,#!%{_bindir}/php,' misc/cli/eventum > %{name}-cli
 sed -e '1i#!%{_bindir}/php' misc/scm/process_cvs_commits.php > %{name}-scm
+mv misc/cli/eventumrc_example eventumrc
 
-# using system package
+sed -e '
+s,$private_key\s*=\s*".*";,$private_key = "DEFAULTPRIVATEKEYPLEASERUNSETUP!";,
+' < include/private_key.php > private_key.php.in
+rm -f include/private_key.php
+
+# using system package FIXME?
 #rm -rf include/pear/Net/SmartIRC*
 
 # packaging
-%patch0 -p1 -b .paths
+%patch0 -p1
 %patch1 -p1
-%patch2 -p1 -b .irc-config
-%{?with_pear:%patch3 -p1 -b .PEAR}
+%patch2 -p1
+%{?with_pear:%patch3 -p1}
 
 # bug fixes.
 %patch4 -p1
@@ -485,6 +509,8 @@ grep -rl 'include_once(".*config.inc.php")' . | xargs sed -i -e '
 grep -rl 'APP_INC_PATH..*"private_key.php"' . | xargs sed -i -e '
 	s,include_once(APP_INC_PATH.*"private_key.php"),include_once("%{_sysconfdir}/private_key.php"),
 '
+
+# remove backups from patching as we use globs to package files to buildroot
 find '(' -name '*~' -o -name '*.orig' ')' | xargs -r rm -v
 
 %install
@@ -512,20 +538,15 @@ install %{SOURCE14} $RPM_BUILD_ROOT%{_appdir}/upgrade/upgrade.sh
 
 # cli
 install -d $RPM_BUILD_ROOT%{_appdir}/cli
-install misc/cli/include/class.{misc,command_line}.php $RPM_BUILD_ROOT%{_appdir}/cli
-install misc/cli/config.inc.php $RPM_BUILD_ROOT%{_sysconfdir}/cli.php
+cp -a misc/cli/include/class.{misc,command_line}.php $RPM_BUILD_ROOT%{_appdir}/cli
+cp -a misc/cli/config.inc.php $RPM_BUILD_ROOT%{_sysconfdir}/cli.php
 install %{name}-cli $RPM_BUILD_ROOT%{_bindir}/%{name}
-cp -f misc/cli/eventumrc_example eventumrc
 
 # scm
 install %{name}-scm $RPM_BUILD_ROOT%{_libdir}/scm
 
 # private key
-mv $RPM_BUILD_ROOT{%{_appdir}/include/private_key.php,%{_sysconfdir}}
-# change private key, so we can easily grep
-sed -i -e '
-s,$private_key\s*=\s*".*";,$private_key = "DEFAULTPRIVATEKEYPLEASERUNSETUP!";,
-' $RPM_BUILD_ROOT%{_sysconfdir}/private_key.php
+cp -a private_key.php.in $RPM_BUILD_ROOT%{_sysconfdir}/private_key.php
 
 install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/apache.conf
 install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/httpd.conf
@@ -549,9 +570,6 @@ s,%%{SYSCONFDIR}%%,%{_sysconfdir},
 # config
 > $RPM_BUILD_ROOT%{_sysconfdir}/setup.php
 mv $RPM_BUILD_ROOT{%{_appdir}/htdocs/config.inc,%{_sysconfdir}/config}.php
-
-# sample, not used in eventum
-rm -f $RPM_BUILD_ROOT%{_appdir}/htdocs/rpc/xmlrpc_client.php
 
 %if %{with pear}
 # provided by PEAR
@@ -600,7 +618,7 @@ setup package, so that %{name}-setup is able to secure your Eventum
 installation.
 
 EOF
-#' vim stupidity.
+#' vim syntax hack
 else
 %banner %{name} -e <<EOF
 
@@ -616,7 +634,7 @@ setup package, so that %{name}-setup is able to secure your Eventum
 installation.
 
 EOF
-#' vim stupidity.
+#' vim syntax hack
 fi
 
 elif grep -q 'DEFAULTPRIVATEKEY' %{_sysconfdir}/private_key.php; then
@@ -761,7 +779,7 @@ s,\$irc_username,$username,
 s,\$irc_password,$password,
 ' /etc/eventum/irc.php
 
-%triggerpostun -- eventum < 1.7.0-0.20051130.4.25
+%triggerpostun -- eventum < 1.7.0-2.0.48
 # migrate from apache-config macros
 if [ -f /etc/%{name}/apache.conf.rpmsave ]; then
 	if [ -d /etc/apache/webapps.d ]; then
@@ -818,7 +836,7 @@ fi
 %files
 %defattr(644,root,root,755)
 %doc ChangeLog FAQ INSTALL README UPGRADE
-%doc docs/* rpc/xmlrpc_client.php setup/schema.sql
+%doc docs/* setup/schema.sql
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/apache.conf
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/httpd.conf
 %attr(640,root,eventum) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/config.php
@@ -902,13 +920,16 @@ fi
 %{_appdir}/monitor.php
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/cron.d/%{name}-monitor
 
+%files route-drafts
+%defattr(644,root,root,755)
+%{_appdir}/route_drafts.php
+
 %files route-emails
 %defattr(644,root,root,755)
 %{_appdir}/route_emails.php
 
 %files route-notes
 %defattr(644,root,root,755)
-%{_appdir}/route_drafts.php
 %{_appdir}/route_notes.php
 
 %if %{with qmail}
