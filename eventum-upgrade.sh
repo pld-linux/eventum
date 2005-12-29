@@ -6,7 +6,7 @@ if [ ! -d "$scriptdir" ]; then
 	exit 1
 fi
 
-echo >&2 "Running eventum upgrade scripts to in $scriptdir"
+echo >&2 "Running eventum upgrade scripts in $scriptdir"
 
 upgrade_script() {
 	script="$1"; shift
