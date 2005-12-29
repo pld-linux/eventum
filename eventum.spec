@@ -677,7 +677,6 @@ if [ "$1" = "0" ]; then
 	%groupremove %{name}
 fi
 
-%if %{with qmail}
 %post router-qmail
 CF=/etc/qmail/control/virtualdomains
 if ! grep -q ':%{name}\b' $CF 2>/dev/null; then
@@ -701,7 +700,6 @@ fi
 if [ "$1" = "0" ]; then
 	sed -i -e '/:%{name}\b/d' /etc/qmail/control/virtualdomains
 fi
-%endif
 
 %post setup
 chmod 660 %{_sysconfdir}/{config,private_key}.php
