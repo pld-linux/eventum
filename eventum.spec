@@ -16,7 +16,7 @@
 # release candidate
 #define _rc		2
 
-%define	_rel	1
+%define	_rel	3
 
 %if 0%{?_rc:1}
 %define	_source http://eventum.mysql.org/eventum-1.7.0.tar.gz
@@ -36,7 +36,7 @@ Version:	1.7.0
 Release:	%{?_snap:0.%{_snap}.}%{?_rc:%{_rc}.}%{_rel}
 License:	GPL
 Group:		Applications/WWW
-Source0:	http://eventum.mysql.org/eventum-1.7.0.tar.gz
+Source0:	%{_source}
 # Source0-md5:	d0869fd0ceda5f12974e16399493cd64
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
@@ -68,6 +68,8 @@ Patch11:	%{name}-php440.patch
 Patch12:	%{name}-htmloptions-truncate.patch
 Patch13:	http://glen.alkohol.ee/pld/%{name}-link_filter-updates.patch
 Patch14:	http://glen.alkohol.ee/pld/%{name}-irc-mem.patch
+Patch15:	eventum-reports-fix.patch
+Patch16:	http://glen.alkohol.ee/pld/eventum-recent_activity-usability.patch
 URL:		http://dev.mysql.com/downloads/other/eventum/
 %{?with_pear:BuildRequires:	rpm-php-pearprov >= 4.0.2-98}
 BuildRequires:	rpmbuild(macros) >= 1.223
@@ -491,6 +493,8 @@ rm -f rpc/xmlrpc_client.php
 %patch11 -p1
 %patch12 -p1
 %patch13 -p1
+%patch15 -p1
+%patch16 -p1
 
 sed -e '1s,#!.*/bin/php -q,#!%{_bindir}/php,' misc/cli/eventum > %{name}-cli
 sed -e '1i#!%{_bindir}/php' misc/scm/process_cvs_commits.php > %{name}-scm
