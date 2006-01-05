@@ -16,7 +16,7 @@
 # release candidate
 #define _rc		2
 
-%define	_rel	3
+%define	_rel	3.1
 
 %if 0%{?_rc:1}
 %define	_source http://eventum.mysql.org/eventum-1.7.0.tar.gz
@@ -70,6 +70,7 @@ Patch13:	http://glen.alkohol.ee/pld/%{name}-link_filter-updates.patch
 Patch14:	http://glen.alkohol.ee/pld/%{name}-irc-mem.patch
 Patch15:	eventum-reports-fix.patch
 Patch16:	http://glen.alkohol.ee/pld/eventum-recent_activity-usability.patch
+Patch17:	eventum-new-issue.patch
 URL:		http://dev.mysql.com/downloads/other/eventum/
 %{?with_pear:BuildRequires:	rpm-php-pearprov >= 4.0.2-98}
 BuildRequires:	rpmbuild(macros) >= 1.223
@@ -495,6 +496,7 @@ rm -f rpc/xmlrpc_client.php
 %patch13 -p1
 %patch15 -p1
 %patch16 -p1
+%patch17 -p1
 
 sed -e '1s,#!.*/bin/php -q,#!%{_bindir}/php,' misc/cli/eventum > %{name}-cli
 sed -e '1i#!%{_bindir}/php' misc/scm/process_cvs_commits.php > %{name}-scm
