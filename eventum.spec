@@ -16,7 +16,7 @@
 # release candidate
 #define _rc		2
 
-%define	_rel	3.1
+%define	_rel	3.4
 
 %if 0%{?_rc:1}
 %define	_source http://eventum.mysql.org/eventum-1.7.0.tar.gz
@@ -116,7 +116,8 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define		_smartydir	/usr/share/php/Smarty
 %define		_webapps	/etc/webapps
 %define		_webapp		%{name}
-%define		_sysconfdir	%{_webapps}/%{_webapp}
+%define		_webappdir	%{_webapps}/%{_webapp}
+%define		_sysconfdir	/etc/%{name}
 
 %description
 Eventum is a user-friendly and flexible issue tracking system that can
@@ -510,11 +511,11 @@ rm -f include/private_key.php
 
 # replace in remaining scripts config.inc.php to system one
 grep -rl 'include_once(".*config.inc.php")' . | xargs sed -i -e '
-	s,include_once(".*config.inc.php"),include_once("%{_sysconfdir}/core.php"),
+	s,include_once(".*config.inc.php"),include_once("%{_webappdir}/core.php"),
 '
 
 grep -rl 'APP_INC_PATH..*"private_key.php"' . | xargs sed -i -e '
-	s,include_once(APP_INC_PATH.*"private_key.php"),include_once("%{_sysconfdir}/private_key.php"),
+	s,include_once(APP_INC_PATH.*"private_key.php"),include_once("%{_webappdir}/private_key.php"),
 '
 
 # remove backups from patching as we use globs to package files to buildroot
@@ -523,7 +524,7 @@ find '(' -name '*~' -o -name '*.orig' ')' | xargs -r rm -v
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d \
-	$RPM_BUILD_ROOT{%{_sysconfdir},%{_bindir},%{_sbindir},%{_libdir}} \
+	$RPM_BUILD_ROOT{%{_webappdir},%{_sysconfdir},%{_bindir},%{_sbindir},%{_libdir}} \
 	$RPM_BUILD_ROOT/etc/{rc.d/init.d,cron.d,sysconfig} \
 	$RPM_BUILD_ROOT/var/{run,log,cache,lib}/%{name} \
 	$RPM_BUILD_ROOT/var/lib/%{name}/routed_{emails,drafts,notes} \
@@ -551,17 +552,17 @@ install %{name}-bot $RPM_BUILD_ROOT%{_sbindir}
 
 # scm
 install %{name}-scm $RPM_BUILD_ROOT%{_libdir}/scm
+install %{SOURCE6} $RPM_BUILD_ROOT%{_sysconfdir}/cvs.php
 
 # private key
-cp -a private_key.php.in $RPM_BUILD_ROOT%{_sysconfdir}/private_key.php
+cp -a private_key.php.in $RPM_BUILD_ROOT%{_webappdir}/private_key.php
 
-install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/apache.conf
-install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/httpd.conf
+install %{SOURCE1} $RPM_BUILD_ROOT%{_webappdir}/apache.conf
+install %{SOURCE1} $RPM_BUILD_ROOT%{_webappdir}/httpd.conf
 install %{SOURCE2} $RPM_BUILD_ROOT/etc/cron.d/%{name}-mail-queue
 install %{SOURCE3} $RPM_BUILD_ROOT/etc/cron.d/%{name}-mail-download
 install %{SOURCE4} $RPM_BUILD_ROOT/etc/cron.d/%{name}-reminder
 install %{SOURCE5} $RPM_BUILD_ROOT/etc/cron.d/%{name}-monitor
-install %{SOURCE6} $RPM_BUILD_ROOT%{_sysconfdir}/cvs.php
 install %{SOURCE7} $RPM_BUILD_ROOT%{_sysconfdir}/irc.php
 install %{SOURCE8} $RPM_BUILD_ROOT/etc/rc.d/init.d/eventum-irc
 install %{SOURCE9} $RPM_BUILD_ROOT/etc/sysconfig/eventum-irc
@@ -571,12 +572,12 @@ s,%%{APP_VERSION}%%,%{version}%{?_snap:-%{_snap}},
 s,%%{PHP_PEAR_DIR}%%,%{?with_pear:%{php_pear_dir}}%{!?with_pear:%{_appdir}/includes/pear},
 s,%%{APP_PATH}%%,%{_appdir},
 s,%%{SMARTY_DIR}%%,%{_smartydir},
-s,%%{SYSCONFDIR}%%,%{_sysconfdir},
-' %{SOURCE10} > $RPM_BUILD_ROOT%{_sysconfdir}/core.php
+s,%%{SYSCONFDIR}%%,%{_webappdir},
+' %{SOURCE10} > $RPM_BUILD_ROOT%{_webappdir}/core.php
 
 # config
-> $RPM_BUILD_ROOT%{_sysconfdir}/setup.php
-mv $RPM_BUILD_ROOT{%{_appdir}/htdocs/config.inc,%{_sysconfdir}/config}.php
+> $RPM_BUILD_ROOT%{_webappdir}/setup.php
+mv $RPM_BUILD_ROOT{%{_appdir}/htdocs/config.inc,%{_webappdir}/config}.php
 
 %if %{with pear}
 # provided by PEAR
@@ -611,14 +612,14 @@ rm -rf $RPM_BUILD_ROOT
 
 %post
 # check if the package is configured.
-if grep -q 'header("Location: setup/")' %{_sysconfdir}/config.php; then
+if grep -q 'header("Location: setup/")' %{_webappdir}/config.php; then
 if [ -f %{_appdir}/htdocs/setup/index.php ]; then
 %banner %{name} -e <<EOF
 
 You haven't yet configured Eventum!
 Please open in browser <http://localhost/eventum/>
 If you need access from elsewhere, you need to edit
-%{_sysconfdir}/apache.conf and restart apache.
+%{_webappdir}/apache.conf and restart apache.
 
 IMPORTANT: When You have configured Eventum, please uninstall the
 setup package, so that %{name}-setup is able to secure your Eventum
@@ -634,7 +635,7 @@ You haven't yet configured Eventum!
 To setup eventum, please install %{name}-setup and open in browser
 <http://localhost/eventum/>.
 If you need access from elsewhere, you need to edit
-%{_sysconfdir}/apache.conf and restart apache.
+%{_webappdir}/apache.conf and restart apache.
 
 IMPORTANT: When You have configured Eventum, please uninstall the
 setup package, so that %{name}-setup is able to secure your Eventum
@@ -644,7 +645,7 @@ EOF
 #' vim syntax hack
 fi
 
-elif grep -q 'DEFAULTPRIVATEKEY' %{_sysconfdir}/private_key.php; then
+elif grep -q 'DEFAULTPRIVATEKEY' %{_webappdir}/private_key.php; then
 %banner %{name} -e <<EOF
 
 You have default private key installed!
@@ -687,7 +688,7 @@ fi
 %post router-qmail
 CF=/etc/qmail/control/virtualdomains
 if ! grep -q ':%{name}\b' $CF 2>/dev/null; then
-	FQDN=$(awk -F'"' '/define/ && $2 ~ /APP_HOSTNAME/ {print $4}' %{_sysconfdir}/config.php 2>/dev/null)
+	FQDN=$(awk -F'"' '/define/ && $2 ~ /APP_HOSTNAME/ {print $4}' %{_webappdir}/config.php 2>/dev/null)
 	[ "$FQDN" ] || FQDN=$(hostname -f 2>/dev/null || echo localhost)
 	umask 022
 	echo "#${FQDN}:%{name}" >> $CF
@@ -709,13 +710,13 @@ if [ "$1" = "0" ]; then
 fi
 
 %post setup
-chmod 660 %{_sysconfdir}/{config,private_key}.php
-chown root:eventum %{_sysconfdir}/{config,private_key}.php
+chmod 660 %{_webappdir}/{config,private_key}.php
+chown root:eventum %{_webappdir}/{config,private_key}.php
 
 %postun setup
 if [ "$1" = "0" ]; then
-	chmod 640 %{_sysconfdir}/{config,private_key}.php
-	chown root:eventum %{_sysconfdir}/{config,private_key}.php
+	chmod 640 %{_webappdir}/{config,private_key}.php
+	chown root:eventum %{_webappdir}/{config,private_key}.php
 fi
 
 %post irc
@@ -821,33 +822,34 @@ EOF
 # regular configs
 for i in apache.conf config.php private_key.php setup.php; do
 	if [ -f /etc/eventum/$i.rpmsave ]; then
-		mv -f %{_sysconfdir}/$i{,.rpmnew}
-		mv -f /etc/eventum/$i.rpmsave %{_sysconfdir}/$i
+		mv -f %{_webappdir}/$i{,.rpmnew}
+		mv -f /etc/eventum/$i.rpmsave %{_webappdir}/$i
 	fi
 done
 
-%triggerpostun cli -- %{name}-cli < 1.6.1-4.16
-if [ -f /etc/eventum/cli.php.rpmsave ]; then
+%triggerpostun cli -- %{name}-cli < 1.7.0-3.4
+if [ -f %{_webappdir}/cli.php.rpmsave ]; then
 	mv -f %{_sysconfdir}/cli.php{,.rpmnew}
-	mv -f /etc/eventum/cli.php.rpmsave %{_sysconfdir}/cli.php
+	mv -f %{_webappdir}/cli.php.rpmsave %{_sysconfdir}/cli.php
 fi
 
-%triggerpostun irc -- %{name}-irc < 1.6.1-4.17
-if [ -f /etc/eventum/irc.php.rpmsave ]; then
+%triggerpostun irc -- %{name}-irc < 1.7.0-3.4
+if [ -f %{_webappdir}/irc.php.rpmsave ]; then
 	mv -f %{_sysconfdir}/irc.php{,.rpmnew}
-	mv -f /etc/eventum/irc.php.rpmsave %{_sysconfdir}/irc.php
+	mv -f %{_webappdir}/irc.php.rpmsave %{_sysconfdir}/irc.php
 fi
 
 %files
 %defattr(644,root,root,755)
 %doc ChangeLog FAQ INSTALL README UPGRADE
 %doc docs/* setup/schema.sql
-%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/apache.conf
-%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/httpd.conf
-%attr(640,root,eventum) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/config.php
-%attr(640,root,eventum) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/private_key.php
-%attr(660,root,eventum) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/setup.php
-%attr(640,root,eventum) %config %verify(not mtime) %{_sysconfdir}/core.php
+%attr(751,root,root) %dir %{_webappdir}
+%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/apache.conf
+%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/httpd.conf
+%attr(640,root,eventum) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/config.php
+%attr(640,root,eventum) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/private_key.php
+%attr(660,root,eventum) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/setup.php
+%attr(640,root,eventum) %config %verify(not mtime) %{_webappdir}/core.php
 
 %dir %attr(731,root,eventum) /var/log/%{name}
 %attr(620,root,eventum) %ghost /var/log/%{name}/*

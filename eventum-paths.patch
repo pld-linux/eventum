@@ -5,7 +5,7 @@
  // @(#) $Id$
  //
 -include_once("config.inc.php");
-+include_once("/etc/webapps/eventum/cli.php");
++include_once("/etc/eventum/cli.php");
  include_once(APP_INC_PATH . "class.command_line.php");
  include_once(APP_PEAR_PATH . "XML_RPC/RPC.php");
  

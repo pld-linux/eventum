@@ -8,7 +8,7 @@
 -$eventum_relative_url = '/';
 -$eventum_port = 80;
  
-+include '/etc/webapps/eventum/cvs.php';
++include '/etc/eventum/cvs.php';
  
  //
  // DO NOT CHANGE ANYTHING AFTER THIS LINE
