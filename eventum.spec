@@ -16,7 +16,7 @@
 # release candidate
 #define _rc		2
 
-%define	_rel	3.4
+%define	_rel	3.6
 
 %if 0%{?_rc:1}
 %define	_source http://eventum.mysql.org/eventum-1.7.0.tar.gz
@@ -73,7 +73,7 @@ Patch16:	http://glen.alkohol.ee/pld/eventum-recent_activity-usability.patch
 Patch17:	eventum-new-issue.patch
 URL:		http://dev.mysql.com/downloads/other/eventum/
 %{?with_pear:BuildRequires:	rpm-php-pearprov >= 4.0.2-98}
-BuildRequires:	rpmbuild(macros) >= 1.223
+BuildRequires:	rpmbuild(macros) >= 1.268
 BuildRequires:	sed >= 4.0
 Requires:	%{name}-base = %{version}-%{release}
 Requires:	Smarty >= 2.6.2
@@ -721,11 +721,7 @@ fi
 
 %post irc
 /sbin/chkconfig --add eventum-irc
-if [ -f /var/lock/subsys/eventum-irc ]; then
-	/etc/rc.d/init.d/eventum-irc restart >&2
-else
-	echo "Run \"/etc/rc.d/init.d/eventum-irc start\" to start Eventum IRC Bot." >&2
-fi
+%service eventum-irc restart "Eventum IRC Bot"
 
 %triggerin -- apache1
 %webapp_register apache %{_webapp}
@@ -802,16 +798,12 @@ fi
 if [ -L /etc/apache/conf.d/99_%{_webapp}.conf ]; then
 	/usr/sbin/webapp register apache %{_webapp}
 	rm -f /etc/apache/conf.d/99_%{_webapp}.conf
-	if [ -f /var/lock/subsys/apache ]; then
-		/etc/rc.d/init.d/apache reload 1>&2
-	fi
+	%service -q apache reload
 fi
 if [ -L /etc/httpd/httpd.conf/99_%{_webapp}.conf ]; then
 	/usr/sbin/webapp register httpd %{_webapp}
 	rm -f /etc/httpd/httpd.conf/99_%{_webapp}.conf
-	if [ -f /var/lock/subsys/httpd ]; then
-		/etc/rc.d/init.d/httpd reload 1>&2
-	fi
+	%service -q httpd reload
 fi
 
 %{_appdir}/upgrade/upgrade.sh %{_appdir}/upgrade/v1.6.1_to_v1.7.0 <<EOF
