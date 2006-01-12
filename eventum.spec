@@ -16,7 +16,7 @@
 # release candidate
 #define _rc		2
 
-%define	_rel	3.6
+%define	_rel	4
 
 %if 0%{?_rc:1}
 %define	_source http://eventum.mysql.org/eventum-1.7.0.tar.gz
