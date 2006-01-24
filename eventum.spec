@@ -11,12 +11,12 @@
 %bcond_with	qmail	# build the router-qmail subpackage
 
 # snapshot: DATE
-#define	_snap 20051227
+%define	_snap 20060112
 
 # release candidate
 #define _rc		2
 
-%define	_rel	4
+%define	_rel	0.6
 
 %if 0%{?_rc:1}
 %define	_source http://eventum.mysql.org/eventum-1.7.0.tar.gz
@@ -33,11 +33,11 @@ Summary:	Eventum Issue / Bug tracking system
 Summary(pl):	Eventum - system ¶ledzenia spraw/b³êdów
 Name:		eventum
 Version:	1.7.0
-Release:	%{?_snap:0.%{_snap}.}%{?_rc:%{_rc}.}%{_rel}
+Release:	%{?_snap:4.%{_snap}.}%{?_rc:%{_rc}.}%{_rel}
 License:	GPL
 Group:		Applications/WWW
 Source0:	%{_source}
-# Source0-md5:	d0869fd0ceda5f12974e16399493cd64
+# Source0-md5:	f9531fb08560cf0e59fb1e9476a0a6e3
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -64,13 +64,12 @@ Patch7:		%{name}-bot-reconnect.patch
 Patch8:		%{name}-perms.patch
 Patch9:		http://glen.alkohol.ee/pld/%{name}-httpclient-clientside.patch
 Patch10:	%{name}-cli-wr-separated.patch
-Patch11:	%{name}-php440.patch
 Patch12:	%{name}-htmloptions-truncate.patch
 Patch13:	http://glen.alkohol.ee/pld/%{name}-link_filter-updates.patch
 Patch14:	http://glen.alkohol.ee/pld/%{name}-irc-mem.patch
-Patch15:	eventum-reports-fix.patch
 Patch16:	http://glen.alkohol.ee/pld/eventum-recent_activity-usability.patch
-Patch17:	eventum-new-issue.patch
+Patch17:	http://glen.alkohol.ee/pld/eventum-upload-error-keep-popup.patch
+Patch18:	eventum-scm-parse-response.patch
 URL:		http://dev.mysql.com/downloads/other/eventum/
 %{?with_pear:BuildRequires:	rpm-php-pearprov >= 4.0.2-98}
 BuildRequires:	rpmbuild(macros) >= 1.268
@@ -492,12 +491,11 @@ rm -f rpc/xmlrpc_client.php
 %patch8 -p1
 %patch9 -p1
 %patch10 -p1
-%patch11 -p1
 %patch12 -p1
 %patch13 -p1
-%patch15 -p1
 %patch16 -p1
 %patch17 -p1
+%patch18 -p1
 
 sed -e '1s,#!.*/bin/php -q,#!%{_bindir}/php,' misc/cli/eventum > %{name}-cli
 sed -e '1i#!%{_bindir}/php' misc/scm/process_cvs_commits.php > %{name}-scm
@@ -833,7 +831,7 @@ fi
 
 %files
 %defattr(644,root,root,755)
-%doc ChangeLog FAQ INSTALL README UPGRADE
+%doc ChangeLog FAQ INSTALL README UPGRADE CONTRIB
 %doc docs/* setup/schema.sql
 %attr(751,root,root) %dir %{_webappdir}
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/apache.conf
