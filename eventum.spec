@@ -11,12 +11,12 @@
 %bcond_with	qmail	# build the router-qmail subpackage
 
 # snapshot: DATE
-%define	_snap 20060112
+%define	_snap 20060118
 
 # release candidate
 #define _rc		2
 
-%define	_rel	0.6
+%define	_rel	0.2
 
 %if 0%{?_rc:1}
 %define	_source http://eventum.mysql.org/eventum-1.7.0.tar.gz
@@ -37,7 +37,7 @@ Release:	%{?_snap:4.%{_snap}.}%{?_rc:%{_rc}.}%{_rel}
 License:	GPL
 Group:		Applications/WWW
 Source0:	%{_source}
-# Source0-md5:	f9531fb08560cf0e59fb1e9476a0a6e3
+# Source0-md5:	dafef066667ead53f415c11690033b93
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -69,7 +69,7 @@ Patch13:	http://glen.alkohol.ee/pld/%{name}-link_filter-updates.patch
 Patch14:	http://glen.alkohol.ee/pld/%{name}-irc-mem.patch
 Patch16:	http://glen.alkohol.ee/pld/eventum-recent_activity-usability.patch
 Patch17:	http://glen.alkohol.ee/pld/eventum-upload-error-keep-popup.patch
-Patch18:	eventum-scm-parse-response.patch
+Patch18:	http://glen.alkohol.ee/pld/eventum-scm-parse-response.patch
 URL:		http://dev.mysql.com/downloads/other/eventum/
 %{?with_pear:BuildRequires:	rpm-php-pearprov >= 4.0.2-98}
 BuildRequires:	rpmbuild(macros) >= 1.268
@@ -97,7 +97,6 @@ Requires:	php-pear-Net_UserAgent_Detect
 Requires:	php-pear-PEAR-core
 Requires:	php-pear-Text_Diff
 Requires:	php-pear-XML_RPC
-#Suggests:	php-pear-Net_POP3
 %endif
 Requires(triggerpostun):	/usr/bin/php
 Requires(triggerpostun):	sed >= 4.0
@@ -107,7 +106,7 @@ Requires:	webserver = apache
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
-%define		_noautoreq	'pear(/etc/webapps/.*)' 'pear(jpgraph_dir.php)' 'pear(.*Smarty.class.php)' 'pear(Net/POP3.php)'
+%define		_noautoreq	'pear(/etc/webapps/.*)' 'pear(jpgraph_dir.php)' 'pear(.*Smarty.class.php)'
 
 %define		_libdir		%{_prefix}/lib/%{name}
 %define		_appdir		%{_datadir}/%{name}
