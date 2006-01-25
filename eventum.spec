@@ -277,6 +277,7 @@ Ten pakiet zawiera zadanie dla crona.
 
 %package route-drafts
 Summary:	Eventum Draft Routing
+Summary(pl):	Przekazywanie szkiców dla Eventum
 Group:		Applications/WWW
 Requires:	%{name} = %{version}-%{release}
 Requires:	/usr/bin/php
@@ -284,11 +285,19 @@ Requires:	eventum(router)
 
 %description route-drafts
 The draft routing feature is used to automatically associate a thread
-of drafts into an Eventum issue. By setting up qmail (or even postfix)
+of drafts into an Eventum issue. By setting up qmail (or even Postfix)
 to deliver emails sent to a specific address (usually
 draft-<number>@<domain>) to the above script, users are able to send
 drafts written in their mail client to be stored in Eventum. These
 drafts will NOT broadcasted to the notification list.
+
+%description route-drafts -l pl
+Przekazywanie szkiców s³u¿y do automatycznego wi±zania w±tku szkiców z
+problemem w Eventum. Ustawiaj±c qmaila (czy nawet Postfiksa), aby
+dostarcza³ pocztê wys³an± na podany adres (zwykle
+draft-<liczba>@<domena>) do tego skryptu umo¿liwia siê u¿ytkownikom
+wysy³anie szkiców napisanych w ich kliencie pocztowym do zapisania w
+Eventum. Szkice te NIE bêd± wysy³ane na listê powiadomieñ.
 
 %package route-emails
 Summary:	Eventum Email Routing
