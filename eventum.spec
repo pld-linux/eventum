@@ -75,7 +75,7 @@ URL:		http://dev.mysql.com/downloads/other/eventum/
 BuildRequires:	rpmbuild(macros) >= 1.268
 BuildRequires:	sed >= 4.0
 Requires:	%{name}-base = %{version}-%{release}
-Requires:	Smarty >= 2.6.2
+Requires:	Smarty >= 2.6.10-4
 Requires:	php >= 3:4.2.0
 Requires:	php-gd
 Requires:	php-imap
