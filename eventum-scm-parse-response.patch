@@ -1,0 +1,14 @@
+--- eventum-20060112/misc/scm/process_cvs_commits.php	2006-01-24 17:10:02.000000000 +0200
++++ /tmp/scm	2006-01-24 17:09:31.000000000 +0200
+@@ -94,6 +95,11 @@
+         $msg .= "Host: $eventum_domain\r\n";
+         $msg .= "Connection: Close\r\n\r\n";
+         fwrite($fp, $msg);
++        $buf = fgets($fp, 4096);
++        list($proto, $status, $msg) = explode(' ', trim($buf));
++        if ($status != '200') {
++            echo "Error: Could not ping the Eventum SCM handler script: HTTP status code: $status $msg\n";
++        }
+         fclose($fp);
+     }
+ }
