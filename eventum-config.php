@@ -57,6 +57,13 @@ if (!defined('APP_BENCHMARK')) {
     define('APP_BENCHMARK', false);
 }
 
+if (!defined('APP_COOKIE_URL')) {
+    define('APP_COOKIE_URL', APP_RELATIVE_URL);
+}
+if (!defined('APP_COOKIE_DOMAIN')) {
+    define('APP_COOKIE_DOMAIN', APP_HOSTNAME);
+}
+
 if (APP_BENCHMARK) {
     // always benchmark the scripts
     require_once 'Benchmark/Timer.php';
