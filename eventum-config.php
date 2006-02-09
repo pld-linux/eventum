@@ -57,6 +57,12 @@ if (!defined('APP_BENCHMARK')) {
     define('APP_BENCHMARK', false);
 }
 
+if (!defined('APP_DEFAULT_ASSIGNED_EMAILS')) {
+    define('APP_DEFAULT_ASSIGNED_EMAILS', 1);
+}
+if (!defined('APP_DEFAULT_NEW_EMAILS')) {
+    define('APP_DEFAULT_NEW_EMAILS', 0);
+}
 if (!defined('APP_COOKIE_URL')) {
     define('APP_COOKIE_URL', APP_RELATIVE_URL);
 }
