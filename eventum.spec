@@ -11,7 +11,7 @@
 %bcond_with	qmail	# build the router-qmail subpackage
 
 # snapshot: DATE
-%define	_snap 20060118
+%define	_snap 20060210
 
 # release candidate
 #define _rc		2
@@ -37,7 +37,7 @@ Release:	%{?_snap:4.%{_snap}.}%{?_rc:%{_rc}.}%{_rel}
 License:	GPL
 Group:		Applications/WWW
 Source0:	%{_source}
-# Source0-md5:	dafef066667ead53f415c11690033b93
+# Source0-md5:	1377a12683649c103d606575433c0b7f
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -49,10 +49,8 @@ Source8:	%{name}-irc.init
 Source9:	%{name}-irc.sysconfig
 Source10:	%{name}-config.php
 Source11:	%{name}-router-qmail.sh
-Source12:	http://dev.mysql.com/common/favicon.ico
-# Source12-md5:	858be0130832da4144c08d4b59116411
-Source13:	%{name}-config-setup.php
-Source14:	%{name}-upgrade.sh
+Source12:	%{name}-config-setup.php
+Source13:	%{name}-upgrade.sh
 Patch0:		%{name}-paths.patch
 Patch1:		%{name}-cvs-config.patch
 Patch2:		%{name}-irc-config.patch
@@ -70,6 +68,9 @@ Patch14:	http://glen.alkohol.ee/pld/%{name}-irc-mem.patch
 Patch16:	http://glen.alkohol.ee/pld/eventum-recent_activity-usability.patch
 Patch17:	http://glen.alkohol.ee/pld/eventum-upload-error-keep-popup.patch
 Patch18:	http://glen.alkohol.ee/pld/eventum-scm-parse-response.patch
+Patch19:	eventum-double-decode.patch
+Patch20:	http://glen.alkohol.ee/pld/eventum-keep-submitbutton.patch
+Patch21:	http://glen.alkohol.ee/pld/eventum-tt-unhide.patch
 URL:		http://dev.mysql.com/downloads/other/eventum/
 %{?with_pear:BuildRequires:	rpm-php-pearprov >= 4.0.2-98}
 BuildRequires:	rpmbuild(macros) >= 1.268
@@ -504,6 +505,9 @@ rm -f rpc/xmlrpc_client.php
 %patch16 -p1
 %patch17 -p1
 %patch18 -p1
+%patch19 -p1
+%patch20 -p1
+%patch21 -p1
 
 sed -e '1s,#!.*/bin/php -q,#!%{_bindir}/php,' misc/cli/eventum > %{name}-cli
 sed -e '1i#!%{_bindir}/php' misc/scm/process_cvs_commits.php > %{name}-scm
@@ -540,14 +544,14 @@ cp -a *.php css customer images js manage reports rpc setup $RPM_BUILD_ROOT%{_ap
 cp -a misc/*.html $RPM_BUILD_ROOT%{_appdir}/htdocs/misc
 cp -a misc/*.php $RPM_BUILD_ROOT%{_appdir}
 cp -a templates $RPM_BUILD_ROOT%{_appdir}
-cp -a include/{customer,jpgraph,pear,workflow} $RPM_BUILD_ROOT%{_appdir}/include
+cp -a include/{customer,custom_field,jpgraph,pear,workflow} $RPM_BUILD_ROOT%{_appdir}/include
 cp -a include/*.php $RPM_BUILD_ROOT%{_appdir}/include
 cp -a logs/* $RPM_BUILD_ROOT/var/log/%{name}
 cp -a misc/upgrade $RPM_BUILD_ROOT%{_appdir}
 
-install %{SOURCE12} $RPM_BUILD_ROOT%{_appdir}/htdocs/favicon.ico
-install %{SOURCE13} $RPM_BUILD_ROOT%{_appdir}/htdocs/setup/config.inc.php
-install %{SOURCE14} $RPM_BUILD_ROOT%{_appdir}/upgrade/upgrade.sh
+cp -a favicon.ico $RPM_BUILD_ROOT%{_appdir}/htdocs/favicon.ico
+install %{SOURCE12} $RPM_BUILD_ROOT%{_appdir}/htdocs/setup/config.inc.php
+install %{SOURCE13} $RPM_BUILD_ROOT%{_appdir}/upgrade/upgrade.sh
 
 # cli
 install -d $RPM_BUILD_ROOT%{_appdir}/cli
@@ -876,6 +880,7 @@ fi
 
 %dir %{_appdir}/include
 %{_appdir}/include/customer
+%{_appdir}/include/custom_field
 %{_appdir}/include/jpgraph
 %{_appdir}/include/workflow
 %{_appdir}/include/class.[!m]*.php
