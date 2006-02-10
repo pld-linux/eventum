@@ -21,7 +21,7 @@ cd /usr/share/eventum
 /usr/bin/php -q route_$TYPE.php "$@" && exit $OK
 rc=$?
 
-# exit does are for postfix, based on /usr/include/sysexits.h
+# exit codes are for postfix, based on /usr/include/sysexits.h
 #define EX_NOINPUT      66      /* cannot open input */
 #define EX_DATAERR      65      /* data format error */
 #define EX_NOPERM       77      /* permission denied */
