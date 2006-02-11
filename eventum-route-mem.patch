@@ -1,0 +1,30 @@
+--- eventum-20060210/misc/route_drafts.php~	2006-02-11 07:27:35.000000000 +0200
++++ eventum-20060210/misc/route_drafts.php	2006-02-11 07:28:23.000000000 +0200
+@@ -27,6 +27,7 @@
+ //
+ // @(#) $Id$
+ //
++ini_set('memory_limit', '16M');
+ include_once("../config.inc.php");
+ include_once(APP_INC_PATH . "db_access.php");
+ include_once(APP_INC_PATH . "class.routing.php");
+--- eventum-20060210/misc/route_emails.php~	2006-02-11 07:27:35.000000000 +0200
++++ eventum-20060210/misc/route_emails.php	2006-02-11 07:28:43.000000000 +0200
+@@ -27,6 +27,7 @@
+ //
+ // @(#) $Id$
+ //
++ini_set('memory_limit', '16M');
+ include_once("../config.inc.php");
+ include_once(APP_INC_PATH . "db_access.php");
+ include_once(APP_INC_PATH . "class.routing.php");
+--- eventum-20060210/misc/route_notes.php~	2006-02-11 07:27:35.000000000 +0200
++++ eventum-20060210/misc/route_notes.php	2006-02-11 07:28:54.000000000 +0200
+@@ -27,6 +27,7 @@
+ //
+ // @(#) $Id$
+ //
++ini_set('memory_limit', '16M');
+ include_once("../config.inc.php");
+ include_once(APP_INC_PATH . "db_access.php");
+ include_once(APP_INC_PATH . "class.routing.php");
