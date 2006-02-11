@@ -384,6 +384,9 @@ Obsoletes:	eventum(router)
 This package provides way of routing notes and emails back to Eventum
 via Postfix.
 
+The Postfix configuration instructions you can find from
+<http://eventum.mysql.org/wiki/index.php/Setting_up_email_routing_with_postfix>.
+
 %description router-postfix -l pl
 Ten pakiet udostêpnia metodê przekazywania notatek i listów do Eventum
 przez Postfiksa.
