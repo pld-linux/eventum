@@ -16,7 +16,7 @@
 # release candidate
 #define _rc		2
 
-%define	_rel	0.2
+%define	_rel	0.4
 
 %if 0%{?_rc:1}
 %define	_source http://eventum.mysql.org/eventum-1.7.0.tar.gz
@@ -51,6 +51,7 @@ Source10:	%{name}-config.php
 Source11:	%{name}-router-qmail.sh
 Source12:	%{name}-config-setup.php
 Source13:	%{name}-upgrade.sh
+Source14:	%{name}-router-postfix.sh
 Patch0:		%{name}-paths.patch
 Patch1:		%{name}-cvs-config.patch
 Patch2:		%{name}-irc-config.patch
@@ -71,6 +72,7 @@ Patch18:	http://glen.alkohol.ee/pld/eventum-scm-parse-response.patch
 Patch19:	eventum-double-decode.patch
 Patch20:	http://glen.alkohol.ee/pld/eventum-keep-submitbutton.patch
 Patch21:	http://glen.alkohol.ee/pld/eventum-tt-unhide.patch
+Patch22:	%{name}-route-mem.patch
 URL:		http://dev.mysql.com/downloads/other/eventum/
 %{?with_pear:BuildRequires:	rpm-php-pearprov >= 4.0.2-98}
 BuildRequires:	rpmbuild(macros) >= 1.268
@@ -281,7 +283,6 @@ Summary:	Eventum Draft Routing
 Summary(pl):	Przekazywanie szkiców dla Eventum
 Group:		Applications/WWW
 Requires:	%{name} = %{version}-%{release}
-Requires:	/usr/bin/php
 Requires:	eventum(router)
 
 %description route-drafts
@@ -305,7 +306,6 @@ Summary:	Eventum Email Routing
 Summary(pl):	Przekazywanie poczty dla Eventum
 Group:		Applications/WWW
 Requires:	%{name} = %{version}-%{release}
-Requires:	/usr/bin/php
 Requires:	eventum(router)
 
 %description route-emails
@@ -331,7 +331,6 @@ Summary:	Eventum Note Routing
 Summary(pl):	Przekazywanie notatek dla Eventum
 Group:		Applications/WWW
 Requires:	%{name} = %{version}-%{release}
-Requires:	/usr/bin/php
 Requires:	eventum(router)
 
 %description route-notes
@@ -511,11 +510,13 @@ rm -f rpc/xmlrpc_client.php
 %patch19 -p1
 %patch20 -p1
 %patch21 -p1
+%patch22 -p1
 
 sed -e '1s,#!.*/bin/php -q,#!%{_bindir}/php,' misc/cli/eventum > %{name}-cli
 sed -e '1i#!%{_bindir}/php' misc/scm/process_cvs_commits.php > %{name}-scm
 sed -e '1i#!%{_bindir}/php' misc/irc/bot.php > %{name}-bot
 mv misc/cli/eventumrc_example eventumrc
+sed -i -e '1i#!%{_bindir}/php' misc/route_*.php
 
 sed -e '
 s,$private_key\s*=\s*".*";,$private_key = "DEFAULTPRIVATEKEYPLEASERUNSETUP!";,
@@ -616,6 +617,8 @@ echo '| %{_libdir}/router-qmail emails 1' > $d/.qmail-issue-default
 echo '| %{_libdir}/router-qmail notes' > $d/.qmail-note-default
 install %{SOURCE11} $RPM_BUILD_ROOT%{_libdir}/router-qmail
 %endif
+# postfix router
+install %{SOURCE14} $RPM_BUILD_ROOT%{_libdir}/router-postfix
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -935,15 +938,15 @@ fi
 
 %files route-drafts
 %defattr(644,root,root,755)
-%{_appdir}/route_drafts.php
+%attr(755,root,root) %{_appdir}/route_drafts.php
 
 %files route-emails
 %defattr(644,root,root,755)
-%{_appdir}/route_emails.php
+%attr(755,root,root) %{_appdir}/route_emails.php
 
 %files route-notes
 %defattr(644,root,root,755)
-%{_appdir}/route_notes.php
+%attr(755,root,root) %{_appdir}/route_notes.php
 
 %if %{with qmail}
 %files router-qmail
@@ -954,6 +957,7 @@ fi
 
 %files router-postfix
 %defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/router-postfix
 
 %files irc
 %defattr(644,root,root,755)
