@@ -18,15 +18,6 @@
 
 %define	_rel	0.4
 
-%if 0%{?_rc:1}
-%define	_source http://eventum.mysql.org/eventum-1.7.0.tar.gz
-%else
-%if 0%{?_snap}
-%define	_source http://downloads.mysql.com/snapshots/%{name}/%{name}-nightly-%{_snap}.tar.gz
-%else
-%define	_source http://mysql.dataphone.se/Downloads/%{name}/%{name}-%{version}.tar.gz
-%endif
-%endif
 
 %{?with_pear:%include	/usr/lib/rpm/macros.php}
 Summary:	Eventum Issue / Bug tracking system
@@ -36,7 +27,8 @@ Version:	1.7.0
 Release:	%{?_snap:4.%{_snap}.}%{?_rc:%{_rc}.}%{_rel}
 License:	GPL
 Group:		Applications/WWW
-Source0:	%{_source}
+#Source0:	http://mysql.dataphone.se/Downloads/%{name}/%{name}-%{version}.tar.gz
+Source0:	http://downloads.mysql.com/snapshots/%{name}/%{name}-nightly-%{_snap}.tar.gz
 # Source0-md5:	1377a12683649c103d606575433c0b7f
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
