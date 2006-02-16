@@ -11,12 +11,12 @@
 %bcond_with	qmail	# build the router-qmail subpackage
 
 # snapshot: DATE
-%define	_snap 20060210
+%define	_snap 20060216
 
 # release candidate
 #define _rc		2
 
-%define	_rel	0.4
+%define	_rel	0.1
 
 
 %{?with_pear:%include	/usr/lib/rpm/macros.php}
@@ -29,7 +29,7 @@ License:	GPL
 Group:		Applications/WWW
 #Source0:	http://mysql.dataphone.se/Downloads/%{name}/%{name}-%{version}.tar.gz
 Source0:	http://downloads.mysql.com/snapshots/%{name}/%{name}-nightly-%{_snap}.tar.gz
-# Source0-md5:	1377a12683649c103d606575433c0b7f
+# Source0-md5:	608b47b9996cc7b0c9858d8710b9a6db
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
