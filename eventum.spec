@@ -12,13 +12,9 @@
 %bcond_with	qmail	# build the router-qmail subpackage
 #
 # snapshot: DATE
-%define	_snap 20060216
+%define	_snap 20060220
 
-# release candidate
-#define _rc		2
-
-%define	_rel	0.1
-
+%define	_rel	0.4
 
 %{?with_pear:%include	/usr/lib/rpm/macros.php}
 Summary:	Eventum Issue / Bug tracking system
@@ -30,7 +26,7 @@ License:	GPL
 Group:		Applications/WWW
 #Source0:	http://mysql.dataphone.se/Downloads/%{name}/%{name}-%{version}.tar.gz
 Source0:	http://downloads.mysql.com/snapshots/%{name}/%{name}-nightly-%{_snap}.tar.gz
-# Source0-md5:	608b47b9996cc7b0c9858d8710b9a6db
+# Source0-md5:	f2bc584ac2d0fd67bec954f43abe920c
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -194,7 +190,6 @@ Summary:	Eventum email download
 Summary(pl):	¦ci±ganie poczty Eventum
 Group:		Applications/WWW
 Requires:	%{name} = %{version}-%{release}
-Requires:	/usr/bin/php
 Requires:	crondaemon
 
 %description mail-download
@@ -513,6 +508,8 @@ sed -e '1i#!%{_bindir}/php' misc/scm/process_cvs_commits.php > %{name}-scm
 sed -e '1i#!%{_bindir}/php' misc/irc/bot.php > %{name}-bot
 mv misc/cli/eventumrc_example eventumrc
 sed -i -e '1i#!%{_bindir}/php' misc/route_*.php
+sed -i -e '1i#!%{_bindir}/php' misc/download_emails.php
+chmod +x misc/{route_*,download_emails}.php
 
 sed -e '
 s,$private_key\s*=\s*".*";,$private_key = "DEFAULTPRIVATEKEYPLEASERUNSETUP!";,
@@ -918,7 +915,7 @@ fi
 
 %files mail-download
 %defattr(644,root,root,755)
-%{_appdir}/download_emails.php
+%attr(755,root,root) %{_appdir}/download_emails.php
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/cron.d/%{name}-mail-download
 
 %files reminder
