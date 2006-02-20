@@ -6,10 +6,11 @@
 #  - overLIB 3.5.1 (http://www.bosrup.com/web/overlib/)
 #  - A few other small javascript libraries
 # - 64bit platforms beware? http://bugs.php.net/bug.php?id=30215 (it's actually Smarty related problem)
-
+#
+# Conditional build:
 %bcond_without	pear	# build with system PEAR packages (or use bundled ones)
 %bcond_with	qmail	# build the router-qmail subpackage
-
+#
 # snapshot: DATE
 %define	_snap 20060216
 
@@ -381,6 +382,9 @@ The Postfix configuration instructions you can find from
 %description router-postfix -l pl
 Ten pakiet udostêpnia metodê przekazywania notatek i listów do Eventum
 przez Postfiksa.
+
+Opis konfiguracji Postfiksa mo¿na znale¼æ pod adresem
+<http://eventum.mysql.org/wiki/index.php/Setting_up_email_routing_with_postfix>.
 
 %package irc
 Summary:	Eventum IRC Notification Bot
