@@ -1,0 +1,271 @@
+19:19:13 < glen_> i didn't do customer section as i don't have customer backend configured
+19:20:02 < glen_> in emails section 'all' and 'disassociate selected' are visible. maybe should hide them too
+19:20:15 < glen_> same for drafts section 'show all drafts' checkbox
+19:21:43 < glen_> drafts has additionally another style: {if $drafts[i].emd_status != 'pending'}style="text-decoration: line-through;"{/if}
+19:21:59 < glen_> which will probably work together with {get_display_style element_name="drafts" total=$drafts|@count}
+19:22:05 < glen_> as they both set style="..
+19:22:42 < glen_> otherwise it's cool
+
+diff -u ./templates/en/attachments.tpl.html ./templates/en.new/attachments.tpl.html
+--- ./templates/en/attachments.tpl.html	2006-02-09 18:17:19.000000000 +0200
++++ ./templates/en.new/attachments.tpl.html	2006-02-09 18:48:39.255119000 +0200
+@@ -46,10 +46,10 @@
+             {/if}
+           </td>
+         </tr>
+-        <tr id="attachments1" {get_display_style element_name="attachments"}>
++        <tr>
+           <td colspan="2">
+             <table width="100%" cellpadding="2" cellspacing="1">
+-              <tr>
++              <tr id="attachments1" {get_display_style element_name="attachments"}>
+                 <td class="default_white" bgcolor="{$cell_color}">Files</td>
+                 <td class="default_white" bgcolor="{$cell_color}">Owner</td>
+                 {if $current_role > $roles.customer}
+@@ -60,7 +60,7 @@
+               </tr>
+               {section name="i" loop=$files}
+               {cycle values=$cycle assign="row_color"}
+-              <tr bgcolor="{$row_color}">
++              <tr id="attachments{$smarty.section.i.iteration+1}" {get_display_style element_name="attachments"} bgcolor="{$row_color}">
+                 <td class="default">
+                   {section name="y" loop=$files[i].files}
+                   <a title="download file ({$files[i].files[y].iaf_filename|escape:"html"} - {$files[i].files[y].iaf_filesize})" href="download.php?cat=attachment&id={$files[i].files[y].iaf_id}"><img width="17" height="17" src="{$rel_url}images/file.gif" border="0"></a>
+@@ -86,7 +86,7 @@
+                 <td class="default" width="45%">{$files[i].iat_description}</td>
+               </tr>
+               {sectionelse}
+-              <tr>
++              <tr id="attachments2" {get_display_style element_name="attachments"}>
+                 <td colspan="{if $current_role > $roles.customer}5{else}4{/if}" bgcolor="{$light_color}" align="center" class="default">
+                   <i>No attachments could be found.</i>
+                 </td>
+diff -u ./templates/en/custom_fields.tpl.html ./templates/en.new/custom_fields.tpl.html
+--- ./templates/en/custom_fields.tpl.html	2006-02-09 18:17:19.000000000 +0200
++++ ./templates/en.new/custom_fields.tpl.html	2006-02-09 18:54:29.817759000 +0200
+@@ -27,12 +27,12 @@
+             {/if}
+           </td>
+         </tr>
+-        <tr id="custom_fields1" {get_display_style element_name="custom_fields" total=$custom_fields|@count}>
++        <tr>
+           <td colspan="2">
+             <table width="100%" cellpadding="2" cellspacing="1">
+               {section name="i" loop=$custom_fields}
+               {cycle values=$cycle assign="row_color"}
+-              <tr {if $custom_fields[i].hide_when_no_options == 1 && $custom_fields[i].icf_value == ''}style="display: none"{/if}>
++              <tr id="custom_fields{$smarty.section.i.iteration}" {get_display_style element_name="custom_fields" total=$custom_fields|@count} {if $custom_fields[i].hide_when_no_options == 1 && $custom_fields[i].icf_value == ''}style="display: none"{/if}>
+                 <td bgcolor="{if $custom_fields[i].fld_min_role > $roles.customer}{$internal_color}{else}{$cell_color}{/if}" class="default_white">
+                   <nobr><b>{$custom_fields[i].fld_title}:</b>&nbsp;</nobr>
+                 </td>
+@@ -45,14 +45,14 @@
+                 </td>
+               </tr>
+               {sectionelse}
+-              <tr>
++              <tr id="custom_fields1" {get_display_style element_name="custom_fields" total=$custom_fields|@count}>
+                 <td colspan="2" bgcolor="{$light_color}" align="center" class="default">
+                   <i>No custom fields could be found.</i>
+                 </td>
+               </tr>
+               {/section}
+               {if $current_role > $roles.reporter and $custom_fields != ""}
+-              <tr id="custom_fields2" {get_display_style element_name="custom_fields"}>
++              <tr>
+                 <td align="center" colspan="2" bgcolor="{$cell_color}">
+                   <input class="button" type="button" value="Update" onClick="javascript:updateCustomFields({$smarty.get.id});">
+                 </td>
+Common subdirectories: ./templates/en/customer and ./templates/en.new/customer
+diff -u ./templates/en/email_drafts.tpl.html ./templates/en.new/email_drafts.tpl.html
+--- ./templates/en/email_drafts.tpl.html	2006-02-09 18:17:19.000000000 +0200
++++ ./templates/en.new/email_drafts.tpl.html	2006-02-09 19:12:46.908484000 +0200
+@@ -49,10 +49,10 @@
+             {/if}
+           </td>
+         </tr>
+-        <tr id="drafts1" {get_display_style element_name="drafts" total=$drafts|@count}>
++        <tr>
+           <td colspan="2">
+             <table width="100%" cellpadding="2" cellspacing="1">
+-              <tr bgcolor="{$internal_color}">
++              <tr id="drafts1" {get_display_style element_name="drafts" total=$drafts|@count} bgcolor="{$internal_color}">
+                 <td class="default_white" NOWRAP>{include file="expandable_cell/buttons.tpl.html" remote_func="getDraft" ec_id="draft"}</td>
+                 <td width="5" class="default_white" align="center">#</td>
+                 {if $smarty.request.show_all_drafts == 1}
+@@ -65,7 +65,7 @@
+               </tr>
+               {section name="i" loop=$drafts}
+               {cycle values=$cycle assign="row_color"}
+-              <tr {if $drafts[i].emd_status != 'pending'}style="text-decoration: line-through;"{/if}>
++              <tr id="drafts{$smarty.section.i.iteration+1}" {get_display_style element_name="drafts" total=$drafts|@count} {if $drafts[i].emd_status != 'pending'}style="text-decoration: line-through;"{/if}>
+                 <td class="default" NOWRAP bgcolor="{$row_color}">{include file="expandable_cell/buttons.tpl.html" ec_id="draft" list_id=$drafts[i].emd_id}</td>
+                 <td width="5" class="default" bgcolor="{$row_color}" align="center">{$smarty.section.i.iteration}</td>
+                 {if $smarty.request.show_all_drafts == 1}
+@@ -80,7 +80,7 @@
+               </tr>
+               {include file="expandable_cell/body.tpl.html" ec_id="draft" list_id=$drafts[i].emd_id colspan=$draft_col_count}
+               {sectionelse}
+-              <tr>
++              <tr id="drafts2" {get_display_style element_name="drafts" total=$drafts|@count}>
+                 <td colspan="{$draft_col_count}" bgcolor="{$light_color}" class="default" align="center">
+                   <i>No email drafts could be found.</i>
+                 </td>
+Common subdirectories: ./templates/en/expandable_cell and ./templates/en.new/expandable_cell
+Common subdirectories: ./templates/en/help and ./templates/en.new/help
+Common subdirectories: ./templates/en/js and ./templates/en.new/js
+Common subdirectories: ./templates/en/manage and ./templates/en.new/manage
+diff -u ./templates/en/notes.tpl.html ./templates/en.new/notes.tpl.html
+--- ./templates/en/notes.tpl.html	2006-02-09 18:17:19.000000000 +0200
++++ ./templates/en.new/notes.tpl.html	2006-02-09 18:51:33.362363000 +0200
+@@ -59,10 +59,10 @@
+             {/if}
+           </td>
+         </tr>
+-        <tr id="notes1" {get_display_style element_name="notes" total=$notes|@count}>
++        <tr>
+           <td colspan="2">
+             <table width="100%" cellpadding="2" cellspacing="1">
+-              <tr bgcolor="{$internal_color}">
++              <tr id="notes1" {get_display_style element_name="notes" total=$notes|@count} bgcolor="{$internal_color}">
+                 <td class="default_white" NOWRAP>{include file="expandable_cell/buttons.tpl.html" remote_func="getNote" ec_id="note"}</td>
+                 <td class="default_white" align="center">#</td>
+                 <td class="default_white">Reply</td>
+@@ -72,7 +72,7 @@
+               </tr>
+               {section name="i" loop=$notes}
+               {cycle values=$cycle assign="row_color"}
+-              <tr bgcolor="{$row_color}">
++              <tr id="notes{$smarty.section.i.iteration+1}" {get_display_style element_name="notes" total=$notes|@count} bgcolor="{$row_color}">
+                 <td class="default" NOWRAP>{include file="expandable_cell/buttons.tpl.html" ec_id="note" list_id=$notes[i].not_id}</td>
+                 <td class="default" align="center">{$smarty.section.i.iteration}</td>
+                 <td align="center">
+@@ -90,7 +90,7 @@
+               </tr>
+               {include file="expandable_cell/body.tpl.html" ec_id="note" list_id=$notes[i].not_id colspan="6"}
+               {sectionelse}
+-              <tr>
++              <tr id="notes2" {get_display_style element_name="notes" total=$notes|@count}>
+                 <td colspan="6" bgcolor="{$light_color}" align="center" class="default">
+                   <i>No internal notes could be found.</i>
+                 </td>
+Common subdirectories: ./templates/en/notifications and ./templates/en.new/notifications
+diff -u ./templates/en/phone_support.tpl.html ./templates/en.new/phone_support.tpl.html
+--- ./templates/en/phone_support.tpl.html	2006-02-09 18:17:18.000000000 +0200
++++ ./templates/en.new/phone_support.tpl.html	2006-02-09 19:09:06.666312000 +0200
+@@ -39,10 +39,10 @@
+             {/if}
+         </td>
+         </tr>
+-        <tr id="phone_support1" {get_display_style element_name="phone_support" total=$phone_entries|@count}>
++        <tr>
+           <td colspan="2">
+             <table bgcolor="#FFFFFF" width="100%" cellspacing="1" cellpadding="2">
+-              <tr bgcolor="{$internal_color}">
++              <tr id="phone_support1" {get_display_style element_name="phone_support" total=$phone_entries|@count} bgcolor="{$internal_color}">
+                 <td class="default_white" NOWRAP>{include file="expandable_cell/buttons.tpl.html" remote_func="getPhoneSupport" ec_id="phone"}</td>
+                 <td width="5" class="default_white" align="center">#</td>
+                 <td width="20%" class="default_white" nowrap>Recorded Date</td>
+@@ -55,7 +55,7 @@
+               </tr>
+               {section name="i" loop=$phone_entries}
+               {cycle values=$cycle assign="row_color"}
+-              <tr bgcolor="{$row_color}">
++              <tr id="phone_support{$smarty.section.i.iteration+1}" {get_display_style element_name="phone_support" total=$phone_entries|@count} bgcolor="{$row_color}">
+                 <td class="default" NOWRAP>{include file="expandable_cell/buttons.tpl.html" ec_id="phone" list_id=$phone_entries[i].phs_id}</td>
+                 <td class="default" nowrap>{$smarty.section.i.iteration}</td>
+                 <td class="default" nowrap>{$phone_entries[i].phs_created_date}</td>
+@@ -73,14 +73,14 @@
+               </tr>
+               {include file="expandable_cell/body.tpl.html" ec_id="phone" list_id=$phone_entries[i].phs_id colspan="9"}
+               {sectionelse}
+-              <tr>
++              <tr id="phone_support2" {get_display_style element_name="phone_support" total=$phone_entries|@count}>
+                 <td colspan="9" bgcolor="{$light_color}" class="default" align="center">
+                   <i>No phone calls recorded yet.</i>
+                 </td>
+               </tr>
+               {/section}
+               {if $current_role > $roles.customer}
+-              <tr id="phone_support11" {get_display_style element_name="phone_support"}>
++              <tr>
+                 <td colspan="9" bgcolor="{$internal_color}" align="center">
+                   <input type="submit" value="Add Phone Call" class="button" onClick="javascript:addPhoneCall();">
+                 </td>
+Common subdirectories: ./templates/en/reminders and ./templates/en.new/reminders
+Common subdirectories: ./templates/en/reports and ./templates/en.new/reports
+diff -u ./templates/en/support_emails.tpl.html ./templates/en.new/support_emails.tpl.html
+--- ./templates/en/support_emails.tpl.html	2006-02-09 18:17:18.000000000 +0200
++++ ./templates/en.new/support_emails.tpl.html	2006-02-09 19:14:11.133904000 +0200
+@@ -65,10 +65,10 @@
+             {/if}
+           </td>
+         </tr>
+-        <tr id="support_emails1" {get_display_style element_name="support_emails" total=$emails|@count}>
++        <tr>
+           <td colspan="2">
+             <table width="100%" cellpadding="2" cellspacing="1">
+-              <tr bgcolor="{$cell_color}">
++              <tr id="support_emails1" {get_display_style element_name="support_emails" total=$emails|@count} bgcolor="{$cell_color}">
+                 {if $emails != "" and $current_role > $roles.viewer and $current_role != $roles.customer}
+                 <td width="5"><input type="button" value="All" class="shortcut" onClick="javascript:toggleSelectAll(this.form, 'item[]');"></td>
+                 {/if}
+@@ -82,7 +82,7 @@
+               </tr>
+               {section name="i" loop=$emails}
+               {cycle values=$cycle assign="row_color"}
+-              <tr>
++              <tr id="support_emails{$smarty.section.i.iteration+1}" {get_display_style element_name="support_emails" total=$emails|@count}>
+                 {if $current_role > $roles.viewer and $current_role != $roles.customer}
+                 <td align="center" bgcolor="{$row_color}">
+                   <input type="checkbox" name="item[]" value="{$emails[i].sup_id}">
+@@ -113,7 +113,7 @@
+               </tr>
+               {include file="expandable_cell/body.tpl.html" ec_id="email" list_id=$emails[i].composite_id colspan=$email_col_count row_color=$row_color}
+               {sectionelse}
+-              <tr>
++              <tr id="support_emails2" {get_display_style element_name="support_emails" total=$emails|@count}>
+                 <td colspan="{$email_col_count}" bgcolor="{$light_color}" class="default" align="center">
+                   <i>No associated emails could be found.</i>
+                 </td>
+diff -u ./templates/en/time_tracking.tpl.html ./templates/en.new/time_tracking.tpl.html
+--- ./templates/en/time_tracking.tpl.html	2006-02-09 18:17:18.000000000 +0200
++++ ./templates/en.new/time_tracking.tpl.html	2006-02-09 19:07:36.684524000 +0200
+@@ -40,10 +40,10 @@
+             {/if}
+           </td>
+         </tr>
+-        <tr id="time_tracker1" {get_display_style element_name="time_tracker" total=$time_entries|@count}>
++        <tr>
+           <td colspan="2" class="default" width="100%">
+             <table width="100%" cellpadding="2" cellspacing="1">
+-              <tr bgcolor="{$internal_color}">
++              <tr id="time_tracker1" {get_display_style element_name="time_tracker" total=$time_entries|@count} bgcolor="{$internal_color}">
+                 <td class="default_white" align="center" width="5">#</td>
+                 <td class="default_white" nowrap>Date of Work</td>
+                 <td class="default_white" nowrap>User</td>
+@@ -53,7 +53,7 @@
+               </tr>
+               {section name="i" loop=$time_entries}
+               {cycle values=$cycle assign="row_color"}
+-              <tr bgcolor="{$row_color}">
++              <tr id="time_tracker{$smarty.section.i.iteration+1}" {get_display_style element_name="time_tracker" total=$time_entries|@count} bgcolor="{$row_color}">
+                 <td class="default" align="center">{$smarty.section.i.iteration}</td>
+                 <td class="default" nowrap>{$time_entries[i].ttr_created_date}</td>
+                 <td class="default" nowrap>
+@@ -65,13 +65,13 @@
+                 <td class="default">{$time_entries[i].ttr_summary}</td>
+               </tr>
+               {if $smarty.section.i.last}
+-              <tr>
++              <tr id="time_tracker{math equation="2 + x" x=$time_entries|@count}" {get_display_style element_name="time_tracker" total=$time_entries|@count}>
+                 <td bgcolor="{$internal_color}" colspan="3" class="default_white" align="right">Total Time Spent:</td>
+                 <td bgcolor="{$dark_color}" colspan="3" class="default">{$total_time_spent}</td>
+               </tr>
+               {/if}
+               {sectionelse}
+-              <tr>
++              <tr id="time_tracker2" {get_display_style element_name="time_tracker" total=$time_entries|@count}>
+                 <td colspan="6" bgcolor="{$light_color}" align="center" class="default">
+                   <i>No time tracking entries could be found.</i>
+                 </td>
+Common subdirectories: ./templates/en/tips and ./templates/en.new/tips
