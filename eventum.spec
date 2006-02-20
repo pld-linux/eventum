@@ -14,7 +14,7 @@
 # snapshot: DATE
 %define	_snap 20060220
 
-%define	_rel	0.4
+%define	_rel	0.6
 
 %{?with_pear:%include	/usr/lib/rpm/macros.php}
 Summary:	Eventum Issue / Bug tracking system
@@ -164,7 +164,6 @@ Summary:	Eventum mail queue process
 Summary(pl):	Przetwarzanie kolejki poczty Eventum
 Group:		Applications/WWW
 Requires:	%{name} = %{version}-%{release}
-Requires:	/usr/bin/php
 Requires:	crondaemon
 
 %description mail-queue
@@ -210,7 +209,6 @@ Summary:	Eventum Reminder System
 Summary(pl):	System przypominania dla Eventum
 Group:		Applications/WWW
 Requires:	%{name} = %{version}-%{release}
-Requires:	/usr/bin/php
 Requires:	crondaemon
 
 %description reminder
@@ -236,7 +234,6 @@ Summary:	Eventum Heartbeat Monitor
 Summary(pl):	Monitor ¿ycia dla Eventum
 Group:		Applications/WWW
 Requires:	%{name} = %{version}-%{release}
-Requires:	/usr/bin/php
 Requires:	crondaemon
 Requires:	php-posix
 
@@ -387,7 +384,6 @@ Summary(pl):	IRC-owy bot powiadamiaj±cy dla Eventum
 Group:		Applications/WWW
 Requires(triggerpostun):	sed >= 4.0
 Requires:	%{name} = %{version}-%{release}
-Requires:	/usr/bin/php
 Requires:	php-pear-Net_SmartIRC
 Requires:	php-sockets
 Requires:	rc-scripts >= 0.4.0.18
@@ -507,9 +503,8 @@ sed -e '1s,#!.*/bin/php -q,#!%{_bindir}/php,' misc/cli/eventum > %{name}-cli
 sed -e '1i#!%{_bindir}/php' misc/scm/process_cvs_commits.php > %{name}-scm
 sed -e '1i#!%{_bindir}/php' misc/irc/bot.php > %{name}-bot
 mv misc/cli/eventumrc_example eventumrc
-sed -i -e '1i#!%{_bindir}/php' misc/route_*.php
-sed -i -e '1i#!%{_bindir}/php' misc/download_emails.php
-chmod +x misc/{route_*,download_emails}.php
+sed -i -e '1i#!%{_bindir}/php' misc/*.php
+chmod +x misc/*.php
 
 sed -e '
 s,$private_key\s*=\s*".*";,$private_key = "DEFAULTPRIVATEKEYPLEASERUNSETUP!";,
@@ -910,7 +905,7 @@ fi
 
 %files mail-queue
 %defattr(644,root,root,755)
-%{_appdir}/process_mail_queue.php
+%attr(755,root,root) %{_appdir}/process_mail_queue.php
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/cron.d/%{name}-mail-queue
 
 %files mail-download
@@ -920,13 +915,13 @@ fi
 
 %files reminder
 %defattr(644,root,root,755)
-%{_appdir}/check_reminders.php
+%attr(755,root,root) %{_appdir}/check_reminders.php
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/cron.d/%{name}-reminder
 
 %files monitor
 %defattr(644,root,root,755)
 %{_appdir}/include/class.monitor.php
-%{_appdir}/monitor.php
+%attr(755,root,root) %{_appdir}/monitor.php
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/cron.d/%{name}-monitor
 
 %files route-drafts
