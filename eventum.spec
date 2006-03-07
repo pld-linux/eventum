@@ -12,9 +12,9 @@
 %bcond_with	qmail	# build the router-qmail subpackage
 #
 # snapshot: DATE
-%define	_snap 20060220
+%define	_snap 20060306
 
-%define	_rel	0.6
+%define	_rel	0.2
 
 %{?with_pear:%include	/usr/lib/rpm/macros.php}
 Summary:	Eventum Issue / Bug tracking system
@@ -25,8 +25,8 @@ Release:	%{?_snap:4.%{_snap}.}%{?_rc:%{_rc}.}%{_rel}
 License:	GPL
 Group:		Applications/WWW
 #Source0:	http://mysql.dataphone.se/Downloads/%{name}/%{name}-%{version}.tar.gz
-Source0:	http://downloads.mysql.com/snapshots/%{name}/%{name}-nightly-%{_snap}.tar.gz
-# Source0-md5:	f2bc584ac2d0fd67bec954f43abe920c
+Source0:	http://downloads.mysql.com/snapshots/eventum/%{name}-nightly-%{_snap}.tar.gz
+# Source0-md5:	1cc82b6e8a502c65341510400b6b1971
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -55,12 +55,12 @@ Patch10:	%{name}-cli-wr-separated.patch
 Patch12:	%{name}-htmloptions-truncate.patch
 Patch13:	http://glen.alkohol.ee/pld/%{name}-link_filter-updates.patch
 Patch14:	http://glen.alkohol.ee/pld/%{name}-irc-mem.patch
-Patch16:	http://glen.alkohol.ee/pld/eventum-recent_activity-usability.patch
-Patch17:	http://glen.alkohol.ee/pld/eventum-upload-error-keep-popup.patch
-Patch18:	http://glen.alkohol.ee/pld/eventum-scm-parse-response.patch
-Patch19:	eventum-double-decode.patch
-Patch20:	http://glen.alkohol.ee/pld/eventum-keep-submitbutton.patch
-Patch21:	http://glen.alkohol.ee/pld/eventum-tt-unhide.patch
+Patch16:	http://glen.alkohol.ee/pld/%{name}-recent_activity-usability.patch
+Patch17:	http://glen.alkohol.ee/pld/%{name}-upload-error-keep-popup.patch
+Patch18:	http://glen.alkohol.ee/pld/%{name}-scm-parse-response.patch
+Patch19:	%{name}-double-decode.patch
+Patch20:	http://glen.alkohol.ee/pld/%{name}-keep-submitbutton.patch
+Patch21:	http://glen.alkohol.ee/pld/%{name}-tt-unhide.patch
 Patch22:	%{name}-route-mem.patch
 URL:		http://dev.mysql.com/downloads/other/eventum/
 %{?with_pear:BuildRequires:	rpm-php-pearprov >= 4.0.2-98}
@@ -80,6 +80,7 @@ Requires:	php-pear-DB
 Requires:	php-pear-Date
 Requires:	php-pear-HTTP_Request
 Requires:	php-pear-Mail
+Requires:	php-pear-Mail_Mime
 Requires:	php-pear-Math_Stats
 Requires:	php-pear-Net_DIME
 Requires:	php-pear-Net_SMTP
