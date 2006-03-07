@@ -53,9 +53,9 @@ Patch8:		%{name}-perms.patch
 Patch9:		http://glen.alkohol.ee/pld/%{name}-httpclient-clientside.patch
 Patch10:	%{name}-cli-wr-separated.patch
 Patch12:	%{name}-htmloptions-truncate.patch
-Patch13:	http://glen.alkohol.ee/pld/%{name}-link_filter-updates.patch
-Patch14:	http://glen.alkohol.ee/pld/%{name}-irc-mem.patch
-Patch16:	http://glen.alkohol.ee/pld/%{name}-recent_activity-usability.patch
+Patch13:	%{name}-link_filter-updates.patch
+Patch14:	%{name}-irc-mem.patch
+Patch16:	%{name}-recent_activity-usability.patch
 Patch17:	http://glen.alkohol.ee/pld/%{name}-upload-error-keep-popup.patch
 Patch18:	http://glen.alkohol.ee/pld/%{name}-scm-parse-response.patch
 Patch19:	%{name}-double-decode.patch
