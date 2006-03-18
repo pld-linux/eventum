@@ -1,0 +1,13 @@
+i want to use same email account for emails/notes/drafts routing and for
+downloading emails for auto creation of issues
+
+--- eventum/include/class.support.php~	2006-03-15 17:34:38.094124892 +0200
++++ eventum/include/class.support.php	2006-03-15 17:34:44.914566574 +0200
+@@ -570,7 +570,6 @@
+                         return $return;
+                     }
+                 }
+-                return false;
+             }
+ 
+             $sender_email = Mail_API::getEmailAddress($email->fromaddress);
