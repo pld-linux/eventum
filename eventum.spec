@@ -12,9 +12,9 @@
 %bcond_with	qmail	# build the router-qmail subpackage
 #
 # snapshot: DATE
-%define	_snap 20060314
+%define	_snap 20060318
 
-%define	_rel	0.5
+%define	_rel	0.1
 
 %{?with_pear:%include	/usr/lib/rpm/macros.php}
 Summary:	Eventum Issue / Bug tracking system
@@ -26,7 +26,7 @@ License:	GPL
 Group:		Applications/WWW
 #Source0:	http://mysql.dataphone.se/Downloads/%{name}/%{name}-%{version}.tar.gz
 Source0:	http://downloads.mysql.com/snapshots/eventum/%{name}-nightly-%{_snap}.tar.gz
-# Source0-md5:	f9b9e49bbba4a58638240bcfc1e15555
+# Source0-md5:	a9d1c01ee5ad396729e75262bdae558c
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
