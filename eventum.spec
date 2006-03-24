@@ -14,7 +14,7 @@
 # snapshot: DATE
 %define	_snap 20060318
 
-%define	_rel	0.1
+%define	_rel	0.2
 
 %{?with_pear:%include	/usr/lib/rpm/macros.php}
 Summary:	Eventum Issue / Bug tracking system
@@ -64,6 +64,7 @@ Patch21:	http://glen.alkohol.ee/pld/%{name}-tt-unhide.patch
 Patch22:	%{name}-route-mem.patch
 Patch23:	http://glen.alkohol.ee/pld/%{name}-msgid-case.patch
 Patch24:	http://glen.alkohol.ee/pld/%{name}-route-and-download.patch
+Patch25:	%{name}-scm-pluscharisbad.patch
 URL:		http://dev.mysql.com/downloads/other/eventum/
 %{?with_pear:BuildRequires:	rpm-php-pearprov >= 4.0.2-98}
 BuildRequires:	rpmbuild(macros) >= 1.268
@@ -503,6 +504,7 @@ rm -f rpc/xmlrpc_client.php
 %patch22 -p1
 %patch23 -p1
 %patch24 -p1
+%patch25 -p1
 
 sed -e '1s,#!.*/bin/php -q,#!%{_bindir}/php,' misc/cli/eventum > %{name}-cli
 sed -e '1i#!%{_bindir}/php' misc/scm/process_cvs_commits.php > %{name}-scm
