@@ -12,9 +12,9 @@
 %bcond_with	qmail	# build the router-qmail subpackage
 #
 # snapshot: DATE
-%define	_snap 20060318
+%define	_snap 20060328
 
-%define	_rel	0.2
+%define	_rel	0.1
 
 %{?with_pear:%include	/usr/lib/rpm/macros.php}
 Summary:	Eventum Issue / Bug tracking system
@@ -26,7 +26,7 @@ License:	GPL
 Group:		Applications/WWW
 #Source0:	http://mysql.dataphone.se/Downloads/%{name}/%{name}-%{version}.tar.gz
 Source0:	http://downloads.mysql.com/snapshots/eventum/%{name}-nightly-%{_snap}.tar.gz
-# Source0-md5:	a9d1c01ee5ad396729e75262bdae558c
+# Source0-md5:	051c38f914f33bc20afe1c33314663f9
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -65,6 +65,7 @@ Patch22:	%{name}-route-mem.patch
 Patch23:	http://glen.alkohol.ee/pld/%{name}-msgid-case.patch
 Patch24:	http://glen.alkohol.ee/pld/%{name}-route-and-download.patch
 Patch25:	%{name}-scm-pluscharisbad.patch
+Patch26:	%{name}-scm-updates.patch
 URL:		http://dev.mysql.com/downloads/other/eventum/
 %{?with_pear:BuildRequires:	rpm-php-pearprov >= 4.0.2-98}
 BuildRequires:	rpmbuild(macros) >= 1.268
@@ -505,6 +506,7 @@ rm -f rpc/xmlrpc_client.php
 %patch23 -p1
 %patch24 -p1
 %patch25 -p1
+%patch26 -p1
 
 sed -e '1s,#!.*/bin/php -q,#!%{_bindir}/php,' misc/cli/eventum > %{name}-cli
 sed -e '1i#!%{_bindir}/php' misc/scm/process_cvs_commits.php > %{name}-scm
