@@ -69,6 +69,9 @@ if (!defined('APP_COOKIE_URL')) {
 if (!defined('APP_COOKIE_DOMAIN')) {
     define('APP_COOKIE_DOMAIN', APP_HOSTNAME);
 }
+if (!define('APP_HASH_TYPE')) {
+    define('APP_HASH_TYPE', 'MD5');
+}
 
 if (APP_BENCHMARK) {
     // always benchmark the scripts
