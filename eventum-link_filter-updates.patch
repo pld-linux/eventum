@@ -19,3 +19,14 @@
          return $text;
      }
  
+--- ./include/class.attachment.php~	2006-03-28 12:19:20.000000000 +0300
++++ ./include/class.attachment.php	2006-03-28 12:19:23.434862171 +0300
+@@ -403,7 +403,7 @@
+             return "";
+         } else {
+             for ($i = 0; $i < count($res); $i++) {
+-                $res[$i]["iat_description"] = Link_Filter::processText(Issue::getProjectID($issue_id), nl2br(Misc::activateLinks(htmlspecialchars($res[$i]["iat_description"]))));
++                $res[$i]["iat_description"] = Link_Filter::processText(Issue::getProjectID($issue_id), nl2br(htmlspecialchars($res[$i]["iat_description"])));
+                 $res[$i]["files"] = Attachment::getFileList($res[$i]["iat_id"]);
+                 $res[$i]["iat_created_date"] = Date_API::getFormattedDate($res[$i]["iat_created_date"]);
+ 
