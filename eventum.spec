@@ -13,7 +13,7 @@
 # snapshot: DATE
 %define	_snap 20060328
 
-%define	_rel	0.2
+%define	_rel	0.3
 
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
@@ -476,13 +476,6 @@ rm -rf misc/upgrade/*/upgrade_config.php # not needed nor supported in PLD Linux
 # sample, not used in eventum
 rm -f rpc/xmlrpc_client.php
 
-# packaging
-%patch0 -p1
-%patch1 -p1
-%patch14 -p1
-%patch2 -p1
-%patch3 -p1
-
 # bug fixes.
 %patch4 -p1
 %patch5 -p1
@@ -504,6 +497,13 @@ rm -f rpc/xmlrpc_client.php
 %patch24 -p1
 %patch25 -p1
 %patch26 -p1
+
+# packaging
+%patch0 -p1
+%patch1 -p1
+%patch14 -p1
+%patch2 -p1
+%patch3 -p1
 
 sed -e '1s,#!.*/bin/php -q,#!%{_bindir}/php,' misc/cli/eventum > %{name}-cli
 sed -e '1i#!%{_bindir}/php' misc/scm/process_cvs_commits.php > %{name}-scm
