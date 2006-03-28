@@ -8,15 +8,14 @@
 # - 64bit platforms beware? http://bugs.php.net/bug.php?id=30215 (it's actually Smarty related problem)
 #
 # Conditional build:
-%bcond_without	pear	# build with system PEAR packages (or use bundled ones)
 %bcond_with	qmail	# build the router-qmail subpackage
 #
 # snapshot: DATE
 %define	_snap 20060328
 
-%define	_rel	0.1
+%define	_rel	0.2
 
-%{?with_pear:%include	/usr/lib/rpm/macros.php}
+%include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl):	Eventum - system ¶ledzenia spraw/b³êdów
 Name:		eventum
@@ -67,7 +66,7 @@ Patch24:	http://glen.alkohol.ee/pld/%{name}-route-and-download.patch
 Patch25:	%{name}-scm-pluscharisbad.patch
 Patch26:	%{name}-scm-updates.patch
 URL:		http://dev.mysql.com/downloads/other/eventum/
-%{?with_pear:BuildRequires:	rpm-php-pearprov >= 4.0.2-98}
+BuildRequires:	rpm-php-pearprov >= 4.0.2-98
 BuildRequires:	rpmbuild(macros) >= 1.268
 BuildRequires:	sed >= 4.0
 Requires:	%{name}-base = %{version}-%{release}
@@ -78,7 +77,6 @@ Requires:	php-imap
 Requires:	php-mysql
 Requires:	php-pcre
 Requires:	php-session
-%if %{with pear}
 Requires:	php-pear-Benchmark
 Requires:	php-pear-DB
 Requires:	php-pear-Date
@@ -94,7 +92,6 @@ Requires:	php-pear-Net_UserAgent_Detect
 Requires:	php-pear-PEAR-core
 Requires:	php-pear-Text_Diff
 Requires:	php-pear-XML_RPC
-%endif
 Requires(triggerpostun):	/usr/bin/php
 Requires(triggerpostun):	sed >= 4.0
 Requires:	apache(mod_dir)
@@ -484,7 +481,7 @@ rm -f rpc/xmlrpc_client.php
 %patch1 -p1
 %patch14 -p1
 %patch2 -p1
-%{?with_pear:%patch3 -p1}
+%patch3 -p1
 
 # bug fixes.
 %patch4 -p1
@@ -580,7 +577,7 @@ install %{SOURCE9} $RPM_BUILD_ROOT/etc/sysconfig/eventum-irc
 
 sed -e '
 s,%%{APP_VERSION}%%,%{version}%{?_snap:-%{_snap}},
-s,%%{PHP_PEAR_DIR}%%,%{?with_pear:%{php_pear_dir}}%{!?with_pear:%{_appdir}/includes/pear},
+s,%%{PHP_PEAR_DIR}%%,%{php_pear_dir},
 s,%%{APP_PATH}%%,%{_appdir},
 s,%%{SMARTY_DIR}%%,%{_smartydir},
 s,%%{SYSCONFDIR}%%,%{_webappdir},
@@ -590,10 +587,8 @@ s,%%{SYSCONFDIR}%%,%{_webappdir},
 > $RPM_BUILD_ROOT%{_webappdir}/setup.php
 mv $RPM_BUILD_ROOT{%{_appdir}/htdocs/config.inc,%{_webappdir}/config}.php
 
-%if %{with pear}
 # provided by PEAR
 rm -rf $RPM_BUILD_ROOT%{_appdir}/include/pear
-%endif
 
 # use system Smarty
 rm -rf $RPM_BUILD_ROOT%{_appdir}/include/Smarty
@@ -870,16 +865,11 @@ fi
 %{_appdir}/htdocs/reports
 %{_appdir}/htdocs/rpc
 %{_appdir}/htdocs/misc
-
 %{_appdir}/templates
 %dir %{_appdir}/upgrade
 %attr(755,root,root) %{_appdir}/upgrade/upgrade.sh
 %{_appdir}/upgrade/[!u]*
-
 %{_smartyplugindir}
-%if %{without pear}
-%{_appdir}/include/pear
-%endif
 
 %dir %{_appdir}/include
 %{_appdir}/include/customer
