@@ -11,9 +11,9 @@
 %bcond_with	qmail	# build the router-qmail subpackage
 #
 # snapshot: DATE
-%define	_snap 20060328
+%define	_snap 20060329
 
-%define	_rel	0.3
+%define	_rel	0.2
 
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
@@ -25,7 +25,7 @@ License:	GPL
 Group:		Applications/WWW
 #Source0:	http://mysql.dataphone.se/Downloads/%{name}/%{name}-%{version}.tar.gz
 Source0:	http://downloads.mysql.com/snapshots/eventum/%{name}-nightly-%{_snap}.tar.gz
-# Source0-md5:	051c38f914f33bc20afe1c33314663f9
+# Source0-md5:	70047a7b5235812a0a21298ea0c92421
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -477,7 +477,7 @@ rm -rf misc/upgrade/*/upgrade_config.php # not needed nor supported in PLD Linux
 rm -f rpc/xmlrpc_client.php
 
 # bug fixes.
-%patch4 -p1
+#%patch4 -p1
 %patch6 -p1
 %patch8 -p1
 %patch10 -p1
