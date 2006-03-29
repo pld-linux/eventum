@@ -69,7 +69,7 @@ if (!defined('APP_COOKIE_URL')) {
 if (!defined('APP_COOKIE_DOMAIN')) {
     define('APP_COOKIE_DOMAIN', APP_HOSTNAME);
 }
-if (!define('APP_HASH_TYPE')) {
+if (!defined('APP_HASH_TYPE')) {
     define('APP_HASH_TYPE', 'MD5');
 }
 
