@@ -478,11 +478,8 @@ rm -f rpc/xmlrpc_client.php
 
 # bug fixes.
 %patch4 -p1
-%patch5 -p1
 %patch6 -p1
-%patch7 -p1
 %patch8 -p1
-%patch9 -p1
 %patch10 -p1
 %patch12 -p1
 %patch13 -p1
@@ -504,6 +501,9 @@ rm -f rpc/xmlrpc_client.php
 %patch14 -p1
 %patch2 -p1
 %patch3 -p1
+%patch9 -p1
+%patch7 -p1
+%patch5 -p1
 
 sed -e '1s,#!.*/bin/php -q,#!%{_bindir}/php,' misc/cli/eventum > %{name}-cli
 sed -e '1i#!%{_bindir}/php' misc/scm/process_cvs_commits.php > %{name}-scm
