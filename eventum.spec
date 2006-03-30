@@ -11,7 +11,7 @@
 %bcond_with	qmail	# build the router-qmail subpackage
 
 #define	_snap	20060330
-%define	_rc		RC1
+%define	_rc		RC2
 %define	_rel	0.2
 
 %include	/usr/lib/rpm/macros.php
@@ -23,7 +23,7 @@ Release:	%{?_snap:0.%{_snap}.}%{?_rc:%{_rc}.}%{_rel}
 License:	GPL
 Group:		Applications/WWW
 Source0:	http://eventum.mysql.org/downloads/%{name}-%{version}.%{_rc}.tar.gz
-# Source0-md5:	82d04b26bc0d025201b04328e6e0147b
+# Source0-md5:	1ca8dd3b9876537ac29c02a549e245e1
 #Source0:	http://downloads.mysql.com/snapshots/eventum/%{name}-nightly-%{_snap}.tar.gz
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
@@ -39,22 +39,22 @@ Source11:	%{name}-router-qmail.sh
 Source12:	%{name}-config-setup.php
 Source13:	%{name}-upgrade.sh
 Source14:	%{name}-router-postfix.sh
-Patch0:		%{name}-paths.patch
-Patch1:		%{name}-cvs-config.patch
-Patch2:		%{name}-irc-config.patch
-Patch3:		%{name}-PEAR.patch
-Patch5:		%{name}-lf.patch
-Patch7:		%{name}-bot-reconnect.patch
-Patch8:		%{name}-perms.patch
-Patch9:		%{name}-httpclient-clientside.patch
-Patch10:	%{name}-cli-wr-separated.patch
-Patch14:	%{name}-irc-mem.patch
-Patch18:	%{name}-scm-parse-response.patch
-Patch19:	%{name}-double-decode.patch
-Patch22:	%{name}-route-mem.patch
-Patch25:	%{name}-scm-pluscharisbad.patch
-Patch26:	%{name}-scm-updates.patch
-Patch27:	%{name}-private-key.patch
+Patch0:		%{name}-lf.patch
+Patch1:		%{name}-perms.patch
+Patch2:		%{name}-cli-wr-separated.patch
+Patch3:		%{name}-scm-parse-response.patch
+Patch4:		%{name}-double-decode.patch
+Patch5:		%{name}-route-mem.patch
+Patch6:		%{name}-scm-pluscharisbad.patch
+Patch7:		%{name}-scm-updates.patch
+Patch100:	%{name}-paths.patch
+Patch101:	%{name}-cvs-config.patch
+Patch102:	%{name}-irc-mem.patch
+Patch103:	%{name}-irc-config.patch
+Patch104:	%{name}-PEAR.patch
+Patch105:	%{name}-httpclient-clientside.patch
+Patch106:	%{name}-bot-reconnect.patch
+Patch107:	%{name}-private-key.patch
 URL:		http://dev.mysql.com/downloads/other/eventum/
 BuildRequires:	rpm-php-pearprov >= 4.0.2-98
 BuildRequires:	rpmbuild(macros) >= 1.268
@@ -466,24 +466,24 @@ rm -rf misc/upgrade/*/upgrade_config.php # not needed in PLD Linux
 rm -f rpc/xmlrpc_client.php
 
 # bug fixes.
-%patch8 -p1
-%patch10 -p1
-%patch18 -p1
-%patch19 -p1
-%patch22 -p1
-%patch25 -p1
-%patch26 -p1
-%patch5 -p1
-
-# packaging
 %patch0 -p1
 %patch1 -p1
-%patch14 -p1
 %patch2 -p1
 %patch3 -p1
-%patch9 -p1
+%patch4 -p1
+%patch5 -p1
+%patch6 -p1
 %patch7 -p1
-%patch27 -p1
+
+# packaging
+%patch100 -p1
+%patch101 -p1
+%patch102 -p1
+%patch103 -p1
+%patch104 -p1
+%patch105 -p1
+%patch106 -p1
+%patch107 -p1
 
 sed -e '1s,#!.*/bin/php -q,#!%{_bindir}/php,' misc/cli/eventum > %{name}-cli
 sed -e '1i#!%{_bindir}/php' misc/scm/process_cvs_commits.php > %{name}-scm
@@ -552,7 +552,7 @@ install %{SOURCE8} $RPM_BUILD_ROOT/etc/rc.d/init.d/eventum-irc
 install %{SOURCE9} $RPM_BUILD_ROOT/etc/sysconfig/eventum-irc
 
 sed -e '
-s,%%{APP_VERSION}%%,%{version}%{?_snap:-%{_snap}},
+s,%%{APP_VERSION}%%,%{version}%{?_snap:-%{_snap}}%{?_rc:-%{_rc}},
 s,%%{PHP_PEAR_DIR}%%,%{php_pear_dir},
 s,%%{APP_PATH}%%,%{_appdir},
 s,%%{SMARTY_DIR}%%,%{_smartydir},
