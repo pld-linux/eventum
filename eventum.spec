@@ -13,7 +13,7 @@
 # snapshot: DATE
 %define	_snap 20060330
 
-%define	_rel	0.4
+%define	_rel	0.5
 
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
@@ -58,18 +58,21 @@ Patch21:	%{name}-tt-unhide.patch
 Patch22:	%{name}-route-mem.patch
 Patch25:	%{name}-scm-pluscharisbad.patch
 Patch26:	%{name}-scm-updates.patch
+Patch27:	%{name}-private-key.patch
 URL:		http://dev.mysql.com/downloads/other/eventum/
 BuildRequires:	rpm-php-pearprov >= 4.0.2-98
 BuildRequires:	rpmbuild(macros) >= 1.268
 BuildRequires:	sed >= 4.0
+Requires(triggerpostun):	/usr/bin/php
+Requires(triggerpostun):	sed >= 4.0
 Requires:	%{name}-base = %{version}-%{release}
 Requires:	Smarty >= 2.6.10-4
+Requires:	apache(mod_dir)
 Requires:	php >= 3:4.2.0
 Requires:	php-gd
 Requires:	php-imap
 Requires:	php-mysql
 Requires:	php-pcre
-Requires:	php-session
 Requires:	php-pear-Benchmark
 Requires:	php-pear-DB
 Requires:	php-pear-Date
@@ -85,11 +88,8 @@ Requires:	php-pear-Net_UserAgent_Detect
 Requires:	php-pear-PEAR-core
 Requires:	php-pear-Text_Diff
 Requires:	php-pear-XML_RPC
-Requires(triggerpostun):	/usr/bin/php
-Requires(triggerpostun):	sed >= 4.0
-Requires:	apache(mod_dir)
+Requires:	php-session
 Requires:	webapps
-Requires:	webserver = apache
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -464,7 +464,7 @@ find . -type f -print0 | xargs -0 sed -i -e 's,\r$,,'
 rm -f setup.conf.php # not to be installed by *.php glob
 rm -rf misc/upgrade/*v1.[123]* # too old to support in PLD Linux
 rm -f misc/upgrade/flush_compiled_templates.php
-rm -rf misc/upgrade/*/upgrade_config.php # not needed nor supported in PLD Linux
+rm -rf misc/upgrade/*/upgrade_config.php # not needed in PLD Linux
 
 # sample, not used in eventum
 rm -f rpc/xmlrpc_client.php
@@ -480,6 +480,7 @@ rm -f rpc/xmlrpc_client.php
 %patch22 -p1
 %patch25 -p1
 %patch26 -p1
+%patch5 -p1
 
 # packaging
 %patch0 -p1
@@ -489,7 +490,7 @@ rm -f rpc/xmlrpc_client.php
 %patch3 -p1
 %patch9 -p1
 %patch7 -p1
-%patch5 -p1
+%patch27 -p1
 
 sed -e '1s,#!.*/bin/php -q,#!%{_bindir}/php,' misc/cli/eventum > %{name}-cli
 sed -e '1i#!%{_bindir}/php' misc/scm/process_cvs_commits.php > %{name}-scm
@@ -497,11 +498,7 @@ sed -e '1i#!%{_bindir}/php' misc/irc/bot.php > %{name}-bot
 mv misc/cli/eventumrc_example eventumrc
 sed -i -e '1i#!%{_bindir}/php' misc/*.php
 chmod +x misc/*.php
-
-sed -e '
-s,$private_key\s*=\s*".*";,$private_key = "DEFAULTPRIVATEKEYPLEASERUNSETUP!";,
-' < include/private_key.php > private_key.php.in
-rm -f include/private_key.php
+mv include/private_key.php private_key.php.in
 
 # replace in remaining scripts config.inc.php to system one
 grep -rl 'include_once(".*config.inc.php")' . | xargs sed -i -e '
@@ -528,7 +525,7 @@ cp -a *.php css customer images js manage reports rpc setup $RPM_BUILD_ROOT%{_ap
 cp -a misc/*.html $RPM_BUILD_ROOT%{_appdir}/htdocs/misc
 cp -a misc/*.php $RPM_BUILD_ROOT%{_appdir}
 cp -a templates $RPM_BUILD_ROOT%{_appdir}
-cp -a include/{customer,custom_field,jpgraph,pear,workflow} $RPM_BUILD_ROOT%{_appdir}/include
+cp -a include/{customer,custom_field,jpgraph,workflow} $RPM_BUILD_ROOT%{_appdir}/include
 cp -a include/*.php $RPM_BUILD_ROOT%{_appdir}/include
 cp -a logs/* $RPM_BUILD_ROOT/var/log/%{name}
 cp -a misc/upgrade $RPM_BUILD_ROOT%{_appdir}
@@ -573,11 +570,6 @@ s,%%{SYSCONFDIR}%%,%{_webappdir},
 > $RPM_BUILD_ROOT%{_webappdir}/setup.php
 mv $RPM_BUILD_ROOT{%{_appdir}/htdocs/config.inc,%{_webappdir}/config}.php
 
-# provided by PEAR
-rm -rf $RPM_BUILD_ROOT%{_appdir}/include/pear
-
-# use system Smarty
-rm -rf $RPM_BUILD_ROOT%{_appdir}/include/Smarty
 install -d $RPM_BUILD_ROOT%{_smartyplugindir}
 # These plugins are not in Smarty package (Smarty-2.6.2-3)
 cp -a \
@@ -723,10 +715,10 @@ fi
 %triggerun -- apache1
 %webapp_unregister apache %{_webapp}
 
-%triggerin -- apache >= 2.0.0
+%triggerin -- apache < 2.2.0, apache-base
 %webapp_register httpd %{_webapp}
 
-%triggerun -- apache >= 2.0.0
+%triggerun -- apache < 2.2.0, apache-base
 %webapp_unregister httpd %{_webapp}
 
 # FIXME
