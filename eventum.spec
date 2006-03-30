@@ -9,23 +9,22 @@
 #
 # Conditional build:
 %bcond_with	qmail	# build the router-qmail subpackage
-#
-# snapshot: DATE
-%define	_snap 20060330
 
-%define	_rel	0.5
+#define	_snap	20060330
+%define	_rc		RC1
+%define	_rel	0.2
 
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl):	Eventum - system ¶ledzenia spraw/b³êdów
 Name:		eventum
-Version:	1.7.0
-Release:	%{?_snap:4.%{_snap}.}%{?_rc:%{_rc}.}%{_rel}
+Version:	1.7.1
+Release:	%{?_snap:0.%{_snap}.}%{?_rc:%{_rc}.}%{_rel}
 License:	GPL
 Group:		Applications/WWW
-#Source0:	http://mysql.dataphone.se/Downloads/%{name}/%{name}-%{version}.tar.gz
-Source0:	http://downloads.mysql.com/snapshots/eventum/%{name}-nightly-%{_snap}.tar.gz
-# Source0-md5:	bef923d9f8c1555ac16a53ba57820372
+Source0:	http://eventum.mysql.org/downloads/%{name}-%{version}.%{_rc}.tar.gz
+# Source0-md5:	82d04b26bc0d025201b04328e6e0147b
+#Source0:	http://downloads.mysql.com/snapshots/eventum/%{name}-nightly-%{_snap}.tar.gz
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -49,12 +48,9 @@ Patch7:		%{name}-bot-reconnect.patch
 Patch8:		%{name}-perms.patch
 Patch9:		%{name}-httpclient-clientside.patch
 Patch10:	%{name}-cli-wr-separated.patch
-Patch13:	%{name}-link_filter-updates.patch
 Patch14:	%{name}-irc-mem.patch
-Patch16:	%{name}-recent_activity-usability.patch
 Patch18:	%{name}-scm-parse-response.patch
 Patch19:	%{name}-double-decode.patch
-Patch21:	%{name}-tt-unhide.patch
 Patch22:	%{name}-route-mem.patch
 Patch25:	%{name}-scm-pluscharisbad.patch
 Patch26:	%{name}-scm-updates.patch
@@ -472,11 +468,8 @@ rm -f rpc/xmlrpc_client.php
 # bug fixes.
 %patch8 -p1
 %patch10 -p1
-%patch13 -p1
-%patch16 -p1
 %patch18 -p1
 %patch19 -p1
-%patch21 -p1
 %patch22 -p1
 %patch25 -p1
 %patch26 -p1
