@@ -4,7 +4,7 @@
          <tr>
            <td class="default" bgcolor="{$row_color}" NOWRAP>{include file="expandable_cell/buttons.tpl.html" ec_id="phone" list_id=$row.phs_id}</td>
            <td class="default" bgcolor="{$row.sta_color}" align="right">
--            <a href="{$rel_url}view.php?id={$row.phs_iss_id}" class="link">{$row.phs_iss_id}</a>
+-            <a target="_blank" href="{$rel_url}view.php?id={$row.phs_iss_id}" class="link">{$row.phs_iss_id}</a>
 +            <a target="_blank" href="{$rel_url}view.php?id={$row.phs_iss_id}" class="link">{$row.phs_iss_id}</a>
            </td>
            {if $has_customer_integration}
@@ -13,7 +13,7 @@
          <tr>
            <td class="default" bgcolor="{$row_color}" NOWRAP>{include file="expandable_cell/buttons.tpl.html" ec_id="note" list_id=$row.not_id}</td>
            <td class="default" bgcolor="{$row.sta_color}" align="right">
--            <a href="{$rel_url}view.php?id={$row.not_iss_id}" class="link">{$row.not_iss_id}</a>
+-            <a target="_blank" href="{$rel_url}view.php?id={$row.not_iss_id}" class="link">{$row.not_iss_id}</a>
 +            <a target="_blank" href="{$rel_url}view.php?id={$row.not_iss_id}" class="link" title="{$row.iss_summary|htmlspecialchars}">{$row.not_iss_id}</a>
            </td>
            {if $has_customer_integration}
@@ -22,7 +22,7 @@
              {include file="expandable_cell/buttons.tpl.html" ec_id="email" list_id=$row.composite_id}
            </td>
            <td class="default" bgcolor="{$row.sta_color}" align="right">
--            <a href="{$rel_url}view.php?id={$row.sup_iss_id}" class="link">{$row.sup_iss_id}</a>
+-            <a target="_blank" href="{$rel_url}view.php?id={$row.sup_iss_id}" class="link">{$row.sup_iss_id}</a>
 +            <a target="_blank" href="{$rel_url}view.php?id={$row.sup_iss_id}" class="link" title="{$row.iss_summary|htmlspecialchars}">{$row.sup_iss_id}</a>
            </td>
            {if $has_customer_integration}
@@ -31,7 +31,7 @@
          <tr {if $row.emd_status != 'pending'}style="text-decoration: line-through;"{/if}>
            <td class="default" NOWRAP bgcolor="{$row_color}">{include file="expandable_cell/buttons.tpl.html" ec_id="draft" list_id=$row.emd_id}</td>
            <td class="default" bgcolor="{$row.sta_color}" align="right">
--            <a href="{$rel_url}view.php?id={$row.emd_iss_id}" class="link">{$row.emd_iss_id}</a>
+-            <a target="_blank" href="{$rel_url}view.php?id={$row.emd_iss_id}" class="link">{$row.emd_iss_id}</a>
 +            <a target="_blank" href="{$rel_url}view.php?id={$row.emd_iss_id}" class="link">{$row.emd_iss_id}</a>
            </td>
            {if $has_customer_integration}
@@ -40,7 +40,7 @@
          {cycle values=$cycle assign="row_color"}
          <tr>
            <td class="default" bgcolor="{$row.sta_color}" align="right">
--            <a href="{$rel_url}view.php?id={$row.ttr_iss_id}" class="link">{$row.ttr_iss_id}</a>
+-            <a target="_blank" href="{$rel_url}view.php?id={$row.ttr_iss_id}" class="link">{$row.ttr_iss_id}</a>
 +            <a target="_blank" href="{$rel_url}view.php?id={$row.ttr_iss_id}" class="link" title="{$row.iss_summary|htmlspecialchars}">{$row.ttr_iss_id}</a>
            </td>
            {if $has_customer_integration}
@@ -49,7 +49,7 @@
          {cycle values=$cycle assign="row_color"}
          <tr>
            <td class="default" bgcolor="{$row.sta_color}" align="right">
--            <a href="{$rel_url}view.php?id={$row.rmh_iss_id}" class="link">{$row.rmh_iss_id}</a>
+-            <a target="_blank" href="{$rel_url}view.php?id={$row.rmh_iss_id}" class="link">{$row.rmh_iss_id}</a>
 +            <a target="_blank" href="{$rel_url}view.php?id={$row.rmh_iss_id}" class="link">{$row.rmh_iss_id}</a>
            </td>
            {if $has_customer_integration}
