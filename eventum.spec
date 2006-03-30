@@ -11,9 +11,9 @@
 %bcond_with	qmail	# build the router-qmail subpackage
 #
 # snapshot: DATE
-%define	_snap 20060329
+%define	_snap 20060330
 
-%define	_rel	0.2
+%define	_rel	0.4
 
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
@@ -25,7 +25,7 @@ License:	GPL
 Group:		Applications/WWW
 #Source0:	http://mysql.dataphone.se/Downloads/%{name}/%{name}-%{version}.tar.gz
 Source0:	http://downloads.mysql.com/snapshots/eventum/%{name}-nightly-%{_snap}.tar.gz
-# Source0-md5:	70047a7b5235812a0a21298ea0c92421
+# Source0-md5:	bef923d9f8c1555ac16a53ba57820372
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -44,25 +44,18 @@ Patch0:		%{name}-paths.patch
 Patch1:		%{name}-cvs-config.patch
 Patch2:		%{name}-irc-config.patch
 Patch3:		%{name}-PEAR.patch
-Patch4:		%{name}-reply-subject.patch
 Patch5:		%{name}-lf.patch
-Patch6:		%{name}-maq-subject.patch
 Patch7:		%{name}-bot-reconnect.patch
 Patch8:		%{name}-perms.patch
 Patch9:		%{name}-httpclient-clientside.patch
 Patch10:	%{name}-cli-wr-separated.patch
-Patch12:	%{name}-htmloptions-truncate.patch
 Patch13:	%{name}-link_filter-updates.patch
 Patch14:	%{name}-irc-mem.patch
 Patch16:	%{name}-recent_activity-usability.patch
-Patch17:	%{name}-upload-error-keep-popup.patch
 Patch18:	%{name}-scm-parse-response.patch
 Patch19:	%{name}-double-decode.patch
-Patch20:	%{name}-keep-submitbutton.patch
 Patch21:	%{name}-tt-unhide.patch
 Patch22:	%{name}-route-mem.patch
-Patch23:	%{name}-msgid-case.patch
-Patch24:	%{name}-route-and-download.patch
 Patch25:	%{name}-scm-pluscharisbad.patch
 Patch26:	%{name}-scm-updates.patch
 URL:		http://dev.mysql.com/downloads/other/eventum/
@@ -477,21 +470,14 @@ rm -rf misc/upgrade/*/upgrade_config.php # not needed nor supported in PLD Linux
 rm -f rpc/xmlrpc_client.php
 
 # bug fixes.
-#%patch4 -p1
-%patch6 -p1
 %patch8 -p1
 %patch10 -p1
-%patch12 -p1
 %patch13 -p1
 %patch16 -p1
-%patch17 -p1
 %patch18 -p1
 %patch19 -p1
-%patch20 -p1
 %patch21 -p1
 %patch22 -p1
-%patch23 -p1
-%patch24 -p1
 %patch25 -p1
 %patch26 -p1
 
