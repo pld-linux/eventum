@@ -13,7 +13,7 @@
 
 #define	_snap	20060330
 #define	_rc		RC3
-%define	_rel	1.6
+%define	_rel	1.8
 
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
@@ -52,6 +52,7 @@ Patch8:		%{name}-close-signature.patch
 Patch9:		%{name}-list-sorting.patch
 Patch10:	%{name}-workflow-handlenewnote-note_id.patch
 Patch11:	%{name}-order4b.patch
+Patch12:	%{name}-cli-errorcheck.patch
 Patch100:	%{name}-paths.patch
 Patch101:	%{name}-cvs-config.patch
 Patch102:	%{name}-irc-mem.patch
@@ -481,6 +482,7 @@ rm -f rpc/xmlrpc_client.php
 %patch9 -p1
 %patch10 -p1
 %{?with_order_patch:%patch11 -p1}
+%patch12 -p1
 
 # packaging
 %patch100 -p1
