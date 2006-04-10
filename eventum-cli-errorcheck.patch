@@ -1,0 +1,12 @@
+--- eventum-1.7.1/misc/cli/include/class.command_line.php	2006-04-10 21:09:51.757856592 +0300
++++ /home/glen/class.command_line.php	2006-04-10 21:55:23.878807794 +0300
+@@ -1533,6 +1533,9 @@
+     {
+         $msg = new XML_RPC_Message("isValidLogin", array(new XML_RPC_Value($email), new XML_RPC_Value($password)));
+         $result = $rpc_conn->send($msg);
++        if (!is_object($result)) {
++            Command_Line::quit("result is not an object. This is most likely due connection problems or openssl/curl extension not loaded.");
++        }
+         if ($result->faultCode()) {
+             Command_Line::quit($result->faultString());
+         }
