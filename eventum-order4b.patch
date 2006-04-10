@@ -1,0 +1,417 @@
+--- eventum-1.7.0.orig/include/class.display_column.php	2005-12-29 21:27:24.000000000 +0200
++++ eventum-1.7.0/include/class.display_column.php	2006-04-10 13:42:27.939037416 +0300
+@@ -223,6 +223,9 @@
+                 ),
+                 "iss_expected_resolution_date"  =>  array(
+                     "title" =>  "Expected Resolution Date"
++                ),
++                "isu_order" => array(
++                    "title" => "Order"
+                 )
+             )
+         );
+diff -u eventum-1.7.0/include/class.issue.php eventum-1.7.1/include/class.issue.php
+--- eventum-1.7.0/include/class.issue.php	2006-04-10 13:42:27.949037639 +0300
++++ eventum-1.7.1/include/class.issue.php	2006-04-10 13:49:39.038651201 +0300
+@@ -1245,6 +1245,7 @@
+             Error_Handler::logError(array($res->getMessage(), $res->getDebugInfo()), __FILE__, __LINE__);
+             return -1;
+         } else {
++            Issue::moveOrderForAllUsers($issue_id, 1000);
+             $prj_id = Issue::getProjectID($issue_id);
+ 
+             // add note with the reason to close the issue
+@@ -1595,16 +1596,33 @@
+     {
+         $issue_id = Misc::escapeInteger($issue_id);
+         $assignee_usr_id = Misc::escapeInteger($assignee_usr_id);
++        $order = 1;
++        // move all orders down to free "order space" for this new association
++        $stmt = "UPDATE 
++                    " . APP_DEFAULT_DB . "." . APP_TABLE_PREFIX . "issue_user
++                 SET
++                    isu_order = isu_order + 1
++                 WHERE
++                    isu_usr_id = $assignee_usr_id AND
++                    isu_order >= $order";
++        $res = $GLOBALS["db_api"]->dbh->query($stmt);
++        if (PEAR::isError($res)) {
++            Error_Handler::logError(array($res->getMessage(), $res->getDebugInfo()), __FILE__, __LINE__);
++            return -1;
++        }
++        // insert the new association
+         $stmt = "INSERT INTO
+                     " . APP_DEFAULT_DB . "." . APP_TABLE_PREFIX . "issue_user
+                  (
+                     isu_iss_id,
+                     isu_usr_id,
+-                    isu_assigned_date
++                    isu_assigned_date,
++                    isu_order
+                  ) VALUES (
+                     $issue_id,
+                     $assignee_usr_id,
+-                    '" . Date_API::getCurrentDateGMT() . "'
++                    '" . Date_API::getCurrentDateGMT() . "',
++                    $order
+                  )";
+         $res = $GLOBALS["db_api"]->dbh->query($stmt);
+         if (PEAR::isError($res)) {
+@@ -1619,6 +1637,78 @@
+         }
+     }
+ 
++    /**
++     * Method used to get the order list to be rearranged
++     * 
++     * @access  private
++     * @param   string $issue_id The issue ID or a comma seperated list of IDs already prepared for giving to mysql
++     * @param   string $usr_id The user to remove. When not specified, all users are taken as to be removed for that issue
++     * @return  mixed delete order list to be rearranged. Used as a parameter to the method of rearranging the order.
++     */
++    function getDeleteUserAssociationOrderList($issue_id, $usr_id = "")
++    {
++        // find all affected associantion orders
++        $stmt = "SELECT isu_usr_id, isu_order FROM
++                    " . APP_DEFAULT_DB . "." . APP_TABLE_PREFIX . "issue_user
++                 WHERE
++                 isu_iss_id IN ($issue_id)";
++        if ($usr_id !== FALSE) {
++            $stmt.= " AND isu_usr_id IN ($usr_id)";
++        }
++        $stmt.= "ORDER BY isu_order";
++        $res = $GLOBALS["db_api"]->dbh->getAll($stmt, DB_FETCHMODE_ASSOC);
++        if (PEAR::isError($res)) {
++            Error_Handler::logError(array($res->getMessage(), $res->getDebugInfo()), __FILE__, __LINE__);
++            return -1;
++        } else {
++            $deleted_orders = array();
++            foreach ($res as $row) {
++                if (empty($deleted_orders[$row['isu_usr_id']])) {
++                    $deleted_orders[$row['isu_usr_id']] = array();
++                }
++                $deleted_orders[$row['isu_usr_id']] [] = $row['isu_order'];
++            }
++            return $deleted_orders;
++        }
++    }
++
++    /**
++     *
++     * Method used to rearrange order list in the db according to known deleted records
++     *
++     * @access  private
++     * @param   mixed  deleteorder list
++     * @return void
++     */
++    function rearrangeDeleteUserAssociationOrderList($delete_order_list)
++    {
++        if (empty($delete_order_list) || (!is_array($delete_order_list))) {
++            return -1;
++        }
++        foreach ($delete_order_list as $isu_usr_id => $orders) {
++            for ($i = 0; $i < count($orders); $i++) { // traverse all deleted orders
++                // move the orders after them up to take the "order space" of the deleted records
++                $stmt = "UPDATE
++                            " . APP_DEFAULT_DB . "." . APP_TABLE_PREFIX . "issue_user
++                         SET
++                            isu_order = isu_order - " . ($i+1) . "
++                         WHERE
++                            isu_usr_id = $isu_usr_id AND
++                            isu_order > " . $orders[$i];
++                if ($i < count($orders) - 1) {
++                    $stmt.=  " AND
++                            isu_order < " . $orders[$i+1];
++                }
++                $res = $GLOBALS["db_api"]->dbh->query($stmt);
++                if (PEAR::isError($res)) {
++                    Error_Handler::logError(array($res->getMessage(), $res->getDebugInfo()), __FILE__, __LINE__);
++                    return -1;
++                }
++            }
++        }
++        return 1;
++    }
++
+ 
+     /**
+      * Method used to delete all user assignments for a specific issue.
+@@ -1634,6 +1724,7 @@
+         if (is_array($issue_id)) {
+             $issue_id = implode(", ", $issue_id);
+         }
++        $deleted_order_list = Issue::getDeleteUserAssociationOrderList($issue_id);
+         $stmt = "DELETE FROM
+                     " . APP_DEFAULT_DB . "." . APP_TABLE_PREFIX . "issue_user
+                  WHERE
+@@ -1646,6 +1737,7 @@
+             if ($usr_id) {
+                 History::add($issue_id, $usr_id, History::getTypeID('user_all_unassociated'), 'Issue assignments removed by ' . User::getFullName($usr_id));
+             }
++            Issue::rearrangeDeleteUserAsssociationOrderList($deleted_order_list);
+             return 1;
+         }
+     }
+@@ -1664,6 +1756,7 @@
+     {
+         $issue_id = Misc::escapeInteger($issue_id);
+         $usr_id = Misc::escapeInteger($usr_id);
++        $delete_order_list = Issue::getDeleteUserAssociationOrderList($issue_id, $usr_id);
+         $stmt = "DELETE FROM
+                     " . APP_DEFAULT_DB . "." . APP_TABLE_PREFIX . "issue_user
+                  WHERE
+@@ -1678,6 +1771,7 @@
+                 History::add($issue_id, Auth::getUserID(), History::getTypeID('user_unassociated'),
+                     User::getFullName($usr_id) . ' removed from issue by ' . User::getFullName(Auth::getUserID()));
+             }
++            Issue::rearrangeDeleteUserAssociationOrderList($delete_order_list);
+             return 1;
+         }
+     }
+@@ -2160,6 +2246,11 @@
+     {
+         $sort_by = Issue::getParam('sort_by');
+         $sort_order = Issue::getParam('sort_order');
++        $users = Issue::getParam('users');
++        if (empty($users) && ($sort_by == 'isu_order')) { // Sorting by isu_order is impossible when no user specified
++            unset($sort_by);
++            unset($sort_order);
++        }
+         $rows = Issue::getParam('rows');
+         $hide_closed = Issue::getParam('hide_closed');
+         if ($hide_closed === '') {
+@@ -2293,6 +2385,7 @@
+             "last_action_date" => "desc",
+             "usr_full_name" => "asc",
+             "iss_expected_resolution_date" => "desc",
++            "isu_order" => "desc",
+         );
+ 
+         foreach ($custom_fields as $fld_id => $fld_name) {
+@@ -2974,6 +3067,8 @@
+         $ids = implode(", ", $ids);
+         $stmt = "SELECT
+                     isu_iss_id,
++                    isu_order,
++                    isu_usr_id,
+                     usr_full_name
+                  FROM
+                     " . APP_DEFAULT_DB . "." . APP_TABLE_PREFIX . "issue_user,
+@@ -2985,6 +3080,7 @@
+         if (PEAR::isError($res)) {
+             Error_Handler::logError(array($res->getMessage(), $res->getDebugInfo()), __FILE__, __LINE__);
+         } else {
++            // gather names of the users assigned to each issue
+             $t = array();
+             for ($i = 0; $i < count($res); $i++) {
+                 if (!empty($t[$res[$i]['isu_iss_id']])) {
+@@ -2993,9 +3089,18 @@
+                     $t[$res[$i]['isu_iss_id']] = $res[$i]['usr_full_name'];
+                 }
+             }
++            // gather orders
++            $o = array();
++            for ($i = 0; $i < count($res); $i++) {
++                if (empty($o[$res[$i]['isu_iss_id']])) {
++                    $o[$res[$i]['isu_iss_id']] = array();
++                }
++                $o[$res[$i]['isu_iss_id']][$res[$i]['isu_usr_id']] = $res[$i]['isu_order'];
++            }
+             // now populate the $result variable again
+             for ($i = 0; $i < count($result); $i++) {
+                 @$result[$i]['assigned_users'] = $t[$result[$i]['iss_id']];
++                @$result[$i]['assigned_users_order'] = $o[$result[$i]['iss_id']];
+             }
+         }
+     }
+@@ -3962,6 +4067,7 @@
+             Error_Handler::logError(array($res->getMessage(), $res->getDebugInfo()), __FILE__, __LINE__);
+             return -1;
+         }
++        Issue::moveOrderForAllUsers($issue_id, 1);
+     }
+ 
+ 
+@@ -4020,8 +4126,91 @@
+         }
+         return $returns[$msg_id];
+     }
++
++    /**
++     * Reorders user's issues as requested by user
++     * @access public
++     * @param $usr_id User to be reordered
++     * @param $issue_id Issue or array of issues to be moved
++     * @param $neworder The new order of the issues
++     * @return void
++     */
++    function reorderUserIssues($usr_id, $issue_id, $neworder)
++    {
++        if (!isset($usr_id) || !isset($issue_id) || !isset($neworder)) {
++            return false;
++        }
++        if (!is_numeric($usr_id) || !is_numeric($neworder)) {
++            return false;
++        }
++        $usr_id = Misc::escapeInteger($usr_id);
++        $issue_id = Misc::escapeInteger($issue_id);
++        $neworder = Misc::escapeInteger($neworder);
++        if (is_array($issue_id)) {
++            $issue_count = count($issue_id);
++            $issue_id_str = implode(", ", $issue_id);
++        } else {
++            $issue_count = 1;
++            $issue_id_str = $issue_id;
++            $issue_id = array($issue_id);
++        }
++        // do a nasty pretending to be deleting stuff so that reordering happens as if these elements were deleted
++        $orderlist = Issue::getDeleteUserAssociationOrderList($issue_id_str, $usr_id);
++        Issue::rearrangeDeleteUserAssociationOrderList($orderlist);
++        // move down the orders to free the "order space" needed
++        $stmt = "UPDATE 
++                    " . APP_DEFAULT_DB . "." . APP_TABLE_PREFIX . "issue_user
++                 SET
++                    isu_order = isu_order + $issue_count
++                 WHERE
++                    isu_usr_id = $usr_id AND
++                    isu_order >= $neworder";
++        $res = $GLOBALS["db_api"]->dbh->query($stmt);
++        if (PEAR::isError($res)) {
++            Error_Handler::logError(array($res->getMessage(), $res->getDebugInfo()), __FILE__, __LINE__);
++            return -1;
++        }
++        //update the order for the issues being moved
++        $i = 0;
++        foreach ($issue_id as $iss_id) {
++            $stmt = "UPDATE
++                        " . APP_DEFAULT_DB . "." . APP_TABLE_PREFIX . "issue_user
++                     SET
++                        isu_order = " . ($neworder + $i) . "
++                     WHERE
++                        isu_usr_id = $usr_id AND
++                        isu_iss_id = $iss_id";
++            $res = $GLOBALS["db_api"]->dbh->query($stmt);
++            if (PEAR::isError($res)) {
++                Error_Handler::logError(array($res->getMessage(), $res->getDebugInfo()), __FILE__, __LINE__);
++                return -1;
++            }
++            $i++;
++        }
++    }
++
++    function moveOrderForAllUsers($issue_id, $neworder)
++    {
++        // Move the issue to the top priority for the ppl it's assigned to
++        $stmt = "SELECT isu_usr_id FROM
++                    "  . APP_DEFAULT_DB . "." . APP_TABLE_PREFIX . "issue_user
++                 WHERE
++                    isu_iss_id = " . Misc::escapeInteger($issue_id);
++        $res = $GLOBALS["db_api"]->dbh->getAll($stmt, DB_FETCHMODE_ASSOC);
++        if (PEAR::isError($res)) {
++            Error_Handler::logError(array($res->getMessage(), $res->getDebugInfo()), __FILE__, __LINE__);
++            return -1;
++        }
++        foreach ($res as $row) {
++            Issue::reorderUserIssues($row["isu_usr_id"], $issue_id, $neworder);
++        }
++    }
++    
+ }
+ 
++
++
++
+ // benchmarking the included file (aka setup time)
+ if (APP_BENCHMARK) {
+     $GLOBALS['bench']->setMarker('Included Issue Class');
+--- eventum-1.7.0.orig/templates/en/list.tpl.html	2005-12-29 21:27:24.000000000 +0200
++++ eventum-1.7.0/templates/en/list.tpl.html	2006-04-10 13:42:27.949037639 +0300
+@@ -89,6 +89,28 @@
+     f.target = '_popup';
+     f.submit();
+ }
++function reorderBulk(order_user, neworder)
++{
++    url = page_url + "?";
++    url += "reorder_user=" + order_user;
++	
++    items = document.getElementsByName("item[]");
++    checkedcount = 0;
++    for (var i = 0; i < items.length; i++) {
++	if (items[i].checked) {
++	    url += "&reorder_source[" + checkedcount + "]=" + items[i].value;
++	    checkedcount++;
++	}
++    }
++    if (checkedcount == 0) {
++        alert('Please choose which issues to move to the new palce.');
++        return false;
++    }
++
++    url += "&reorder_neworder=" + neworder;
++    
++    window.location.href = url;
++}
+ function hideClosed(f)
+ {
+     if (f.hide_closed.checked) {
+@@ -202,8 +224,8 @@
+                 <td align="{$column.align|default:'center'}" class="default_white" nowrap>
+                   {$fld_title|escape:"html"}
+                 </td>
+-              {/foreach}
+-          {else}
++	    {/foreach}
++          {elseif $field_name != 'isu_order' || $isu_order_user}
+           <td align="{$column.align|default:'center'}" class="default_white" nowrap {if $column.width != ''}width="{$column.width}"{/if}>
+             {if $field_name == 'iss_summary'}
+             <table cellspacing="0" cellpadding="1" width="100%">
+@@ -218,8 +240,11 @@
+               </tr>
+             </table>
+             {elseif $sorting.links[$field_name] != ''}
+-              <a title="sort by {$column.title}" href="{$sorting.links[$field_name]}" class="white_link">{$column.title}</a>
+-              {if $sorting.images[$field_name] != ""}<a title="sort by {$column.title}" href="{$sorting.links[$field_name]}" class="white_link"><img border="0" src="{$sorting.images[$field_name]}"></a>{/if}
++	    <a title="sort by {$column.title}" href="{$sorting.links[$field_name]}" class="white_link">{$column.title}</a>
++	    {if $field_name == 'isu_order'}
++	      <br>{$users[$isu_order_user]}
++	    {/if}
++            {if $sorting.images[$field_name] != ""}<a title="sort by {$column.title}" href="{$sorting.links[$field_name]}" class="white_link"><img border="0" src="{$sorting.images[$field_name]}"></a>{/if}
+             {else}
+               {$column.title}
+             {/if}
+@@ -239,7 +264,7 @@
+                   {$fld_value|formatCustomValue:$fld_id:$list[i].iss_id}
+                 </td>
+               {/foreach}
+-          {else}
++          {elseif $field_name != 'isu_order' || $isu_order_user}
+           <td bgcolor="{$list[i].status_color}" align="{$column.align|default:'center'}" class="default">
+             {if $field_name == 'iss_id'}
+               <a href="view.php?id={$list[i].iss_id}" class="link" title="view issue details">{$list[i].iss_id}</a>
+@@ -278,7 +303,24 @@
+               {/if}
+               {if $list[i].iss_private == 1}
+                   <b>[Private]</b>
+-              {/if}
++	      {/if}
++	    {elseif $field_name == 'isu_order'}
++	      {if $isu_order_user}
++	        {assign var="order" value=$list[i].assigned_users_order[$isu_order_user]}
++	        {if $order}
++		<a class="link" title="hide / show reordering options" href="javascript:void(null);" onClick="javascript:toggleVisibility('order{$list[i].iss_id}_');">{$order}</a>
++		<div id="order{$list[i].iss_id}_1" style="display: none">
++	          <table>
++                    <tr>
++		      <td class="default">{if $order > 1}<a class="link" title="move up" href="list.php?reorder_user={$isu_order_user}&reorder_source[0]={$list[i].iss_id}&reorder_neworder={math equation="x - 1" x=$order}">Up</a>{/if}</td>
++		      <td class="default"><a class="link" title="move up" href="list.php?reorder_user={$isu_order_user}&reorder_source[0]={$list[i].iss_id}&reorder_neworder={math equation="x + 1" x=$order}">Down</a></td>
++	            </tr>
++		    <tr>
++                      <td class="default"><a class="link" title="move here" href="javascript:void(null);" onClick="javascript:reorderBulk({$isu_order_user}, {$order})">Move here</a></td>
++	            </tr>
++	          </table>
++	        {/if}
++	      {/if}
+             {/if}
+           </td>
+           {/if}
