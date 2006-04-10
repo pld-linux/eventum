@@ -9,10 +9,11 @@
 #
 # Conditional build:
 %bcond_with	qmail	# build the router-qmail subpackage
+%bcond_with	order_patch	# with custom issue order patch
 
 #define	_snap	20060330
 #define	_rc		RC3
-%define	_rel	1.1
+%define	_rel	1.6
 
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
@@ -23,7 +24,7 @@ Release:	%{?_snap:0.%{_snap}.}%{?_rc:%{_rc}.}%{_rel}
 License:	GPL
 Group:		Applications/WWW
 #Source0:	http://downloads.mysql.com/snapshots/eventum/%{name}-nightly-%{_snap}.tar.gz
-Source0:	http://mysql.dataphone.se/Downloads/%{name}/%{name}-%{version}.tar.gz
+Source0:	http://mysql.dataphone.se/Downloads/eventum/%{name}-%{version}.tar.gz
 # Source0-md5:	e1845de39b4d9bd30ddec9c26031a7d5
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
@@ -50,6 +51,7 @@ Patch7:		%{name}-scm-updates.patch
 Patch8:		%{name}-close-signature.patch
 Patch9:		%{name}-list-sorting.patch
 Patch10:	%{name}-workflow-handlenewnote-note_id.patch
+Patch11:	%{name}-order4b.patch
 Patch100:	%{name}-paths.patch
 Patch101:	%{name}-cvs-config.patch
 Patch102:	%{name}-irc-mem.patch
@@ -413,9 +415,7 @@ Group:		Applications/WWW
 Requires:	%{name}-base = %{version}-%{release}
 Requires:	php-cli
 Requires:	php-common >= 3:4.1.0
-Requires:	php-curl
 Requires:	php-pear-XML_RPC
-Requires:	php-xml
 
 %description cli
 The Eventum command-line interface allows you to access most of the
@@ -480,6 +480,7 @@ rm -f rpc/xmlrpc_client.php
 %patch8 -p1
 %patch9 -p1
 %patch10 -p1
+%{?with_order_patch:%patch11 -p1}
 
 # packaging
 %patch100 -p1
