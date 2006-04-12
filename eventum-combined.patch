@@ -1,0 +1,389 @@
+Handle broken headers like double encoded personal field of email in Mail_API::getAddressInfo()
+Fix typo in Mail_API::getAddressInfo().
+
+--- eventum-1.7.1/include/class.mail.php	2006-04-12 00:48:18.349874724 +0300
++++ /home/glen/class.mail.php	2006-04-12 00:52:33.195568053 +0300
+@@ -245,12 +245,22 @@
+         $address = Mime_Helper::encodeValue($address);
+         include_once(APP_PEAR_PATH . "Mail/RFC822.php");
+         $t = Mail_RFC822::parseAddressList($address, null, null, false);
++        if (PEAR::isError($t)) {
++            Error_Handler::logError(array($t->getMessage(), $t->getDebugInfo()), __FILE__, __LINE__);
++            // ugly hack: remove double quotes and retry.
++            $address = str_replace('""', '"', $address);
++            $t = Mail_RFC822::parseAddressList($address, null, null, false);
++        }
++        if (PEAR::isError($t)) {
++            Error_Handler::logError(array($t->getMessage(), $t->getDebugInfo()), __FILE__, __LINE__);
++        }
++
+         if ($multiple) {
+             $returns = array();
+             for ($i = 0; $i < count($t); $i++) {
+                 $returns[] = array(
+                     'sender_name' => $t[$i]->personal,
+-                    'email'       => $t[$i]->mailbox . '@' . $t[0]->host,
++                    'email'       => $t[$i]->mailbox . '@' . $t[$i]->host,
+                     'username'    => $t[$i]->mailbox,
+                     'host'        => $t[$i]->host
+                 );
+
+-------------------------------------------------------------------------------------------------------
+Detect and log possibly corrupted MIME emails.
+
+--- eventum-1.7.1/include/class.mime_helper.php	2006-04-12 00:48:18.579879862 +0300
++++ /home/glen/class.mime_helper.php	2006-04-12 00:52:33.225568723 +0300
+@@ -39,6 +39,7 @@
+ */
+ 
+ include_once(APP_PEAR_PATH . "Mail/mimeDecode.php");
++include_once(APP_INC_PATH . "class.error_handler.php");
+ 
+ /**
+  * Class to handle the business logic related to the MIME email 
+@@ -88,6 +89,10 @@
+     {
+         $parts = array();
+         Mime_Helper::parse_output($output, $parts);
++        if (empty($parts)) {
++            Error_Handler::logError(array("Mime_Helper::parse_output failed. Corrupted MIME in email?", $output), __FILE__, __LINE__);
++            // we continue as if nothing happened until it's clear it's right check to do.
++        }
+         $str = '';
+         $is_html = false;
+         if (isset($parts["text"])) {
+
+-------------------------------------------------------------------------------------------------------
+Rewrite routing part to have consistent API for matching issue_ids from mail headers.
+Add new method Routing::getMatchingIssueIDs().
+
+--- eventum-1.7.1/include/class.routing.php	2006-04-12 00:48:18.189871149 +0300
++++ /home/glen/class.routing.php	2006-04-12 00:52:33.295570287 +0300
+@@ -104,35 +104,29 @@
+         if ($setup['email_routing']['status'] != 'enabled') {
+             return array(78, "Error: The email routing interface is disabled.\n");
+         }
+-        $prefix = $setup['email_routing']['address_prefix'];
+-        // escape plus signs so 'issue+1@example.com' becomes a valid routing address
+-        $prefix = str_replace('+', '\+', $prefix);
+-        $mail_domain = quotemeta($setup['email_routing']['address_host']);
+-        $mail_domain_alias = quotemeta(@$setup['email_routing']['host_alias']);
+-        if (!empty($mail_domain_alias)) {
+-            $mail_domain = "(?:" . $mail_domain . "|" . $mail_domain_alias . ")";
+-        }
+-        if (empty($prefix)) {
++        if (empty($setup['email_routing']['address_prefix'])) {
+             return array(78, "Error: Please configure the email address prefix.\n");
+         }
+-        if (empty($mail_domain)) {
++        if (empty($setup['email_routing']['address_host'])) {
+             return array(78, "Error: Please configure the email address domain.\n");
+         }
++
+         $structure = Mime_Helper::decode($full_message, true, true);
+ 
+         // find which issue ID this email refers to
+-        @preg_match("/$prefix(\d*)@$mail_domain/i", $structure->headers['to'], $matches);
+-        @$issue_id = $matches[1];
++        if (isset($structure->headers['to'])) {
++            $issue_id = Routing::getMatchingIssueIDs($structure->headers['to'], 'email');
++        }
+         // validation is always a good idea
+-        if (empty($issue_id)) {
++        if (empty($issue_id) and isset($structure->headers['cc'])) {
+             // we need to try the Cc header as well
+-            @preg_match("/$prefix(\d*)@$mail_domain/i", $structure->headers['cc'], $matches);
+-            if (!empty($matches[1])) {
+-                $issue_id = $matches[1];
+-            } else {
+-                return array(65, "Error: The routed email had no associated Eventum issue ID or had an invalid recipient address.\n");
+-            }
++            $issue_id = Routing::getMatchingIssueIDs($structure->headers['cc'], 'email');
++        }
++
++        if (empty($issue_id)) {
++            return array(65, "Error: The routed email had no associated Eventum issue ID or had an invalid recipient address.\n");
+         }
++
+         if (empty($email_account_id)) {
+             $issue_prj_id = Issue::getProjectID($issue_id);
+             if (empty($issue_prj_id)) {
+@@ -305,30 +299,26 @@
+         if (@$setup['note_routing']['status'] != 'enabled') {
+             return array(78, "Error: The internal note routing interface is disabled.\n");
+         }
+-        $prefix = $setup['note_routing']['address_prefix'];
+-        // escape plus signs so 'note+1@example.com' becomes a valid routing address
+-        $prefix = str_replace('+', '\+', $prefix);
+-        $mail_domain = quotemeta($setup['note_routing']['address_host']);
+-        if (empty($prefix)) {
++        if (empty($setup['note_routing']['address_prefix'])) {
+             return array(78, "Error: Please configure the email address prefix.\n");
+         }
+-        if (empty($mail_domain)) {
++        if (empty($setup['note_routing']['address_host'])) {
+             return array(78, "Error: Please configure the email address domain.\n");
+         }
+         $structure = Mime_Helper::decode($full_message, true, true);
+ 
+         // find which issue ID this email refers to
+-        @preg_match("/$prefix(\d*)@$mail_domain/i", $structure->headers['to'], $matches);
+-        @$issue_id = $matches[1];
++        if (isset($structure->headers['to'])) {
++            $issue_id = Routing::getMatchingIssueIDs($structure->headers['to'], 'note');
++        }
+         // validation is always a good idea
+-        if (empty($issue_id)) {
++        if (empty($issue_id) and isset($structure->headers['cc'])) {
+             // we need to try the Cc header as well
+-            @preg_match("/$prefix(\d*)@$mail_domain/i", $structure->headers['cc'], $matches);
+-            if (!empty($matches[1])) {
+-                $issue_id = $matches[1];
+-            } else {
+-                return array(65, "Error: The routed note had no associated Eventum issue ID or had an invalid recipient address.\n");
+-            }
++            $issue_id = Routing::getMatchingIssueIDs($structure->headers['cc'], 'note');
++        }
++
++        if (empty($issue_id)) {
++            return array(65, "Error: The routed note had no associated Eventum issue ID or had an invalid recipient address.\n");
+         }
+ 
+         $prj_id = Issue::getProjectID($issue_id);
+@@ -389,6 +379,7 @@
+         if ($res != -1) {
+             Support::extractAttachments($issue_id, $full_message, true, $res);
+         }
++        // FIXME! $res == -2 is not handled
+         History::add($issue_id, Auth::getUserID(), History::getTypeID('note_routed'), "Note routed from " . $structure->headers['from']);
+ 
+         return true;
+@@ -433,30 +424,27 @@
+         if (@$setup['draft_routing']['status'] != 'enabled') {
+             return array(78, "Error: The email draft interface is disabled.\n");
+         }
+-        $prefix = $setup['draft_routing']['address_prefix'];
+-        // escape plus signs so 'draft+1@example.com' becomes a valid address
+-        $prefix = str_replace('+', '\+', $prefix);
+-        $mail_domain = quotemeta($setup['draft_routing']['address_host']);
+-        if (empty($prefix)) {
++        if (empty($setup['draft_routing']['address_prefix'])) {
+             return array(78, "Error: Please configure the email address prefix.\n");
+         }
+-        if (empty($mail_domain)) {
++        if (empty($setup['draft_routing']['address_host'])) {
+             return array(78, "Error: Please configure the email address domain.\n");
+         }
++
+         $structure = Mime_Helper::decode($full_message, true, false);
+ 
+         // find which issue ID this email refers to
+-        @preg_match("/$prefix(\d*)@$mail_domain/i", $structure->headers['to'], $matches);
+-        @$issue_id = $matches[1];
++        if (isset($structure->headers['to'])) {
++            $issue_id = Routing::getMatchingIssueIDs($structure->headers['to'], 'draft');
++        }
+         // validation is always a good idea
+-        if (empty($issue_id)) {
++        if (empty($issue_id) and isset($structure->headers['cc'])) {
+             // we need to try the Cc header as well
+-            @preg_match("/$prefix(\d*)@$mail_domain/i", $structure->headers['cc'], $matches);
+-            if (!empty($matches[1])) {
+-                $issue_id = $matches[1];
+-            } else {
+-                return array(65, "Error: The routed draft had no associated Eventum issue ID or had an invalid recipient address.\n");
+-            }
++            $issue_id = Routing::getMatchingIssueIDs($structure->headers['cc'], 'draft');
++        }
++
++        if (empty($issue_id)) {
++            return array(65, "Error: The routed email had no associated Eventum issue ID or had an invalid recipient address.\n");
+         }
+ 
+         $prj_id = Issue::getProjectID($issue_id);
+@@ -477,5 +465,54 @@
+         History::add($issue_id, Auth::getUserID(), History::getTypeID('draft_routed'), "Draft routed from " . $structure->headers['from']);
+         return true;
+     }
++     
++    /**
++     * Check for $adresses for matches
++     *
++     * @param   mixed   $addresses to check
++     * @param   string  Type of address match to find (email, note, draft)
++     * @return  mixed   $issue_id in case of match otherwise false
++     */
++    function getMatchingIssueIDs($addresses, $type)
++    {
++        $setup = Setup::load();
++        $settings = $setup["${type}_routing"];
++        if (!is_array($settings)) {
++            return false;
++        }
++
++        if (empty($settings['address_prefix'])) {
++            return false;
++        }
++        // escape plus signs so 'issue+1@example.com' becomes a valid routing address
++        $prefix = quotemeta($settings['address_prefix']);
++
++        if (empty($settings['address_host'])) {
++            return false;
++        }
++        $mail_domain = quotemeta($settings['address_host']);
++
++        // it is not checked for type when host alias is asked. this leaves 
++        // room foradding host_alias for other than email routing.
++        if (isset($settings['host_alias'])) {
++            // TODO: can't quotemeta() host alias as it can contain multiple hosts separated with pipe
++            $mail_domain = '(?:' . $mail_domain . '|' . $settings['host_alias'] . ')';
++        }
++
++        // if there are multiple CC or To headers Mail_Mime creates array.
++        // handle both cases (strings and arrays).
++        if (!is_array($addresses)) {
++            $addresses = array($addresses);
++        }
++
++        // everything safely escaped and checked, try matching address
++        foreach ($addresses as $address) {
++            if (preg_match("/$prefix(\d*)@$mail_domain/i", $address, $matches)) {
++                return $matches[1];
++            }
++        }
++
++        return false;
++    }
+ }
+ ?>
+--- eventum-1.7.1/include/class.support.php	2006-04-12 00:48:18.619880756 +0300
++++ /home/glen/class.support.php	2006-04-12 00:52:33.395572521 +0300
+@@ -504,22 +504,22 @@
+             if ($info['ema_use_routing'] == 1) {
+                 $setup = Setup::load();
+ 
+-                if (@$setup['email_routing']['status'] == 'enabled') {
+-                    $prefix = $setup['email_routing']['address_prefix'];
+-                    // escape plus signs so 'issue+1@example.com' becomes a valid routing address
+-                    $prefix = str_replace('+', '\+', $prefix);
+-                    $mail_domain = $setup['email_routing']['address_host'];
+-                    $mail_domain_alias = @$setup['email_routing']['host_alias'];
+-                    if (!empty($mail_domain_alias)) {
+-                        $mail_domain = "[" . $mail_domain . "|" . $mail_domain_alias . "]";
+-                    }
+-                    if (empty($prefix)) {
+-                        return false;
++                // we create addresses array so it can be reused
++                $addresses = array();
++                if (isset($email->to)) {
++                    foreach ($email->to as $address) {
++                        $addresses[] = $address->mailbox . '@' . $address->host;
+                     }
+-                    if (empty($mail_domain)) {
+-                        return false;
++                }
++                if (isset($email->cc)) {
++                    foreach ($email->cc as $address) {
++                        $addresses[] = $address->mailbox . '@' . $address->host;
+                     }
+-                    if (preg_match("/$prefix(\d*)@$mail_domain/i", $email->toaddress, $matches)) {
++                }
++
++                if (@$setup['email_routing']['status'] == 'enabled') {
++                    $res = Routing::getMatchingIssueIDs($addresses, 'email');
++                    if ($res != false) {
+                         $return = Routing::route_emails($message);
+                         if ($return == true) {
+                             Support::deleteMessage($info, $mbox, $num);
+@@ -528,18 +528,8 @@
+                     }
+                 }
+                 if (@$setup['note_routing']['status'] == 'enabled') {
+-                    $prefix = $setup['note_routing']['address_prefix'];
+-                    // escape plus signs so 'note+1@example.com' becomes a valid routing address
+-                    $prefix = str_replace('+', '\+', $prefix);
+-                    $mail_domain = $setup['note_routing']['address_host'];
+-                    if (empty($prefix)) {
+-                        return false;
+-                    }
+-                    if (empty($mail_domain)) {
+-                        return false;
+-                    }
+-
+-                    if (preg_match("/$prefix(\d*)@$mail_domain/i", $email->toaddress, $matches)) {
++                    $res = Routing::getMatchingIssueIDs($addresses, 'note');
++                    if ($res != false) {
+                         $return = Routing::route_notes($message);
+                         if ($return == true) {
+                             Support::deleteMessage($info, $mbox, $num);
+@@ -548,18 +538,8 @@
+                     }
+                 }
+                 if (@$setup['draft_routing']['status'] == 'enabled') {
+-                    $prefix = $setup['draft_routing']['address_prefix'];
+-                    // escape plus signs so 'draft+1@example.com' becomes a valid routing address
+-                    $prefix = str_replace('+', '\+', $prefix);
+-                    $mail_domain = $setup['draft_routing']['address_host'];
+-                    if (empty($prefix)) {
+-                        return false;
+-                    }
+-                    if (empty($mail_domain)) {
+-                        return false;
+-                    }
+-
+-                    if (preg_match("/$prefix(\d*)@$mail_domain/i", $email->toaddress, $matches)) {
++                    $res = Routing::getMatchingIssueIDs($addresses, 'draft');
++                    if ($res != false) {
+                         $return = Routing::route_drafts($message);
+                         if ($return == true) {
+                             Support::deleteMessage($info, $mbox, $num);
+
+-------------------------------------------------------------------------------------------------------
+Fix possible Cc: headers composition of routed Notes where Eventum user email and email from headers differ with case.
+
+--- eventum-1.7.1/include/class.routing.php	2006-04-12 00:48:18.189871149 +0300
++++ /home/glen/class.routing.php	2006-04-12 00:52:33.295570287 +0300
+@@ -356,12 +346,11 @@
+         $cc_users = array();
+         foreach ($addresses as $email) {
+             if (in_array(strtolower($email), $user_emails)) {
+-                $cc_users[] = $users[$email];
++                $cc_users[] = $users[strtolower($email)];
+             }
+         }
+ 
+         $body = Mime_Helper::getMessageBody($structure);
+-
+         $reference_msg_id = Mail_API::getReferenceMessageID($headers);
+         if (!empty($reference_msg_id)) {
+             $parent_id = Note::getIDByMessageID($reference_msg_id);
+-------------------------------------------------------------------------------------------------------
+API cleanup: drop unneccessary $email_account_id in route_emails to be consistent with download_emails based routing.
+
+--- eventum-1.7.1/misc/route_emails.php	2006-04-12 00:54:57.398789518 +0300
++++ /home/glen/route_emails.php	2006-04-12 01:03:52.300737408 +0300
+@@ -33,10 +33,9 @@
+ include_once(APP_INC_PATH . "db_access.php");
+ include_once(APP_INC_PATH . "class.routing.php");
+ 
+-$email_account_id = $HTTP_SERVER_VARS['argv'][1];
+ $full_message = Misc::getInput();
+ 
+-$return = Routing::route_emails($full_message, $email_account_id);
++$return = Routing::route_emails($full_message);
+ if (is_array($return)) {
+     echo $return[1];
+     exit($return[0]);
+--- eventum-1.7.1/include/class.routing.php	2006-04-12 00:54:57.278786838 +0300
++++ /home/glen/class.routing.php	2006-04-12 01:03:45.370582745 +0300
+@@ -52,9 +52,8 @@
+      * Routes an email to the correct issue.
+      *
+      * @param   string $full_message The full email message, including headers
+-     * @param   integer $email_account_id The ID of the email account this email should be routed too. If empty this method will try to figure it out
+      */
+-    function route_emails($full_message, $email_account_id = 0)
++    function route_emails($full_message)
+     {
+         GLOBAL $HTTP_POST_VARS;
+ 
