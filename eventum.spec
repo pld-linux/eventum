@@ -381,6 +381,7 @@ Opis konfiguracji Postfiksa mo¿na znale¼æ pod adresem
 Summary:	Eventum IRC Notification Bot
 Summary(pl):	IRC-owy bot powiadamiaj±cy dla Eventum
 Group:		Applications/WWW
+Requires(post,preun):	/sbin/chkconfig
 Requires(triggerpostun):	sed >= 4.0
 Requires:	%{name} = %{version}-%{release}
 Requires:	php-pear-Net_SmartIRC
