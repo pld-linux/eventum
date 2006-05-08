@@ -1,0 +1,149 @@
+--- eventum-1.7.1/js/global.js	2006-05-09 00:45:20.430458749 +0300
++++ /home/glen/global.js	2006-05-09 00:46:12.751624134 +0300
+@@ -143,15 +143,19 @@
+     popupWin.focus();
+ }
+ 
+-function updateTimeFields(form_name, year_field, month_field, day_field, hour_field, minute_field)
++function updateTimeFields(form_name, year_field, month_field, day_field, hour_field, minute_field, date)
+ {
+     var f = getForm(form_name);
+-    var current_date = new Date();
+-    selectOption(f, month_field, padDateValue(current_date.getMonth()+1));
+-    selectOption(f, day_field, padDateValue(current_date.getDate()));
+-    selectOption(f, year_field, current_date.getFullYear());
+-    selectOption(f, hour_field, padDateValue(current_date.getHours()));
+-    selectOption(f, minute_field, padDateValue(current_date.getMinutes()));
++	if (typeof date == 'undefined') {
++		date = new Date();
++	}
++    selectOption(f, month_field, padDateValue(date.getMonth()+1));
++    selectOption(f, day_field, padDateValue(date.getDate()));
++    selectOption(f, year_field, date.getFullYear());
++    selectOption(f, hour_field, padDateValue(date.getHours()));
++	// minutes need special case due the 5 minute granularity
++	var minutes = Math.floor(date.getMinutes() / 5) * 5;
++    selectOption(f, minute_field, padDateValue(minutes));
+ }
+ 
+ function padDateValue(str)
+--- eventum-1.7.1/templates/en/add_time_tracking.tpl.html	2006-05-09 00:45:21.270477456 +0300
++++ /home/glen/add_time_tracking.tpl.html	2006-05-09 00:49:05.375471751 +0300
+@@ -51,6 +51,65 @@
+     }
+     return true;
+ }
++
++function calcDateDiff(f, type)
++{
++	/*
++	Logic:
++	if duration is filled
++	- if start time is modified, the end time is calculated
++	- if end time is modified, the start time is calculated
++
++	if duration is empty then duration is calculated when you change either
++	start or end time.
++
++	clicking refresh icon on either times will make that time current date and
++	recalculate duration
++
++	*/
++	var duration = f.elements['time_spent'].value;
++	duration = Math.floor(duration / 5) * 5;
++
++	var d1 = new Date();
++	d1.setFullYear(f.elements['date[Year]'].value);
++	d1.setMonth(f.elements['date[Month]'].value - 1);
++	d1.setDate(f.elements['date[Day]'].value);
++	d1.setHours(f.elements['date[Hour]'].value);
++	d1.setMinutes(f.elements['date[Minute]'].value);
++	d1.setSeconds(0);
++
++	var d2 = new Date();
++	d2.setFullYear(f.elements['date2[Year]'].value);
++	d2.setMonth(f.elements['date2[Month]'].value - 1);
++	d2.setDate(f.elements['date2[Day]'].value);
++	d2.setHours(f.elements['date2[Hour]'].value);
++	d2.setMinutes(f.elements['date2[Minute]'].value);
++	d2.setSeconds(0);
++
++	var minute = 1000 * 60;
++	/* decide which time user changed */
++	if (duration && type != 3) {
++		// user changed start time or filled duration
++		if (type == 1 || type == 0) {
++			d2.setTime(d1.getTime() + duration * minute)
++
++		// user changed end time
++		} else if (type == 2) {
++			d1.setTime(d2.getTime() - duration * minute)
++		}
++	} else if (type) {
++		duration = (d2.getTime() - d1.getTime()) / minute
++	}
++
++	/* refill form after calculation */
++	updateTimeFields(f.name, 'date[Year]', 'date[Month]', 'date[Day]', 'date[Hour]', 'date[Minute]', d1)
++	updateTimeFields(f.name, 'date2[Year]', 'date2[Month]', 'date2[Day]', 'date2[Hour]', 'date2[Minute]', d2)
++
++	if (duration > 0) {
++		f.elements['time_spent'].value = parseInt(duration);
++	}
++
++}
+ //-->
+ </script>
+ {/literal}
+@@ -82,19 +141,31 @@
+                   {include file="error_icon.tpl.html" field="category"}
+                 </td>
+               </tr>
+-              <tr>
++
++              <tr>
+                 <td bgcolor="{$internal_color}" class="default_white" width="190" nowrap><b>Time Spent:</b></td>
+-                <td bgcolor="{$light_color}" width="100%"><input class="default" type="text" size="5" name="time_spent" class="default"> <span class="default">(in minutes)</span>{include file="error_icon.tpl.html" field="time_spent"}</td>
++                <td bgcolor="{$light_color}" width="100%"><input class="default" type="text" size="5" name="time_spent" class="default" onChange="calcDateDiff(this.form, 0)"> <span class="default">(in minutes)</span>{include file="error_icon.tpl.html" field="time_spent"}</td>
++              </tr>
++
++              <tr>
++                <td bgcolor="{$internal_color}" class="default_white" width="190" nowrap><b>Work started:</b></td>
++                <td bgcolor="{$light_color}" width="100%">
++                  {html_select_date start_year='-1' day_value_format='%02d' field_array='date' prefix='' all_extra=' class="default" onChange="calcDateDiff(this.form, 1)"'}&nbsp;
++                  {html_select_time minute_interval=5 field_array='date' prefix='' all_extra=' class="default" onChange="calcDateDiff(this.form, 1)"' display_seconds=false}
++                  <a href="javascript:void(null);" onClick="javascript:updateTimeFields('add_time_form', 'date[Year]', 'date[Month]', 'date[Day]', 'date[Hour]', 'date[Minute]');calcDateDiff(getForm('add_time_form'), 3)"><img src="images/icons/refresh.gif" border="0"></a>
++                </td>
+               </tr>
+-              <tr>
+-                <td bgcolor="{$internal_color}" class="default_white" width="190" nowrap><b>Date of Work:</b></td>
++
++              <tr>
++                <td bgcolor="{$internal_color}" class="default_white" width="190" nowrap><b>Work ended:</b></td>
+                 <td bgcolor="{$light_color}" width="100%">
+-                  {html_select_date start_year='-1' day_value_format='%02d' field_array='date' prefix='' all_extra=' class="default"'}&nbsp;
+-                  {html_select_time minute_interval=5 field_array='date' prefix='' all_extra=' class="default"' display_seconds=false}
+-                  <a href="javascript:void(null);" onClick="javascript:updateTimeFields('add_time_form', 'date[Year]', 'date[Month]', 'date[Day]', 'date[Hour]', 'date[Minute]');"><img src="images/icons/refresh.gif" border="0"></a>
++                  {html_select_date start_year='-1' day_value_format='%02d' field_array='date2' prefix='' all_extra=' class="default" onChange="calcDateDiff(this.form, 2)"'}&nbsp;
++                  {html_select_time minute_interval=5 field_array='date2' prefix='' all_extra=' class="default" onChange="calcDateDiff(this.form, 2)"' display_seconds=false}
++                  <a href="javascript:void(null);" onClick="javascript:updateTimeFields('add_time_form', 'date2[Year]', 'date2[Month]', 'date2[Day]', 'date2[Hour]', 'date2[Minute]'); calcDateDiff(getForm('add_time_form'), 3)"><img src="images/icons/refresh.gif" border="0"></a>
+                 </td>
+               </tr>
+-              <tr>
++
++              <tr>
+                 <td colspan="2" bgcolor="{$internal_color}" align="center" width="100%" nowrap>
+                   <input type="submit" value="Add Time Entry" class="button">
+                 </td>
+@@ -111,8 +182,9 @@
+ <script language="JavaScript">
+ <!--
+ updateTimeFields('add_time_form', 'date[Year]', 'date[Month]', 'date[Day]', 'date[Hour]', 'date[Minute]');
++updateTimeFields('add_time_form', 'date2[Year]', 'date2[Month]', 'date2[Day]', 'date2[Hour]', 'date2[Minute]');
+ //-->
+ </script>
+ {include file="app_info.tpl.html"}
+ {/if}
+-{include file="footer.tpl.html"}
+\ No newline at end of file
++{include file="footer.tpl.html"}
