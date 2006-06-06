@@ -13,7 +13,7 @@
 
 #define	_snap	20060330
 #define	_rc		RC3
-%define	_rel	2.21
+%define	_rel	2.22
 
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
@@ -40,6 +40,7 @@ Source11:	%{name}-router-qmail.sh
 Source12:	%{name}-config-setup.php
 Source13:	%{name}-upgrade.sh
 Source14:	%{name}-router-postfix.sh
+Source15:	%{name}.logrotate
 Patch0:		%{name}-lf.patch
 Patch1:		%{name}-perms.patch
 Patch2:		%{name}-cli-wr-separated.patch
@@ -531,7 +532,8 @@ rm -rf $RPM_BUILD_ROOT
 install -d \
 	$RPM_BUILD_ROOT{%{_webappdir},%{_sysconfdir},%{_bindir},%{_sbindir},%{_libdir}} \
 	$RPM_BUILD_ROOT/etc/{rc.d/init.d,cron.d,sysconfig} \
-	$RPM_BUILD_ROOT/var/{run,log,cache,lib}/%{name} \
+	$RPM_BUILD_ROOT/var/{run,cache,lib}/%{name} \
+	$RPM_BUILD_ROOT/var/log/{archiv/,}%{name} \
 	$RPM_BUILD_ROOT/var/lib/%{name}/routed_{emails,drafts,notes} \
 	$RPM_BUILD_ROOT%{_appdir}/{include,htdocs/misc,upgrade} \
 
@@ -603,6 +605,8 @@ install %{SOURCE11} $RPM_BUILD_ROOT%{_libdir}/router-qmail
 %endif
 # postfix router
 install %{SOURCE14} $RPM_BUILD_ROOT%{_libdir}/router-postfix
+
+install -D %{SOURCE15} $RPM_BUILD_ROOT/etc/logrotate.d/%{name}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -845,6 +849,8 @@ fi
 
 %dir %attr(731,root,eventum) /var/log/%{name}
 %attr(620,root,eventum) %ghost /var/log/%{name}/*
+%dir %attr(750,root,root) /var/log/archiv/%{name}
+%config(noreplace) %verify(not md5 mtime size) /etc/logrotate.d/%{name}
 
 %dir %{_appdir}/htdocs
 %{_appdir}/htdocs/*.php

@@ -1,0 +1,9 @@
+/var/log/eventum/errors.log
+/var/log/eventum/irc_bot.log
+{
+	monthly
+	notifempty
+	rotate 52
+	create 620 root eventum
+	olddir /var/log/archiv/eventum
+}
