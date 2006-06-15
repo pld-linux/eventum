@@ -13,7 +13,7 @@
 
 #define	_snap	20060330
 #define	_rc		RC3
-%define	_rel	2.22
+%define	_rel	2.23
 
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
@@ -726,6 +726,12 @@ fi
 %post irc
 /sbin/chkconfig --add eventum-irc
 %service eventum-irc restart "Eventum IRC Bot"
+
+%preun irc
+if [ "$1" = 0 ]; then
+	%service eventum-irc stop
+	/sbin/chkconfig --del eventum-irc
+fi
 
 %triggerin -- apache1
 %webapp_register apache %{_webapp}
