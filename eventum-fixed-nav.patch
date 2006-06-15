@@ -1,0 +1,44 @@
+--- /dev/null	2006-03-28 14:00:37.387408000 +0300
++++ eventum-1.7.1/css/common.css	2006-06-15 21:35:45.731492788 +0300
+@@ -0,0 +1,15 @@
++body {
++	padding-top: 56px;
++}
++
++div#navbar { 
++	position: absolute;
++	width: -11em;
++	height: auto;
++	top: 0;
++	right: auto;
++	bottom: auto;
++	left: 0;
++}
++
++body>div#navbar { position: fixed }
+--- eventum-1.7.1/templates/en/header.tpl.html~	2006-06-15 20:36:52.842558353 +0300
++++ eventum-1.7.1/templates/en/header.tpl.html	2006-06-15 21:35:45.681491670 +0300
+@@ -7,6 +7,7 @@
+ {else}
+ <link rel="stylesheet" href="{$rel_url}css/other.css" type="text/css">
+ {/if}
++<link rel="stylesheet" href="{$rel_url}css/common.css" type="text/css">
+ <script language="JavaScript" src="{$rel_url}js/browserSniffer.js"></script>
+ <script language="JavaScript" src="{$rel_url}js/global.js"></script>
+ <script language="JavaScript" src="{$rel_url}js/validation.js"></script>
+--- eventum-1.7.1/templates/en/navigation.tpl.html	2006-06-15 20:36:52.922560140 +0300
++++ eventum-1.7.1/templates/en/navigation.tpl.html	2006-06-15 21:35:45.721492564 +0300
+@@ -1,4 +1,4 @@
+-
++<div id="navbar">
+ <table width="100%" border="0" cellspacing="0" cellpadding="0">
+   <tr>
+     <td>
+@@ -114,6 +114,7 @@
+     </td>
+   </tr>
+ </table>
++</div>
+ 
+ {if $show_line != "no"}
+ <hr size="1" noshade color="{$cell_color}">
