@@ -9,7 +9,7 @@
 +// shortcut to exit out when no issue id-s are passed in request
 +// as this script is always called by CVS but we handle only ones which can be 
 +// associated with issues.
-+if (empty($_GET['issue']) {
++if (empty($_GET['issue'])) {
 +    exit;
 +}
 +
