@@ -1,0 +1,22 @@
+--- eventum-1.7.1/misc/process_mail_queue.php~	2006-06-19 17:50:25.747786986 +0300
++++ eventum-1.7.1/misc/process_mail_queue.php	2006-06-19 17:59:33.490045125 +0300
+@@ -27,7 +27,9 @@
+ // +----------------------------------------------------------------------+
+ //
+ // @(#) $Id$
+-//
++
++ini_set("memory_limit", "256M");
++
+ include_once("/etc/webapps/eventum/core.php");
+ include_once(APP_INC_PATH . "db_access.php");
+ include_once(APP_INC_PATH . "class.mail_queue.php");
+@@ -60,8 +62,6 @@
+     exit;
+ }
+ 
+-ini_set("memory_limit", "256M");
+-
+ // handle only pending emails
+ $limit = 50;
+ Mail_Queue::send('pending', $limit);
