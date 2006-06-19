@@ -1,7 +1,6 @@
 <?php
+# $Id$
+# URL to your Eventum installation.
+# https is supported transparently by PHP 5 if you have openssl module enabled.
 
-$eventum_domain = 'localhost';
-$eventum_relative_url = '/eventum/';
-$eventum_port = 80;
-
-?>
+$eventum_url = 'http://localhost/eventum/';
