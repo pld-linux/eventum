@@ -13,7 +13,7 @@
 
 #define	_snap	20060330
 #define	_rc		RC3
-%define	_rel	2.25
+%define	_rel	2.26
 
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
@@ -499,7 +499,7 @@ rm -f rpc/xmlrpc_client.php
 %patch16 -p1
 %patch17 -p1
 %patch18 -p1
-%patch19 -p1
+#%patch19 -p1
 
 # packaging
 %patch100 -p1
@@ -510,6 +510,12 @@ rm -f rpc/xmlrpc_client.php
 %patch105 -p1
 %patch106 -p1
 %patch107 -p1
+
+cat <<'EOF'> mysql-permissions.sql
+# use this schema if you want to grant permissions manually instead of using setup
+# this schema is extracted from setup/index.php.
+GRANT SELECT, UPDATE, DELETE, INSERT, ALTER, DROP, CREATE, INDEX ON eventum.* TO 'eventum'@'localhost' IDENTIFIED BY 'password';
+EOF
 
 sed -e '1s,#!.*/bin/php -q,#!%{_bindir}/php,' misc/cli/eventum > %{name}-cli
 sed -e '1i#!%{_bindir}/php' misc/scm/process_cvs_commits.php > %{name}-scm
@@ -848,7 +854,7 @@ fi
 %files
 %defattr(644,root,root,755)
 %doc ChangeLog FAQ INSTALL README UPGRADE CONTRIB
-%doc docs/* setup/schema.sql
+%doc docs/* setup/schema.sql mysql-permissions.sql
 %attr(751,root,root) %dir %{_webappdir}
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/apache.conf
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/httpd.conf
