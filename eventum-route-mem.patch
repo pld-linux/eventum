@@ -4,7 +4,7 @@
  //
  // @(#) $Id$
  //
-+ini_set('memory_limit', '16M');
++ini_set('memory_limit', '256M');
  include_once("../config.inc.php");
  include_once(APP_INC_PATH . "db_access.php");
  include_once(APP_INC_PATH . "class.routing.php");
@@ -14,7 +14,7 @@
  //
  // @(#) $Id$
  //
-+ini_set('memory_limit', '16M');
++ini_set('memory_limit', '256M');
  include_once("../config.inc.php");
  include_once(APP_INC_PATH . "db_access.php");
  include_once(APP_INC_PATH . "class.routing.php");
@@ -24,7 +24,7 @@
  //
  // @(#) $Id$
  //
-+ini_set('memory_limit', '16M');
++ini_set('memory_limit', '256M');
  include_once("../config.inc.php");
  include_once(APP_INC_PATH . "db_access.php");
  include_once(APP_INC_PATH . "class.routing.php");
