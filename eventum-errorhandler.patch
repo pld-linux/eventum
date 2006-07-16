@@ -1,0 +1,22 @@
+print_r $return parameter appeared in 4.3.0, so we can skip the ob capture stuff
+
+--- eventum-1.7.1/include/class.error_handler.php~	2006-07-15 21:14:46.624810456 +0300
++++ eventum-1.7.1/include/class.error_handler.php	2006-07-16 17:34:08.494895266 +0300
+@@ -105,16 +105,12 @@
+         // only try to include the backtrace if we are on PHP 4.3.0 or later
+         if (version_compare(phpversion(), "4.3.0", ">=")) {
+             $msg .= "\n\nA backtrace is available:\n\n";
+-            ob_start();
+             $backtrace = debug_backtrace();
+             // remove the two entries related to the error handling stuff itself
+             array_shift($backtrace);
+             array_shift($backtrace);
+             // now we can print it out
+-            print_r($backtrace);
+-            $contents = ob_get_contents();
+-            $msg .= $contents;
+-            ob_end_clean();
++            $msg .= print_r($backtrace, 1);
+         }
+         // avoid triggering an email notification about a query that 
+         // was bigger than max_allowed_packet (usually 16 megs on 3.23 
