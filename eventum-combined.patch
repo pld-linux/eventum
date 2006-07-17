@@ -1,18 +1,12 @@
-Handle broken headers like double encoded personal field of email in Mail_API::getAddressInfo()
+Catch error from address parsing.
 Fix typo in Mail_API::getAddressInfo().
 
 --- eventum-1.7.1/include/class.mail.php	2006-04-12 00:48:18.349874724 +0300
 +++ /home/glen/class.mail.php	2006-04-12 00:52:33.195568053 +0300
-@@ -245,12 +245,22 @@
+@@ -245,12 +245,16 @@
          $address = Mime_Helper::encodeValue($address);
          include_once(APP_PEAR_PATH . "Mail/RFC822.php");
          $t = Mail_RFC822::parseAddressList($address, null, null, false);
-+        if (PEAR::isError($t)) {
-+            Error_Handler::logError(array($t->getMessage(), $t->getDebugInfo()), __FILE__, __LINE__);
-+            // ugly hack: remove double quotes and retry.
-+            $address = str_replace('""', '"', $address);
-+            $t = Mail_RFC822::parseAddressList($address, null, null, false);
-+        }
 +        if (PEAR::isError($t)) {
 +            Error_Handler::logError(array($t->getMessage(), $t->getDebugInfo()), __FILE__, __LINE__);
 +        }
@@ -56,7 +50,6 @@ Detect and log possibly corrupted MIME emails.
 -------------------------------------------------------------------------------------------------------
 Rewrite routing part to have consistent API for matching issue_ids from mail headers.
 Add new method Routing::getMatchingIssueIDs().
-
 --- eventum-1.7.1/include/class.routing.php	2006-04-12 00:48:18.189871149 +0300
 +++ /home/glen/class.routing.php	2006-04-12 00:52:33.295570287 +0300
 @@ -104,35 +104,29 @@
@@ -340,7 +333,6 @@ Add new method Routing::getMatchingIssueIDs().
 
 -------------------------------------------------------------------------------------------------------
 Fix possible Cc: headers composition of routed Notes where Eventum user email and email from headers differ with case.
-
 --- eventum-1.7.1/include/class.routing.php	2006-04-12 00:48:18.189871149 +0300
 +++ /home/glen/class.routing.php	2006-04-12 00:52:33.295570287 +0300
 @@ -356,12 +346,11 @@
@@ -359,7 +351,6 @@ Fix possible Cc: headers composition of routed Notes where Eventum user email an
              $parent_id = Note::getIDByMessageID($reference_msg_id);
 -------------------------------------------------------------------------------------------------------
 API cleanup: drop unneccessary $email_account_id in route_emails to be consistent with download_emails based routing.
-
 --- eventum-1.7.1/misc/route_emails.php	2006-04-12 00:54:57.398789518 +0300
 +++ /home/glen/route_emails.php	2006-04-12 01:03:52.300737408 +0300
 @@ -33,10 +33,9 @@
