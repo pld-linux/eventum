@@ -1,27 +1,17 @@
 Catch error from address parsing.
-Fix typo in Mail_API::getAddressInfo().
 
---- eventum-1.7.1/include/class.mail.php	2006-04-12 00:48:18.349874724 +0300
-+++ /home/glen/class.mail.php	2006-04-12 00:52:33.195568053 +0300
-@@ -245,12 +245,16 @@
+--- eventum-20060717/include/class.mail.php~	2006-07-18 01:21:08.631017731 +0300
++++ eventum-20060717/include/class.mail.php	2006-07-18 01:22:01.102190536 +0300
+@@ -244,6 +244,9 @@
          $address = Mime_Helper::encodeValue($address);
          include_once(APP_PEAR_PATH . "Mail/RFC822.php");
          $t = Mail_RFC822::parseAddressList($address, null, null, false);
 +        if (PEAR::isError($t)) {
 +            Error_Handler::logError(array($t->getMessage(), $t->getDebugInfo()), __FILE__, __LINE__);
 +        }
-+
          if ($multiple) {
              $returns = array();
              for ($i = 0; $i < count($t); $i++) {
-                 $returns[] = array(
-                     'sender_name' => $t[$i]->personal,
--                    'email'       => $t[$i]->mailbox . '@' . $t[0]->host,
-+                    'email'       => $t[$i]->mailbox . '@' . $t[$i]->host,
-                     'username'    => $t[$i]->mailbox,
-                     'host'        => $t[$i]->host
-                 );
-
 -------------------------------------------------------------------------------------------------------
 Detect and log possibly corrupted MIME emails.
 
@@ -279,7 +269,7 @@ Add new method Routing::getMatchingIssueIDs().
 +                    foreach ($email->cc as $address) {
 +                        $addresses[] = $address->mailbox . '@' . $address->host;
                      }
--                    if (preg_match("/$prefix(\d*)@$mail_domain/i", $email->toaddress, $matches)) {
+-                    if ((isset($email->toaddress)) && (preg_match("/$prefix(\d*)@$mail_domain/i", $email->toaddress, $matches))) {
 +                }
 +
 +                if (@$setup['email_routing']['status'] == 'enabled') {

@@ -78,17 +78,17 @@
  
  $_displayed_confirmation = false;
  
---- ./include/class.template.php~	2005-02-27 17:49:54.000000000 +0200
-+++ ./include/class.template.php	2005-02-27 17:51:00.000000000 +0200
+--- eventum-localization-dev/include/class.template.php~	2006-04-10 23:48:12.740151749 +0300
++++ eventum-localization-dev/include/class.template.php	2006-04-10 23:48:16.310231300 +0300
 @@ -60,7 +60,7 @@
      {
          $this->smarty = new Smarty;
-         $this->smarty->template_dir = APP_TPL_PATH . APP_CURRENT_LANG;
+         $this->smarty->template_dir = APP_TPL_PATH;
 -        $this->smarty->compile_dir = APP_PATH . "templates_c";
-+        $this->smarty->compile_dir = "/var/cache/eventum";
++        $this->smarty->compile_dir = '/var/cache/eventum';
          $this->smarty->config_dir = '';
          $this->smarty->register_modifier("activateLinks", array('Link_Filter', 'activateLinks'));
-     }
+         $this->smarty->register_modifier("formatCustomValue", array('Custom_Field', 'formatValue'));
 --- ./include/class.monitor.php~	2005-02-22 21:50:49.000000000 +0200
 +++ ./include/class.monitor.php	2005-02-22 23:04:50.000000000 +0200
 @@ -157,6 +165,7 @@
@@ -99,9 +99,9 @@
          foreach ($required_directories as $dir_path => $options) {
              // check if directory exists
              if (!file_exists($dir_path)) {
---- ./setup/index.php	2005-04-16 05:53:27.000000000 +0300
-+++ eventum-1.5.2.patched/setup/index.php	2005-04-16 05:53:05.000000000 +0300
-@@ -118,31 +118,31 @@
+--- eventum-20060717/setup/index.php~	2006-07-18 00:20:57.530267420 +0300
++++ eventum-20060717/setup/index.php	2006-07-18 00:22:06.301805247 +0300
+@@ -121,31 +121,31 @@
      if (ini_get('allow_call_time_pass_reference') != "1") {
          $errors[] = "The 'allow_call_time_pass_reference' directive needs to be enabled in your PHP.INI file in order for Eventum to work properly.";
      }
@@ -140,6 +140,8 @@
      if (!empty($error)) {
          $errors[] = $error;
      }
+--- ./setup/index.php	2005-04-16 05:53:27.000000000 +0300
++++ eventum-1.5.2.patched/setup/index.php	2005-04-16 05:53:05.000000000 +0300
 @@ -276,8 +276,8 @@
  
      clearstatcache();
@@ -173,11 +175,10 @@
      }
      fclose($fp);
      // check if we can connect
-@@ -425,23 +425,8 @@
-     $tpl->assign('is_imap_enabled', function_exists('imap_open'));
+@@ -442,22 +442,8 @@
  }
  
--
+ 
 -$full_url = dirname($HTTP_SERVER_VARS['PHP_SELF']);
 -$pieces = explode("/", $full_url);
 -$relative_url = array();
@@ -190,10 +191,10 @@
 -$relative_url[] = '';
 -$relative_url = implode("/", $relative_url);
 -
--if (substr($HTTP_SERVER_VARS['DOCUMENT_ROOT'], -1) == '/') {
+-if (substr(@$HTTP_SERVER_VARS['DOCUMENT_ROOT'], -1) == '/') {
 -    $HTTP_SERVER_VARS['DOCUMENT_ROOT'] = substr($HTTP_SERVER_VARS['DOCUMENT_ROOT'], 0, -1);
 -}
--$installation_path = $HTTP_SERVER_VARS['DOCUMENT_ROOT'] . $relative_url;
+-$installation_path = @$HTTP_SERVER_VARS['DOCUMENT_ROOT'] . $relative_url;
 +$installation_path = "/usr/share/eventum";
 +$relative_url = "/eventum/";
  
@@ -247,21 +248,6 @@
          $fp = @fopen($path . $filename, 'w');
 --- ../setup/index.php~	2005-07-26 18:49:37.000000000 +0300
 +++ ../setup/index.php	2005-07-26 19:12:57.000000000 +0300
-@@ -213,11 +213,11 @@
-     exit;
- }
- 
--include_once("../include/Smarty/Smarty.class.php");
-+include_once("/usr/share/pear/Smarty/Smarty.class.php");
- 
- $tpl = new Smarty();
--$tpl->template_dir = '../templates/en';
--$tpl->compile_dir = "../templates_c";
-+$tpl->template_dir = '/usr/share/eventum/templates/en';
-+$tpl->compile_dir = "/var/cache/eventum";
- $tpl->config_dir = '';
- 
- function replace_table_prefix($str)
 @@ -417,7 +417,7 @@
          $config_contents = str_replace("%{APP_ENABLE_FULLTEXT}%", "false", $config_contents);
      }
@@ -271,6 +257,23 @@
      if ($fp === FALSE) {
          return "Could not open the file 'config.inc.php' for writing. The permissions on the file should be set as to allow the user that the web server runs as to open it. Please correct this problem and try again.";
      }
+--- eventum-localization-dev2/setup/index.php~	2006-06-02 00:58:11.321514674 +0300
++++ eventum-localization-dev2/setup/index.php	2006-06-02 00:58:46.032294537 +0300
+@@ -208,11 +208,11 @@
+     exit;
+ }
+ 
+-include_once("../include/Smarty/Smarty.class.php");
++include_once("/usr/share/pear/Smarty/Smarty.class.php");
+ 
+ $tpl = new Smarty();
+-$tpl->template_dir = '../templates/';
+-$tpl->compile_dir = "../templates_c";
++$tpl->template_dir = '/usr/share/eventum/templates';
++$tpl->compile_dir = "/var/cache/eventum";
+ $tpl->config_dir = '';
+ 
+ function replace_table_prefix($str)
 --- eventum-1.5.5/setup/index.php~	2005-07-26 20:22:06.000000000 +0300
 +++ eventum-1.5.5/setup/index.php	2005-07-26 20:35:31.000000000 +0300
 @@ -198,13 +198,7 @@
@@ -288,12 +291,12 @@
  include_once("File/Util.php");
  
  $html = checkRequirements();
---- eventum-20051130/include/class.template.php~	2005-11-30 17:51:55.000000000 +0200
-+++ eventum-20051130/include/class.template.php	2005-11-30 17:53:15.000000000 +0200
+--- eventum-localization-dev/include/class.template.php~	2006-04-11 00:16:59.258616656 +0300
++++ eventum-localization-dev/include/class.template.php	2006-04-11 00:17:23.649160189 +0300
 @@ -61,6 +61,7 @@
          $this->smarty = new Smarty;
-         $this->smarty->template_dir = APP_TPL_PATH . APP_CURRENT_LANG;
-         $this->smarty->compile_dir = "/var/cache/eventum";
+         $this->smarty->template_dir = APP_TPL_PATH;
+         $this->smarty->compile_dir = '/var/cache/eventum';
 +        $this->smarty->plugins_dir  = array('/usr/share/eventum/include/smarty', 'plugins');
          $this->smarty->config_dir = '';
          $this->smarty->register_modifier("activateLinks", array('Link_Filter', 'activateLinks'));

@@ -61,6 +61,7 @@ define("APP_DEFAULT_ASSIGNED_EMAILS", 1); // if the user will recieve an email w
 define("APP_DEFAULT_NEW_EMAILS", 0); // if the user will recieve an email when ANY issue is created
 
 define("APP_CHARSET", "ISO-8859-1");
+define("APP_DEFAULT_LOCALE", "en_US");
 
 // define colors used by eventum
 define("APP_CELL_COLOR", "#255282");

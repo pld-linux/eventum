@@ -1,5 +1,5 @@
---- eventum-1.7.0/templates/en/attachments.tpl.html     2005-12-30 08:27:24.000000000 +1300
-+++ eventum/templates/en/attachments.tpl.html   2006-02-22 16:28:47.000000000 +1300
+--- eventum-1.7.0/templates/attachments.tpl.html     2005-12-30 08:27:24.000000000 +1300
++++ eventum/templates/attachments.tpl.html   2006-02-22 16:28:47.000000000 +1300
 @@ -31,7 +31,6 @@
  //-->
  </script>
@@ -16,8 +16,8 @@
              {if $browser.ie5up or $browser.ns6up or $browser.gecko or $browser.safari}
              [ <a id="attachments_link" class="link" href="javascript:void(null);" onClick="javascript:toggleVisibility('attachments');">{get_innerhtml element_name="attachments"}</a> ]
              {/if}
---- eventum-1.7.0/templates/en/checkins.tpl.html        2005-12-30 08:27:25.000000000 +1300
-+++ eventum/templates/en/checkins.tpl.html      2006-02-22 16:29:26.000000000 +1300
+--- eventum-1.7.0/templates/checkins.tpl.html        2005-12-30 08:27:25.000000000 +1300
++++ eventum/templates/checkins.tpl.html      2006-02-22 16:29:26.000000000 +1300
 @@ -20,7 +20,6 @@
  //-->
  </script>
@@ -34,8 +34,8 @@
              {if $browser.ie5up or $browser.ns6up or $browser.gecko or $browser.safari or $browser.opera5up}
              [ <a id="checkins_link" class="link" href="javascript:void(null);" onClick="javascript:toggleVisibility('checkins');">{get_innerhtml element_name="checkins" total=$checkins|@count}</a> ]
              {/if} Common subdirectories: eventum-1.7.0/templates/en/customer and eventum/templates/en/customer
---- eventum-1.7.0/templates/en/custom_fields.tpl.html   2005-12-30 08:27:24.000000000 +1300
-+++ eventum/templates/en/custom_fields.tpl.html 2006-02-22 16:27:56.000000000 +1300
+--- eventum-1.7.0/templates/custom_fields.tpl.html   2005-12-30 08:27:24.000000000 +1300
++++ eventum/templates/custom_fields.tpl.html 2006-02-22 16:27:56.000000000 +1300
 @@ -11,7 +11,6 @@
  //-->
  </script>
@@ -54,8 +54,8 @@
              {if $browser.ie5up or $browser.ns6up or $browser.gecko or $browser.safari or $browser.opera5up}
              [ <a id="custom_fields_link" class="link" href="javascript:void(null);" onClick="javascript:toggleVisibility('custom_fields');">{get_innerhtml element_name="custom_fields" total=$custom_fields|@count}</a> ]
              {/if}
---- eventum-1.7.0/templates/en/email_drafts.tpl.html    2005-12-30 08:27:25.000000000 +1300
-+++ eventum/templates/en/email_drafts.tpl.html  2006-02-22 16:31:17.000000000 +1300
+--- eventum-1.7.0/templates/email_drafts.tpl.html    2005-12-30 08:27:25.000000000 +1300
++++ eventum/templates/email_drafts.tpl.html  2006-02-22 16:31:17.000000000 +1300
 @@ -33,7 +33,6 @@
  {else}
    {assign var="draft_col_count" value="6"}
@@ -74,8 +74,8 @@
              [ <a id="drafts_link" class="link" href="javascript:void(null);" onClick="javascript:toggleVisibility('drafts');">{get_innerhtml element_name="drafts" total=$drafts|@count}</a> ]
              {/if}
            </td> Common subdirectories: eventum-1.7.0/templates/en/expandable_cell and eventum/templates/en/expandable_cell
---- eventum-1.7.0/templates/en/notes.tpl.html   2005-12-30 08:27:24.000000000 +1300
-+++ eventum/templates/en/notes.tpl.html 2006-02-22 16:30:29.000000000 +1300
+--- eventum-1.7.0/templates/notes.tpl.html   2005-12-30 08:27:24.000000000 +1300
++++ eventum/templates/notes.tpl.html 2006-02-22 16:30:29.000000000 +1300
 @@ -43,7 +43,6 @@
  //-->
  </script>
@@ -92,8 +92,8 @@
              {if $browser.ie5up or $browser.ns6up or $browser.gecko or $browser.safari or $browser.opera5up or $browser.safari or $browser.opera5up}
              [ <a id="notes_link" class="link" href="javascript:void(null);" onClick="javascript:toggleVisibility('notes');">{get_innerhtml element_name="notes" total=$notes|@count}</a> ]
              {/if} Common subdirectories: eventum-1.7.0/templates/en/notifications and eventum/templates/en/notifications
---- eventum-1.7.0/templates/en/phone_support.tpl.html   2005-12-30 08:27:24.000000000 +1300
-+++ eventum/templates/en/phone_support.tpl.html 2006-02-22 16:31:01.000000000 +1300
+--- eventum-1.7.0/templates/phone_support.tpl.html   2005-12-30 08:27:24.000000000 +1300
++++ eventum/templates/phone_support.tpl.html 2006-02-22 16:31:01.000000000 +1300
 @@ -24,7 +24,6 @@
  //-->
  </script>
@@ -112,8 +112,8 @@
              [ <a id="phone_support_link" class="link" href="javascript:void(null);" onClick="javascript:toggleVisibility('phone_support');">{get_innerhtml element_name="phone_support" total=$phone_entries|@count}</a> ]
              {/if}
          </td> Common subdirectories: eventum-1.7.0/templates/en/reminders and eventum/templates/en/reminders
---- eventum-1.7.0/templates/en/support_emails.tpl.html  2005-12-30 08:27:24.000000000 +1300
-+++ eventum/templates/en/support_emails.tpl.html        2006-02-22 16:31:39.000000000 +1300
+--- eventum-20060717/templates/support_emails.tpl.html~	2006-07-18 01:39:25.025514665 +0300
++++ eventum-20060717/templates/support_emails.tpl.html	2006-07-18 01:41:22.838147227 +0300
 @@ -40,7 +40,6 @@
  //-->
  </script>
@@ -122,18 +122,16 @@
  {if $current_role > $roles.viewer}
      {assign var="email_col_count" value="8"}
  {else}
-@@ -57,7 +56,8 @@
-             <b>Associated Emails ({if $emails|@is_array}{$emails|@count}{else}0{/if})</b>
+@@ -56,6 +56,7 @@
+             <b>{t}Associated Emails{/t} ({if $emails|@is_array}{$emails|@count}{else}0{/if})</b>
            </td>
            <td align="right" class="default">
--            {if $current_role >= $roles.standard_user}
-+            [ <a class="link" href="#top">Back to Top</a><a id="link" class="link" href="#top"></a> ]
-+          {if $current_role >= $roles.standard_user}
-             [ <a href="mail_queue.php?iss_id={$smarty.get.id}" class="link" title="view the history of sent emails">Mail Queue Log</a> ]
++            [ <a class="link" href="#top">{t}Back to Top{/t}</a><a id="link" class="link" href="#top"></a> ]
+             {if $current_role >= $roles.standard_user}
+             [ <a href="mail_queue.php?iss_id={$smarty.get.id}" class="link" title="{t}view the history of sent emails{/t}">{t}Mail Queue Log{/t}</a> ]
              {/if}
-             {if $browser.ie5up or $browser.ns6up or $browser.gecko or $browser.safari or $browser.opera5up or $browser.safari or $browser.opera5up}
---- eventum-1.7.0/templates/en/time_tracking.tpl.html   2005-12-30 08:27:24.000000000 +1300
-+++ eventum/templates/en/time_tracking.tpl.html 2006-02-22 16:29:50.000000000 +1300
+--- eventum-1.7.0/templates/time_tracking.tpl.html   2005-12-30 08:27:24.000000000 +1300
++++ eventum/templates/time_tracking.tpl.html 2006-02-22 16:29:50.000000000 +1300
 @@ -24,7 +24,6 @@
  //-->
  </script>
@@ -150,8 +148,8 @@
              {if $browser.ie5up or $browser.ns6up or $browser.gecko or $browser.safari or $browser.opera5up or $browser.safari or $browser.opera5up}
              [ <a id="time_tracker_link" class="link" href="javascript:void(null);" onClick="javascript:toggleVisibility('time_tracker');">{get_innerhtml element_name="time_tracker" total=$time_entries|@count}</a> ]
              {/if} Common subdirectories: eventum-1.7.0/templates/en/tips and eventum/templates/en/tips
---- eventum-1.7.0/templates/en/view.tpl.html    2005-12-30 08:27:24.000000000 +1300
-+++ eventum/templates/en/view.tpl.html  2006-02-22 16:26:14.000000000 +1300
+--- eventum-1.7.0/templates/view.tpl.html    2005-12-30 08:27:24.000000000 +1300
++++ eventum/templates/view.tpl.html  2006-02-22 16:26:14.000000000 +1300
 @@ -27,36 +27,27 @@
  {else}
    {include file="view_form.tpl.html"}

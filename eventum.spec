@@ -11,21 +11,20 @@
 %bcond_with	qmail	# build the router-qmail subpackage
 %bcond_with	order_patch	# with custom issue order patch
 
-#define	_snap	20060330
+%define	_snap	20060717
 #define	_rc		RC3
-%define	_rel	2.37
+%define	_rel	2.45
 
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl):	Eventum - system ¶ledzenia spraw/b³êdów
 Name:		eventum
 Version:	1.7.1
-Release:	%{?_snap:0.%{_snap}.}%{?_rc:%{_rc}.}%{_rel}
+Release:	%{?_rc:%{_rc}.}%{_rel}%{?_snap:.%{_snap}}
 License:	GPL
 Group:		Applications/WWW
-#Source0:	http://downloads.mysql.com/snapshots/eventum/%{name}-nightly-%{_snap}.tar.gz
-Source0:	http://mysql.dataphone.se/Downloads/eventum/%{name}-%{version}.tar.gz
-# Source0-md5:	e1845de39b4d9bd30ddec9c26031a7d5
+Source0:	http://downloads.mysql.com/snapshots/eventum/%{name}-nightly-%{_snap}.tar.gz
+# Source0-md5:	1cce0226e038632a16a951ec225f3686
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -67,6 +66,8 @@ Patch22:	%{name}-mem-limits.patch
 Patch23:	%{name}-backtraces.patch
 Patch24:	%{name}-errorhandler.patch
 Patch25:	%{name}-unbalancedquotesinemailaddress.patch
+Patch26:	http://glen.alkohol.ee/pld/eventum/upgrade-2.0.patch
+Patch27:	http://glen.alkohol.ee/pld/eventum/checkins.tpl-typo.patch
 # packaging patches that probably never go upstream
 Patch100:	%{name}-paths.patch
 Patch101:	%{name}-cvs-config.patch
@@ -106,6 +107,7 @@ Requires:	php-pear-PEAR-core
 Requires:	php-pear-Text_Diff
 Requires:	php-pear-XML_RPC
 Requires:	php-session
+Requires:	smarty-gettext
 Requires:	webapps
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -477,10 +479,13 @@ Szczegó³y na temat instalacji mo¿na przeczytaæ pod
 # undos the source
 find . -type f -print0 | xargs -0 sed -i -e 's,\r$,,'
 
+%patch26 -p1
+
 rm -f setup.conf.php # not to be installed by *.php glob
 rm -rf misc/upgrade/*v1.[123]* # too old to support in PLD Linux
 rm -f misc/upgrade/flush_compiled_templates.php
 rm -rf misc/upgrade/*/upgrade_config.php # not needed in PLD Linux
+rm -rf misc/upgrade/*/index.html # not needed in PLD Linux
 
 # sample, not used in eventum
 rm -f rpc/xmlrpc_client.php
@@ -512,6 +517,7 @@ rm -f rpc/xmlrpc_client.php
 %patch23 -p1
 %patch24 -p1
 %patch25 -p1
+%patch27 -p1
 
 # packaging
 %patch100 -p1
@@ -528,6 +534,24 @@ cat <<'EOF'> mysql-permissions.sql
 # this schema is extracted from setup/index.php.
 GRANT SELECT, UPDATE, DELETE, INSERT, ALTER, DROP, CREATE, INDEX ON eventum.* TO 'eventum'@'localhost' IDENTIFIED BY 'password';
 EOF
+
+mv misc/localization/de{_DE,}
+mv misc/localization/es{_ES,}
+mv misc/localization/fi{_FI,}
+mv misc/localization/fr{_FR,}
+mv misc/localization/it{_IT,}
+mv misc/localization/nl{_NL,}
+mv misc/localization/ru{_RU,}
+
+# oops, the file got truncated - quick fix
+cp misc/localization/eventum.po misc/localization/de/LC_MESSAGES/eventum.po
+cp misc/localization/eventum.po misc/localization/es/LC_MESSAGES/eventum.po
+cp misc/localization/eventum.po misc/localization/fi/LC_MESSAGES/eventum.po
+cp misc/localization/eventum.po misc/localization/fr/LC_MESSAGES/eventum.po
+cp misc/localization/eventum.po misc/localization/it/LC_MESSAGES/eventum.po
+cp misc/localization/eventum.po misc/localization/nl/LC_MESSAGES/eventum.po
+cp misc/localization/eventum.po misc/localization/ru/LC_MESSAGES/eventum.po
+cp misc/localization/eventum.po misc/localization/en_US/LC_MESSAGES/eventum.po
 
 sed -e '1s,#!.*/bin/php -q,#!%{_bindir}/php,' misc/cli/eventum > %{name}-cli
 sed -e '1i#!%{_bindir}/php' misc/scm/process_cvs_commits.php > %{name}-scm
@@ -548,6 +572,12 @@ grep -rl 'APP_INC_PATH..*"private_key.php"' . | xargs sed -i -e '
 
 # remove backups from patching as we use globs to package files to buildroot
 find '(' -name '*~' -o -name '*.orig' ')' | xargs -r rm -v
+
+%build
+cd misc/localization
+for a in */LC_MESSAGES; do
+	msgfmt -o $a/eventum.mo $a/eventum.po
+done
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -629,6 +659,15 @@ install %{SOURCE11} $RPM_BUILD_ROOT%{_libdir}/router-qmail
 install %{SOURCE14} $RPM_BUILD_ROOT%{_libdir}/router-postfix
 
 install -D %{SOURCE15} $RPM_BUILD_ROOT/etc/logrotate.d/%{name}
+# locale
+cd misc/localization
+for a in */LC_MESSAGES; do
+	install -d $RPM_BUILD_ROOT%{_datadir}/locale/$a
+	cp -a $a/%{name}.mo $RPM_BUILD_ROOT%{_datadir}/locale/$a
+done
+cd -
+
+#%find_lang %{name}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -800,6 +839,11 @@ EOF
 
 %triggerpostun -- eventum < 1.6.1-0.2
 %{_appdir}/upgrade/upgrade.sh %{_appdir}/upgrade/v1.6.0_to_v1.6.1 <<EOF
+database_changes.php Perform database changes
+EOF
+
+%triggerpostun -- eventum < 1.7.1-2.43.20060717
+%{_appdir}/upgrade/upgrade.sh %{_appdir}/upgrade/v1.7.1_to_v2.0 <<EOF
 database_changes.php Perform database changes
 EOF
 

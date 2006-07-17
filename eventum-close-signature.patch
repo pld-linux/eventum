@@ -16,7 +16,7 @@ signature appended. feature request by slay.
 -?>
 \ No newline at end of file
 +?>
---- eventum-1.7.1/templates/en/close.tpl.html	2006-03-31 12:03:17.310786621 +0300
+--- eventum-1.7.1/templates/close.tpl.html	2006-03-31 12:03:17.310786621 +0300
 +++ /home/glen/close.tpl.html	2006-03-31 12:04:47.462798592 +0300
 @@ -90,6 +90,22 @@
          cell.style.background = "{/literal}{$internal_color}{literal}";
@@ -53,11 +53,13 @@ signature appended. feature request by slay.
              {include file="error_icon.tpl.html" field="reason"}
            </td>
          </tr>
-@@ -205,6 +224,16 @@
+--- eventum-localization-dev2/templates/close.tpl.html~	2006-06-02 00:56:06.638714939 +0300
++++ eventum-localization-dev2/templates/close.tpl.html	2006-06-02 00:57:12.060184006 +0300
+@@ -222,7 +222,16 @@
                <tr>
-                 <td><input class="button" type="button" value="&lt;&lt; Back" onClick="javascript:history.go(-1);"></td>
-                 <td width="100%" align="center"><input class="button" type="submit" value="Close Issue"></td>
-+
+                 <td><input class="button" type="button" value="&lt;&lt; {t}Back{/t}" onClick="javascript:history.go(-1);"></td>
+                 <td width="100%" align="center"><input class="button" type="submit" value="{t}Close Issue{/t}"></td>
+-              </tr>
 +                {if $current_user_prefs.email_signature != "" and $current_user_prefs.auto_append_sig != 'yes'}
 +                <td class="default_white" align="right" width="150">
 +                  <nobr>
@@ -67,6 +69,7 @@ signature appended. feature request by slay.
 +                  </nobr>
 +                </td>
 +                {/if}
-               </tr>
++            </tr>
              </table>
            </td>
+         </tr>

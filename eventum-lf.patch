@@ -1,18 +1,18 @@
 minor look & feel fixes
 
---- ./templates/en/faq.tpl.html~	2005-02-27 17:59:14.000000000 +0200
-+++ ./templates/en/faq.tpl.html	2005-03-17 12:25:38.000000000 +0200
+--- eventum-localization-dev2/templates/faq.tpl.html~	2006-06-02 00:55:02.347271167 +0300
++++ eventum-localization-dev2/templates/faq.tpl.html	2006-06-02 00:55:31.437924456 +0300
 @@ -13,7 +13,7 @@
              <td class="default_white" bgcolor="{$cell_color}"><b>{$faq.faq_title|escape:"html"}</b></td>
            </tr>
            <tr>
 -            <td class="default" bgcolor="{$dark_color}">
 +            <td class="default" bgcolor="{$dark_color}" height="260" valign="top">
-               <p><i>Last updated: {$faq.faq_updated_date}</i></p>
+               <p><i>{t}Last updated{/t}: {$faq.faq_updated_date}</i></p>
                {$faq.message}
              </td>
---- ./templates/en/view_form.tpl.html~	2005-02-27 17:59:14.000000000 +0200
-+++ ./templates/en/view_form.tpl.html	2005-03-17 12:38:03.000000000 +0200
+--- ./templates/view_form.tpl.html~	2005-02-27 17:59:14.000000000 +0200
++++ ./templates/view_form.tpl.html	2005-03-17 12:38:03.000000000 +0200
 @@ -5,13 +5,13 @@
  {literal}
  function openHistory(issue_id)
@@ -29,8 +29,8 @@ minor look & feel fixes
      var popupWin = window.open('notification.php?iss_id=' + issue_id, '_notification', features);
      popupWin.focus();
  }
---- ./templates/en/update_form.tpl.html~	2005-03-16 19:03:57.000000000 +0200
-+++ ./templates/en/update_form.tpl.html	2005-03-17 12:59:17.000000000 +0200
+--- ./templates/update_form.tpl.html~	2005-03-16 19:03:57.000000000 +0200
++++ ./templates/update_form.tpl.html	2005-03-17 12:59:17.000000000 +0200
 @@ -31,13 +31,13 @@
  <!--
  function openHistory(issue_id)
@@ -47,8 +47,8 @@ minor look & feel fixes
      var popupWin = window.open('notification.php?iss_id=' + issue_id, '_notification', features);
      popupWin.focus();
  }
---- eventum-20051130/templates/en/file_upload.tpl.html~	2005-11-30 17:54:07.000000000 +0200
-+++ eventum-20051130/templates/en/file_upload.tpl.html	2005-11-30 17:55:45.000000000 +0200
+--- eventum-20051130/templates/file_upload.tpl.html~	2005-11-30 17:54:07.000000000 +0200
++++ eventum-20051130/templates/file_upload.tpl.html	2005-11-30 17:55:45.000000000 +0200
 @@ -79,13 +79,13 @@
                  <td bgcolor="{$light_color}">
                    <table width="100%" cellpadding="2" cellspacing="0" id="file_table">

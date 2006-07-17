@@ -33,7 +33,7 @@ glen 2005-07-30, 2005-11-30
  }
 -{/literal}
 \ No newline at end of file
---- ./templates/en/view.tpl.html	2005-07-30 17:47:13.000000000 +0300
+--- ./templates/view.tpl.html	2005-07-30 17:47:13.000000000 +0300
 +++ /tmp/view.tpl.html	2005-07-30 20:18:01.000000000 +0300
 @@ -1,9 +1,7 @@
  {include file="header.tpl.html" extra_title=$extra_title}
@@ -47,7 +47,7 @@ glen 2005-07-30, 2005-11-30
  {if $issue == ""}
    <table width="400" align="center">
      <tr>
---- ./templates/en/mail_queue.tpl.html	2005-07-30 17:47:13.000000000 +0300
+--- ./templates/mail_queue.tpl.html	2005-07-30 17:47:13.000000000 +0300
 +++ /tmp/mail_queue.tpl.html	2005-07-30 20:21:46.000000000 +0300
 @@ -3,10 +3,8 @@
  {if $denied == 1}
@@ -62,10 +62,11 @@ glen 2005-07-30, 2005-11-30
  <form>
    <table bgcolor="#FFFFFF" width="100%" cellspacing="1" cellpadding="2" border="0">
      <tr>
---- eventum-20051130/templates/en/reports/recent_activity.tpl.html~	2005-11-30 18:24:19.000000000 +0200
-+++ eventum-20051130/templates/en/reports/recent_activity.tpl.html	2005-11-30 18:25:09.000000000 +0200
-@@ -1,8 +1,6 @@
- {include file="header.tpl.html" extra_title="Recent Activity"}
+--- eventum-localization-dev2/templates/reports/recent_activity.tpl.html~	2006-06-02 01:01:26.205901620 +0300
++++ eventum-localization-dev2/templates/reports/recent_activity.tpl.html	2006-06-02 01:02:30.727354382 +0300
+@@ -1,9 +1,7 @@
+ {capture assign="extra_title"}{t}Recent Activity{/t}{/capture}
+ {include file="header.tpl.html" extra_title=$extra_title}
 -<script language="javascript">
 -{include file="../js/httpclient.js"}
 -{include file="../js/expandable_cell.js"}
