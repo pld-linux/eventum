@@ -13,7 +13,7 @@
 
 %define	_snap	20060717
 #define	_rc		RC3
-%define	_rel	2.45
+%define	_rel	2.48
 
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
@@ -842,7 +842,7 @@ EOF
 database_changes.php Perform database changes
 EOF
 
-%triggerpostun -- eventum < 1.7.1-2.43.20060717
+%triggerpostun -- eventum < 1.7.1-2.48.20060717
 %{_appdir}/upgrade/upgrade.sh %{_appdir}/upgrade/v1.7.1_to_v2.0 <<EOF
 database_changes.php Perform database changes
 EOF
