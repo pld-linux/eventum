@@ -12,7 +12,7 @@ upgrade_script() {
 	script="$1"; shift
 
 	echo -n "Eventum upgrade: $@..."
-	if ! php $scriptdir/$script; then
+	if ! php -dmemory_limit=256M $scriptdir/$script; then
 		echo >&2 ""
 		echo >&2 "Please run manually: php $scriptdir/$script"
 		echo >&2 "NOTE: You might need to add CREATE, DROP, ALTER and INDEX privileges to Eventum MySQL user for this to work".
