@@ -72,6 +72,9 @@ if (!defined('APP_COOKIE_DOMAIN')) {
 if (!defined('APP_HASH_TYPE')) {
     define('APP_HASH_TYPE', 'MD5');
 }
+if (!defined('APP_DEFAULT_LOCALE')) {
+    define('APP_DEFAULT_LOCALE', 'en_US');
+}
 
 if (APP_BENCHMARK) {
     // always benchmark the scripts
