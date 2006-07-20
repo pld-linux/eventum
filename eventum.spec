@@ -11,9 +11,9 @@
 %bcond_with	qmail	# build the router-qmail subpackage
 %bcond_with	order_patch	# with custom issue order patch
 
-%define	_snap	20060718
+%define	_snap	20060720
 #define	_rc		RC3
-%define	_rel	2.48
+%define	_rel	2.54
 
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
@@ -24,7 +24,7 @@ Release:	%{?_rc:%{_rc}.}%{_rel}%{?_snap:.%{_snap}}
 License:	GPL
 Group:		Applications/WWW
 Source0:	http://downloads.mysql.com/snapshots/eventum/%{name}-nightly-%{_snap}.tar.gz
-# Source0-md5:	b5e65ec07296b249f940827bae94108d
+# Source0-md5:	56d558dacc7a7b0040874cb27f8667bc
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -65,9 +65,8 @@ Patch21:	%{name}-scm-quick-out.patch
 Patch22:	%{name}-mem-limits.patch
 Patch23:	%{name}-backtraces.patch
 Patch24:	%{name}-errorhandler.patch
-Patch25:	%{name}-unbalancedquotesinemailaddress.patch
-Patch26:	http://glen.alkohol.ee/pld/eventum/upgrade-2.0.patch
-Patch27:	http://glen.alkohol.ee/pld/eventum/checkins.tpl-typo.patch
+Patch25:	http://glen.alkohol.ee/pld/eventum/upgrade-2.0.patch
+Patch26:	%{name}-tpl-fixes.patch
 # packaging patches that probably never go upstream
 Patch100:	%{name}-paths.patch
 Patch101:	%{name}-cvs-config.patch
@@ -479,7 +478,7 @@ Szczegó³y na temat instalacji mo¿na przeczytaæ pod
 # undos the source
 find . -type f -print0 | xargs -0 sed -i -e 's,\r$,,'
 
-%patch26 -p1
+%patch25 -p1
 
 rm -f setup.conf.php # not to be installed by *.php glob
 rm -rf misc/upgrade/*v1.[123]* # too old to support in PLD Linux
@@ -516,8 +515,7 @@ rm -f rpc/xmlrpc_client.php
 %patch22 -p1
 %patch23 -p1
 %patch24 -p1
-%patch25 -p1
-%patch27 -p1
+%patch26 -p1
 
 # packaging
 %patch100 -p1
