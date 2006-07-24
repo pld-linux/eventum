@@ -11,9 +11,9 @@
 %bcond_with	qmail	# build the router-qmail subpackage
 %bcond_with	order_patch	# with custom issue order patch
 
-%define	_snap	20060720
+%define	_snap	20060724
 #define	_rc		RC3
-%define	_rel	2.54
+%define	_rel	2.62
 
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
@@ -24,7 +24,7 @@ Release:	%{?_rc:%{_rc}.}%{_rel}%{?_snap:.%{_snap}}
 License:	GPL
 Group:		Applications/WWW
 Source0:	http://downloads.mysql.com/snapshots/eventum/%{name}-nightly-%{_snap}.tar.gz
-# Source0-md5:	56d558dacc7a7b0040874cb27f8667bc
+# Source0-md5:	fb5e53aa24cff295490ba8f5a058a826
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -40,6 +40,7 @@ Source12:	%{name}-config-setup.php
 Source13:	%{name}-upgrade.sh
 Source14:	%{name}-router-postfix.sh
 Source15:	%{name}.logrotate
+Source16:	%{name}-lighttpd.conf
 Patch0:		%{name}-lf.patch
 Patch1:		%{name}-perms.patch
 Patch2:		%{name}-cli-wr-separated.patch
@@ -67,6 +68,8 @@ Patch23:	%{name}-backtraces.patch
 Patch24:	%{name}-errorhandler.patch
 Patch25:	http://glen.alkohol.ee/pld/eventum/upgrade-2.0.patch
 Patch26:	%{name}-tpl-fixes.patch
+Patch27:	%{name}-xss.patch
+Patch28:	%{name}-tpl-fixes2.patch
 # packaging patches that probably never go upstream
 Patch100:	%{name}-paths.patch
 Patch101:	%{name}-cvs-config.patch
@@ -108,6 +111,8 @@ Requires:	php-pear-XML_RPC
 Requires:	php-session
 Requires:	smarty-gettext
 Requires:	webapps
+Requires:	webserver(access)
+Requires:	webserver(alias)
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -516,6 +521,8 @@ rm -f rpc/xmlrpc_client.php
 %patch23 -p1
 %patch24 -p1
 %patch26 -p1
+%patch27 -p1
+%patch28 -p1
 
 # packaging
 %patch100 -p1
@@ -613,9 +620,11 @@ install %{SOURCE6} $RPM_BUILD_ROOT%{_sysconfdir}/cvs.php
 
 # private key
 cp -a private_key.php.in $RPM_BUILD_ROOT%{_webappdir}/private_key.php
+touch $RPM_BUILD_ROOT%{_webappdir}/htpasswd
 
 install %{SOURCE1} $RPM_BUILD_ROOT%{_webappdir}/apache.conf
 install %{SOURCE1} $RPM_BUILD_ROOT%{_webappdir}/httpd.conf
+install %{SOURCE16} $RPM_BUILD_ROOT%{_webappdir}/lighttpd.conf
 install %{SOURCE2} $RPM_BUILD_ROOT/etc/cron.d/%{name}-mail-queue
 install %{SOURCE3} $RPM_BUILD_ROOT/etc/cron.d/%{name}-mail-download
 install %{SOURCE4} $RPM_BUILD_ROOT/etc/cron.d/%{name}-reminder
@@ -804,6 +813,12 @@ fi
 %triggerun -- apache < 2.2.0, apache-base
 %webapp_unregister httpd %{_webapp}
 
+%triggerin -- lighttpd
+%webapp_register lighttpd %{_webapp}
+
+%triggerun -- lighttpd
+%webapp_unregister lighttpd %{_webapp}
+
 # FIXME
 # only one upgrade trigger is called if you're upgrading over two
 # versions, say 1.5 to 1.5.3, only 1.5.3 trigger is called.
@@ -912,9 +927,11 @@ fi
 %attr(751,root,root) %dir %{_webappdir}
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/apache.conf
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/httpd.conf
+%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/lighttpd.conf
 %attr(640,root,eventum) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/config.php
 %attr(640,root,eventum) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/private_key.php
 %attr(660,root,eventum) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/setup.php
+%attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/htpasswd
 %attr(640,root,eventum) %config %verify(not mtime) %{_webappdir}/core.php
 
 %dir %attr(731,root,eventum) /var/log/%{name}
