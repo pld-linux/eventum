@@ -13,7 +13,7 @@
 
 %define	_snap	20060724
 #define	_rc		RC3
-%define	_rel	2.62
+%define	_rel	2.72
 
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
@@ -41,6 +41,8 @@ Source13:	%{name}-upgrade.sh
 Source14:	%{name}-router-postfix.sh
 Source15:	%{name}.logrotate
 Source16:	%{name}-lighttpd.conf
+Source17:	http://eventum.mysql.org/patches/process_svn_commits_new.phps
+# Source17-md5:	48a1bc003907101e4052e5232047e6b2
 Patch0:		%{name}-lf.patch
 Patch1:		%{name}-perms.patch
 Patch2:		%{name}-cli-wr-separated.patch
@@ -70,6 +72,7 @@ Patch25:	http://glen.alkohol.ee/pld/eventum/upgrade-2.0.patch
 Patch26:	%{name}-tpl-fixes.patch
 Patch27:	%{name}-xss.patch
 Patch28:	%{name}-tpl-fixes2.patch
+Patch29:	%{name}-svn.patch
 # packaging patches that probably never go upstream
 Patch100:	%{name}-paths.patch
 Patch101:	%{name}-cvs-config.patch
@@ -480,6 +483,7 @@ Szczegó³y na temat instalacji mo¿na przeczytaæ pod
 
 %prep
 %setup -q %{?_snap:-n %{name}-%{_snap}}
+cp %{SOURCE17} misc/scm/process_svn_commits.php
 # undos the source
 find . -type f -print0 | xargs -0 sed -i -e 's,\r$,,'
 
@@ -523,6 +527,7 @@ rm -f rpc/xmlrpc_client.php
 %patch26 -p1
 %patch27 -p1
 %patch28 -p1
+%patch29 -p1
 
 # packaging
 %patch100 -p1
@@ -559,7 +564,8 @@ cp misc/localization/eventum.po misc/localization/ru/LC_MESSAGES/eventum.po
 cp misc/localization/eventum.po misc/localization/en_US/LC_MESSAGES/eventum.po
 
 sed -e '1s,#!.*/bin/php -q,#!%{_bindir}/php,' misc/cli/eventum > %{name}-cli
-sed -e '1i#!%{_bindir}/php' misc/scm/process_cvs_commits.php > %{name}-scm
+sed -e '1i#!%{_bindir}/php' misc/scm/process_cvs_commits.php > process_cvs_commits
+sed -e '1i#!%{_bindir}/php' misc/scm/process_svn_commits.php > process_svn_commits
 sed -e '1i#!%{_bindir}/php' misc/irc/bot.php > %{name}-bot
 mv misc/cli/eventumrc_example eventumrc
 sed -i -e '1i#!%{_bindir}/php' misc/*.php
@@ -615,8 +621,10 @@ install %{name}-cli $RPM_BUILD_ROOT%{_bindir}/%{name}
 install %{name}-bot $RPM_BUILD_ROOT%{_sbindir}
 
 # scm
-install %{name}-scm $RPM_BUILD_ROOT%{_libdir}/scm
-install %{SOURCE6} $RPM_BUILD_ROOT%{_sysconfdir}/cvs.php
+install process_cvs_commits $RPM_BUILD_ROOT%{_libdir}/process_cvs_commits
+install process_svn_commits $RPM_BUILD_ROOT%{_libdir}/process_svn_commits
+ln -s process_cvs_commits $RPM_BUILD_ROOT%{_libdir}/scm
+install %{SOURCE6} $RPM_BUILD_ROOT%{_sysconfdir}/scm.php
 
 # private key
 cp -a private_key.php.in $RPM_BUILD_ROOT%{_webappdir}/private_key.php
@@ -920,6 +928,13 @@ if [ -f %{_webappdir}/irc.php.rpmsave ]; then
 	mv -f %{_webappdir}/irc.php.rpmsave %{_sysconfdir}/irc.php
 fi
 
+%triggerpostun scm -- %{name}-scm < 1.7.1-2.70.20060724
+if [ -f %{_sysconfdir}/cvs.php.rpmsave ]; then
+	mv -f %{_sysconfdir}/scm.php{,.rpmnew}
+	mv -f %{_sysconfdir}/cvs.php.rpmsave %{_sysconfdir}/scm.php
+fi
+ln -sf process_cvs_commits $RPM_BUILD_ROOT%{_libdir}/scm
+
 %files
 %defattr(644,root,root,755)
 %doc ChangeLog FAQ INSTALL README UPGRADE CONTRIB
@@ -1047,5 +1062,8 @@ fi
 
 %files scm
 %defattr(644,root,root,755)
-%attr(644,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/cvs.php
-%attr(755,root,root) %{_libdir}/scm
+%attr(644,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/scm.php
+%attr(755,root,root) %{_libdir}/process_cvs_commits
+%attr(755,root,root) %{_libdir}/process_svn_commits
+# legacy
+%ghost %{_libdir}/scm
