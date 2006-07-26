@@ -1,0 +1,19 @@
+This patch is to resolve PHP Warning:
+
+PHP Notice:  Use of undefined constant SID - assumed 'SID' in /usr/share/eventum/include/class.template.php on line 202
+
+The problem is that SID constant gets defined only if session_start() has been called (or you autostart session).
+And the second issue is that this SID is never used in templates or classes.
+
+so i'm removing it.
+
+--- eventum-20060725/include/class.template.php~	2006-07-25 10:34:23.330668461 +0300
++++ eventum-20060725/include/class.template.php	2006-07-26 11:27:17.567040087 +0300
+@@ -199,7 +199,6 @@
+         $this->assign("app_base_url", APP_BASE_URL);
+         $this->assign("rel_url", APP_RELATIVE_URL);
+         $this->assign("locale", APP_CURRENT_LOCALE);
+-        $this->assign("SID", SID);
+ 
+         // now for the browser detection stuff
+         Net_UserAgent_Detect::detect();
