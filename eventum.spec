@@ -1056,13 +1056,13 @@ ln -sf process_cvs_commits $RPM_BUILD_ROOT%{_libdir}/scm
 %files cli
 %defattr(644,root,root,755)
 %doc eventumrc
-%attr(644,root,root) %config %verify(not md5 mtime size) %{_sysconfdir}/cli.php
+%config %verify(not md5 mtime size) %{_sysconfdir}/cli.php
 %attr(755,root,root) %{_bindir}/%{name}
 %{_appdir}/cli
 
 %files scm
 %defattr(644,root,root,755)
-%attr(644,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/scm.php
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/scm.php
 %attr(755,root,root) %{_libdir}/process_cvs_commits
 %attr(755,root,root) %{_libdir}/process_svn_commits
 # legacy
