@@ -1,0 +1,8 @@
+--- eventum/templates/add_phone_entry.tpl.html~	2006-07-27 14:56:25.000000000 +0300
++++ eventum/templates/add_phone_entry.tpl.html	2006-08-01 12:01:21.579170792 +0300
+@@ -1,4 +1,4 @@
+-{capture name="extra_title" assign="extra_title"}{t}Issue{/t} #$issue_id - {t}Add Phone Entry{/t}{/capture}
++{capture name="extra_title" assign="extra_title"}{t}Issue{/t} #{$issue_id} - {t}Add Phone Entry{/t}{/capture}
+ {include file="header.tpl.html" extra_title=$extra_title}
+ 
+ {if $add_phone_result != ''}

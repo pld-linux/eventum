@@ -1,0 +1,13 @@
+let tabs show out visually in email headers
+
+--- eventum-20060725/templates/view_headers.tpl.html	2006-07-26 14:23:44.084529706 +0300
++++ /home/glen/view_headers.tpl.html	2006-07-27 14:54:05.000000000 +0300
+@@ -17,7 +17,7 @@
+         </tr>
+         <tr>
+           <td bgcolor="{$light_color}" class="default">
+-            {$headers|escape:"html"|nl2br}
++            {$headers|escape:"html"|replace:"\t":"&nbsp;&nbsp;"|nl2br}
+           </td>
+         </tr>
+         <tr>

@@ -1,0 +1,93 @@
+--- /dev/null	2006-03-28 14:00:37.387408000 +0300
++++ eventum-20060717/misc/upgrade/v1.7.1_to_v2.0/index.html	2006-07-18 00:54:31.875309544 +0300
+@@ -0,0 +1,15 @@
++<html>
++<head>
++<title>Eventum - Upgrade to 2.0 from 1.7.1</title>
++</head>
++<body>
++Please take the following steps to upgrade to Eventum 2.0 from 1.7.1.<br />
++
++<a href="database_changes.php">Perform database changes</a>.<br />
++
++<a href="upgrade_config.php">Upgrade the configuration file</a>.<br />
++
++<a href="../flush_compiled_templates.php">Flush compiled templates</a>.<br />
++
++</body>
++</html>
+--- /dev/null	2006-03-28 14:00:37.387408000 +0300
++++ eventum-20060717/misc/upgrade/v1.7.1_to_v2.0/upgrade_config.php	2006-07-18 00:52:13.012203723 +0300
+@@ -0,0 +1,50 @@
++<?php
++// upgrade the config.inc.php file
++
++include_once("../../../config.inc.php");
++
++// make backup copy
++$backup_file = APP_PATH . "config.inc.pre_2_0.php";
++if (copy(APP_PATH . "config.inc.php", $backup_file) == false) {
++    echo "Unable to create backup copy of config.inc.php. Please check your base directory is writeable and try again.";
++    exit(1);
++}
++
++$config_contents = implode("", file(APP_PATH . "setup/config.inc.php"));
++$config_backup = $config_contents;
++$config_contents = str_replace("%{APP_PATH}%", APP_PATH, $config_contents);
++$config_contents = str_replace("%{APP_SQL_DBHOST}%", APP_SQL_DBHOST, $config_contents);
++$config_contents = str_replace("%{APP_SQL_DBNAME}%", APP_SQL_DBNAME, $config_contents);
++$config_contents = str_replace("%{APP_SQL_DBUSER}%", APP_SQL_DBUSER, $config_contents);
++$config_contents = str_replace("%{APP_SQL_DBPASS}%", APP_SQL_DBPASS, $config_contents);
++$config_contents = str_replace("%{APP_TABLE_PREFIX}%", APP_TABLE_PREFIX, $config_contents);
++$config_contents = str_replace("%{APP_HOSTNAME}%", APP_HOSTNAME, $config_contents);
++$config_contents = str_replace("%{APP_RELATIVE_URL}%", APP_RELATIVE_URL, $config_contents);
++if (APP_ENABLE_FULLTEXT == true) {
++    $fulltext = 'true';
++} else {
++    $fulltext = 'false';
++}
++$config_contents = str_replace("'%{APP_ENABLE_FULLTEXT}%'", $fulltext, $config_contents);
++$config_contents = str_replace("%{APP_VERSION}%", "2.0", $config_contents);
++if (stristr(APP_BASE_URL, 'https://') !== false) {
++    $protocol_type = 'https://';
++} else {
++    $protocol_type = 'http://';
++}
++
++$config_contents = str_replace("%{PROTOCOL_TYPE}%", $protocol_type, $config_contents);
++$fp = fopen(APP_PATH . 'config.inc.php', 'w');
++if ($fp === FALSE) {
++    echo "Could not open the file 'config.inc.php' for writing. The permissions on the file should be set as to allow the user that the web server runs as to open it. Please correct this problem and try again.";
++    exit(1);
++}
++$res = fwrite($fp, $config_contents);
++if ($fp === FALSE) {
++    echo "Could not write the configuration information to 'config.inc.php'. The file should be writable by the user that the web server runs as. Please correct this problem and try again.";
++    exit(1);
++}
++fclose($fp);
++?>
++Done. Your configuration file (config.inc.php) has been upgraded to version 2.0.<br />
++A backup copy has been made in the file <i>'<?php echo $backup_file; ?>'</i>.
+--- /dev/null	2006-03-28 14:00:37.387408000 +0300
++++ eventum-20060717/misc/upgrade/v1.7.1_to_v2.0/database_changes.php	2006-07-18 00:50:46.760275066 +0300
+@@ -0,0 +1,19 @@
++<?php
++include_once("../../../config.inc.php");
++include_once(APP_INC_PATH . "db_access.php");
++
++$stmts = array();
++
++$stmts[] = "ALTER TABLE eventum_support_email CHANGE COLUMN sup_to sup_to tinytext;";
++$stmts[] = "ALTER TABLE eventum_support_email CHANGE COLUMN sup_cc sup_cc tinytext;";
++
++foreach ($stmts as $stmt) {
++    $stmt = str_replace('eventum_', APP_TABLE_PREFIX, $stmt);
++    $res = $GLOBALS["db_api"]->dbh->query($stmt);
++    if (PEAR::isError($res)) {
++        echo "<pre>";var_dump($res);echo "</pre>";
++        exit(1);
++    }
++}
++?>
++done
