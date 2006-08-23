@@ -75,6 +75,9 @@ if (!defined('APP_HASH_TYPE')) {
 if (!defined('APP_DEFAULT_LOCALE')) {
     define('APP_DEFAULT_LOCALE', 'en_US');
 }
+if (!defined('APP_EMAIL_ENCODING')) {
+    define('APP_EMAIL_ENCODING', APP_CHARSET);
+}
 
 if (APP_BENCHMARK) {
     // always benchmark the scripts
