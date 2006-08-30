@@ -1,0 +1,84 @@
+--- eventum-20060829/include/class.notification.php	2006-08-30 00:46:18.937413896 +0300
++++ eventum-20060830/include/class.notification.php	2006-08-30 20:17:25.074832296 +0300
+@@ -853,6 +853,26 @@
+         }
+     }
+ 
++    /**
++     * Method used to get list of addresses that were email sent to.
++     *
++     * @access  public
++     * @param   integer $issue_id The issue ID
++     * @return  array   list of addresse
++     */
++    function getLastUpdateAddresses($issue_id = null)
++    {
++        global $subscriberNotifyList;
++
++        if (is_null($issue_id)) {
++            // return all addresses in flat view
++            return array_values($subscriberNotifyList);
++        }
++
++        // return address list for specific issue_id only.
++        return $subscriberNotifyList[$issue_id];
++    }
++
+ 
+     /**
+      * Method used to format and send the email notifications.
+@@ -869,6 +889,8 @@
+      */
+     function notifySubscribers($issue_id, $emails, $type, $data, $subject, $internal_only, $type_id = false, $headers = false)
+     {
++        global $subscriberNotifyList;
++
+         // open text template
+         $tpl = new Template_API;
+         $tpl->setTemplate('notifications/' . $type . '.tpl.text');
+@@ -954,6 +976,8 @@
+                 $full_subject = "[#$issue_id] $subject: $extra_subject";
+             }
+             $mail->send($from, $emails[$i], $full_subject, TRUE, $issue_id, $final_type, $sender_usr_id, $type_id);
++
++            $subscriberNotifyList[$issue_id][] = $emails[$i];
+         }
+     }
+ 
+--- eventum-20060829/update.php	2006-08-30 00:46:19.047416365 +0300
++++ eventum-20060830/update.php	2006-08-30 20:17:24.844826982 +0300
+@@ -111,6 +111,7 @@
+ 
+     $tpl->assign(array(
+         "subscribers"  => Notification::getSubscribers($issue_id),
++        "notify_list"  => Notification::getLastUpdateAddresses($issue_id),
+         "categories"   => Category::getAssocList($prj_id),
+         "priorities"   => Priority::getAssocList($prj_id),
+         "status"       => $statuses,
+--- eventum-20060829/templates/update_form.tpl.html	2006-08-30 00:46:18.777410305 +0300
++++ eventum-20060830/templates/update_form.tpl.html	2006-08-30 20:21:39.160697745 +0300
+@@ -10,12 +10,23 @@
+             {if $update_result == -1}
+               <b>{t}Sorry, an error happened while trying to run your query.{/t}</b>
+             {elseif $update_result == 1}
+-              <b>{t}Thank you, issue #{$smarty.post.issue_id} was updated successfully.{/t}
++              <b>{t}Thank you, issue #{$smarty.post.issue_id} was updated successfully.{/t}</b>
+               {if $has_duplicates == 'yes'}
+                 {t}Also, all issues that are marked as duplicates from this one were updated as well.{/t}
+               {/if}
+               <br /><br />
++
++              {if $notify_list|@count > 0}
++              <b>{t}E-mail about issue update was sent to:{/t}</b><br />
++              {foreach from=$notify_list item=email_address}
++              &nbsp;&nbsp;{$email_address|escape:"html"}<br />
++              {/foreach}
++              <br />
++              {/if}
++
++              <b>
+               <a href="view.php?id={$smarty.post.issue_id}" class="link">{t}Return to Issue{/t} #{$smarty.post.issue_id} {t}Details Page{/t}</a>
++              </b>
+             {/if}
+           </td>
+         </tr>
