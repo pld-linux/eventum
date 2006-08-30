@@ -11,7 +11,7 @@
 +     * @param   integer $issue_id The issue ID
 +     * @return  array   list of addresse
 +     */
-+    function getLastUpdateAddresses($issue_id = null)
++    function getLastNotifiedAddresses($issue_id = null)
 +    {
 +        global $subscriberNotifyList;
 +
@@ -51,7 +51,7 @@
  
      $tpl->assign(array(
          "subscribers"  => Notification::getSubscribers($issue_id),
-+        "notify_list"  => Notification::getLastUpdateAddresses($issue_id),
++        "notify_list"  => Notification::getLastNotifiedAddresses($issue_id),
          "categories"   => Category::getAssocList($prj_id),
          "priorities"   => Priority::getAssocList($prj_id),
          "status"       => $statuses,
