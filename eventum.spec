@@ -11,9 +11,9 @@
 %bcond_with	qmail	# build the router-qmail subpackage
 %bcond_with	order_patch	# with custom issue order patch
 
-%define	_snap	20060823
+%define	_snap	20060830
 #define	_rc		RC3
-%define	_rel	2.83
+%define	_rel	2.86
 
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
@@ -24,7 +24,7 @@ Release:	%{?_rc:%{_rc}.}%{_rel}%{?_snap:.%{_snap}}
 License:	GPL
 Group:		Applications/WWW
 Source0:	http://downloads.mysql.com/snapshots/eventum/%{name}-nightly-%{_snap}.tar.gz
-# Source0-md5:	0931fa998008424fa0d834d3f9a4cb8f
+# Source0-md5:	2728604a05f51d6041e553561cbe32ff
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -60,7 +60,7 @@ Patch13:	%{name}-combined.patch
 Patch14:	%{name}-xml-inline.patch
 Patch15:	%{name}-timetracking-advanced-logic.patch
 Patch16:	%{name}-timedisplay.patch
-
+Patch17:	%{name}-email-notify-display.patch
 Patch18:	%{name}-compact-issue-display.patch
 Patch19:	%{name}-fixed-nav.patch
 Patch20:	%{name}-scm-ssl.patch
@@ -77,8 +77,8 @@ Patch30:	%{name}-tpl-fixes3.patch
 Patch31:	%{name}-sid.patch
 Patch32:	%{name}-charset.patch
 Patch33:	%{name}-view_headers-tab.patch
-Patch34:	http://glen.alkohol.ee/pld/eventum/eventum-tpl-fixes4.patch
-Patch35:	http://glen.alkohol.ee/pld/eventum/eventum-tpl-fixes5.patch
+Patch34:	http://glen.alkohol.ee/pld/eventum/%{name}-tpl-fixes4.patch
+Patch35:	http://glen.alkohol.ee/pld/eventum/%{name}-tpl-fixes5.patch
 # packaging patches that probably never go upstream
 Patch100:	%{name}-paths.patch
 Patch101:	%{name}-cvs-config.patch
@@ -540,6 +540,7 @@ rm -f rpc/xmlrpc_client.php
 %patch33 -p1
 %patch34 -p1
 %patch35 -p1
+%patch17 -p1
 
 # packaging
 %patch100 -p1
