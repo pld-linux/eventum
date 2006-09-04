@@ -13,7 +13,7 @@
 
 %define	_snap	20060830
 #define	_rc		RC3
-%define	_rel	2.86
+%define	_rel	2.89
 
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
@@ -24,7 +24,7 @@ Release:	%{?_rc:%{_rc}.}%{_rel}%{?_snap:.%{_snap}}
 License:	GPL
 Group:		Applications/WWW
 Source0:	http://downloads.mysql.com/snapshots/eventum/%{name}-nightly-%{_snap}.tar.gz
-# Source0-md5:	2728604a05f51d6041e553561cbe32ff
+# Source0-md5:	4c92f74c4e8d6ef67e7ccaed879d6f2b
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -79,6 +79,7 @@ Patch32:	%{name}-charset.patch
 Patch33:	%{name}-view_headers-tab.patch
 Patch34:	http://glen.alkohol.ee/pld/eventum/%{name}-tpl-fixes4.patch
 Patch35:	http://glen.alkohol.ee/pld/eventum/%{name}-tpl-fixes5.patch
+Patch36:	%{name}-draftbug.patch
 # packaging patches that probably never go upstream
 Patch100:	%{name}-paths.patch
 Patch101:	%{name}-cvs-config.patch
@@ -541,6 +542,7 @@ rm -f rpc/xmlrpc_client.php
 %patch34 -p1
 %patch35 -p1
 %patch17 -p1
+%patch36 -p1
 
 # packaging
 %patch100 -p1
