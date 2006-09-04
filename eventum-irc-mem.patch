@@ -18,3 +18,49 @@
  // the following is the list of IRC channels that the bot should connect to,
  // and the associated project name
  $channels = array(
+
+
+# these should be sent to upstream too, as memory limit setting should be the very first thing
+--- eventum-1.7.1/misc/process_mail_queue.php~	2006-06-19 17:50:25.747786986 +0300
++++ eventum-1.7.1/misc/process_mail_queue.php	2006-06-19 17:59:33.490045125 +0300
+@@ -27,7 +27,9 @@
+ // +----------------------------------------------------------------------+
+ //
+ // @(#) $Id$
+-//
++
++ini_set("memory_limit", "256M");
++
+ include_once("../config.inc.php");
+ include_once(APP_INC_PATH . "db_access.php");
+ include_once(APP_INC_PATH . "class.mail_queue.php");
+@@ -60,8 +62,6 @@
+     exit;
+ }
+ 
+-ini_set("memory_limit", "256M");
+-
+ // handle only pending emails
+ $limit = 50;
+ Mail_Queue::send('pending', $limit);
+--- eventum-1.7.1/misc/download_emails.php~	2006-06-19 18:13:23.698634331 +0300
++++ eventum-1.7.1/misc/download_emails.php	2006-06-19 18:16:24.672688641 +0300
+@@ -27,15 +27,15 @@
+ // +----------------------------------------------------------------------+
+ //
+ // @(#) $Id$
+-//
++
++ini_set("memory_limit", "256M");
++
+ include_once("../config.inc.php");
+ include_once(APP_INC_PATH . "class.support.php");
+ include_once(APP_INC_PATH . "class.lock.php");
+ include_once(APP_INC_PATH . "class.project.php");
+ include_once(APP_INC_PATH . "db_access.php");
+ 
+-ini_set("memory_limit", "256M");
+-
+ // we need the IMAP extension for this to work
+ if (!function_exists('imap_open')) {
+     echo "Error: Eventum requires the IMAP extension in order to download messages saved on a IMAP/POP3 mailbox.\n";

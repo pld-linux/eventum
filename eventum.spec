@@ -13,7 +13,7 @@
 
 %define	_snap	20060830
 #define	_rc		RC3
-%define	_rel	2.89
+%define	_rel	2.90
 
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
@@ -48,7 +48,7 @@ Patch1:		%{name}-perms.patch
 Patch2:		%{name}-cli-wr-separated.patch
 Patch3:		%{name}-scm-parse-response.patch
 Patch4:		%{name}-double-decode.patch
-Patch5:		%{name}-route-mem.patch
+Patch5:		%{name}-irc-mem.patch
 Patch6:		%{name}-scm-pluscharisbad.patch
 Patch7:		%{name}-scm-updates.patch
 Patch8:		%{name}-close-signature.patch
@@ -65,7 +65,7 @@ Patch18:	%{name}-compact-issue-display.patch
 Patch19:	%{name}-fixed-nav.patch
 Patch20:	%{name}-scm-ssl.patch
 Patch21:	%{name}-scm-quick-out.patch
-Patch22:	%{name}-mem-limits.patch
+
 Patch23:	%{name}-backtraces.patch
 Patch24:	%{name}-errorhandler.patch
 Patch25:	http://glen.alkohol.ee/pld/eventum/upgrade-2.0.patch
@@ -83,12 +83,12 @@ Patch36:	%{name}-draftbug.patch
 # packaging patches that probably never go upstream
 Patch100:	%{name}-paths.patch
 Patch101:	%{name}-cvs-config.patch
-Patch102:	%{name}-irc-mem.patch
 Patch103:	%{name}-irc-config.patch
 Patch104:	%{name}-PEAR.patch
 Patch105:	%{name}-httpclient-clientside.patch
 Patch106:	%{name}-bot-reconnect.patch
 Patch107:	%{name}-private-key.patch
+Patch108:	%{name}-mem-limits.patch
 URL:		http://dev.mysql.com/downloads/other/eventum/
 BuildRequires:	rpm-php-pearprov >= 4.0.2-98
 BuildRequires:	rpmbuild(macros) >= 1.268
@@ -528,7 +528,7 @@ rm -f rpc/xmlrpc_client.php
 #%patch19 -p1
 %patch20 -p1
 %patch21 -p1
-%patch22 -p1
+
 %patch23 -p1
 %patch24 -p1
 %patch26 -p1
@@ -547,12 +547,13 @@ rm -f rpc/xmlrpc_client.php
 # packaging
 %patch100 -p1
 %patch101 -p1
-%patch102 -p1
+
 %patch103 -p1
 %patch104 -p1
 %patch105 -p1
 %patch106 -p1
 %patch107 -p1
+%patch108 -p1
 
 cat <<'EOF'> mysql-permissions.sql
 # use this schema if you want to grant permissions manually instead of using setup
