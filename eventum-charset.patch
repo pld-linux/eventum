@@ -2,15 +2,15 @@ in Mime_Helper::getCharacterSet() if the email cis multipart/mixed and contains
 only one subpart, take the charset from that first part, rather from primary
 part.
 
---- eventum-20060725/include/class.mime_helper.php	2006-07-26 11:29:55.240578707 +0300
-+++ include/class.mime_helper.php	2006-07-26 14:20:18.000000000 +0300
+--- eventum-20060725/include/class.mime_helper.php	2006-07-26 14:20:18.000000000 +0300
++++ eventum-20060906/include/class.mime_helper.php	2006-09-07 18:06:03.000000000 +0300
 @@ -67,7 +67,13 @@
              return false;
          }
  
 -        $content_type = @$structure->headers['content-type'];
 +        if ($structure->ctype_primary == 'multipart' and $structure->ctype_secondary == 'mixed'
-+            and count($structure->parts) == 1) {
++            and count($structure->parts) >= 1 and $structure->parts[0]->ctype_primary == 'text') {
 +            $content_type = $structure->parts[0]->headers['content-type'];
 +        } else {
 +            $content_type = @$structure->headers['content-type'];
