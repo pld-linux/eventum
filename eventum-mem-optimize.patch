@@ -137,9 +137,9 @@
      {
          // need to fix a pretty annoying bug where if the 'boundary' part of a
          // content-type header is split into another line, the PEAR library would
---- eventum/include/class.support.php~	2006-09-07 23:52:32.769109230 +0300
-+++ eventum/include/class.support.php	2006-09-08 00:07:50.440733738 +0300
-@@ -485,14 +12,17 @@
+--- eventum/include/class.support.php	2006-09-08 00:07:50.440733738 +0300
++++ eventum/include/class.support.php	2006-09-08 01:03:12.090024412 +0300
+@@ -12,14 +12,17 @@
          }
  
          $email = @imap_headerinfo($mbox, $num);
@@ -160,3 +160,52 @@
          if ((!Support::exists($message_id)) && (!Note::exists($message_id))) {
              $structure = Mime_Helper::decode($message, true, true);
              $message_body = Mime_Helper::getMessageBody($structure);
+@@ -496,7 +499,7 @@
+         if ((!Support::exists($message_id)) && (!Note::exists($message_id))) {
+             $structure = Mime_Helper::decode($message, true, true);
+             $message_body = Mime_Helper::getMessageBody($structure);
+-            if (Mime_Helper::hasAttachments($message)) {
++            if (Mime_Helper::hasAttachments($structure)) {
+                 $has_attachments = 1;
+             } else {
+                 $has_attachments = 0;
+@@ -1417,7 +1420,7 @@
+             for ($i = 0; $i < count($res); $i++) {
+                 // since downloading email should make the emails 'public', send 'false' below as the 'internal_only' flag
+                 $structure = Mime_Helper::decode($res[$i]['seb_full_email'], true, false);
+-                if (Mime_Helper::hasAttachments($res[$i]['seb_full_email'])) {
++                if (Mime_Helper::hasAttachments($structure)) {
+                     $has_attachments = 1;
+                 } else {
+                     $has_attachments = 0;
+--- eventum/include/class.routing.php~	2006-09-08 00:56:22.000000000 +0300
++++ eventum/include/class.routing.php	2006-09-08 01:06:28.235959347 +0300
+@@ -169,7 +169,7 @@
+             $has_magic_cookie = false;
+         }
+ 
+-        if (Mime_Helper::hasAttachments($full_message)) {
++        if (Mime_Helper::hasAttachments($structure)) {
+             $has_attachments = 1;
+         } else {
+             $has_attachments = 0;
+@@ -371,7 +371,7 @@
+ 
+         // add the full email to the note if there are any attachments
+         // this is needed because the front end code will display attachment links
+-        if (Mime_Helper::hasAttachments($full_message)) {
++        if (Mime_Helper::hasAttachments($structure)) {
+             $HTTP_POST_VARS['blocked_msg'] = $full_message;
+         }
+         $res = Note::insert(Auth::getUserID(), $issue_id, false, false);
+--- eventum/include/class.note.php~	2006-09-08 00:56:22.000000000 +0300
++++ eventum/include/class.note.php	2006-09-08 01:07:07.482745790 +0300
+@@ -524,7 +524,7 @@
+         $body = Mime_Helper::getMessageBody($structure);
+         $sender_email = strtolower(Mail_API::getEmailAddress($structure->headers['from']));
+         if ($target == 'email') {
+-            if (Mime_Helper::hasAttachments($blocked_message)) {
++            if (Mime_Helper::hasAttachments($structure)) {
+                 $has_attachments = 1;
+             } else {
+                 $has_attachments = 0;
