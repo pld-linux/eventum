@@ -60,7 +60,7 @@ define("APP_DEFAULT_REFRESH_RATE", 5); // in minutes
 define("APP_DEFAULT_ASSIGNED_EMAILS", 1); // if the user will recieve an email when an issue is assigned to him
 define("APP_DEFAULT_NEW_EMAILS", 0); // if the user will recieve an email when ANY issue is created
 
-define("APP_CHARSET", "ISO-8859-1");
+define("APP_CHARSET", "UTF-8");
 define("APP_DEFAULT_LOCALE", "en_US");
 
 // define colors used by eventum

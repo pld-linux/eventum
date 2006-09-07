@@ -76,7 +76,11 @@ if (!defined('APP_DEFAULT_LOCALE')) {
     define('APP_DEFAULT_LOCALE', 'en_US');
 }
 if (!defined('APP_EMAIL_ENCODING')) {
-    define('APP_EMAIL_ENCODING', APP_CHARSET);
+    if (APP_CHARSET == 'UTF-8') {
+        define('APP_EMAIL_ENCODING', '8bit');
+    } else {
+        define('APP_EMAIL_ENCODING', '7bit');
+    }
 }
 
 if (APP_BENCHMARK) {
