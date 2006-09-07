@@ -218,3 +218,17 @@
                  $has_attachments = 1;
              } else {
                  $has_attachments = 0;
+--- eventum/include/class.mime_helper.php~	2006-09-08 00:56:22.000000000 +0300
++++ eventum/include/class.mime_helper.php	2006-09-08 02:01:57.633010451 +0300
+@@ -630,9 +630,9 @@
+      * @access  public
+      * @param   object $obj The decoded object structure of the MIME message
+      * @param   array $parts The parsed parts of the MIME message
+-     * @return  array List of parts that exist in the MIME message
++     * @return  void
+      */
+-    function parse_output(&$obj, &$parts)
++    function parse_output($obj, &$parts)
+     {
+         if (!empty($obj->parts)) {
+             for ($i = 0; $i < count($obj->parts); $i++) {
