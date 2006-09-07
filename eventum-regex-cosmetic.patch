@@ -1,0 +1,83 @@
+--- eventum/include/class.routing.php~	2006-09-07 23:32:17.000000000 +0300
++++ eventum/include/class.routing.php	2006-09-07 23:56:05.122543011 +0300
+@@ -60,9 +60,10 @@
+         // save the full message for logging purposes
+         Support::saveRoutedEmail($full_message);
+ 
+-        if (preg_match("/^(boundary=).*/m", $full_message)) {
+-            $pattern = "/(Content-Type: multipart\/)(.+); ?\r?\n(boundary=)(.*)$/im";
+-            $replacement = '$1$2; $3$4';
++        // join the Content-Type line (for easier parsing?)
++        if (preg_match('/^boundary=/m', $full_message)) {
++            $pattern = "#(Content-Type: multipart/.+); ?\r?\n(boundary=.*)$#im";
++            $replacement = '$1; $2';
+             $full_message = preg_replace($pattern, $replacement, $full_message);
+         }
+         // associate routed emails to the internal system account
+@@ -84,7 +84,7 @@
+         //
+ 
+         // remove the reply-to: header
+-        if (preg_match("/^(reply-to:).*/im", $full_message)) {
++        if (preg_match('/^reply-to:.*/im', $full_message)) {
+             $full_message = preg_replace("/^(reply-to:).*\n/im", '', $full_message, 1);
+         }
+ 
+@@ -271,9 +271,10 @@
+         // save the full message for logging purposes
+         Note::saveRoutedNote($full_message);
+ 
+-        if (preg_match("/^(boundary=).*/m", $full_message)) {
+-            $pattern = "/(Content-Type: multipart\/)(.+); ?\r?\n(boundary=)(.*)$/im";
+-            $replacement = '$1$2; $3$4';
++        // join the Content-Type line (for easier parsing?)
++        if (preg_match('/^boundary=/m', $full_message)) {
++            $pattern = "#(Content-Type: multipart/.+); ?\r?\n(boundary=.*)$#im";
++            $replacement = '$1; $2';
+             $full_message = preg_replace($pattern, $replacement, $full_message);
+         }
+ 
+@@ -290,7 +291,7 @@
+         //
+ 
+         // remove the reply-to: header
+-        if (preg_match("/^(reply-to:).*/im", $full_message)) {
++        if (preg_match('/^reply-to:.*/im', $full_message)) {
+             $full_message = preg_replace("/^(reply-to:).*\n/im", '', $full_message, 1);
+         }
+ 
+--- eventum/include/class.mime_helper.php~	2006-09-07 23:32:17.000000000 +0300
++++ eventum/include/class.mime_helper.php	2006-09-08 00:17:21.483076433 +0300
+@@ -594,9 +598,9 @@
+         // content-type header is split into another line, the PEAR library would
+         // not work correctly. this fix will make the boundary part go to the
+         // same line as the content-type one
+-        if (preg_match("/^(boundary=).*/m", $message)) {
+-            $pattern = "/(Content-Type: multipart\/)(.+); ?\r?\n(boundary=)(.*)$/im";
+-            $replacement = '$1$2; $3$4';
++        if (preg_match('/^boundary=/m', $message)) {
++            $pattern = "#(Content-Type: multipart/.+); ?\r?\n(boundary=)$#im";
++            $replacement = '$1; $2';
+             $message = preg_replace($pattern, $replacement, $message);
+         }
+ 
+--- eventum/include/class.mime_helper.php~	2006-09-08 00:24:49.000000000 +0300
++++ eventum/include/class.mime_helper.php	2006-09-08 00:28:40.622076651 +0300
+@@ -192,7 +192,7 @@
+             $second_part = substr($address, strrpos($address, '<'));
+             $address = $first_part;
+         }
+-        if (preg_match('/^"(.*)"/', $address)) {
++        if (preg_match('/^".*"/', $address)) {
+             $address = preg_replace('/^"(.*)"/', '\\1', $address);
+         }
+         if (!empty($second_part)) {
+@@ -248,7 +248,7 @@
+      */
+     function isQuotedPrintable($address)
+     {
+-        if (preg_match("/=\?.+\?Q\?(.+)\?= <(.+)>/i", $address, $matches)) {
++        if (preg_match("/=\?.+\?Q\?.+\?= <.+>/i", $address)) {
+             return true;
+         } else {
+             return false;
