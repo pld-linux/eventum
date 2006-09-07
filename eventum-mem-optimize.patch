@@ -1,0 +1,162 @@
+--- eventum/include/class.mime_helper.php~	2006-09-07 23:32:17.000000000 +0300
++++ eventum/include/class.mime_helper.php	2006-09-08 00:17:21.483076433 +0300
+@@ -446,12 +446,16 @@
+      * Method used to check whether a given email message has any attachments.
+      *
+      * @access  public
+-     * @param   string $message The full body of the message
++     * @param   mixed   $message The full body of the message or parsed message structure.
+      * @return  boolean
+      */
+     function hasAttachments($message)
+     {
+-        $output = Mime_Helper::decode($message, true);
++        if (is_string($message)) {
++            $output = Mime_Helper::decode($message, true);
++        } else {
++            $output = $message;
++        }
+         $attachments = Mime_Helper::_getAttachmentDetails($output, TRUE);
+         if (count($attachments) > 0) {
+             return true;
+--- eventum/include/class.mime_helper.php~	2006-09-08 00:17:21.000000000 +0300
++++ eventum/include/class.mime_helper.php	2006-09-08 00:24:49.529222316 +0300
+@@ -57,12 +57,16 @@
+      * Method used to get charset from raw email.
+      *
+      * @access  public
+-     * @param   string $input The full body of the message
++     * @param   mixed   $input The full body of the message or decoded email.
+      * @return  string charset extracted from Content-Type header of email.
+      */
+     function getCharacterSet($input)
+     {
+-        $structure = Mime_Helper::decode($input, false, false);
++        if (!is_object($input)) {
++            $input = Mime_Helper::decode($input, false, false);
++        } else {
++            $structure = $input;
++        }
+         if (empty($structure)) {
+             return false;
+         }
+--- eventum/include/class.mime_helper.php~	2006-09-08 00:28:40.000000000 +0300
++++ eventum/include/class.mime_helper.php	2006-09-08 00:52:25.642013349 +0300
+@@ -455,12 +455,10 @@
+      */
+     function hasAttachments($message)
+     {
+-        if (is_string($message)) {
+-            $output = Mime_Helper::decode($message, true);
+-        } else {
+-            $output = $message;
++        if (!is_object($message)) {
++            $message = Mime_Helper::decode($message, true);
+         }
+-        $attachments = Mime_Helper::_getAttachmentDetails($output, TRUE);
++        $attachments = Mime_Helper::_getAttachmentDetails($message, TRUE);
+         if (count($attachments) > 0) {
+             return true;
+         } else {
+@@ -474,13 +472,15 @@
+      * associated with a message.
+      *
+      * @access  public
+-     * @param   string $message The full body of the message
++     * @param   mixed   $message The full body of the message or parsed message structure.
+      * @return  array The list of attachments, if any
+      */
+     function getAttachments($message)
+     {
+-        $output = Mime_Helper::decode($message, true);
+-        return Mime_Helper::_getAttachmentDetails($output, TRUE);
++        if (!is_object($message)) {
++            $message = Mime_Helper::decode($message, true);
++        }
++        return Mime_Helper::_getAttachmentDetails($message, TRUE);
+     }
+ 
+ 
+@@ -489,14 +489,15 @@
+      * associated with a message.
+      *
+      * @access  public
+-     * @param   string $message The full body of the message
++     * @param   mixed   $message The full body of the message or parsed message structure.
+      * @return  array The list of attachment CIDs, if any
+      */
+-    function getAttachmentCIDs(&$message)
++    function getAttachmentCIDs($message)
+     {
+-        // gotta parse MIME based emails now
+-        $output = Mime_Helper::decode($message, true);
+-        return Mime_Helper::_getAttachmentDetails($output, TRUE);
++        if (!is_object($message)) {
++            $message = Mime_Helper::decode($message, true);
++        }
++        return Mime_Helper::_getAttachmentDetails($message, TRUE);
+     }
+ 
+ 
+@@ -509,6 +510,7 @@
+                 $attachments = array_merge($t, $attachments);
+             }
+         }
++        // FIXME: content-type is always lowered by PEAR class (CHECKME) and why not $mime_part->content_type?
+         $content_type = strtolower(@$mime_part->ctype_primary . '/' . @$mime_part->ctype_secondary);
+         if ($content_type == '/') {
+             $content_type = '';
+@@ -567,7 +569,7 @@
+      * attachment.
+      *
+      * @access  public
+-     * @param   string $message The full content of the message
++     * @param   mixed   $message The full content of the message or parsed message structure.
+      * @param   string $filename The filename to look for
+      * @param   string $cid The content-id to look for, if any
+      * @return  string The full encoded content of the attachment
+@@ -575,8 +577,10 @@
+     function getAttachment($message, $filename, $cid = FALSE)
+     {
+         $parts = array();
+-        $output = Mime_Helper::decode($message, true);
+-        $details = Mime_Helper::_getAttachmentDetails($output, TRUE, $filename, $cid);
++        if (!is_object($message)) {
++            $message = Mime_Helper::decode($message, true);
++        }
++        $details = Mime_Helper::_getAttachmentDetails($message, TRUE, $filename, $cid);
+         if (count($details) == 1) {
+             return array(
+                 $details[0]['filetype'],
+@@ -596,7 +600,7 @@
+      * @param   boolean $include_bodies Whether to include the bodies in the return value or not
+      * @return  mixed The decoded content of the message
+      */
+-    function decode(&$message, $include_bodies = FALSE, $decode_bodies = TRUE)
++    function decode($message, $include_bodies = FALSE, $decode_bodies = TRUE)
+     {
+         // need to fix a pretty annoying bug where if the 'boundary' part of a
+         // content-type header is split into another line, the PEAR library would
+--- eventum/include/class.support.php~	2006-09-07 23:52:32.769109230 +0300
++++ eventum/include/class.support.php	2006-09-08 00:07:50.440733738 +0300
+@@ -485,14 +12,17 @@
+         }
+ 
+         $email = @imap_headerinfo($mbox, $num);
+-        $body = imap_body($mbox, $num);
+         $headers = imap_fetchheader($mbox, $num);
+-        $message = $headers . $body;
++        $body = imap_body($mbox, $num);
+         // check for mysterious blank messages
+-        if (empty($message)) {
++        if (empty($body) and empty($headers)) {
+             return '';
+         }
+         $message_id = Mail_API::getMessageID($headers, $body);
++        $message = $headers . $body;
++        // we don't need $body anymore -- free memory
++        unset($body);
++
+         if ((!Support::exists($message_id)) && (!Note::exists($message_id))) {
+             $structure = Mime_Helper::decode($message, true, true);
+             $message_body = Mime_Helper::getMessageBody($structure);
