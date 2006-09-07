@@ -137,8 +137,8 @@
      {
          // need to fix a pretty annoying bug where if the 'boundary' part of a
          // content-type header is split into another line, the PEAR library would
---- eventum/include/class.support.php	2006-09-08 00:07:50.440733738 +0300
-+++ eventum/include/class.support.php	2006-09-08 01:03:12.090024412 +0300
+--- eventum/include/class.support.php	2006-09-08 01:03:12.090024412 +0300
++++ eventum/include/class.support.php	2006-09-08 01:25:16.661067108 +0300
 @@ -12,14 +12,17 @@
          }
  
@@ -178,6 +178,15 @@
                      $has_attachments = 1;
                  } else {
                      $has_attachments = 0;
+@@ -1475,7 +1478,7 @@
+             // gotta parse MIME based emails now
+             $output = Mime_Helper::decode($res["seb_full_email"], true);
+             $res["message"] = Mime_Helper::getMessageBody($output); // XXX: check which code relies on this var
+-            $res["attachments"] = Mime_Helper::getAttachmentCIDs($res["seb_full_email"]);
++            $res["attachments"] = Mime_Helper::getAttachmentCIDs($output);
+             $res["timestamp"] = Date_API::getUnixTimestamp($res['sup_date'], 'GMT');
+             $res["sup_date"] = Date_API::getFormattedDate($res["sup_date"]);
+             $res["sup_subject"] = Mime_Helper::fixEncoding($res["sup_subject"]);
 --- eventum/include/class.routing.php~	2006-09-08 00:56:22.000000000 +0300
 +++ eventum/include/class.routing.php	2006-09-08 01:06:28.235959347 +0300
 @@ -169,7 +169,7 @@
