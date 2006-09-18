@@ -11,9 +11,9 @@
 %bcond_with	qmail	# build the router-qmail subpackage
 %bcond_with	order_patch	# with custom issue order patch
 
-%define	_snap	20060908
+%define	_snap	20060918
 #define	_rc		RC3
-%define	_rel	2.105
+%define	_rel	3.112
 
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
@@ -24,7 +24,7 @@ Release:	%{?_rc:%{_rc}.}%{_rel}%{?_snap:.%{_snap}}
 License:	GPL
 Group:		Applications/WWW
 Source0:	http://downloads.mysql.com/snapshots/eventum/%{name}-nightly-%{_snap}.tar.gz
-# Source0-md5:	2e8deea183ace7a30e7080656b22e081
+# Source0-md5:	ae9056a365613e75c607c7810fc96c29
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -82,6 +82,8 @@ Patch35:	http://glen.alkohol.ee/pld/eventum/%{name}-tpl-fixes5.patch
 Patch36:	%{name}-regex-cosmetic.patch
 Patch37:	%{name}-mem-optimize.patch
 Patch38:	http://glen.alkohol.ee/pld/eventum/%{name}-drop-message.patch
+Patch39:	http://glen.alkohol.ee/pld/eventum/%{name}-tpl-fixes6.patch
+Patch40:	http://glen.alkohol.ee/pld/eventum/%{name}-recact-defaults.patch
 # packaging patches that probably never go upstream
 Patch100:	%{name}-paths.patch
 Patch101:	%{name}-cvs-config.patch
@@ -546,6 +548,8 @@ rm -f rpc/xmlrpc_client.php
 %patch36 -p1
 %patch37 -p1
 %patch38 -p1
+%patch39 -p1
+%patch40 -p1
 
 # packaging
 %patch100 -p1
