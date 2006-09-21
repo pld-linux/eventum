@@ -14,7 +14,7 @@
 #define	_snap	20060921
 %define	_svn	20060921.3107
 #define	_rc		RC3
-%define	_rel	3.115
+%define	_rel	3.116
 
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
@@ -45,24 +45,24 @@ Source15:	%{name}.logrotate
 Source16:	%{name}-lighttpd.conf
 Patch0:		%{name}-lf.patch
 Patch1:		%{name}-perms.patch
-Patch10:	%{name}-workflow-handlenewnote-note_id.patch
-Patch11:	%{name}-order4b.patch
-Patch15:	%{name}-timetracking-advanced-logic.patch
-Patch17:	%{name}-email-notify-display.patch
-Patch19:	%{name}-fixed-nav.patch
-Patch23:	%{name}-backtraces.patch
-Patch24:	%{name}-errorhandler.patch
-Patch32:	%{name}-charset.patch
-Patch40:	http://glen.alkohol.ee/pld/eventum/%{name}-recact-defaults.patch
+Patch2:		%{name}-workflow-handlenewnote-note_id.patch
+Patch3:		%{name}-timetracking-advanced-logic.patch
+Patch4:		%{name}-email-notify-display.patch
+Patch5:		%{name}-backtraces.patch
+Patch6:		%{name}-errorhandler.patch
+Patch7:		%{name}-charset.patch
+Patch8:		http://glen.alkohol.ee/pld/eventum/%{name}-recact-defaults.patch
+Patch9:		%{name}-order4b.patch
+Patch10:	%{name}-fixed-nav.patch
 # packaging patches that probably never go upstream
 Patch100:	%{name}-paths.patch
 Patch101:	%{name}-cvs-config.patch
-Patch103:	%{name}-irc-config.patch
-Patch104:	%{name}-PEAR.patch
-Patch105:	%{name}-httpclient-clientside.patch
-Patch106:	%{name}-bot-reconnect.patch
-Patch107:	%{name}-private-key.patch
-Patch108:	%{name}-mem-limits.patch
+Patch102:	%{name}-irc-config.patch
+Patch103:	%{name}-PEAR.patch
+Patch104:	%{name}-httpclient-clientside.patch
+Patch105:	%{name}-bot-reconnect.patch
+Patch106:	%{name}-private-key.patch
+Patch107:	%{name}-mem-limits.patch
 URL:		http://dev.mysql.com/downloads/other/eventum/
 BuildRequires:	rpm-php-pearprov >= 4.0.2-98
 BuildRequires:	rpmbuild(macros) >= 1.268
@@ -479,27 +479,26 @@ rm -f rpc/xmlrpc_client.php
 # bug fixes.
 %patch0 -p1
 %patch1 -p1
+%patch2 -p1
+%patch3 -p1
+%patch4 -p1
+%patch5 -p1
+%patch6 -p1
+%patch7 -p1
+%patch8 -p1
 
-%patch10 -p1
-%{?with_order_patch:%patch11 -p1}
-%patch15 -p1
-%patch17 -p1
-#%patch19 -p1
-%patch23 -p1
-%patch24 -p1
-%patch32 -p1
-%patch40 -p1
+%{?with_order_patch:%patch9 -p1}
+#%patch10 -p1
 
 # packaging
 %patch100 -p1
 %patch101 -p1
-
+%patch102 -p1
 %patch103 -p1
 %patch104 -p1
 %patch105 -p1
 %patch106 -p1
 %patch107 -p1
-%patch108 -p1
 
 cat <<'EOF'> mysql-permissions.sql
 # use this schema if you want to grant permissions manually instead of using setup
