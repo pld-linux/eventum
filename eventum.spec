@@ -14,7 +14,7 @@
 #define	_snap	20060921
 %define	_svn	20060921.3107
 #define	_rc		RC3
-%define	_rel	3.116
+%define	_rel	3.119
 
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
@@ -603,7 +603,7 @@ install %{SOURCE8} $RPM_BUILD_ROOT/etc/rc.d/init.d/eventum-irc
 install %{SOURCE9} $RPM_BUILD_ROOT/etc/sysconfig/eventum-irc
 
 sed -e '
-s,%%{APP_VERSION}%%,%{version}%{?_snap:-%{_snap}}%{?_rc:-%{_rc}},
+s,%%{APP_VERSION}%%,%{version}%{?_snap:-%{_snap}}%{?_rc:-%{_rc}}%{?_svn:-%{_svn}},
 s,%%{PHP_PEAR_DIR}%%,%{php_pear_dir},
 s,%%{APP_PATH}%%,%{_appdir},
 s,%%{SMARTY_DIR}%%,%{_smartydir},
