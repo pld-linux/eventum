@@ -11,20 +11,22 @@
 %bcond_with	qmail	# build the router-qmail subpackage
 %bcond_with	order_patch	# with custom issue order patch
 
-%define	_snap	20060918
+#define	_snap	20060921
+%define	_svn	20060921.3107
 #define	_rc		RC3
-%define	_rel	3.112
+%define	_rel	3.115
 
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl):	Eventum - system ¶ledzenia spraw/b³êdów
 Name:		eventum
 Version:	1.7.1
-Release:	%{?_rc:%{_rc}.}%{_rel}%{?_snap:.%{_snap}}
+Release:	%{?_rc:%{_rc}.}%{_rel}%{?_snap:.%{_snap}}%{?_svn:.%{_svn}}
 License:	GPL
 Group:		Applications/WWW
-Source0:	http://downloads.mysql.com/snapshots/eventum/%{name}-nightly-%{_snap}.tar.gz
-# Source0-md5:	ae9056a365613e75c607c7810fc96c29
+#Source0:	http://downloads.mysql.com/snapshots/eventum/%{name}-nightly-%{_snap}.tar.gz
+Source0:	%{name}-%{_svn}.tar.bz2
+# Source0-md5:	e7d3ba151a57d535f2ffd1ad4a7301be
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -41,48 +43,16 @@ Source13:	%{name}-upgrade.sh
 Source14:	%{name}-router-postfix.sh
 Source15:	%{name}.logrotate
 Source16:	%{name}-lighttpd.conf
-Source17:	http://eventum.mysql.org/patches/process_svn_commits_new.phps
-# Source17-md5:	48a1bc003907101e4052e5232047e6b2
 Patch0:		%{name}-lf.patch
 Patch1:		%{name}-perms.patch
-Patch2:		%{name}-cli-wr-separated.patch
-Patch3:		%{name}-scm-parse-response.patch
-Patch4:		%{name}-double-decode.patch
-Patch5:		%{name}-irc-mem.patch
-Patch6:		%{name}-scm-pluscharisbad.patch
-Patch7:		%{name}-scm-updates.patch
-Patch8:		%{name}-close-signature.patch
-Patch9:		%{name}-list-sorting.patch
 Patch10:	%{name}-workflow-handlenewnote-note_id.patch
 Patch11:	%{name}-order4b.patch
-Patch12:	%{name}-cli-errorcheck.patch
-Patch13:	%{name}-combined.patch
-Patch14:	%{name}-xml-inline.patch
 Patch15:	%{name}-timetracking-advanced-logic.patch
-Patch16:	%{name}-timedisplay.patch
 Patch17:	%{name}-email-notify-display.patch
-Patch18:	%{name}-compact-issue-display.patch
 Patch19:	%{name}-fixed-nav.patch
-Patch20:	%{name}-scm-ssl.patch
-Patch21:	%{name}-scm-quick-out.patch
-Patch22:	%{name}-emailsig.patch
 Patch23:	%{name}-backtraces.patch
 Patch24:	%{name}-errorhandler.patch
-Patch25:	http://glen.alkohol.ee/pld/eventum/upgrade-2.0.patch
-Patch26:	%{name}-tpl-fixes.patch
-Patch27:	%{name}-xss.patch
-Patch28:	%{name}-tpl-fixes2.patch
-Patch29:	%{name}-svn.patch
-Patch30:	%{name}-tpl-fixes3.patch
-Patch31:	%{name}-sid.patch
 Patch32:	%{name}-charset.patch
-Patch33:	%{name}-view_headers-tab.patch
-Patch34:	http://glen.alkohol.ee/pld/eventum/%{name}-tpl-fixes4.patch
-Patch35:	http://glen.alkohol.ee/pld/eventum/%{name}-tpl-fixes5.patch
-Patch36:	%{name}-regex-cosmetic.patch
-Patch37:	%{name}-mem-optimize.patch
-Patch38:	http://glen.alkohol.ee/pld/eventum/%{name}-drop-message.patch
-Patch39:	http://glen.alkohol.ee/pld/eventum/%{name}-tpl-fixes6.patch
 Patch40:	http://glen.alkohol.ee/pld/eventum/%{name}-recact-defaults.patch
 # packaging patches that probably never go upstream
 Patch100:	%{name}-paths.patch
@@ -493,12 +463,9 @@ Szczegó³y na temat instalacji mo¿na przeczytaæ pod
 </eventum/help.php?topic=scm_integration_installation>.
 
 %prep
-%setup -q %{?_snap:-n %{name}-%{_snap}}
-cp %{SOURCE17} misc/scm/process_svn_commits.php
+%setup -q %{?_snap:-n %{name}-%{_snap}}%{?_svn:-n %{name}}
 # undos the source
 find . -type f -print0 | xargs -0 sed -i -e 's,\r$,,'
-
-%patch25 -p1
 
 rm -f setup.conf.php # not to be installed by *.php glob
 rm -rf misc/upgrade/*v1.[123]* # too old to support in PLD Linux
@@ -512,43 +479,15 @@ rm -f rpc/xmlrpc_client.php
 # bug fixes.
 %patch0 -p1
 %patch1 -p1
-%patch2 -p1
-%patch3 -p1
-%patch4 -p1
-%patch5 -p1
-%patch6 -p1
-%patch7 -p1
-%patch8 -p1
-%patch9 -p1
+
 %patch10 -p1
 %{?with_order_patch:%patch11 -p1}
-%patch12 -p1
-%patch13 -p1
-%patch14 -p1
 %patch15 -p1
-%patch16 -p1
 %patch17 -p1
-%patch18 -p1
 #%patch19 -p1
-%patch20 -p1
-%patch21 -p1
-%patch22 -p1
 %patch23 -p1
 %patch24 -p1
-%patch26 -p1
-%patch27 -p1
-%patch28 -p1
-%patch29 -p1
-%patch30 -p1
-%patch31 -p1
 %patch32 -p1
-%patch33 -p1
-%patch34 -p1
-%patch35 -p1
-%patch36 -p1
-%patch37 -p1
-%patch38 -p1
-%patch39 -p1
 %patch40 -p1
 
 # packaging
@@ -588,7 +527,7 @@ cp misc/localization/eventum.po misc/localization/en_US/LC_MESSAGES/eventum.po
 
 sed -e '1s,#!.*/bin/php -q,#!%{_bindir}/php,' misc/cli/eventum > %{name}-cli
 sed -e '1i#!%{_bindir}/php' misc/scm/process_cvs_commits.php > process_cvs_commits
-sed -e '1i#!%{_bindir}/php' misc/scm/process_svn_commits.php > process_svn_commits
+cat misc/scm/process_svn_commits.php > process_svn_commits
 sed -e '1i#!%{_bindir}/php' misc/irc/bot.php > %{name}-bot
 mv misc/cli/eventumrc_example eventumrc
 sed -i -e '1i#!%{_bindir}/php' misc/*.php
