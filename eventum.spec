@@ -12,9 +12,9 @@
 %bcond_with	order_patch	# with custom issue order patch
 
 #define	_snap	20060921
-%define	_svn	20060921.3107
+%define	_svn	20060922.3112
 #define	_rc		RC3
-%define	_rel	3.119
+%define	_rel	3.120
 
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
@@ -26,7 +26,7 @@ License:	GPL
 Group:		Applications/WWW
 #Source0:	http://downloads.mysql.com/snapshots/eventum/%{name}-nightly-%{_snap}.tar.gz
 Source0:	%{name}-%{_svn}.tar.bz2
-# Source0-md5:	e7d3ba151a57d535f2ffd1ad4a7301be
+# Source0-md5:	faf47e6685c12771698ffc1f456e679c
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
