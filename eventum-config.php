@@ -90,6 +90,11 @@ if (APP_BENCHMARK) {
     $bench->start();
 }
 
+// handle the language preferences now
+@session_start();
+include_once(APP_INC_PATH . "class.language.php");
+Language::setPreference();
+
 include_once APP_INC_PATH . 'class.misc.php';
 
 if (isset($_GET)) {
@@ -110,12 +115,7 @@ $HTTP_GET_VARS = Misc::dispelMagicQuotes($HTTP_GET_VARS);
 $HTTP_POST_VARS = Misc::dispelMagicQuotes($HTTP_POST_VARS);
 $_REQUEST = Misc::dispelMagicQuotes($_REQUEST);
 
-// handle the language preferences now
-include_once(APP_INC_PATH . 'class.language.php');
-Language::setPreference();
-
 // set charset
 header('Content-Type: text/html; charset=' . APP_CHARSET);
 
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
-?>
