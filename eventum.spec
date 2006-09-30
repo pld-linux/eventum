@@ -12,7 +12,7 @@
 
 #define	_snap	20060330
 #define	_rc		RC3
-%define	_rel	3
+%define	_rel	4
 
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
@@ -23,7 +23,7 @@ Release:	%{?_snap:0.%{_snap}.}%{?_rc:%{_rc}.}%{_rel}
 License:	GPL
 Group:		Applications/WWW
 #Source0:	http://downloads.mysql.com/snapshots/eventum/%{name}-nightly-%{_snap}.tar.gz
-Source0:	http://mysql.dataphone.se/Downloads/%{name}/%{name}-%{version}.tar.gz
+Source0:	http://mysql.dataphone.se/Downloads/eventum/%{name}-%{version}.tar.gz
 # Source0-md5:	e1845de39b4d9bd30ddec9c26031a7d5
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
@@ -706,10 +706,10 @@ fi
 /sbin/chkconfig --add eventum-irc
 %service eventum-irc restart "Eventum IRC Bot"
 
-%triggerin -- apache1
+%triggerin -- apache1 < 1.3.37-3, apache1-base
 %webapp_register apache %{_webapp}
 
-%triggerun -- apache1
+%triggerun -- apache1 < 1.3.37-3, apache1-base
 %webapp_unregister apache %{_webapp}
 
 %triggerin -- apache < 2.2.0, apache-base
@@ -931,11 +931,11 @@ fi
 %files cli
 %defattr(644,root,root,755)
 %doc eventumrc
-%attr(644,root,root) %config %verify(not md5 mtime size) %{_sysconfdir}/cli.php
+%config %verify(not md5 mtime size) %{_sysconfdir}/cli.php
 %attr(755,root,root) %{_bindir}/%{name}
 %{_appdir}/cli
 
 %files scm
 %defattr(644,root,root,755)
-%attr(644,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/cvs.php
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/cvs.php
 %attr(755,root,root) %{_libdir}/scm
