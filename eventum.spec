@@ -11,8 +11,8 @@
 %bcond_with	qmail	# build the router-qmail subpackage
 
 #define	_snap	20060330
-%define	_rc		RC2
-%define	_rel	0.2
+#define	_rc		RC3
+%define	_rel	4
 
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
@@ -22,9 +22,9 @@ Version:	1.7.1
 Release:	%{?_snap:0.%{_snap}.}%{?_rc:%{_rc}.}%{_rel}
 License:	GPL
 Group:		Applications/WWW
-Source0:	http://eventum.mysql.org/downloads/%{name}-%{version}.%{_rc}.tar.gz
-# Source0-md5:	1ca8dd3b9876537ac29c02a549e245e1
 #Source0:	http://downloads.mysql.com/snapshots/eventum/%{name}-nightly-%{_snap}.tar.gz
+Source0:	http://mysql.dataphone.se/Downloads/eventum/%{name}-%{version}.tar.gz
+# Source0-md5:	e1845de39b4d9bd30ddec9c26031a7d5
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -47,6 +47,8 @@ Patch4:		%{name}-double-decode.patch
 Patch5:		%{name}-route-mem.patch
 Patch6:		%{name}-scm-pluscharisbad.patch
 Patch7:		%{name}-scm-updates.patch
+Patch8:		%{name}-close-signature.patch
+Patch9:		%{name}-list-sorting.patch
 Patch100:	%{name}-paths.patch
 Patch101:	%{name}-cvs-config.patch
 Patch102:	%{name}-irc-mem.patch
@@ -474,6 +476,8 @@ rm -f rpc/xmlrpc_client.php
 %patch5 -p1
 %patch6 -p1
 %patch7 -p1
+%patch8 -p1
+%patch9 -p1
 
 # packaging
 %patch100 -p1
@@ -702,10 +706,10 @@ fi
 /sbin/chkconfig --add eventum-irc
 %service eventum-irc restart "Eventum IRC Bot"
 
-%triggerin -- apache1
+%triggerin -- apache1 < 1.3.37-3, apache1-base
 %webapp_register apache %{_webapp}
 
-%triggerun -- apache1
+%triggerun -- apache1 < 1.3.37-3, apache1-base
 %webapp_unregister apache %{_webapp}
 
 %triggerin -- apache < 2.2.0, apache-base
@@ -927,11 +931,11 @@ fi
 %files cli
 %defattr(644,root,root,755)
 %doc eventumrc
-%attr(644,root,root) %config %verify(not md5 mtime size) %{_sysconfdir}/cli.php
+%config %verify(not md5 mtime size) %{_sysconfdir}/cli.php
 %attr(755,root,root) %{_bindir}/%{name}
 %{_appdir}/cli
 
 %files scm
 %defattr(644,root,root,755)
-%attr(644,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/cvs.php
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/cvs.php
 %attr(755,root,root) %{_libdir}/scm
