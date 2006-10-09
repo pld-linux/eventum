@@ -12,9 +12,9 @@
 %bcond_with	order_patch	# with custom issue order patch
 
 #define	_snap	20060921
-%define	_svn	20060922.3112
+%define	_svn	20061009.3121
 #define	_rc		RC3
-%define	_rel	3.120
+%define	_rel	4.123
 
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
@@ -26,7 +26,7 @@ License:	GPL
 Group:		Applications/WWW
 #Source0:	http://downloads.mysql.com/snapshots/eventum/%{name}-nightly-%{_snap}.tar.gz
 Source0:	%{name}-%{_svn}.tar.bz2
-# Source0-md5:	faf47e6685c12771698ffc1f456e679c
+# Source0-md5:	0a3c1f2213aa683594252f89900f4544
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -513,6 +513,7 @@ mv misc/localization/fr{_FR,}
 mv misc/localization/it{_IT,}
 mv misc/localization/nl{_NL,}
 mv misc/localization/ru{_RU,}
+mv misc/localization/sv{_SE,}
 
 # oops, the file got truncated - quick fix
 cp misc/localization/eventum.po misc/localization/de/LC_MESSAGES/eventum.po
@@ -643,7 +644,7 @@ for a in */LC_MESSAGES; do
 done
 cd -
 
-#%find_lang %{name}
+%find_lang %{name}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -824,7 +825,7 @@ EOF
 database_changes.php Perform database changes
 EOF
 
-%triggerpostun -- eventum < 1.7.1-2.48.20060717
+%triggerpostun -- eventum < 1.7.1-4.123.20061009.3121
 %{_appdir}/upgrade/upgrade.sh %{_appdir}/upgrade/v1.7.1_to_v2.0 <<EOF
 database_changes.php Perform database changes
 EOF
@@ -896,7 +897,7 @@ if [ -f %{_sysconfdir}/cvs.php.rpmsave ]; then
 fi
 ln -sf process_cvs_commits $RPM_BUILD_ROOT%{_libdir}/scm
 
-%files
+%files -f %{name}.lang
 %defattr(644,root,root,755)
 %doc ChangeLog FAQ INSTALL README UPGRADE CONTRIB
 %doc docs/* setup/schema.sql mysql-permissions.sql
