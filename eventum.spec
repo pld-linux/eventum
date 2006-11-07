@@ -12,9 +12,9 @@
 %bcond_with	order_patch	# with custom issue order patch
 
 #define	_snap	20060921
-%define	_svn	20061026.3125
+%define	_svn	20061107.3132
 #define	_rc		RC3
-%define	_rel	4.125
+%define	_rel	4.128
 
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
@@ -51,7 +51,7 @@ Patch4:		%{name}-email-notify-display.patch
 Patch5:		%{name}-backtraces.patch
 Patch6:		%{name}-errorhandler.patch
 Patch7:		%{name}-charset.patch
-Patch8:		http://glen.alkohol.ee/pld/eventum/%{name}-recact-defaults.patch
+
 Patch9:		%{name}-order4b.patch
 Patch10:	%{name}-fixed-nav.patch
 # packaging patches that probably never go upstream
@@ -486,7 +486,6 @@ rm -f rpc/xmlrpc_client.php
 %patch5 -p1
 %patch6 -p1
 %patch7 -p1
-%patch8 -p1
 
 %{?with_order_patch:%patch9 -p1}
 #%patch10 -p1
