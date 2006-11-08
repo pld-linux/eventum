@@ -14,7 +14,7 @@
 #define	_snap	20060921
 %define	_svn	20061107.3132
 #define	_rc		RC3
-%define	_rel	4.128
+%define	_rel	4.129
 
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
