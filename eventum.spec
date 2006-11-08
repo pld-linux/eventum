@@ -26,7 +26,7 @@ License:	GPL
 Group:		Applications/WWW
 #Source0:	http://downloads.mysql.com/snapshots/eventum/%{name}-nightly-%{_snap}.tar.gz
 Source0:	%{name}-%{_svn}.tar.bz2
-# Source0-md5:	e03610496b8d25f76ef46adaed3151ab
+# Source0-md5:	60b3bb2bd839131dd333f72ebe23bd00
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
