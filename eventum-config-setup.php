@@ -77,5 +77,3 @@ define("APP_ENABLE_FULLTEXT", %{APP_ENABLE_FULLTEXT}%);
 
 // define the type of password hashing to use (MD5, MD5-64)
 define('APP_HASH_TYPE', 'MD5');
-
-?>

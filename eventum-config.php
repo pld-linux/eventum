@@ -91,11 +91,23 @@ if (APP_BENCHMARK) {
 }
 
 // handle the language preferences now
-@session_start();
-include_once(APP_INC_PATH . "class.language.php");
-Language::setPreference();
+$avail_langs = array(
+    "en_US" =>  "English",
+#    "ru" =>  "Russian",
+#    "de" =>  "German",
+#    "fr" =>  "French",
+    "it" =>  "Italian",
+#    "fi" =>  "Finish",
+#    "es" =>  "Spanish",
+#    "nl" =>  "Dutch",
+    "sv" =>  "Swedish"
+);
 
-include_once APP_INC_PATH . 'class.misc.php';
+include_once(APP_INC_PATH . 'class.language.php');
+include_once(APP_INC_PATH . 'db_access.php');
+include_once(APP_INC_PATH . 'class.auth.php');
+include_once(APP_INC_PATH . 'class.misc.php');
+Language::setPreference();
 
 if (isset($_GET)) {
     $HTTP_POST_VARS = $_POST;
