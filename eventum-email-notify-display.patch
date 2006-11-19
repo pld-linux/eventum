@@ -60,8 +60,8 @@
          "categories"   => Category::getAssocList($prj_id),
          "priorities"   => Priority::getAssocList($prj_id),
          "status"       => $statuses,
---- eventum-20060829/templates/update_form.tpl.html	2006-08-30 00:46:18.777410305 +0300
-+++ eventum-20060830/templates/update_form.tpl.html	2006-08-30 20:21:39.160697745 +0300
+--- eventum/templates/update_form.tpl.html~	2006-11-19 23:13:05.931183315 +0200
++++ eventum/templates/update_form.tpl.html	2006-11-19 23:16:07.055242625 +0200
 @@ -10,12 +10,23 @@
              {if $update_result == -1}
                <b>{t}Sorry, an error happened while trying to run your query.{/t}</b>
@@ -69,7 +69,7 @@
 -              <b>{t}Thank you, issue #{$smarty.post.issue_id} was updated successfully.{/t}
 +              <b>{t}Thank you, issue #{$smarty.post.issue_id} was updated successfully.{/t}</b>
                {if $has_duplicates == 'yes'}
-                 {t}Also, all issues that are marked as duplicates from this one were updated as well.{/t}
+                 <br />{t}Also, all issues that are marked as duplicates from this one were updated as well.{/t}
                {/if}
                <br /><br />
 +
