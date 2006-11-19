@@ -25,7 +25,7 @@ define('APP_INC_PATH', '%{APP_PATH}%/include/');
 define('APP_PEAR_PATH', '%{PHP_PEAR_DIR}%/');
 define('APP_TPL_PATH', '%{APP_PATH}%/templates/');
 define('APP_SMARTY_PATH', '%{SMARTY_DIR}%/');
-define('APP_JPGRAPH_PATH', APP_INC_PATH . "jpgraph/");
+define('APP_JPGRAPH_PATH', APP_INC_PATH . 'jpgraph/');
 define('APP_LOG_PATH', '/var/log/eventum/');
 define('APP_LOCKS_PATH', '/var/run/eventum/');
 ini_set('include_path', '.:' . APP_PEAR_PATH);
@@ -92,15 +92,15 @@ if (APP_BENCHMARK) {
 
 // handle the language preferences now
 $avail_langs = array(
-    "en_US" =>  "English",
-#    "ru" =>  "Russian",
-#    "de" =>  "German",
-#    "fr" =>  "French",
-    "it" =>  "Italian",
-#    "fi" =>  "Finish",
-#    "es" =>  "Spanish",
-#    "nl" =>  "Dutch",
-    "sv" =>  "Swedish"
+    'en_US' =>  'English',
+#    'ru' =>  'Russian',
+#    'de' =>  'German',
+#    'fr' =>  'French',
+    'it' =>  'Italian',
+#    'fi' =>  'Finish',
+#    'es' =>  'Spanish',
+#    'nl' =>  'Dutch',
+    'sv' =>  'Swedish',
 );
 
 include_once(APP_INC_PATH . 'class.language.php');
