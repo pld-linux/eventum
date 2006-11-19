@@ -12,9 +12,9 @@
 %bcond_with	order_patch	# with custom issue order patch
 
 #define	_snap	20060921
-%define	_svn	20061107.3132
+%define	_svn	20061119.3143
 #define	_rc		RC3
-%define	_rel	4.129
+%define	_rel	4.133
 
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
@@ -26,7 +26,7 @@ License:	GPL
 Group:		Applications/WWW
 #Source0:	http://downloads.mysql.com/snapshots/eventum/%{name}-nightly-%{_snap}.tar.gz
 Source0:	%{name}-%{_svn}.tar.bz2
-# Source0-md5:	60b3bb2bd839131dd333f72ebe23bd00
+# Source0-md5:	1300bac797d586208c784ffed20f8f65
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -63,6 +63,7 @@ Patch104:	%{name}-httpclient-clientside.patch
 Patch105:	%{name}-bot-reconnect.patch
 Patch106:	%{name}-private-key.patch
 Patch107:	%{name}-mem-limits.patch
+Patch108:	%{name}-db.patch
 URL:		http://dev.mysql.com/downloads/other/eventum/
 BuildRequires:	rpm-php-pearprov >= 4.0.2-98
 BuildRequires:	rpmbuild(macros) >= 1.268
@@ -78,7 +79,6 @@ Requires:	php-imap
 Requires:	php-mbstring
 Requires:	php-mysql
 Requires:	php-pcre
-Requires:	php-pear-Benchmark
 Requires:	php-pear-DB
 Requires:	php-pear-Date
 Requires:	php-pear-HTTP_Request
@@ -101,7 +101,7 @@ Requires:	webserver(alias)
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
-%define		_noautoreq	'pear(/etc/webapps/.*)' 'pear(jpgraph_dir.php)' 'pear(.*Smarty.class.php)'
+%define		_noautoreq	'pear(/etc/webapps/.*)' 'pear(jpgraph_dir.php)' 'pear(.*Smarty.class.php)' 'pear(Benchmark/.*)'
 
 %define		_libdir		%{_prefix}/lib/%{name}
 %define		_appdir		%{_datadir}/%{name}
@@ -468,14 +468,16 @@ Szczegó³y na temat instalacji mo¿na przeczytaæ pod
 # undos the source
 find . -type f -print0 | xargs -0 sed -i -e 's,\r$,,'
 
-rm -f setup.conf.php # not to be installed by *.php glob
-rm -rf misc/upgrade/*v1.[123]* # too old to support in PLD Linux
-rm -f misc/upgrade/flush_compiled_templates.php
-rm -rf misc/upgrade/*/upgrade_config.php # not needed in PLD Linux
-rm -rf misc/upgrade/*/index.html # not needed in PLD Linux
+rm setup.conf.php # not to be installed by *.php glob
+rm benchmark.php
+rm -r misc/upgrade/*v1.[123]* # too old to support in PLD Linux
+rm misc/upgrade/flush_compiled_templates.php
+rm -r misc/upgrade/*/upgrade_config.php # not needed in PLD Linux
+rm -r misc/upgrade/*/index.html # not needed in PLD Linux
 
+rm -r include/php-gettext
 # sample, not used in eventum
-rm -f rpc/xmlrpc_client.php
+rm rpc/xmlrpc_client.php
 
 # bug fixes.
 %patch0 -p1
@@ -499,6 +501,7 @@ rm -f rpc/xmlrpc_client.php
 %patch105 -p1
 %patch106 -p1
 %patch107 -p1
+%patch108 -p1
 
 cat <<'EOF'> mysql-permissions.sql
 # use this schema if you want to grant permissions manually instead of using setup
@@ -520,7 +523,6 @@ cp misc/localization/eventum.po misc/localization/de/LC_MESSAGES/eventum.po
 cp misc/localization/eventum.po misc/localization/es/LC_MESSAGES/eventum.po
 cp misc/localization/eventum.po misc/localization/fi/LC_MESSAGES/eventum.po
 cp misc/localization/eventum.po misc/localization/fr/LC_MESSAGES/eventum.po
-cp misc/localization/eventum.po misc/localization/it/LC_MESSAGES/eventum.po
 cp misc/localization/eventum.po misc/localization/nl/LC_MESSAGES/eventum.po
 cp misc/localization/eventum.po misc/localization/ru/LC_MESSAGES/eventum.po
 cp misc/localization/eventum.po misc/localization/en_US/LC_MESSAGES/eventum.po
@@ -825,7 +827,7 @@ EOF
 database_changes.php Perform database changes
 EOF
 
-%triggerpostun -- eventum < 1.7.1-4.123.20061009.3121
+%triggerpostun -- eventum < 1.7.1-4.132.20061119.3143
 %{_appdir}/upgrade/upgrade.sh %{_appdir}/upgrade/v1.7.1_to_v2.0 <<EOF
 database_changes.php Perform database changes
 EOF
