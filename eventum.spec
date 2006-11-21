@@ -14,7 +14,7 @@
 #define	_snap	20060921
 %define	_svn	20061119.3143
 #define	_rc		RC3
-%define	_rel	4.133
+%define	_rel	5.133
 
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
@@ -73,12 +73,12 @@ Requires(triggerpostun):	sed >= 4.0
 Requires:	%{name}-base = %{version}-%{release}
 Requires:	Smarty >= 2.6.10-4
 Requires:	apache(mod_dir)
-Requires:	php >= 3:4.2.0
-Requires:	php-gd
-Requires:	php-imap
-Requires:	php-mbstring
-Requires:	php-mysql
-Requires:	php-pcre
+Requires:	php(gd)
+Requires:	php(imap)
+Requires:	php(mbstring)
+Requires:	php(mysql)
+Requires:	php(pcre)
+Requires:	php(session)
 Requires:	php-pear-DB
 Requires:	php-pear-Date
 Requires:	php-pear-HTTP_Request
@@ -93,11 +93,11 @@ Requires:	php-pear-Net_UserAgent_Detect
 Requires:	php-pear-PEAR-core
 Requires:	php-pear-Text_Diff
 Requires:	php-pear-XML_RPC
-Requires:	php-session
 Requires:	smarty-gettext
 Requires:	webapps
 Requires:	webserver(access)
 Requires:	webserver(alias)
+Requires:	webserver(php) >= 4.2.0
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -238,7 +238,7 @@ Summary(pl):	Monitor ¿ycia dla Eventum
 Group:		Applications/WWW
 Requires:	%{name} = %{version}-%{release}
 Requires:	crondaemon
-Requires:	php-posix
+Requires:	php(posix)
 
 %description monitor
 The heartbeat monitor is a feature designed for the administrator that
@@ -388,8 +388,8 @@ Group:		Applications/WWW
 Requires(post,preun):	/sbin/chkconfig
 Requires(triggerpostun):	sed >= 4.0
 Requires:	%{name} = %{version}-%{release}
+Requires:	php(sockets)
 Requires:	php-pear-Net_SmartIRC
-Requires:	php-sockets
 Requires:	rc-scripts >= 0.4.0.18
 
 %description irc
@@ -438,9 +438,9 @@ Summary:	Eventum SCM integration
 Summary(pl):	Integracja SCM dla Eventum
 Group:		Applications/WWW
 Requires:	%{name}-base = %{version}-%{release}
+Requires:	php(pcre)
 Requires:	php-cli
 Requires:	php-common >= 3:4.1.0
-Requires:	php-pcre
 
 %description scm
 This feature allows your software development teams to integrate your
