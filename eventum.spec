@@ -11,8 +11,8 @@
 %bcond_with	qmail	# build the router-qmail subpackage
 
 #define	_snap	20060330
-%define	_rc		RC2
-%define	_rel	0.2
+#define	_rc		RC3
+%define	_rel	5
 
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
@@ -22,9 +22,9 @@ Version:	1.7.1
 Release:	%{?_snap:0.%{_snap}.}%{?_rc:%{_rc}.}%{_rel}
 License:	GPL
 Group:		Applications/WWW
-Source0:	http://eventum.mysql.org/downloads/%{name}-%{version}.%{_rc}.tar.gz
-# Source0-md5:	1ca8dd3b9876537ac29c02a549e245e1
 #Source0:	http://downloads.mysql.com/snapshots/eventum/%{name}-nightly-%{_snap}.tar.gz
+Source0:	http://mysql.dataphone.se/Downloads/eventum/%{name}-%{version}.tar.gz
+# Source0-md5:	e1845de39b4d9bd30ddec9c26031a7d5
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -47,6 +47,8 @@ Patch4:		%{name}-double-decode.patch
 Patch5:		%{name}-route-mem.patch
 Patch6:		%{name}-scm-pluscharisbad.patch
 Patch7:		%{name}-scm-updates.patch
+Patch8:		%{name}-close-signature.patch
+Patch9:		%{name}-list-sorting.patch
 Patch100:	%{name}-paths.patch
 Patch101:	%{name}-cvs-config.patch
 Patch102:	%{name}-irc-mem.patch
@@ -64,12 +66,11 @@ Requires(triggerpostun):	sed >= 4.0
 Requires:	%{name}-base = %{version}-%{release}
 Requires:	Smarty >= 2.6.10-4
 Requires:	apache(mod_dir)
-Requires:	php >= 3:4.2.0
-Requires:	php-gd
-Requires:	php-imap
-Requires:	php-mysql
-Requires:	php-pcre
-Requires:	php-pear-Benchmark
+Requires:	php(gd)
+Requires:	php(imap)
+Requires:	php(mysql)
+Requires:	php(pcre)
+Requires:	php(session)
 Requires:	php-pear-DB
 Requires:	php-pear-Date
 Requires:	php-pear-HTTP_Request
@@ -84,12 +85,12 @@ Requires:	php-pear-Net_UserAgent_Detect
 Requires:	php-pear-PEAR-core
 Requires:	php-pear-Text_Diff
 Requires:	php-pear-XML_RPC
-Requires:	php-session
 Requires:	webapps
+Requires:	webserver(php) >= 4.2.0
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
-%define		_noautoreq	'pear(/etc/webapps/.*)' 'pear(jpgraph_dir.php)' 'pear(.*Smarty.class.php)'
+%define		_noautoreq	'pear(/etc/webapps/.*)' 'pear(jpgraph_dir.php)' 'pear(.*Smarty.class.php)' 'pear(Benchmark/.*)'
 
 %define		_libdir		%{_prefix}/lib/%{name}
 %define		_appdir		%{_datadir}/%{name}
@@ -226,7 +227,7 @@ Summary(pl):	Monitor ¿ycia dla Eventum
 Group:		Applications/WWW
 Requires:	%{name} = %{version}-%{release}
 Requires:	crondaemon
-Requires:	php-posix
+Requires:	php(posix)
 
 %description monitor
 The heartbeat monitor is a feature designed for the administrator that
@@ -375,8 +376,8 @@ Summary(pl):	IRC-owy bot powiadamiaj±cy dla Eventum
 Group:		Applications/WWW
 Requires(triggerpostun):	sed >= 4.0
 Requires:	%{name} = %{version}-%{release}
+Requires:	php(sockets)
 Requires:	php-pear-Net_SmartIRC
-Requires:	php-sockets
 Requires:	rc-scripts >= 0.4.0.18
 
 %description irc
@@ -408,11 +409,11 @@ Summary:	Eventum command-line interface
 Summary(pl):	Interfejs linii poleceñ dla Eventum
 Group:		Applications/WWW
 Requires:	%{name}-base = %{version}-%{release}
+Requires:	php(curl)
+Requires:	php(xml)
 Requires:	php-cli
 Requires:	php-common >= 3:4.1.0
-Requires:	php-curl
 Requires:	php-pear-XML_RPC
-Requires:	php-xml
 
 %description cli
 The Eventum command-line interface allows you to access most of the
@@ -427,9 +428,9 @@ Summary:	Eventum SCM integration
 Summary(pl):	Integracja SCM dla Eventum
 Group:		Applications/WWW
 Requires:	%{name}-base = %{version}-%{release}
+Requires:	php(pcre)
 Requires:	php-cli
 Requires:	php-common >= 3:4.1.0
-Requires:	php-pcre
 
 %description scm
 This feature allows your software development teams to integrate your
@@ -474,6 +475,8 @@ rm -f rpc/xmlrpc_client.php
 %patch5 -p1
 %patch6 -p1
 %patch7 -p1
+%patch8 -p1
+%patch9 -p1
 
 # packaging
 %patch100 -p1
@@ -702,10 +705,10 @@ fi
 /sbin/chkconfig --add eventum-irc
 %service eventum-irc restart "Eventum IRC Bot"
 
-%triggerin -- apache1
+%triggerin -- apache1 < 1.3.37-3, apache1-base
 %webapp_register apache %{_webapp}
 
-%triggerun -- apache1
+%triggerun -- apache1 < 1.3.37-3, apache1-base
 %webapp_unregister apache %{_webapp}
 
 %triggerin -- apache < 2.2.0, apache-base
@@ -927,11 +930,11 @@ fi
 %files cli
 %defattr(644,root,root,755)
 %doc eventumrc
-%attr(644,root,root) %config %verify(not md5 mtime size) %{_sysconfdir}/cli.php
+%config %verify(not md5 mtime size) %{_sysconfdir}/cli.php
 %attr(755,root,root) %{_bindir}/%{name}
 %{_appdir}/cli
 
 %files scm
 %defattr(644,root,root,755)
-%attr(644,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/cvs.php
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/cvs.php
 %attr(755,root,root) %{_libdir}/scm
