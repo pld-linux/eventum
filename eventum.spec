@@ -12,7 +12,7 @@
 
 #define	_snap	20060330
 #define	_rc		RC3
-%define	_rel	4
+%define	_rel	5
 
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
@@ -66,12 +66,11 @@ Requires(triggerpostun):	sed >= 4.0
 Requires:	%{name}-base = %{version}-%{release}
 Requires:	Smarty >= 2.6.10-4
 Requires:	apache(mod_dir)
-Requires:	php >= 3:4.2.0
-Requires:	php-gd
-Requires:	php-imap
-Requires:	php-mysql
-Requires:	php-pcre
-Requires:	php-pear-Benchmark
+Requires:	php(gd)
+Requires:	php(imap)
+Requires:	php(mysql)
+Requires:	php(pcre)
+Requires:	php(session)
 Requires:	php-pear-DB
 Requires:	php-pear-Date
 Requires:	php-pear-HTTP_Request
@@ -86,12 +85,12 @@ Requires:	php-pear-Net_UserAgent_Detect
 Requires:	php-pear-PEAR-core
 Requires:	php-pear-Text_Diff
 Requires:	php-pear-XML_RPC
-Requires:	php-session
 Requires:	webapps
+Requires:	webserver(php) >= 4.2.0
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
-%define		_noautoreq	'pear(/etc/webapps/.*)' 'pear(jpgraph_dir.php)' 'pear(.*Smarty.class.php)'
+%define		_noautoreq	'pear(/etc/webapps/.*)' 'pear(jpgraph_dir.php)' 'pear(.*Smarty.class.php)' 'pear(Benchmark/.*)'
 
 %define		_libdir		%{_prefix}/lib/%{name}
 %define		_appdir		%{_datadir}/%{name}
@@ -228,7 +227,7 @@ Summary(pl):	Monitor ¿ycia dla Eventum
 Group:		Applications/WWW
 Requires:	%{name} = %{version}-%{release}
 Requires:	crondaemon
-Requires:	php-posix
+Requires:	php(posix)
 
 %description monitor
 The heartbeat monitor is a feature designed for the administrator that
@@ -377,8 +376,8 @@ Summary(pl):	IRC-owy bot powiadamiaj±cy dla Eventum
 Group:		Applications/WWW
 Requires(triggerpostun):	sed >= 4.0
 Requires:	%{name} = %{version}-%{release}
+Requires:	php(sockets)
 Requires:	php-pear-Net_SmartIRC
-Requires:	php-sockets
 Requires:	rc-scripts >= 0.4.0.18
 
 %description irc
@@ -410,11 +409,11 @@ Summary:	Eventum command-line interface
 Summary(pl):	Interfejs linii poleceñ dla Eventum
 Group:		Applications/WWW
 Requires:	%{name}-base = %{version}-%{release}
+Requires:	php(curl)
+Requires:	php(xml)
 Requires:	php-cli
 Requires:	php-common >= 3:4.1.0
-Requires:	php-curl
 Requires:	php-pear-XML_RPC
-Requires:	php-xml
 
 %description cli
 The Eventum command-line interface allows you to access most of the
@@ -429,9 +428,9 @@ Summary:	Eventum SCM integration
 Summary(pl):	Integracja SCM dla Eventum
 Group:		Applications/WWW
 Requires:	%{name}-base = %{version}-%{release}
+Requires:	php(pcre)
 Requires:	php-cli
 Requires:	php-common >= 3:4.1.0
-Requires:	php-pcre
 
 %description scm
 This feature allows your software development teams to integrate your
