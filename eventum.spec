@@ -65,6 +65,7 @@ Patch106:	%{name}-private-key.patch
 Patch107:	%{name}-mem-limits.patch
 Patch108:	%{name}-db.patch
 URL:		http://dev.mysql.com/downloads/other/eventum/
+BuildRequires:	gettext-devel
 BuildRequires:	rpm-php-pearprov >= 4.0.2-98
 BuildRequires:	rpmbuild(macros) >= 1.268
 BuildRequires:	sed >= 4.0
