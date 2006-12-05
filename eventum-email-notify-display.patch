@@ -62,12 +62,7 @@
          "status"       => $statuses,
 --- eventum/templates/update_form.tpl.html~	2006-11-19 23:13:05.931183315 +0200
 +++ eventum/templates/update_form.tpl.html	2006-11-19 23:16:07.055242625 +0200
-@@ -10,12 +10,23 @@
-             {if $update_result == -1}
-               <b>{t}Sorry, an error happened while trying to run your query.{/t}</b>
-             {elseif $update_result == 1}
--              <b>{t}Thank you, issue #{$smarty.post.issue_id} was updated successfully.{/t}
-+              <b>{t}Thank you, issue #{$smarty.post.issue_id} was updated successfully.{/t}</b>
+@@ -14,8 +14,19 @@
                {if $has_duplicates == 'yes'}
                  <br />{t}Also, all issues that are marked as duplicates from this one were updated as well.{/t}
                {/if}
