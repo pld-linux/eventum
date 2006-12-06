@@ -17,8 +17,7 @@ drafts|emails|notes)
 	exit $SOFT
 esac
 
-cd /usr/share/eventum
-/usr/bin/php route_$TYPE.php "$@" && exit $OK
+/usr/share/eventum/route_$TYPE.php "$@" && exit $OK
 rc=$?
 
 # exit codes are for postfix, based on /usr/include/sysexits.h
