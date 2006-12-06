@@ -2,7 +2,7 @@
 # $Id$
 
 case "$1" in
-emails\ *)
+emails|emails\ *)
 	TYPE="emails"
 	ARG="${1#* }"
 	;;
