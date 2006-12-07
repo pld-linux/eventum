@@ -11,9 +11,9 @@
 %bcond_with	qmail	# build the router-qmail subpackage
 
 #define	_snap	20060921
-%define	_svn	20061207.3163
+%define	_svn	20061207.3172
 #define	_rc		RC3
-%define	_rel	5.142
+%define	_rel	5.146
 
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
@@ -25,7 +25,7 @@ License:	GPL
 Group:		Applications/WWW
 #Source0:	http://downloads.mysql.com/snapshots/eventum/%{name}-nightly-%{_snap}.tar.gz
 Source0:	%{name}-%{_svn}.tar.bz2
-# Source0-md5:	d7acc75a6fd51117d74910d0f42ad80c
+# Source0-md5:	ab9893cd124b8229973907b58080de7f
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -44,12 +44,11 @@ Source15:	%{name}.logrotate
 Source16:	%{name}-lighttpd.conf
 Patch0:		%{name}-lf.patch
 Patch1:		%{name}-perms.patch
-Patch3:		%{name}-timetracking-advanced-logic.patch
-Patch4:		%{name}-email-notify-display.patch
-Patch5:		%{name}-backtraces.patch
-Patch6:		%{name}-errorhandler.patch
-Patch8:		%{name}-mem2.patch
-Patch10:	%{name}-fixed-nav.patch
+Patch2:		%{name}-timetracking-advanced-logic.patch
+Patch3:		%{name}-email-notify-display.patch
+Patch4:		%{name}-backtraces.patch
+Patch5:		%{name}-errorhandler.patch
+Patch7:		%{name}-mem2.patch
 # packaging patches that probably never go upstream
 Patch100:	%{name}-paths.patch
 Patch101:	%{name}-cvs-config.patch
@@ -59,6 +58,9 @@ Patch104:	%{name}-httpclient-clientside.patch
 Patch105:	%{name}-bot-reconnect.patch
 Patch106:	%{name}-private-key.patch
 Patch107:	%{name}-mem-limits.patch
+Patch108:	%{name}-gettext.patch
+# some tests
+Patch200:	%{name}-fixed-nav.patch
 URL:		http://dev.mysql.com/downloads/other/eventum/
 BuildRequires:	gettext-devel
 BuildRequires:	rpm-php-pearprov >= 4.0.2-98
@@ -479,15 +481,15 @@ rm rpc/xmlrpc_client.php
 %patch0 -p1
 %patch1 -p1
 
+%patch2 -p1
 %patch3 -p1
 %patch4 -p1
 %patch5 -p1
-%patch6 -p1
 cd include
-%patch8 -p1
+%patch7 -p1
 cd -
 
-#%patch10 -p1
+#%patch200 -p1
 
 # packaging
 %patch100 -p1
@@ -498,6 +500,7 @@ cd -
 %patch105 -p1
 %patch106 -p1
 %patch107 -p1
+%patch108 -p1
 
 cat <<'EOF'> mysql-permissions.sql
 # use this schema if you want to grant permissions manually instead of using setup
