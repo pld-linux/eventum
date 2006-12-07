@@ -12,9 +12,9 @@
 %bcond_with	order_patch	# with custom issue order patch
 
 #define	_snap	20060921
-%define	_svn	20061119.3143
+%define	_svn	20061207.3163
 #define	_rc		RC3
-%define	_rel	5.133
+%define	_rel	5.142
 
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
@@ -26,7 +26,7 @@ License:	GPL
 Group:		Applications/WWW
 #Source0:	http://downloads.mysql.com/snapshots/eventum/%{name}-nightly-%{_snap}.tar.gz
 Source0:	%{name}-%{_svn}.tar.bz2
-# Source0-md5:	1300bac797d586208c784ffed20f8f65
+# Source0-md5:	d7acc75a6fd51117d74910d0f42ad80c
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -45,13 +45,11 @@ Source15:	%{name}.logrotate
 Source16:	%{name}-lighttpd.conf
 Patch0:		%{name}-lf.patch
 Patch1:		%{name}-perms.patch
-Patch2:		%{name}-workflow-handlenewnote-note_id.patch
 Patch3:		%{name}-timetracking-advanced-logic.patch
 Patch4:		%{name}-email-notify-display.patch
 Patch5:		%{name}-backtraces.patch
 Patch6:		%{name}-errorhandler.patch
-Patch7:		%{name}-charset.patch
-
+Patch8:		%{name}-mem2.patch
 Patch9:		%{name}-order4b.patch
 Patch10:	%{name}-fixed-nav.patch
 # packaging patches that probably never go upstream
@@ -63,7 +61,6 @@ Patch104:	%{name}-httpclient-clientside.patch
 Patch105:	%{name}-bot-reconnect.patch
 Patch106:	%{name}-private-key.patch
 Patch107:	%{name}-mem-limits.patch
-Patch108:	%{name}-db.patch
 URL:		http://dev.mysql.com/downloads/other/eventum/
 BuildRequires:	gettext-devel
 BuildRequires:	rpm-php-pearprov >= 4.0.2-98
@@ -483,12 +480,14 @@ rm rpc/xmlrpc_client.php
 # bug fixes.
 %patch0 -p1
 %patch1 -p1
-%patch2 -p1
+
 %patch3 -p1
 %patch4 -p1
 %patch5 -p1
 %patch6 -p1
-%patch7 -p1
+cd include
+%patch8 -p1
+cd -
 
 %{?with_order_patch:%patch9 -p1}
 #%patch10 -p1
@@ -502,7 +501,6 @@ rm rpc/xmlrpc_client.php
 %patch105 -p1
 %patch106 -p1
 %patch107 -p1
-%patch108 -p1
 
 cat <<'EOF'> mysql-permissions.sql
 # use this schema if you want to grant permissions manually instead of using setup
