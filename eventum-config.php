@@ -93,14 +93,14 @@ if (APP_BENCHMARK) {
 // handle the language preferences now
 $avail_langs = array(
     'en_US' =>  'English',
-#    'ru' =>  'Russian',
-#    'de' =>  'German',
-#    'fr' =>  'French',
-    'it' =>  'Italian',
-#    'fi' =>  'Finish',
-#    'es' =>  'Spanish',
-#    'nl' =>  'Dutch',
-    'sv' =>  'Swedish',
+#    'ru_RU' =>  'Russian',
+#    'de_DE' =>  'German',
+#    'fr_FR' =>  'French',
+    'it_IT' =>  'Italian',
+#    'fi_FI' =>  'Finish',
+#    'es_ES' =>  'Spanish',
+#    'nl_NL' =>  'Dutch',
+    'sv_SE' =>  'Swedish',
 );
 
 include_once(APP_INC_PATH . 'class.language.php');
