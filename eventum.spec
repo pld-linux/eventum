@@ -9,7 +9,6 @@
 #
 # Conditional build:
 %bcond_with	qmail	# build the router-qmail subpackage
-%bcond_with	order_patch	# with custom issue order patch
 
 #define	_snap	20060921
 %define	_svn	20061207.3163
@@ -50,7 +49,6 @@ Patch4:		%{name}-email-notify-display.patch
 Patch5:		%{name}-backtraces.patch
 Patch6:		%{name}-errorhandler.patch
 Patch8:		%{name}-mem2.patch
-Patch9:		%{name}-order4b.patch
 Patch10:	%{name}-fixed-nav.patch
 # packaging patches that probably never go upstream
 Patch100:	%{name}-paths.patch
@@ -489,7 +487,6 @@ cd include
 %patch8 -p1
 cd -
 
-%{?with_order_patch:%patch9 -p1}
 #%patch10 -p1
 
 # packaging
