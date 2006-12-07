@@ -152,7 +152,7 @@
 +        return "The file '/etc/webapps/eventum/config.php' needs to be writable by the web server user. Please correct this problem and try again.";
      }
      // gotta check and see if the provided installation path really exists...
-     if (!file_exists($HTTP_POST_VARS['path'])) {
+     if (!file_exists($_POST['path'])) {
 @@ -287,16 +287,16 @@
      $private_key = '<?php
  $private_key = "' . md5(microtime()) . '";
@@ -180,7 +180,7 @@
  }
  
 -
--$full_url = dirname($HTTP_SERVER_VARS['PHP_SELF']);
+-$full_url = dirname($_SERVER['PHP_SELF']);
 -$pieces = explode("/", $full_url);
 -$relative_url = array();
 -$relative_url[] = '';
