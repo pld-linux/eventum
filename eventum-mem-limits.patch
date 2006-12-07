@@ -5,9 +5,9 @@
  // @(#) $Id$
  //
 +ini_set('memory_limit', '1024M');
- include_once("../config.inc.php");
- include_once(APP_INC_PATH . "db_access.php");
- include_once(APP_INC_PATH . "class.routing.php");
+ require_once("../config.inc.php");
+ require_once(APP_INC_PATH . "db_access.php");
+ require_once(APP_INC_PATH . "class.routing.php");
 --- eventum-20060210/misc/route_emails.php~	2006-02-11 07:27:35.000000000 +0200
 +++ eventum-20060210/misc/route_emails.php	2006-02-11 07:28:43.000000000 +0200
 @@ -27,6 +27,7 @@
@@ -15,9 +15,9 @@
  // @(#) $Id$
  //
 +ini_set('memory_limit', '1024M');
- include_once("../config.inc.php");
- include_once(APP_INC_PATH . "db_access.php");
- include_once(APP_INC_PATH . "class.routing.php");
+ require_once("../config.inc.php");
+ require_once(APP_INC_PATH . "db_access.php");
+ require_once(APP_INC_PATH . "class.routing.php");
 --- eventum-20060210/misc/route_notes.php~	2006-02-11 07:27:35.000000000 +0200
 +++ eventum-20060210/misc/route_notes.php	2006-02-11 07:28:54.000000000 +0200
 @@ -27,6 +27,7 @@
@@ -25,9 +25,9 @@
  // @(#) $Id$
  //
 +ini_set('memory_limit', '1024M');
- include_once("../config.inc.php");
- include_once(APP_INC_PATH . "db_access.php");
- include_once(APP_INC_PATH . "class.routing.php");
+ require_once("../config.inc.php");
+ require_once(APP_INC_PATH . "db_access.php");
+ require_once(APP_INC_PATH . "class.routing.php");
 --- eventum-20060830/misc/download_emails.php	2006-09-05 00:11:48.396726556 +0300
 +++ eventum-20060830.mem/misc/download_emails.php	2006-09-05 00:12:09.647203129 +0300
 @@ -28,7 +28,7 @@
@@ -37,8 +37,8 @@
 -ini_set("memory_limit", "256M");
 +ini_set("memory_limit", "1024M");
  
- include_once("/etc/webapps/eventum/core.php");
- include_once(APP_INC_PATH . "class.support.php");
+ require_once("/etc/webapps/eventum/core.php");
+ require_once(APP_INC_PATH . "class.support.php");
 --- eventum-20060830/misc/irc/bot.php	2006-09-05 00:11:48.396726556 +0300
 +++ eventum-20060830.mem/misc/irc/bot.php	2006-09-05 00:12:09.647203129 +0300
 @@ -28,7 +28,7 @@
@@ -48,8 +48,8 @@
 -ini_set("memory_limit", "256M");
 +ini_set("memory_limit", "1024M");
  
- include_once("/etc/webapps/eventum/core.php");
- include_once('/etc/eventum/irc.php');
+ require_once("/etc/webapps/eventum/core.php");
+ require_once('/etc/eventum/irc.php');
 --- eventum-20060830/misc/process_mail_queue.php	2006-09-05 00:11:48.396726556 +0300
 +++ eventum-20060830.mem/misc/process_mail_queue.php	2006-09-05 00:12:09.647203129 +0300
 @@ -28,7 +28,7 @@
@@ -59,5 +59,5 @@
 -ini_set("memory_limit", "256M");
 +ini_set("memory_limit", "1024M");
  
- include_once("/etc/webapps/eventum/core.php");
- include_once(APP_INC_PATH . "db_access.php");
+ require_once("/etc/webapps/eventum/core.php");
+ require_once(APP_INC_PATH . "db_access.php");

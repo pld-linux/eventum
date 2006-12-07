@@ -70,8 +70,8 @@
 @@ -31,6 +31,7 @@
  ini_set("memory_limit", "256M");
  
- include_once("../../config.inc.php");
-+include_once('/etc/eventum/irc.php');
- include_once(APP_INC_PATH . "db_access.php");
- include_once(APP_INC_PATH . "class.auth.php");
- include_once(APP_INC_PATH . "class.lock.php");
+ require_once("../../config.inc.php");
++require_once('/etc/eventum/irc.php');
+ require_once(APP_INC_PATH . "db_access.php");
+ require_once(APP_INC_PATH . "class.auth.php");
+ require_once(APP_INC_PATH . "class.lock.php");
