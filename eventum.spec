@@ -13,7 +13,7 @@
 #define	_snap	20060921
 %define	_svn	20061207.3172
 #define	_rc		RC3
-%define	_rel	5.146
+%define	_rel	5.148
 
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
@@ -48,6 +48,7 @@ Patch2:		%{name}-timetracking-advanced-logic.patch
 Patch3:		%{name}-email-notify-display.patch
 Patch4:		%{name}-backtraces.patch
 Patch5:		%{name}-errorhandler.patch
+Patch6:		eventum-emailsig.patch
 Patch7:		%{name}-mem2.patch
 # packaging patches that probably never go upstream
 Patch100:	%{name}-paths.patch
@@ -485,6 +486,7 @@ rm rpc/xmlrpc_client.php
 %patch3 -p1
 %patch4 -p1
 %patch5 -p1
+%patch6 -p1
 cd include
 %patch7 -p1
 cd -
@@ -536,12 +538,12 @@ chmod +x misc/*.php
 mv include/private_key.php private_key.php.in
 
 # replace in remaining scripts config.inc.php to system one
-grep -rl 'include_once(".*config.inc.php")' . | xargs sed -i -e '
-	s,include_once(".*config.inc.php"),include_once("%{_webappdir}/core.php"),
+grep -rl 'require_once(".*config.inc.php")' . | xargs sed -i -e '
+	s,require_once(".*config.inc.php"),require_once("%{_webappdir}/core.php"),
 '
 
 grep -rl 'APP_INC_PATH..*"private_key.php"' . | xargs sed -i -e '
-	s,include_once(APP_INC_PATH.*"private_key.php"),include_once("%{_webappdir}/private_key.php"),
+	s,require_once(APP_INC_PATH.*"private_key.php"),require_once("%{_webappdir}/private_key.php"),
 '
 
 # remove backups from patching as we use globs to package files to buildroot
