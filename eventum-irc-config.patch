@@ -1,71 +1,12 @@
---- eventum/misc/irc/bot.php	2007-01-16 20:45:46.418194549 +0200
-+++ eventum/misc/irc/bot.php	2007-01-16 20:59:51.807185984 +0200
+--- eventum/misc/irc/bot.php~	2007-01-16 21:23:26.718863136 +0200
++++ eventum/misc/irc/bot.php	2007-01-16 21:23:53.759467491 +0200
 @@ -30,7 +30,8 @@
  
- ini_set("memory_limit", "1024M");
+ ini_set('memory_limit', '256M');
  
--require_once("../../config.inc.php");
+-require_once('../../config.inc.php');
 +require_once('/etc/webapps/eventum/core.php');
 +require_once('/etc/eventum/irc.php');
- require_once(APP_INC_PATH . "db_access.php");
- require_once(APP_INC_PATH . "class.auth.php");
- require_once(APP_INC_PATH . "class.lock.php");
-@@ -39,22 +40,19 @@
  
- ini_set("memory_limit", "256M");
- 
-+// compat with earlier releases where didn't have array -glen
-+if (empty($irc_channels)) {
-+    $irc_channels = array();
-+    $irc_channels[$irc_default_project] = $irc_default_channel;
-+}
-+
- // the following is the list of IRC channels that the bot should connect to,
- // and the associated project name
--$channels = array(
--    Project::getID('Default Project') => array(
--        '#issues',
--    )
--);
--$irc_server_hostname = 'localhost';
--$irc_server_port = 6667;
--$nickname = 'EventumBOT';
--$realname = 'Eventum Issue Tracking System';
--// do you need a username/password to connect to this server? if 
--// so, fill in the next two variables
--$username = '';
--$password = '';
--
-+$channels = array();
-+foreach ($irc_channels as $proj => $chan) {
-+    $proj_id = Project::getID($proj);
-+    $channels[$proj_id] = is_array($chan) ? $chan : array($chan);
-+}
- 
- // ============================================
- // ============================================
-@@ -270,7 +268,7 @@
-     function _getChannels($prj_id)
-     {
-         global $channels;
--        return $channels[$prj_id];
-+        return @$channels[$prj_id];
-     }
-     
-     
-@@ -411,10 +409,12 @@
- $irc->registerActionhandler(SMARTIRC_TYPE_QUERY, '^!?list-quarantined', $bot, 'listQuarantinedIssues');
- 
- $irc->connect($irc_server_hostname, $irc_server_port);
--if (!empty($username)) {
--    $irc->login($nickname, $realname, 0, $username, $password);
--} else {
-+if (empty($username)) {
-     $irc->login($nickname, $realname);
-+} elseif (empty($password)) {
-+    $irc->login($nickname, $realname, 0, $username);
-+} else {
-+    $irc->login($nickname, $realname, 0, $username, $password);
- }
- $irc->listen();
- $irc->disconnect();
+ // IRC server address
+ $irc_server_hostname = 'localhost';

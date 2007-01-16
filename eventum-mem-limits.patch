@@ -42,17 +42,6 @@
  
  require_once("/etc/webapps/eventum/core.php");
  require_once(APP_INC_PATH . "class.support.php");
---- eventum-20060830/misc/irc/bot.php	2006-09-05 00:11:48.396726556 +0300
-+++ eventum-20060830.mem/misc/irc/bot.php	2006-09-05 00:12:09.647203129 +0300
-@@ -28,7 +28,7 @@
- // @(#) $Id$
- //
- 
--ini_set("memory_limit", "256M");
-+ini_set("memory_limit", "1024M");
- 
- require_once("/etc/webapps/eventum/core.php");
- require_once('/etc/eventum/irc.php');
 --- eventum-20060830/misc/process_mail_queue.php	2006-09-05 00:11:48.396726556 +0300
 +++ eventum-20060830.mem/misc/process_mail_queue.php	2006-09-05 00:12:09.647203129 +0300
 @@ -28,7 +28,7 @@
@@ -64,3 +53,13 @@
  
  require_once("/etc/webapps/eventum/core.php");
  require_once(APP_INC_PATH . "db_access.php");
+--- eventum/misc/irc/bot.php~	2007-01-16 21:24:17.009987152 +0200
++++ eventum/misc/irc/bot.php	2007-01-16 21:24:57.050882112 +0200
+@@ -26,6 +26,6 @@
+ //
+ 
+-ini_set('memory_limit', '256M');
++ini_set('memory_limit', '1024M');
+ 
+ require_once('/etc/webapps/eventum/core.php');
+ require_once('/etc/eventum/irc.php');
