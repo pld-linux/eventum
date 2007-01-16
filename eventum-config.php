@@ -106,7 +106,6 @@ include_once(APP_INC_PATH . 'db_access.php');
 include_once(APP_INC_PATH . 'class.auth.php');
 include_once(APP_INC_PATH . 'class.misc.php');
 
-// fix magic_quote_gpc'ed values (i wish i knew who is the person behind this)
 // fix magic_quote_gpc'ed values
 $_GET = Misc::dispelMagicQuotes($_GET);
 $_POST = Misc::dispelMagicQuotes($_POST);
