@@ -1,5 +1,14 @@
---- eventum-1.6.1/misc/irc/bot.php	2005-09-17 17:49:09.000000000 +0300
-+++ eventum/misc/irc/bot.php	2007-01-16 09:45:12.170099815 +0200
+--- eventum/misc/irc/bot.php	2007-01-16 09:45:12.170099815 +0200
++++ eventum/misc/irc/bot.php	2007-01-16 20:45:46.418194549 +0200
+@@ -30,7 +30,7 @@
+ 
+ ini_set("memory_limit", "256M");
+ 
+-require_once("../../config.inc.php");
++require_once('/etc/eventum/irc.php');
+ require_once(APP_INC_PATH . "db_access.php");
+ require_once(APP_INC_PATH . "class.auth.php");
+ require_once(APP_INC_PATH . "class.lock.php");
 @@ -39,22 +39,19 @@
  
  ini_set("memory_limit", "256M");
