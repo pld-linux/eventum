@@ -9,15 +9,16 @@
  require_once(APP_INC_PATH . "class.command_line.php");
  require_once(APP_PEAR_PATH . "XML_RPC/RPC.php");
  
---- eventum-1.4.orig/misc/cli/config.inc.php	2005-01-26 00:00:58.000000000 +0200
-+++ eventum-1.4/misc/cli/config.inc.php	2005-01-25 23:57:39.000000000 +0200
-@@ -45,16 +45,10 @@
+--- eventum/misc/cli/config.inc.php~	2007-01-16 09:40:00.453108697 +0200
++++ eventum/misc/cli/config.inc.php	2007-01-16 09:39:31.922469000 +0200
+@@ -45,15 +45,9 @@
  }
  
  // definitions of path related variables
 -@define("APP_PATH", dirname(__FILE__) . '/');
+-@define("APP_INC_PATH", APP_PATH . "include/");
 +@define("APP_PATH", '/usr/share/eventum/cli/');
- @define("APP_INC_PATH", APP_PATH . "include/");
++@define("APP_INC_PATH", APP_PATH);
  @define("APP_PEAR_PATH", APP_INC_PATH . "pear/");
 -if (stristr(PHP_OS, 'darwin')) {
 -    ini_set("include_path", ".:" . APP_PEAR_PATH);
@@ -27,33 +28,6 @@
 -    ini_set("include_path", ".:" . APP_PEAR_PATH);
 -}
 +ini_set("include_path", ".:" . APP_PEAR_PATH);
- 
- @define("APP_BENCHMARK", false);
- ?>
---- eventum-1.4/misc/cli/config.inc.php~	2005-02-22 21:35:52.000000000 +0200
-+++ eventum-1.4/misc/cli/config.inc.php	2005-02-22 21:44:10.000000000 +0200
-@@ -46,9 +46,9 @@
- 
- // definitions of path related variables
- @define("APP_PATH", '/usr/share/eventum/cli/');
--@define("APP_INC_PATH", APP_PATH . "include/");
-+@define("APP_INC_PATH", APP_PATH);
- @define("APP_PEAR_PATH", APP_INC_PATH . "pear/");
- ini_set("include_path", ".:" . APP_PEAR_PATH);
- 
- @define("APP_BENCHMARK", false);
--?>
-\ No newline at end of file
-+?>
---- ./misc/cli/config.inc.php~	2005-02-22 21:49:37.000000000 +0200
-+++ ./misc/cli/config.inc.php	2005-02-22 21:50:01.000000000 +0200
-@@ -47,7 +47,7 @@
- // definitions of path related variables
- @define("APP_PATH", '/usr/share/eventum/cli/');
- @define("APP_INC_PATH", APP_PATH);
--@define("APP_PEAR_PATH", APP_INC_PATH . "pear/");
-+@define("APP_PEAR_PATH", "/usr/share/pear/");
- ini_set("include_path", ".:" . APP_PEAR_PATH);
  
  @define("APP_BENCHMARK", false);
 --- ./misc/cli/eventum~	2005-01-24 17:49:25.000000000 +0200

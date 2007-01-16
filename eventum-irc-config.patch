@@ -1,6 +1,6 @@
---- eventum-1.6.1/misc/irc/bot.php.orig	2005-09-17 17:28:04.000000000 +0300
-+++ eventum-1.6.1/misc/irc/bot.php	2005-09-17 17:49:09.000000000 +0300
-@@ -38,22 +39,19 @@
+--- eventum-1.6.1/misc/irc/bot.php	2005-09-17 17:49:09.000000000 +0300
++++ eventum/misc/irc/bot.php	2007-01-16 09:45:12.170099815 +0200
+@@ -39,22 +39,19 @@
  
  ini_set("memory_limit", "256M");
  
@@ -34,7 +34,7 @@
  
  // ============================================
  // ============================================
-@@ -269,7 +267,7 @@
+@@ -270,7 +267,7 @@
      function _getChannels($prj_id)
      {
          global $channels;
@@ -43,7 +43,7 @@
      }
      
      
-@@ -410,14 +408,16 @@
+@@ -411,10 +408,12 @@
  $irc->registerActionhandler(SMARTIRC_TYPE_QUERY, '^!?list-quarantined', $bot, 'listQuarantinedIssues');
  
  $irc->connect($irc_server_hostname, $irc_server_port);
@@ -59,19 +59,3 @@
  }
  $irc->listen();
  $irc->disconnect();
- 
- // release the lock
- Lock::release('irc_bot');
--?>
-\ No newline at end of file
-+?>
---- eventum-1.7.0/misc/irc/bot.php~	2005-12-30 00:22:37.000000000 +0200
-+++ eventum-1.7.0/misc/irc/bot.php	2005-12-30 00:23:17.000000000 +0200
-@@ -31,6 +31,7 @@
- ini_set("memory_limit", "256M");
- 
- require_once("../../config.inc.php");
-+require_once('/etc/eventum/irc.php');
- require_once(APP_INC_PATH . "db_access.php");
- require_once(APP_INC_PATH . "class.auth.php");
- require_once(APP_INC_PATH . "class.lock.php");
