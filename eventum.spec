@@ -11,9 +11,9 @@
 %bcond_with	qmail	# build the router-qmail subpackage
 
 #define	_snap	20060921
-%define	_svn	20070116.3194
+%define	_svn	20070116.3201
 #define	_rc		RC3
-%define	_rel	5.149
+%define	_rel	5.154
 
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
@@ -25,7 +25,7 @@ License:	GPL
 Group:		Applications/WWW
 #Source0:	http://downloads.mysql.com/snapshots/eventum/%{name}-nightly-%{_snap}.tar.gz
 Source0:	%{name}-%{_svn}.tar.bz2
-# Source0-md5:	1d7b04945535fe2153aba617c6acccfe
+# Source0-md5:	4026af391f6ddc365feaf225fd83b416
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -48,8 +48,6 @@ Patch2:		%{name}-timetracking-advanced-logic.patch
 Patch3:		%{name}-email-notify-display.patch
 Patch4:		%{name}-backtraces.patch
 Patch5:		%{name}-errorhandler.patch
-Patch6:		eventum-emailsig.patch
-Patch7:		%{name}-mem2.patch
 # packaging patches that probably never go upstream
 Patch100:	%{name}-paths.patch
 Patch101:	%{name}-cvs-config.patch
@@ -486,10 +484,6 @@ rm rpc/xmlrpc_client.php
 %patch3 -p1
 %patch4 -p1
 %patch5 -p1
-%patch6 -p1
-cd include
-%patch7 -p1
-cd -
 
 #%patch200 -p1
 
