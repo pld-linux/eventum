@@ -11,8 +11,6 @@
  * http://bugs.pld-linux.org.
  */
 
-ini_set('allow_url_fopen', 0);
-ini_set('display_errors', 0);
 set_time_limit(0);
 set_magic_quotes_runtime(0);
 
@@ -22,9 +20,9 @@ ini_set('session.cache_limiter', 'nocache');
 // definitions of path related variables
 define('APP_PATH', '%{APP_PATH}%/htdocs/');
 define('APP_INC_PATH', '%{APP_PATH}%/include/');
-define('APP_PEAR_PATH', '%{PHP_PEAR_DIR}%/');
+define('APP_PEAR_PATH', '/usr/share/pear/');
 define('APP_TPL_PATH', '%{APP_PATH}%/templates/');
-define('APP_SMARTY_PATH', '%{SMARTY_DIR}%/');
+define('APP_SMARTY_PATH', '/usr/share/php/Smarty/');
 define('APP_JPGRAPH_PATH', APP_INC_PATH . 'jpgraph/');
 define('APP_LOG_PATH', '/var/log/eventum/');
 define('APP_LOCKS_PATH', '/var/run/eventum/');
@@ -108,27 +106,15 @@ include_once(APP_INC_PATH . 'db_access.php');
 include_once(APP_INC_PATH . 'class.auth.php');
 include_once(APP_INC_PATH . 'class.misc.php');
 
-if (isset($_GET)) {
-    $HTTP_POST_VARS = $_POST;
-    $HTTP_GET_VARS = $_GET;
-    $HTTP_SERVER_VARS = $_SERVER;
-    $HTTP_ENV_VARS = $_ENV;
-    $HTTP_POST_FILES = $_FILES;
-    // seems like PHP 4.1.0 didn't implement the $_SESSION auto-global...
-    if (isset($_SESSION)) {
-        $HTTP_SESSION_VARS = $_SESSION;
-    }
-    $HTTP_COOKIE_VARS = $_COOKIE;
-}
-
 // fix magic_quote_gpc'ed values (i wish i knew who is the person behind this)
-$HTTP_GET_VARS = Misc::dispelMagicQuotes($HTTP_GET_VARS);
-$HTTP_POST_VARS = Misc::dispelMagicQuotes($HTTP_POST_VARS);
+// fix magic_quote_gpc'ed values
+$_GET = Misc::dispelMagicQuotes($_GET);
+$_POST = Misc::dispelMagicQuotes($_POST);
 $_REQUEST = Misc::dispelMagicQuotes($_REQUEST);
 
-Language::setPreference();
+Language::setup();
 
 // set charset
-header('Content-Type: text/html; charset=' . APP_CHARSET);
+Header('Content-Type: text/html; charset=' . APP_CHARSET);
 
-/* vim: set expandtab tabstop=4 shiftwidth=4: */
+/* vim: set expandtab tabstop=4 shiftwidth=4 encoding=utf-8: */
