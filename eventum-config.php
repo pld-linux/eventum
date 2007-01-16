@@ -107,9 +107,11 @@ include_once(APP_INC_PATH . 'class.auth.php');
 include_once(APP_INC_PATH . 'class.misc.php');
 
 // fix magic_quote_gpc'ed values
-$_GET = Misc::dispelMagicQuotes($_GET);
-$_POST = Misc::dispelMagicQuotes($_POST);
-$_REQUEST = Misc::dispelMagicQuotes($_REQUEST);
+if (get_magic_quotes_gpc()) {
+    $_GET = Misc::dispelMagicQuotes($_GET);
+    $_POST = Misc::dispelMagicQuotes($_POST);
+    $_REQUEST = Misc::dispelMagicQuotes($_REQUEST);
+}
 
 Language::setup();
 
