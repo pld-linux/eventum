@@ -1,12 +1,40 @@
---- eventum/misc/irc/bot.php~	2007-01-16 21:23:26.718863136 +0200
-+++ eventum/misc/irc/bot.php	2007-01-16 21:23:53.759467491 +0200
-@@ -30,7 +30,8 @@
+--- eventum/misc/irc/bot.php	2007-01-16 21:23:53.759467491 +0200
++++ eventum/misc/irc/bot.php	2007-01-16 21:30:11.757917329 +0200
+@@ -30,35 +30,8 @@
  
  ini_set('memory_limit', '256M');
  
 -require_once('../../config.inc.php');
+-
+-// IRC server address
+-$irc_server_hostname = 'localhost';
+-$irc_server_port = 6667;
+-
+-// the following is the list of IRC channels that the bot should connect to,
+-// and the associated project name
+-$irc_channels = array(
+-	# Project Name -> IRC Channel(s)
+-	'Default Project' => '#issues',
+-#	'Second Project' => array('#issues_2', '#byrocrate'),
+-);
+-
+-$nickname = 'EventumBOT';
+-$realname = 'Eventum Issue Tracking System';
+-
+-// do you need a username/password to connect to this server? if
+-// so, fill in the next two variables
+-$username = '';
+-$password = '';
+-
+-
+-// ============================================
+-// ============================================
+-// NO NEED TO UPDATE ANYTHING BELOW THIS LINE
+-// ============================================
+-// ============================================
+-
 +require_once('/etc/webapps/eventum/core.php');
 +require_once('/etc/eventum/irc.php');
- 
- // IRC server address
- $irc_server_hostname = 'localhost';
+ require_once(APP_INC_PATH . 'db_access.php');
+ require_once(APP_INC_PATH . 'class.auth.php');
+ require_once(APP_INC_PATH . 'class.lock.php');
