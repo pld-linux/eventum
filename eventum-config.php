@@ -20,9 +20,9 @@ ini_set('session.cache_limiter', 'nocache');
 // definitions of path related variables
 define('APP_PATH', '%{APP_PATH}%/htdocs/');
 define('APP_INC_PATH', '%{APP_PATH}%/include/');
-define('APP_PEAR_PATH', '/usr/share/pear/');
+define('APP_PEAR_PATH', '%{PHP_PEAR_DIR}%/');
 define('APP_TPL_PATH', '%{APP_PATH}%/templates/');
-define('APP_SMARTY_PATH', '/usr/share/php/Smarty/');
+define('APP_SMARTY_PATH', '%{SMARTY_DIR}%/');
 define('APP_JPGRAPH_PATH', APP_INC_PATH . 'jpgraph/');
 define('APP_LOG_PATH', '/var/log/eventum/');
 define('APP_LOCKS_PATH', '/var/run/eventum/');
