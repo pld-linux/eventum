@@ -11,9 +11,9 @@
 %bcond_with	qmail	# build the router-qmail subpackage
 
 #define	_snap	20060921
-%define	_svn	20061207.3172
+%define	_svn	20070116.3194
 #define	_rc		RC3
-%define	_rel	5.148
+%define	_rel	5.149
 
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
@@ -25,7 +25,7 @@ License:	GPL
 Group:		Applications/WWW
 #Source0:	http://downloads.mysql.com/snapshots/eventum/%{name}-nightly-%{_snap}.tar.gz
 Source0:	%{name}-%{_svn}.tar.bz2
-# Source0-md5:	ab9893cd124b8229973907b58080de7f
+# Source0-md5:	1d7b04945535fe2153aba617c6acccfe
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -657,7 +657,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %post
 # check if the package is configured.
-if grep -q 'header("Location: setup/")' %{_webappdir}/config.php; then
+if grep -q "Header('Location: setup/')" %{_webappdir}/config.php; then
 if [ -f %{_appdir}/htdocs/setup/index.php ]; then
 %banner %{name} -e <<EOF
 
@@ -680,7 +680,7 @@ You haven't yet configured Eventum!
 To setup eventum, please install %{name}-setup and open in browser
 <http://localhost/eventum/>.
 If you need access from elsewhere, you need to edit
-%{_webappdir}/apache.conf and restart apache.
+%{_webappdir}/*.conf depending on webserver and restart the webserver.
 
 IMPORTANT: When You have configured Eventum, please uninstall the
 setup package, so that %{name}-setup is able to secure your Eventum
