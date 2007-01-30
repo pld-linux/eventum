@@ -11,9 +11,9 @@
 %bcond_with	qmail	# build the router-qmail subpackage
 
 #define	_snap	20060921
-%define	_svn	20070122.3203
+%define	_svn	20070130.3228
 #define	_rc		RC3
-%define	_rel	5.156
+%define	_rel	5.175
 
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
@@ -25,7 +25,7 @@ License:	GPL
 Group:		Applications/WWW
 #Source0:	http://downloads.mysql.com/snapshots/eventum/%{name}-nightly-%{_snap}.tar.gz
 Source0:	%{name}-%{_svn}.tar.bz2
-# Source0-md5:	e44e34a426b56f59a00777fcf8b777ee
+# Source0-md5:	0c4bb49fefc34dffc29d035d57196fa7
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -35,15 +35,15 @@ Source6:	%{name}-cvs.php
 Source7:	%{name}-irc.php
 Source8:	%{name}-irc.init
 Source9:	%{name}-irc.sysconfig
-Source10:	%{name}-config.php
+
 Source11:	%{name}-router-qmail.sh
-Source12:	%{name}-config-setup.php
+
 Source13:	%{name}-upgrade.sh
 Source14:	%{name}-router-postfix.sh
 Source15:	%{name}.logrotate
 Source16:	%{name}-lighttpd.conf
 Patch0:		%{name}-lf.patch
-Patch1:		%{name}-perms.patch
+
 Patch2:		%{name}-timetracking-advanced-logic.patch
 Patch3:		%{name}-email-notify-display.patch
 Patch4:		%{name}-backtraces.patch
@@ -465,7 +465,6 @@ Szczegó³y na temat instalacji mo¿na przeczytaæ pod
 # undos the source
 find . -type f -print0 | xargs -0 sed -i -e 's,\r$,,'
 
-rm setup.conf.php # not to be installed by *.php glob
 rm benchmark.php
 rm -r misc/upgrade/*v1.[123]* # too old to support in PLD Linux
 rm misc/upgrade/flush_compiled_templates.php
@@ -478,7 +477,6 @@ rm rpc/xmlrpc_client.php
 
 # bug fixes.
 %patch0 -p1
-%patch1 -p1
 
 %patch2 -p1
 %patch3 -p1
@@ -531,11 +529,6 @@ sed -i -e '1i#!%{_bindir}/php' misc/*.php
 chmod +x misc/*.php
 mv include/private_key.php private_key.php.in
 
-# replace in remaining scripts config.inc.php to system one
-grep -rl 'require_once(".*config.inc.php")' . | xargs sed -i -e '
-	s,require_once(".*config.inc.php"),require_once("%{_webappdir}/core.php"),
-'
-
 grep -rl 'APP_INC_PATH..*"private_key.php"' . | xargs sed -i -e '
 	s,require_once(APP_INC_PATH.*"private_key.php"),require_once("%{_webappdir}/private_key.php"),
 '
@@ -569,7 +562,6 @@ cp -a logs/* $RPM_BUILD_ROOT/var/log/%{name}
 cp -a misc/upgrade $RPM_BUILD_ROOT%{_appdir}
 
 cp -a favicon.ico $RPM_BUILD_ROOT%{_appdir}/htdocs/favicon.ico
-install %{SOURCE12} $RPM_BUILD_ROOT%{_appdir}/htdocs/setup/config.inc.php
 install %{SOURCE13} $RPM_BUILD_ROOT%{_appdir}/upgrade/upgrade.sh
 
 # cli
@@ -589,28 +581,27 @@ install %{SOURCE6} $RPM_BUILD_ROOT%{_sysconfdir}/scm.php
 cp -a private_key.php.in $RPM_BUILD_ROOT%{_webappdir}/private_key.php
 touch $RPM_BUILD_ROOT%{_webappdir}/htpasswd
 
-install %{SOURCE1} $RPM_BUILD_ROOT%{_webappdir}/apache.conf
-install %{SOURCE1} $RPM_BUILD_ROOT%{_webappdir}/httpd.conf
-install %{SOURCE16} $RPM_BUILD_ROOT%{_webappdir}/lighttpd.conf
-install %{SOURCE2} $RPM_BUILD_ROOT/etc/cron.d/%{name}-mail-queue
-install %{SOURCE3} $RPM_BUILD_ROOT/etc/cron.d/%{name}-mail-download
-install %{SOURCE4} $RPM_BUILD_ROOT/etc/cron.d/%{name}-reminder
-install %{SOURCE5} $RPM_BUILD_ROOT/etc/cron.d/%{name}-monitor
-install %{SOURCE7} $RPM_BUILD_ROOT%{_sysconfdir}/irc.php
-install %{SOURCE8} $RPM_BUILD_ROOT/etc/rc.d/init.d/eventum-irc
-install %{SOURCE9} $RPM_BUILD_ROOT/etc/sysconfig/eventum-irc
+cp -a %{SOURCE1} $RPM_BUILD_ROOT%{_webappdir}/apache.conf
+cp -a %{SOURCE1} $RPM_BUILD_ROOT%{_webappdir}/httpd.conf
+cp -a %{SOURCE16} $RPM_BUILD_ROOT%{_webappdir}/lighttpd.conf
+cp -a %{SOURCE2} $RPM_BUILD_ROOT/etc/cron.d/%{name}-mail-queue
+cp -a %{SOURCE3} $RPM_BUILD_ROOT/etc/cron.d/%{name}-mail-download
+cp -a %{SOURCE4} $RPM_BUILD_ROOT/etc/cron.d/%{name}-reminder
+cp -a %{SOURCE5} $RPM_BUILD_ROOT/etc/cron.d/%{name}-monitor
+cp -a %{SOURCE7} $RPM_BUILD_ROOT%{_sysconfdir}/irc.php
+cp -a %{SOURCE8} $RPM_BUILD_ROOT/etc/rc.d/init.d/eventum-irc
+cp -a %{SOURCE9} $RPM_BUILD_ROOT/etc/sysconfig/eventum-irc
 
-sed -e '
-s,%%{APP_VERSION}%%,%{version}%{?_snap:-%{_snap}}%{?_rc:-%{_rc}}%{?_svn:-%{_svn}},
-s,%%{PHP_PEAR_DIR}%%,%{php_pear_dir},
-s,%%{APP_PATH}%%,%{_appdir},
-s,%%{SMARTY_DIR}%%,%{_smartydir},
-s,%%{SYSCONFDIR}%%,%{_webappdir},
-' %{SOURCE10} > $RPM_BUILD_ROOT%{_webappdir}/core.php
+
+%{__sed} -i -e "/define('APP_VERSION'/ {
+    idefine('APP_VERSION', '%{version}%{?_snap:-%{_snap}}%{?_rc:-%{_rc}}%{?_svn:-%{_svn}}');
+    d
+
+}" $RPM_BUILD_ROOT%{_appdir}/htdocs/init.php
 
 # config
 > $RPM_BUILD_ROOT%{_webappdir}/setup.php
-mv $RPM_BUILD_ROOT{%{_appdir}/htdocs/config.inc,%{_webappdir}/config}.php
+> $RPM_BUILD_ROOT%{_webappdir}/config.php
 
 install -d $RPM_BUILD_ROOT%{_smartyplugindir}
 # These plugins are not in Smarty package (Smarty-2.6.2-3)
@@ -894,6 +885,11 @@ if [ -f %{_sysconfdir}/cvs.php.rpmsave ]; then
 fi
 ln -sf process_cvs_commits $RPM_BUILD_ROOT%{_libdir}/scm
 
+%triggerpostun -- eventum < eventum-1.7.1-5.165
+%{__sed} -i -e '
+	/define.*APP_URL/d
+' %{_webappdir}/config.php
+
 %files -f %{name}.lang
 %defattr(644,root,root,755)
 %doc ChangeLog FAQ INSTALL README UPGRADE CONTRIB
@@ -906,7 +902,6 @@ ln -sf process_cvs_commits $RPM_BUILD_ROOT%{_libdir}/scm
 %attr(640,root,eventum) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/private_key.php
 %attr(660,root,eventum) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/setup.php
 %attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/htpasswd
-%attr(640,root,eventum) %config %verify(not mtime) %{_webappdir}/core.php
 
 %dir %attr(731,root,eventum) /var/log/%{name}
 %attr(620,root,eventum) %ghost /var/log/%{name}/*
