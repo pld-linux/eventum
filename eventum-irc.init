@@ -24,10 +24,7 @@ else
 	exit 0
 fi
 
-RETVAL=0
-# See how we were called.
-case "$1" in
-start)
+start() {
 	if [ ! -f /var/lock/subsys/eventum-irc ]; then
 		msg_starting "Eventum IRC Bot"
 		start-stop-daemon --start \
@@ -46,8 +43,9 @@ start)
 	else
 		msg_already_running "Eventum IRC Bot"
 	fi
-;;
-stop)
+}
+
+stop() {
 	if [ -f /var/lock/subsys/eventum-irc ]; then
 		msg_stopping "Eventum IRC Bot"
 		if start-stop-daemon --stop --oknodo --pidfile $PIDFILE; then
@@ -59,11 +57,20 @@ stop)
 	else
 		msg_not_running "Eventum IRC Bot"
 	fi
+}
+
+RETVAL=0
+# See how we were called.
+case "$1" in
+start)
+	start
+;;
+stop)
+	stop
 ;;
 restart)
-	$0 stop
-	$0 start
-	exit $?
+	stop
+	start
 ;;
 status)
 	status eventum-bot php
