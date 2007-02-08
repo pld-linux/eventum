@@ -1,6 +1,6 @@
---- eventum/misc/irc/bot.php~	2007-01-30 18:59:36.349169654 +0200
-+++ eventum/misc/irc/bot.php	2007-01-30 19:00:12.409985378 +0200
-@@ -30,13 +30,8 @@
+--- eventum/misc/irc/bot.php~	2007-02-09 00:45:56.986122049 +0200
++++ eventum/misc/irc/bot.php	2007-02-09 00:46:41.197119803 +0200
+@@ -30,20 +30,8 @@
  
  ini_set('memory_limit', '256M');
  
@@ -10,9 +10,16 @@
 -    echo "ERROR: No config specified. Please see setup/irc_config.php for config information.\n\n";
 -    exit;
 -}
+-require_once(APP_CONFIG_PATH . 'irc_config.php');
 -
+-
+-// ============================================
+-// ============================================
+-// NO NEED TO UPDATE ANYTHING BELOW THIS LINE
+-// ============================================
+-// ============================================
 +require_once('/etc/webapps/eventum/core.php');
 +require_once('/etc/eventum/irc.php');
  
- // ============================================
- // ============================================
+ require_once(APP_INC_PATH . 'db_access.php');
+ require_once(APP_INC_PATH . 'class.auth.php');
