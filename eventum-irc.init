@@ -66,7 +66,7 @@ restart)
 	exit $?
 ;;
 status)
-	status "Eventum IRC Bot" php
+	status eventum-bot php
 	exit $?
 ;;
 *)
