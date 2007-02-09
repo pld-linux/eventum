@@ -11,9 +11,9 @@
 %bcond_with	qmail	# build the router-qmail subpackage
 
 #define	_snap	20060921
-%define	_svn	20070203.3234
+%define	_svn	20070209.3245
 #define	_rc		RC3
-%define	_rel	5.176
+%define	_rel	5.181
 
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
@@ -25,7 +25,7 @@ License:	GPL
 Group:		Applications/WWW
 #Source0:	http://downloads.mysql.com/snapshots/eventum/%{name}-nightly-%{_snap}.tar.gz
 Source0:	%{name}-%{_svn}.tar.bz2
-# Source0-md5:	5283210ab1e2ae4ed7421333df7f2738
+# Source0-md5:	a2f0e18bfa2b236e5ed39befa4cede54
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -55,7 +55,6 @@ Patch102:	%{name}-irc-config.patch
 Patch103:	%{name}-PEAR.patch
 Patch104:	%{name}-httpclient-clientside.patch
 Patch105:	%{name}-bot-reconnect.patch
-Patch106:	%{name}-private-key.patch
 Patch107:	%{name}-mem-limits.patch
 Patch108:	%{name}-gettext.patch
 # some tests
@@ -492,7 +491,6 @@ rm rpc/xmlrpc_client.php
 %patch103 -p1
 %patch104 -p1
 %patch105 -p1
-%patch106 -p1
 %patch107 -p1
 %patch108 -p1
 
@@ -523,15 +521,9 @@ cp misc/localization/eventum.po misc/localization/en_US/LC_MESSAGES/eventum.po
 sed -e '1s,#!.*/bin/php -q,#!%{_bindir}/php,' misc/cli/eventum > %{name}-cli
 sed -e '1i#!%{_bindir}/php' misc/scm/process_cvs_commits.php > process_cvs_commits
 cat misc/scm/process_svn_commits.php > process_svn_commits
-sed -e '1i#!%{_bindir}/php' misc/irc/bot.php > %{name}-bot
 mv misc/cli/eventumrc_example eventumrc
 sed -i -e '1i#!%{_bindir}/php' misc/*.php
 chmod +x misc/*.php
-mv include/private_key.php private_key.php.in
-
-grep -rl 'APP_INC_PATH..*"private_key.php"' . | xargs sed -i -e '
-	s,require_once(APP_INC_PATH.*"private_key.php"),require_once("%{_webappdir}/private_key.php"),
-'
 
 # remove backups from patching as we use globs to package files to buildroot
 find '(' -name '*~' -o -name '*.orig' ')' | xargs -r rm -v
@@ -569,7 +561,7 @@ install -d $RPM_BUILD_ROOT%{_appdir}/cli
 cp -a misc/cli/include/class.{misc,command_line}.php $RPM_BUILD_ROOT%{_appdir}/cli
 cp -a misc/cli/config.inc.php $RPM_BUILD_ROOT%{_sysconfdir}/cli.php
 install %{name}-cli $RPM_BUILD_ROOT%{_bindir}/%{name}
-install %{name}-bot $RPM_BUILD_ROOT%{_sbindir}
+install misc/irc/bot.php $RPM_BUILD_ROOT%{_sbindir}/%{name}-bot
 
 # scm
 install process_cvs_commits $RPM_BUILD_ROOT%{_libdir}/process_cvs_commits
@@ -578,7 +570,8 @@ ln -s process_cvs_commits $RPM_BUILD_ROOT%{_libdir}/scm
 install %{SOURCE6} $RPM_BUILD_ROOT%{_sysconfdir}/scm.php
 
 # private key
-cp -a private_key.php.in $RPM_BUILD_ROOT%{_webappdir}/private_key.php
+echo '<?php
+$private_key = "DEFAULTPRIVATEKEY";' > $RPM_BUILD_ROOT%{_webappdir}/private_key.php
 touch $RPM_BUILD_ROOT%{_webappdir}/htpasswd
 
 cp -a %{SOURCE1} $RPM_BUILD_ROOT%{_webappdir}/apache.conf
@@ -588,7 +581,7 @@ cp -a %{SOURCE2} $RPM_BUILD_ROOT/etc/cron.d/%{name}-mail-queue
 cp -a %{SOURCE3} $RPM_BUILD_ROOT/etc/cron.d/%{name}-mail-download
 cp -a %{SOURCE4} $RPM_BUILD_ROOT/etc/cron.d/%{name}-reminder
 cp -a %{SOURCE5} $RPM_BUILD_ROOT/etc/cron.d/%{name}-monitor
-cp -a %{SOURCE7} $RPM_BUILD_ROOT%{_sysconfdir}/irc.php
+cp -a %{SOURCE7} $RPM_BUILD_ROOT%{_webappdir}/irc_config.php
 cp -a %{SOURCE8} $RPM_BUILD_ROOT/etc/rc.d/init.d/eventum-irc
 cp -a %{SOURCE9} $RPM_BUILD_ROOT/etc/sysconfig/eventum-irc
 
@@ -890,6 +883,12 @@ ln -sf process_cvs_commits $RPM_BUILD_ROOT%{_libdir}/scm
 	/define.*APP_URL/d
 ' %{_webappdir}/config.php
 
+%triggerpostun irc -- %{name}-irc < 1.7.1-5.181
+if [ -f %{_sysconfdir}/irc.php.rpmsave ]; then
+	mv -f %{_webappdir}/irc_config.php{,.rpmnew}
+	mv -f %{_sysconfdir}/irc.php.rpmsave %{_webappdir}/irc_config.php
+fi
+
 %files -f %{name}.lang
 %defattr(644,root,root,755)
 %doc ChangeLog FAQ INSTALL README UPGRADE CONTRIB
@@ -1002,7 +1001,7 @@ ln -sf process_cvs_commits $RPM_BUILD_ROOT%{_libdir}/scm
 
 %files irc
 %defattr(644,root,root,755)
-%attr(640,root,eventum) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/irc.php
+%attr(640,root,eventum) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/irc_config.php
 %attr(640,root,eventum) %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/eventum-irc
 %attr(755,root,root) %{_sbindir}/%{name}-bot
 %attr(754,root,root) /etc/rc.d/init.d/%{name}-irc
