@@ -17,7 +17,7 @@
 
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
-Summary(pl):	Eventum - system ¶ledzenia spraw/b³êdów
+Summary(pl.UTF-8):   Eventum - system Å›ledzenia spraw/bÅ‚Ä™dÃ³w
 Name:		eventum
 Version:	1.7.1
 Release:	%{?_rc:%{_rc}.}%{_rel}%{?_snap:.%{_snap}}%{?_svn:.%{_svn}}
@@ -115,17 +115,17 @@ requests, or by a software development team to quickly organize tasks
 and bugs. Eventum is used by the MySQL AB Technical Support team, and
 has allowed us to dramatically improve our response times.
 
-%description -l pl
-Eventum to przyjazny dla u¿ytkownika system ¶ledzenia spraw, który
-mo¿e byæ u¿ywany przez dzia³ obs³ugi do ¶ledzenia przychodz±cych ¿±dañ
-obs³ugi technicznej albo przez zespó³ tworz±cy oprogramowanie do
-szybkiej organizacji zadañ i b³êdów. Eventum jest u¿ywany przez zespó³
-Technical Support MySQL AB i umo¿liwi³ im znacz±co poprawiæ czasy
+%description -l pl.UTF-8
+Eventum to przyjazny dla uÅ¼ytkownika system Å›ledzenia spraw, ktÃ³ry
+moÅ¼e byÄ‡ uÅ¼ywany przez dziaÅ‚ obsÅ‚ugi do Å›ledzenia przychodzÄ…cych Å¼Ä…daÅ„
+obsÅ‚ugi technicznej albo przez zespÃ³Å‚ tworzÄ…cy oprogramowanie do
+szybkiej organizacji zadaÅ„ i bÅ‚Ä™dÃ³w. Eventum jest uÅ¼ywany przez zespÃ³Å‚
+Technical Support MySQL AB i umoÅ¼liwiÅ‚ im znaczÄ…co poprawiÄ‡ czasy
 reakcji.
 
 %package base
 Summary:	Eventum base package
-Summary(pl):	Podstawowy pakiet Eventum
+Summary(pl.UTF-8):   Podstawowy pakiet Eventum
 Group:		Applications/WWW
 Requires(postun):	/usr/sbin/groupdel
 Requires(postun):	/usr/sbin/userdel
@@ -139,12 +139,12 @@ Provides:	user(eventum)
 %description base
 This package contains base directory structure for Eventum.
 
-%description base -l pl
-Ten pakiet zawiera podstawow± strukturê katalogów dla Eventum.
+%description base -l pl.UTF-8
+Ten pakiet zawiera podstawowÄ… strukturÄ™ katalogÃ³w dla Eventum.
 
 %package setup
 Summary:	Eventum setup package
-Summary(pl):	Pakiet do wstêpnej konfiguracji Eventum
+Summary(pl.UTF-8):   Pakiet do wstÄ™pnej konfiguracji Eventum
 Group:		Applications/WWW
 Requires:	%{name} = %{version}-%{release}
 
@@ -153,14 +153,14 @@ Install this package to configure initial Eventum installation. You
 should uninstall this package when you're done, as it considered
 insecure to keep the setup files in place.
 
-%description setup -l pl
-Ten pakiet nale¿y zainstalowaæ w celu wstêpnej konfiguracji Eventum po
-pierwszej instalacji. Potem nale¿y go odinstalowaæ, jako ¿e
-pozostawienie plików instalacyjnych mog³oby byæ niebezpieczne.
+%description setup -l pl.UTF-8
+Ten pakiet naleÅ¼y zainstalowaÄ‡ w celu wstÄ™pnej konfiguracji Eventum po
+pierwszej instalacji. Potem naleÅ¼y go odinstalowaÄ‡, jako Å¼e
+pozostawienie plikÃ³w instalacyjnych mogÅ‚oby byÄ‡ niebezpieczne.
 
 %package mail-queue
 Summary:	Eventum mail queue process
-Summary(pl):	Przetwarzanie kolejki poczty Eventum
+Summary(pl.UTF-8):   Przetwarzanie kolejki poczty Eventum
 Group:		Applications/WWW
 Requires:	%{name} = %{version}-%{release}
 Requires:	crondaemon
@@ -174,18 +174,18 @@ will re-try to send it again the next time it runs.
 
 This package contains the cron job.
 
-%description mail-queue -l pl
-Od pierwszego wydania Eventum poczta nie jest wysy³ana bezpo¶rednio z
-ró¿nych skryptów, lecz dodawana do kolejki przetwarzanej z crona.
-Je¶li poczta nie mo¿e byæ wys³ana, bêdzie odpowiednio oznaczona w logu
-kolejki poczty, a skrypt z crona bêdzie próbowa³ wys³aæ j± ponownie
-nastêpnym razem.
+%description mail-queue -l pl.UTF-8
+Od pierwszego wydania Eventum poczta nie jest wysyÅ‚ana bezpoÅ›rednio z
+rÃ³Å¼nych skryptÃ³w, lecz dodawana do kolejki przetwarzanej z crona.
+JeÅ›li poczta nie moÅ¼e byÄ‡ wysÅ‚ana, bÄ™dzie odpowiednio oznaczona w logu
+kolejki poczty, a skrypt z crona bÄ™dzie prÃ³bowaÅ‚ wysÅ‚aÄ‡ jÄ… ponownie
+nastÄ™pnym razem.
 
 Ten pakiet zawiera zadanie dla crona.
 
 %package mail-download
 Summary:	Eventum email download
-Summary(pl):	¦ci±ganie poczty Eventum
+Summary(pl.UTF-8):   ÅšciÄ…ganie poczty Eventum
 Group:		Applications/WWW
 Requires:	%{name} = %{version}-%{release}
 Requires:	crondaemon
@@ -196,16 +196,16 @@ setup a cron job to run the script every so often.
 
 This package contains the cron job.
 
-%description mail-download -l pl
-Aby integracja poczty elektronicznej w Eventum dzia³a³a, trzeba
-ustawiæ zadanie crona, aby uruchamia³ odpowiedni skrypt wystarczaj±co
-czêsto.
+%description mail-download -l pl.UTF-8
+Aby integracja poczty elektronicznej w Eventum dziaÅ‚aÅ‚a, trzeba
+ustawiÄ‡ zadanie crona, aby uruchamiaÅ‚ odpowiedni skrypt wystarczajÄ…co
+czÄ™sto.
 
 Ten pakiet zawiera zadanie dla crona.
 
 %package reminder
 Summary:	Eventum Reminder System
-Summary(pl):	System przypominania dla Eventum
+Summary(pl.UTF-8):   System przypominania dla Eventum
 Group:		Applications/WWW
 Requires:	%{name} = %{version}-%{release}
 Requires:	crondaemon
@@ -219,18 +219,18 @@ you may deem necessary.
 
 This package contains the cron job.
 
-%description reminder -l pl
-System przypominania zosta³ zaprojektowany tak, aby s³u¿y³ jako
-bezpieczna sieæ dla spraw wymagaj±cych uwagi. W zale¿no¶ci od
-konfiguracji mo¿na ustawiæ ró¿ne przypominajki (lub alarmy) wysy³ane
-przy ka¿dej sprawie wymagaj±cej uwagi lub przy parametrze, który mo¿na
-uwa¿aæ za potrzebny.
+%description reminder -l pl.UTF-8
+System przypominania zostaÅ‚ zaprojektowany tak, aby sÅ‚uÅ¼yÅ‚ jako
+bezpieczna sieÄ‡ dla spraw wymagajÄ…cych uwagi. W zaleÅ¼noÅ›ci od
+konfiguracji moÅ¼na ustawiÄ‡ rÃ³Å¼ne przypominajki (lub alarmy) wysyÅ‚ane
+przy kaÅ¼dej sprawie wymagajÄ…cej uwagi lub przy parametrze, ktÃ³ry moÅ¼na
+uwaÅ¼aÄ‡ za potrzebny.
 
 Ten pakiet zawiera zadanie dla crona.
 
 %package monitor
 Summary:	Eventum Heartbeat Monitor
-Summary(pl):	Monitor ¿ycia dla Eventum
+Summary(pl.UTF-8):   Monitor Å¼ycia dla Eventum
 Group:		Applications/WWW
 Requires:	%{name} = %{version}-%{release}
 Requires:	crondaemon
@@ -250,21 +250,21 @@ Monitor::checkConfiguration().
 
 This package contains the cron job.
 
-%description monitor -l pl
-Monitor ¿ycia to funkcjonalno¶æ zaprojektowana dla administratora
-chc±cego byæ alarmowanym przy ka¿dym wykryciu popularnego problemu z
-Eventum, jak nie dzia³anie serwera bazy danych albo zmiana uprawnieñ
-do plików konfiguracyjnych.
+%description monitor -l pl.UTF-8
+Monitor Å¼ycia to funkcjonalnoÅ›Ä‡ zaprojektowana dla administratora
+chcÄ…cego byÄ‡ alarmowanym przy kaÅ¼dym wykryciu popularnego problemu z
+Eventum, jak nie dziaÅ‚anie serwera bazy danych albo zmiana uprawnieÅ„
+do plikÃ³w konfiguracyjnych.
 
-Nale¿y zauwa¿yæ, ¿e przed uruchomieniem tego monitora mo¿e byæ
-konieczne dostosowanie niektórych testów do systemu, w szczególno¶ci
-testów uprawnieñ i plików w Monitor::checkConfiguration().
+NaleÅ¼y zauwaÅ¼yÄ‡, Å¼e przed uruchomieniem tego monitora moÅ¼e byÄ‡
+konieczne dostosowanie niektÃ³rych testÃ³w do systemu, w szczegÃ³lnoÅ›ci
+testÃ³w uprawnieÅ„ i plikÃ³w w Monitor::checkConfiguration().
 
 Ten pakiet zawiera zadanie dla crona.
 
 %package route-drafts
 Summary:	Eventum Draft Routing
-Summary(pl):	Przekazywanie szkiców dla Eventum
+Summary(pl.UTF-8):   Przekazywanie szkicÃ³w dla Eventum
 Group:		Applications/WWW
 Requires:	%{name} = %{version}-%{release}
 Requires:	eventum(router)
@@ -277,17 +277,17 @@ draft-<number>@<domain>) to the above script, users are able to send
 drafts written in their mail client to be stored in Eventum. These
 drafts will NOT broadcasted to the notification list.
 
-%description route-drafts -l pl
-Przekazywanie szkiców s³u¿y do automatycznego wi±zania w±tku szkiców z
-problemem w Eventum. Ustawiaj±c qmaila (czy nawet Postfiksa), aby
-dostarcza³ pocztê wys³an± na podany adres (zwykle
-draft-<liczba>@<domena>) do tego skryptu umo¿liwia siê u¿ytkownikom
-wysy³anie szkiców napisanych w ich kliencie pocztowym do zapisania w
-Eventum. Szkice te NIE bêd± wysy³ane na listê powiadomieñ.
+%description route-drafts -l pl.UTF-8
+Przekazywanie szkicÃ³w sÅ‚uÅ¼y do automatycznego wiÄ…zania wÄ…tku szkicÃ³w z
+problemem w Eventum. UstawiajÄ…c qmaila (czy nawet Postfiksa), aby
+dostarczaÅ‚ pocztÄ™ wysÅ‚anÄ… na podany adres (zwykle
+draft-<liczba>@<domena>) do tego skryptu umoÅ¼liwia siÄ™ uÅ¼ytkownikom
+wysyÅ‚anie szkicÃ³w napisanych w ich kliencie pocztowym do zapisania w
+Eventum. Szkice te NIE bÄ™dÄ… wysyÅ‚ane na listÄ™ powiadomieÅ„.
 
 %package route-emails
 Summary:	Eventum Email Routing
-Summary(pl):	Przekazywanie poczty dla Eventum
+Summary(pl.UTF-8):   Przekazywanie poczty dla Eventum
 Group:		Applications/WWW
 Requires:	%{name} = %{version}-%{release}
 Requires:	eventum(router)
@@ -301,18 +301,18 @@ their email clients to reply to emails coming from Eventum, and those
 replies will be automatically associated with the issue and
 broadcasted to the entire notification list.
 
-%description route-emails -l pl
-Funkcjonalno¶æ przekazywania poczty s³u¿y do automatycznego wi±zania
-w±tku listów ze spraw± w Eventum. Po ustawieniu qmaila (czy nawet
-postfiksa), aby dostarcza³ listy wysy³ane na pewien adres (zwykle
-issue-<numer>@<domena>) na powy¿szy skrypt, u¿ytkownicy bêd± mogli
-u¿ywaæ klientów pocztowych do odpowiadania na listy przychodz±ce z
-Eventum, a odpowiedzi te bêd± automatycznie wi±zane ze spraw± i
-rozprowadzane do ca³ej listy og³oszeniowej.
+%description route-emails -l pl.UTF-8
+FunkcjonalnoÅ›Ä‡ przekazywania poczty sÅ‚uÅ¼y do automatycznego wiÄ…zania
+wÄ…tku listÃ³w ze sprawÄ… w Eventum. Po ustawieniu qmaila (czy nawet
+postfiksa), aby dostarczaÅ‚ listy wysyÅ‚ane na pewien adres (zwykle
+issue-<numer>@<domena>) na powyÅ¼szy skrypt, uÅ¼ytkownicy bÄ™dÄ… mogli
+uÅ¼ywaÄ‡ klientÃ³w pocztowych do odpowiadania na listy przychodzÄ…ce z
+Eventum, a odpowiedzi te bÄ™dÄ… automatycznie wiÄ…zane ze sprawÄ… i
+rozprowadzane do caÅ‚ej listy ogÅ‚oszeniowej.
 
 %package route-notes
 Summary:	Eventum Note Routing
-Summary(pl):	Przekazywanie notatek dla Eventum
+Summary(pl.UTF-8):   Przekazywanie notatek dla Eventum
 Group:		Applications/WWW
 Requires:	%{name} = %{version}-%{release}
 Requires:	eventum(router)
@@ -326,18 +326,18 @@ their email clients to reply to internal notes coming from Eventum,
 and those replies will be automatically associated with the issue and
 broadcasted to the notification list staff members.
 
-%description route-notes -l pl
-Funkcjonalno¶æ przekazywania notatek s³u¿y do automatycznego wi±zania
-w±tku notatek ze spraw± w Eventum. Po ustawieniu qmaila (czy nawet
-postfiksa), aby dostarcza³ listy wysy³ane na pewien adres (zwykle
-note-<numer>@<domena>) na powy¿szy skrypt, u¿ytkownicy bêd± mogli
-u¿ywaæ klientów pocztowych do odpowiadania na wewnêtrzne notatki
-pochodz±ce od Eventu, a odpowiedzi te bêd± automatycznie wi±zane ze
-spraw± i rozprowadzane do cz³onków personelu listy og³oszeniowej.
+%description route-notes -l pl.UTF-8
+FunkcjonalnoÅ›Ä‡ przekazywania notatek sÅ‚uÅ¼y do automatycznego wiÄ…zania
+wÄ…tku notatek ze sprawÄ… w Eventum. Po ustawieniu qmaila (czy nawet
+postfiksa), aby dostarczaÅ‚ listy wysyÅ‚ane na pewien adres (zwykle
+note-<numer>@<domena>) na powyÅ¼szy skrypt, uÅ¼ytkownicy bÄ™dÄ… mogli
+uÅ¼ywaÄ‡ klientÃ³w pocztowych do odpowiadania na wewnÄ™trzne notatki
+pochodzÄ…ce od Eventu, a odpowiedzi te bÄ™dÄ… automatycznie wiÄ…zane ze
+sprawÄ… i rozprowadzane do czÅ‚onkÃ³w personelu listy ogÅ‚oszeniowej.
 
 %package router-qmail
 Summary:	Eventum Mail Routing - qmail
-Summary(pl):	Przekazywanie poczty Eventum - qmail
+Summary(pl.UTF-8):   Przekazywanie poczty Eventum - qmail
 Group:		Applications/Mail
 # loose dep is intentional. qmail subpackage isn't built on PLD
 # builders and there really nothing changes.
@@ -350,13 +350,13 @@ Obsoletes:	eventum(router)
 This package provides way of routing notes and emails back to Eventum
 via qmail.
 
-%description router-qmail -l pl
-Ten pakiet udostêpnia metodê przekazywania notatek i listów do Eventum
+%description router-qmail -l pl.UTF-8
+Ten pakiet udostÄ™pnia metodÄ™ przekazywania notatek i listÃ³w do Eventum
 przez qmaila.
 
 %package router-postfix
 Summary:	Eventum Mail Routing - Postfix
-Summary(pl):	Przekazywanie poczty Eventum - Postfix
+Summary(pl.UTF-8):   Przekazywanie poczty Eventum - Postfix
 Group:		Applications/Mail
 Requires:	%{name} = %{version}-%{release}
 Requires:	postfix
@@ -370,16 +370,16 @@ via Postfix.
 The Postfix configuration instructions you can find from
 <http://eventum.mysql.org/wiki/index.php/Setting_up_email_routing_with_postfix>.
 
-%description router-postfix -l pl
-Ten pakiet udostêpnia metodê przekazywania notatek i listów do Eventum
+%description router-postfix -l pl.UTF-8
+Ten pakiet udostÄ™pnia metodÄ™ przekazywania notatek i listÃ³w do Eventum
 przez Postfiksa.
 
-Opis konfiguracji Postfiksa mo¿na znale¼æ pod adresem
+Opis konfiguracji Postfiksa moÅ¼na znaleÅºÄ‡ pod adresem
 <http://eventum.mysql.org/wiki/index.php/Setting_up_email_routing_with_postfix>.
 
 %package irc
 Summary:	Eventum IRC Notification Bot
-Summary(pl):	IRC-owy bot powiadamiaj±cy dla Eventum
+Summary(pl.UTF-8):   IRC-owy bot powiadamiajÄ…cy dla Eventum
 Group:		Applications/WWW
 Requires(post,preun):	/sbin/chkconfig
 Requires(triggerpostun):	sed >= 4.0
@@ -400,21 +400,21 @@ NOTE: You will need to manually edit the bot.php script to set your
 appropriate preferences, like IRC server and channel that the bot
 should join.
 
-%description irc -l pl
-IRC-owy bot powiadamiaj±cy to mi³a funkcjonalno¶æ dla zdalnych
-zespo³ów chc±cych obs³ugiwaæ sprawy i mieæ szybki i ³atwy sposób na
-uzyskiwanie prostych powiadomieñ. Aktualnie bot powiadamia o
-nastêpuj±cych zdarzeniach:
+%description irc -l pl.UTF-8
+IRC-owy bot powiadamiajÄ…cy to miÅ‚a funkcjonalnoÅ›Ä‡ dla zdalnych
+zespoÅ‚Ã³w chcÄ…cych obsÅ‚ugiwaÄ‡ sprawy i mieÄ‡ szybki i Å‚atwy sposÃ³b na
+uzyskiwanie prostych powiadomieÅ„. Aktualnie bot powiadamia o
+nastÄ™pujÄ…cych zdarzeniach:
 - nowych sprawach
 - zablokowanych listach
-- sprawach, dla których zmieni³a siê lista powi±zañ
+- sprawach, dla ktÃ³rych zmieniÅ‚a siÄ™ lista powiÄ…zaÅ„
 
-UWAGA: w celu wprowadzenia w³asnych ustawieñ, takich jak serwer IRC i
-kana³ u¿ywany przez bota, trzeba rêcznie zmodyfikowaæ skrypt bot.php .
+UWAGA: w celu wprowadzenia wÅ‚asnych ustawieÅ„, takich jak serwer IRC i
+kanaÅ‚ uÅ¼ywany przez bota, trzeba rÄ™cznie zmodyfikowaÄ‡ skrypt bot.php .
 
 %package cli
 Summary:	Eventum command-line interface
-Summary(pl):	Interfejs linii poleceñ dla Eventum
+Summary(pl.UTF-8):   Interfejs linii poleceÅ„ dla Eventum
 Group:		Applications/WWW
 Requires:	%{name}-base = %{version}-%{release}
 Requires:	php-cli
@@ -425,13 +425,13 @@ Requires:	php-pear-XML_RPC
 The Eventum command-line interface allows you to access most of the
 features of the web interface straight from your command shell.
 
-%description cli -l pl
-Interfejs linii poleceñ Eventum pozwala na dostêp do wiêkszo¶ci
-funkcji interfejsu WWW prosto z linii poleceñ pow³oki.
+%description cli -l pl.UTF-8
+Interfejs linii poleceÅ„ Eventum pozwala na dostÄ™p do wiÄ™kszoÅ›ci
+funkcji interfejsu WWW prosto z linii poleceÅ„ powÅ‚oki.
 
 %package scm
 Summary:	Eventum SCM integration
-Summary(pl):	Integracja SCM dla Eventum
+Summary(pl.UTF-8):   Integracja SCM dla Eventum
 Group:		Applications/WWW
 Requires:	%{name}-base = %{version}-%{release}
 Requires:	php(pcre)
@@ -448,15 +448,15 @@ compatible with pretty much any SCM system, such as CVS.
 For installation see
 </eventum/help.php?topic=scm_integration_installation>.
 
-%description scm -l pl
-Ten pakiet pozwala zespo³om programistów na integracjê systemu
-zarz±dzania ¼ród³ami (SCM - Source Control Management) z systemem
-¶ledzenia spraw.
+%description scm -l pl.UTF-8
+Ten pakiet pozwala zespoÅ‚om programistÃ³w na integracjÄ™ systemu
+zarzÄ…dzania ÅºrÃ³dÅ‚ami (SCM - Source Control Management) z systemem
+Å›ledzenia spraw.
 
-Integracja jest zaimplementowana tak, aby byæ kompatybilna w przód z
-prawie ka¿dym systemem SCM, jak np. CVS.
+Integracja jest zaimplementowana tak, aby byÄ‡ kompatybilna w przÃ³d z
+prawie kaÅ¼dym systemem SCM, jak np. CVS.
 
-Szczegó³y na temat instalacji mo¿na przeczytaæ pod
+SzczegÃ³Å‚y na temat instalacji moÅ¼na przeczytaÄ‡ pod
 </eventum/help.php?topic=scm_integration_installation>.
 
 %prep
