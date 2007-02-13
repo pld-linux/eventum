@@ -17,7 +17,7 @@
 
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
-Summary(pl.UTF-8):   Eventum - system śledzenia spraw/błędów
+Summary(pl.UTF-8):	Eventum - system śledzenia spraw/błędów
 Name:		eventum
 Version:	1.7.1
 Release:	%{?_rc:%{_rc}.}%{_rel}%{?_snap:.%{_snap}}%{?_svn:.%{_svn}}
@@ -125,7 +125,7 @@ reakcji.
 
 %package base
 Summary:	Eventum base package
-Summary(pl.UTF-8):   Podstawowy pakiet Eventum
+Summary(pl.UTF-8):	Podstawowy pakiet Eventum
 Group:		Applications/WWW
 Requires(postun):	/usr/sbin/groupdel
 Requires(postun):	/usr/sbin/userdel
@@ -144,7 +144,7 @@ Ten pakiet zawiera podstawową strukturę katalogów dla Eventum.
 
 %package setup
 Summary:	Eventum setup package
-Summary(pl.UTF-8):   Pakiet do wstępnej konfiguracji Eventum
+Summary(pl.UTF-8):	Pakiet do wstępnej konfiguracji Eventum
 Group:		Applications/WWW
 Requires:	%{name} = %{version}-%{release}
 
@@ -160,7 +160,7 @@ pozostawienie plików instalacyjnych mogłoby być niebezpieczne.
 
 %package mail-queue
 Summary:	Eventum mail queue process
-Summary(pl.UTF-8):   Przetwarzanie kolejki poczty Eventum
+Summary(pl.UTF-8):	Przetwarzanie kolejki poczty Eventum
 Group:		Applications/WWW
 Requires:	%{name} = %{version}-%{release}
 Requires:	crondaemon
@@ -185,7 +185,7 @@ Ten pakiet zawiera zadanie dla crona.
 
 %package mail-download
 Summary:	Eventum email download
-Summary(pl.UTF-8):   Ściąganie poczty Eventum
+Summary(pl.UTF-8):	Ściąganie poczty Eventum
 Group:		Applications/WWW
 Requires:	%{name} = %{version}-%{release}
 Requires:	crondaemon
@@ -205,7 +205,7 @@ Ten pakiet zawiera zadanie dla crona.
 
 %package reminder
 Summary:	Eventum Reminder System
-Summary(pl.UTF-8):   System przypominania dla Eventum
+Summary(pl.UTF-8):	System przypominania dla Eventum
 Group:		Applications/WWW
 Requires:	%{name} = %{version}-%{release}
 Requires:	crondaemon
@@ -230,7 +230,7 @@ Ten pakiet zawiera zadanie dla crona.
 
 %package monitor
 Summary:	Eventum Heartbeat Monitor
-Summary(pl.UTF-8):   Monitor życia dla Eventum
+Summary(pl.UTF-8):	Monitor życia dla Eventum
 Group:		Applications/WWW
 Requires:	%{name} = %{version}-%{release}
 Requires:	crondaemon
@@ -264,7 +264,7 @@ Ten pakiet zawiera zadanie dla crona.
 
 %package route-drafts
 Summary:	Eventum Draft Routing
-Summary(pl.UTF-8):   Przekazywanie szkiców dla Eventum
+Summary(pl.UTF-8):	Przekazywanie szkiców dla Eventum
 Group:		Applications/WWW
 Requires:	%{name} = %{version}-%{release}
 Requires:	eventum(router)
@@ -287,7 +287,7 @@ Eventum. Szkice te NIE będą wysyłane na listę powiadomień.
 
 %package route-emails
 Summary:	Eventum Email Routing
-Summary(pl.UTF-8):   Przekazywanie poczty dla Eventum
+Summary(pl.UTF-8):	Przekazywanie poczty dla Eventum
 Group:		Applications/WWW
 Requires:	%{name} = %{version}-%{release}
 Requires:	eventum(router)
@@ -312,7 +312,7 @@ rozprowadzane do całej listy ogłoszeniowej.
 
 %package route-notes
 Summary:	Eventum Note Routing
-Summary(pl.UTF-8):   Przekazywanie notatek dla Eventum
+Summary(pl.UTF-8):	Przekazywanie notatek dla Eventum
 Group:		Applications/WWW
 Requires:	%{name} = %{version}-%{release}
 Requires:	eventum(router)
@@ -337,7 +337,7 @@ sprawą i rozprowadzane do członków personelu listy ogłoszeniowej.
 
 %package router-qmail
 Summary:	Eventum Mail Routing - qmail
-Summary(pl.UTF-8):   Przekazywanie poczty Eventum - qmail
+Summary(pl.UTF-8):	Przekazywanie poczty Eventum - qmail
 Group:		Applications/Mail
 # loose dep is intentional. qmail subpackage isn't built on PLD
 # builders and there really nothing changes.
@@ -356,7 +356,7 @@ przez qmaila.
 
 %package router-postfix
 Summary:	Eventum Mail Routing - Postfix
-Summary(pl.UTF-8):   Przekazywanie poczty Eventum - Postfix
+Summary(pl.UTF-8):	Przekazywanie poczty Eventum - Postfix
 Group:		Applications/Mail
 Requires:	%{name} = %{version}-%{release}
 Requires:	postfix
@@ -379,7 +379,7 @@ Opis konfiguracji Postfiksa można znaleźć pod adresem
 
 %package irc
 Summary:	Eventum IRC Notification Bot
-Summary(pl.UTF-8):   IRC-owy bot powiadamiający dla Eventum
+Summary(pl.UTF-8):	IRC-owy bot powiadamiający dla Eventum
 Group:		Applications/WWW
 Requires(post,preun):	/sbin/chkconfig
 Requires(triggerpostun):	sed >= 4.0
@@ -414,7 +414,7 @@ kanał używany przez bota, trzeba ręcznie zmodyfikować skrypt bot.php .
 
 %package cli
 Summary:	Eventum command-line interface
-Summary(pl.UTF-8):   Interfejs linii poleceń dla Eventum
+Summary(pl.UTF-8):	Interfejs linii poleceń dla Eventum
 Group:		Applications/WWW
 Requires:	%{name}-base = %{version}-%{release}
 Requires:	php-cli
@@ -431,7 +431,7 @@ funkcji interfejsu WWW prosto z linii poleceń powłoki.
 
 %package scm
 Summary:	Eventum SCM integration
-Summary(pl.UTF-8):   Integracja SCM dla Eventum
+Summary(pl.UTF-8):	Integracja SCM dla Eventum
 Group:		Applications/WWW
 Requires:	%{name}-base = %{version}-%{release}
 Requires:	php(pcre)
