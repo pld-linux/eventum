@@ -11,9 +11,9 @@
 %bcond_with	qmail	# build the router-qmail subpackage
 
 #define	_snap	20060921
-%define	_svn	20070215.3253
+%define	_svn	20070215.3259
 #define	_rc		RC3
-%define	_rel	0.183
+%define	_rel	0.185
 
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
@@ -25,7 +25,7 @@ License:	GPL
 Group:		Applications/WWW
 #Source0:	http://downloads.mysql.com/snapshots/eventum/%{name}-nightly-%{_snap}.tar.gz
 Source0:	%{name}-%{_svn}.tar.bz2
-# Source0-md5:	3afc86e7661b201f6966998e384b913c
+# Source0-md5:	385f0e67a53086c7f7ae80a916464fdd
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -35,19 +35,16 @@ Source6:	%{name}-cvs.php
 Source7:	%{name}-irc.php
 Source8:	%{name}-irc.init
 Source9:	%{name}-irc.sysconfig
-
-Source11:	%{name}-router-qmail.sh
-
-Source13:	%{name}-upgrade.sh
-Source14:	%{name}-router-postfix.sh
-Source15:	%{name}.logrotate
-Source16:	%{name}-lighttpd.conf
+Source10:	%{name}-router-qmail.sh
+Source12:	%{name}-upgrade.sh
+Source13:	%{name}-router-postfix.sh
+Source14:	%{name}.logrotate
+Source15:	%{name}-lighttpd.conf
 Patch0:		%{name}-lf.patch
-
-Patch2:		%{name}-timetracking-advanced-logic.patch
-Patch3:		%{name}-email-notify-display.patch
-Patch4:		%{name}-backtraces.patch
-Patch5:		%{name}-errorhandler.patch
+Patch1:		%{name}-timetracking-advanced-logic.patch
+Patch2:		%{name}-email-notify-display.patch
+Patch3:		%{name}-backtraces.patch
+Patch4:		%{name}-errorhandler.patch
 # packaging patches that probably never go upstream
 Patch100:	%{name}-paths.patch
 Patch101:	%{name}-cvs-config.patch
@@ -55,8 +52,8 @@ Patch102:	%{name}-irc-config.patch
 Patch103:	%{name}-PEAR.patch
 Patch104:	%{name}-httpclient-clientside.patch
 Patch105:	%{name}-bot-reconnect.patch
-Patch107:	%{name}-mem-limits.patch
-Patch108:	%{name}-gettext.patch
+Patch106:	%{name}-mem-limits.patch
+Patch107:	%{name}-gettext.patch
 # some tests
 Patch200:	%{name}-fixed-nav.patch
 URL:		http://dev.mysql.com/downloads/other/eventum/
@@ -477,10 +474,10 @@ rm rpc/xmlrpc_client.php
 # bug fixes.
 %patch0 -p1
 
+%patch1 -p1
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
-%patch5 -p1
 
 #%patch200 -p1
 
@@ -491,8 +488,8 @@ rm rpc/xmlrpc_client.php
 %patch103 -p1
 %patch104 -p1
 %patch105 -p1
+%patch106 -p1
 %patch107 -p1
-%patch108 -p1
 
 cat <<'EOF'> mysql-permissions.sql
 # use this schema if you want to grant permissions manually instead of using setup
@@ -554,7 +551,7 @@ cp -a logs/* $RPM_BUILD_ROOT/var/log/%{name}
 cp -a misc/upgrade $RPM_BUILD_ROOT%{_appdir}
 
 cp -a favicon.ico $RPM_BUILD_ROOT%{_appdir}/htdocs/favicon.ico
-install %{SOURCE13} $RPM_BUILD_ROOT%{_appdir}/upgrade/upgrade.sh
+install %{SOURCE12} $RPM_BUILD_ROOT%{_appdir}/upgrade/upgrade.sh
 
 # cli
 install -d $RPM_BUILD_ROOT%{_appdir}/cli
@@ -576,7 +573,7 @@ touch $RPM_BUILD_ROOT%{_webappdir}/htpasswd
 
 cp -a %{SOURCE1} $RPM_BUILD_ROOT%{_webappdir}/apache.conf
 cp -a %{SOURCE1} $RPM_BUILD_ROOT%{_webappdir}/httpd.conf
-cp -a %{SOURCE16} $RPM_BUILD_ROOT%{_webappdir}/lighttpd.conf
+cp -a %{SOURCE15} $RPM_BUILD_ROOT%{_webappdir}/lighttpd.conf
 cp -a %{SOURCE2} $RPM_BUILD_ROOT/etc/cron.d/%{name}-mail-queue
 cp -a %{SOURCE3} $RPM_BUILD_ROOT/etc/cron.d/%{name}-mail-download
 cp -a %{SOURCE4} $RPM_BUILD_ROOT/etc/cron.d/%{name}-reminder
@@ -611,12 +608,12 @@ echo 'root' > $d/.qmail-default
 echo '| %{_libdir}/router-qmail drafts' > $d/.qmail-draft-default
 echo '| %{_libdir}/router-qmail emails 1' > $d/.qmail-issue-default
 echo '| %{_libdir}/router-qmail notes' > $d/.qmail-note-default
-install %{SOURCE11} $RPM_BUILD_ROOT%{_libdir}/router-qmail
+install %{SOURCE10} $RPM_BUILD_ROOT%{_libdir}/router-qmail
 %endif
 # postfix router
-install %{SOURCE14} $RPM_BUILD_ROOT%{_libdir}/router-postfix
+install %{SOURCE13} $RPM_BUILD_ROOT%{_libdir}/router-postfix
 
-install -D %{SOURCE15} $RPM_BUILD_ROOT/etc/logrotate.d/%{name}
+install -D %{SOURCE14} $RPM_BUILD_ROOT/etc/logrotate.d/%{name}
 # locale
 cd misc/localization
 for a in */LC_MESSAGES; do
