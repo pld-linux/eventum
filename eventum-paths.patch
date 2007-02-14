@@ -208,3 +208,36 @@
  require_once(APP_INC_PATH . "class.monitor.php");
  
  // the disk partition in which eventum is stored in
+--- eventum/misc/route_drafts.php~	2007-02-15 01:36:00.780666107 +0200
++++ eventum/misc/route_drafts.php	2007-02-15 01:36:28.141283847 +0200
+@@ -27,7 +27,7 @@
+ //
+ // @(#) $Id$
+ 
+-include_once(dirname(__FILE__) . "/../init.php");
++require_once(dirname(__FILE__) . "/htdocs/init.php");
+ require_once(APP_INC_PATH . "db_access.php");
+ require_once(APP_INC_PATH . "class.routing.php");
+ 
+--- eventum/misc/route_emails.php~	2007-02-15 01:37:09.932227380 +0200
++++ eventum/misc/route_emails.php	2007-02-15 01:37:25.452577786 +0200
+@@ -27,7 +27,7 @@
+ //
+ // @(#) $Id$
+ 
+-include_once(dirname(__FILE__) . "/../init.php");
++require_once(dirname(__FILE__) . "/htdocs/init.php");
+ require_once(APP_INC_PATH . "db_access.php");
+ require_once(APP_INC_PATH . "class.routing.php");
+ 
+--- eventum/misc/route_notes.php~	2007-02-15 01:38:04.393456957 +0200
++++ eventum/misc/route_notes.php	2007-02-15 01:38:18.973786135 +0200
+@@ -27,7 +27,7 @@
+ //
+ // @(#) $Id$
+ 
+-include_once(dirname(__FILE__) . "/../init.php");
++require_once(dirname(__FILE__) . "/htdocs/init.php");
+ require_once(APP_INC_PATH . "db_access.php");
+ require_once(APP_INC_PATH . "class.routing.php");
+ 
