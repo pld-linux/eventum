@@ -1,34 +1,37 @@
---- eventum/misc/route_drafts.php~	2007-01-16 09:48:38.784735251 +0200
-+++ eventum/misc/route_drafts.php	2007-01-16 09:49:05.325330706 +0200
+--- eventum/misc/route_drafts.php~	2007-02-15 00:28:44.459624327 +0200
++++ eventum/misc/route_drafts.php	2007-02-15 00:29:16.770352580 +0200
 @@ -26,7 +26,8 @@
  // +----------------------------------------------------------------------+
  //
  // @(#) $Id$
- //
+-//
++
 +ini_set('memory_limit', '1024M');
- include_once(dirname(__FILE__) . "/../config.inc.php");
+ include_once(dirname(__FILE__) . "/../config/config.php");
  require_once(APP_INC_PATH . "db_access.php");
  require_once(APP_INC_PATH . "class.routing.php");
---- eventum/misc/route_emails.php~	2007-01-16 09:48:38.784735251 +0200
-+++ eventum/misc/route_emails.php	2007-01-16 09:50:10.266787724 +0200
+--- eventum/misc/route_emails.php~	2007-02-15 00:28:44.459624327 +0200
++++ eventum/misc/route_emails.php	2007-02-15 00:29:59.821322907 +0200
 @@ -26,7 +26,8 @@
  // +----------------------------------------------------------------------+
  //
  // @(#) $Id$
- //
+-//
++
 +ini_set('memory_limit', '1024M');
- include_once(dirname(__FILE__) . "/../config.inc.php");
+ include_once(dirname(__FILE__) . "/../config/config.php");
  require_once(APP_INC_PATH . "db_access.php");
  require_once(APP_INC_PATH . "class.routing.php");
---- eventum/misc/route_notes.php~	2007-01-16 09:48:38.784735251 +0200
-+++ eventum/misc/route_notes.php	2007-01-16 09:51:11.358158379 +0200
+--- eventum/misc/route_notes.php~	2007-02-15 00:28:44.459624327 +0200
++++ eventum/misc/route_notes.php	2007-02-15 00:30:41.992273407 +0200
 @@ -26,7 +26,8 @@
  // +----------------------------------------------------------------------+
  //
  // @(#) $Id$
- //
+-//
++
 +ini_set('memory_limit', '1024M');
- include_once(dirname(__FILE__) . "/../config.inc.php");
+ include_once(dirname(__FILE__) . "/../config/config.php");
  require_once(APP_INC_PATH . "db_access.php");
  require_once(APP_INC_PATH . "class.routing.php");
 --- eventum-20060830/misc/download_emails.php	2006-09-05 00:11:48.396726556 +0300
@@ -49,7 +52,7 @@
  // @(#) $Id$
  
 -ini_set("memory_limit", "256M");
-+ini_set("memory_limit", "1024M");
++ini_set("memory_limit", '1024M');
  
  require_once("/etc/webapps/eventum/core.php");
  require_once(APP_INC_PATH . "db_access.php");
