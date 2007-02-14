@@ -164,3 +164,25 @@
 -require_once(dirname(__FILE__) . '/config.inc.php');
 +require_once('/etc/eventum/cli.php');
  require_once(APP_INC_PATH . 'class.command_line.php');
+--- eventum/misc/process_mail_queue.php~	2007-02-15 00:31:11.000000000 +0200
++++ eventum/misc/process_mail_queue.php	2007-02-15 01:02:15.704386785 +0200
+@@ -30,7 +30,7 @@
+ 
+ ini_set("memory_limit", "1024M");
+ 
+-require_once(dirname(__FILE__) . "/../init.php");
++require_once(dirname(__FILE__) . "/htdocs/init.php");
+ require_once(APP_INC_PATH . "db_access.php");
+ require_once(APP_INC_PATH . "class.mail_queue.php");
+ 
+--- eventum/misc/download_emails.php~	2007-02-15 00:31:11.000000000 +0200
++++ eventum/misc/download_emails.php	2007-02-15 01:02:56.183553358 +0200
+@@ -30,7 +30,7 @@
+ 
+ ini_set("memory_limit", "1024M");
+ 
+-require_once(dirname(__FILE__) . "/../init.php");
++require_once(dirname(__FILE__) . "/htdocs/init.php");
+ require_once(APP_INC_PATH . "class.support.php");
+ require_once(APP_INC_PATH . "class.lock.php");
+ require_once(APP_INC_PATH . "class.project.php");
