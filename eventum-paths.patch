@@ -197,15 +197,13 @@
  require_once(APP_INC_PATH . "db_access.php");
  require_once(APP_INC_PATH . "class.lock.php");
  require_once(APP_INC_PATH . "class.reminder.php");
---- eventum/misc/monitor.php~	2007-02-15 01:04:27.107937884 +0200
-+++ eventum/misc/monitor.php	2007-02-15 01:10:48.616541558 +0200
-@@ -27,8 +27,8 @@
- // +----------------------------------------------------------------------+
+--- eventum/misc/monitor.php~	2007-02-15 01:27:45.089473611 +0200
++++ eventum/misc/monitor.php	2007-02-15 01:28:05.849942411 +0200
+@@ -27,7 +27,7 @@
  //
  // @(#) $Id$
--//
+ 
 -require_once(dirname(__FILE__) . "/../init.php");
-+
 +require_once(dirname(__FILE__) . "/htdocs/init.php");
  require_once(APP_INC_PATH . "class.monitor.php");
  

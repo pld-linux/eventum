@@ -1,14 +1,19 @@
---- /tmp/process_cvs_commits.php	2005-01-17 20:51:29.343450373 +0200
-+++ ./misc/scm/process_cvs_commits.php	2005-01-17 21:40:37.000947744 +0200
-@@ -28,10 +28,8 @@
- // @(#) $Id$
+--- eventum/misc/scm/process_cvs_commits.php~	2007-02-15 01:28:29.670480306 +0200
++++ eventum/misc/scm/process_cvs_commits.php	2007-02-15 01:28:52.320991777 +0200
+@@ -28,15 +28,7 @@
  //
+ // @(#) $Id$
  
--$eventum_domain = 'rabbit.impleo.net';
--$eventum_relative_url = '/';
--$eventum_port = 80;
- 
+-
+-// URL to your Eventum installation.
+-// https is supported transparently by PHP 5 if you have openssl module enabled.
+-$eventum_url = 'http://rabbit.impleo.net/';
+-
+-
+-//
+-// DO NOT CHANGE ANYTHING AFTER THIS LINE
+-//
 +include '/etc/eventum/scm.php';
  
- //
- // DO NOT CHANGE ANYTHING AFTER THIS LINE
+ if (isset($eventum_url)) {
+     $data = parse_url($eventum_url);
