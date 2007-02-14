@@ -11,21 +11,21 @@
 %bcond_with	qmail	# build the router-qmail subpackage
 
 #define	_snap	20060921
-%define	_svn	20070209.3245
+%define	_svn	20070215.3253
 #define	_rc		RC3
-%define	_rel	5.181
+%define	_rel	0.183
 
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl.UTF-8):	Eventum - system śledzenia spraw/błędów
 Name:		eventum
-Version:	1.7.1
+Version:	2.0
 Release:	%{?_rc:%{_rc}.}%{_rel}%{?_snap:.%{_snap}}%{?_svn:.%{_svn}}
 License:	GPL
 Group:		Applications/WWW
 #Source0:	http://downloads.mysql.com/snapshots/eventum/%{name}-nightly-%{_snap}.tar.gz
 Source0:	%{name}-%{_svn}.tar.bz2
-# Source0-md5:	a2f0e18bfa2b236e5ed39befa4cede54
+# Source0-md5:	3afc86e7661b201f6966998e384b913c
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -865,12 +865,6 @@ if [ -f %{_webappdir}/cli.php.rpmsave ]; then
 	mv -f %{_webappdir}/cli.php.rpmsave %{_sysconfdir}/cli.php
 fi
 
-%triggerpostun irc -- %{name}-irc < 1.7.0-3.4
-if [ -f %{_webappdir}/irc.php.rpmsave ]; then
-	mv -f %{_sysconfdir}/irc.php{,.rpmnew}
-	mv -f %{_webappdir}/irc.php.rpmsave %{_sysconfdir}/irc.php
-fi
-
 %triggerpostun scm -- %{name}-scm < 1.7.1-2.70.20060724
 if [ -f %{_sysconfdir}/cvs.php.rpmsave ]; then
 	mv -f %{_sysconfdir}/scm.php{,.rpmnew}
@@ -878,12 +872,19 @@ if [ -f %{_sysconfdir}/cvs.php.rpmsave ]; then
 fi
 ln -sf process_cvs_commits $RPM_BUILD_ROOT%{_libdir}/scm
 
-%triggerpostun -- eventum < eventum-1.7.1-5.165
+%triggerpostun -- %{name} < 1.7.1-5.165
 %{__sed} -i -e '
 	/define.*APP_URL/d
 ' %{_webappdir}/config.php
 
 %triggerpostun irc -- %{name}-irc < 1.7.1-5.181
+# change from 1.7.0-3.4
+if [ -f %{_webappdir}/irc.php.rpmsave ]; then
+	mv -f %{_webappdir}/irc_config.php{,.rpmnew}
+	mv -f %{_webappdir}/irc.php.rpmsave %{_webappdir}/irc_config.php
+fi
+
+# change from 1.7.1-5.181
 if [ -f %{_sysconfdir}/irc.php.rpmsave ]; then
 	mv -f %{_webappdir}/irc_config.php{,.rpmnew}
 	mv -f %{_sysconfdir}/irc.php.rpmsave %{_webappdir}/irc_config.php
