@@ -13,7 +13,7 @@
 #define	_snap	20060921
 %define	_svn	20070215.3259
 #define	_rc		RC3
-%define	_rel	0.185
+%define	_rel	0.187
 
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
@@ -516,8 +516,6 @@ cp misc/localization/eventum.po misc/localization/ru/LC_MESSAGES/eventum.po
 cp misc/localization/eventum.po misc/localization/en_US/LC_MESSAGES/eventum.po
 
 sed -e '1s,#!.*/bin/php -q,#!%{_bindir}/php,' misc/cli/eventum > %{name}-cli
-sed -e '1i#!%{_bindir}/php' misc/scm/process_cvs_commits.php > process_cvs_commits
-cat misc/scm/process_svn_commits.php > process_svn_commits
 mv misc/cli/eventumrc_example eventumrc
 sed -i -e '1i#!%{_bindir}/php' misc/*.php
 chmod +x misc/*.php
@@ -561,8 +559,8 @@ install %{name}-cli $RPM_BUILD_ROOT%{_bindir}/%{name}
 install misc/irc/bot.php $RPM_BUILD_ROOT%{_sbindir}/%{name}-bot
 
 # scm
-install process_cvs_commits $RPM_BUILD_ROOT%{_libdir}/process_cvs_commits
-install process_svn_commits $RPM_BUILD_ROOT%{_libdir}/process_svn_commits
+install misc/scm/process_cvs_commits.php $RPM_BUILD_ROOT%{_libdir}/process_cvs_commits
+install misc/scm/process_svn_commits.php $RPM_BUILD_ROOT%{_libdir}/process_svn_commits
 ln -s process_cvs_commits $RPM_BUILD_ROOT%{_libdir}/scm
 install %{SOURCE6} $RPM_BUILD_ROOT%{_sysconfdir}/scm.php
 
