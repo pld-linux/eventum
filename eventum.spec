@@ -5,15 +5,14 @@
 #  - dynCalendar.js (http://www.phpguru.org/dyncalendar.html)
 #  - overLIB 3.5.1 (http://www.bosrup.com/web/overlib/)
 #  - A few other small javascript libraries
-# - 64bit platforms beware? http://bugs.php.net/bug.php?id=30215 (it's actually Smarty related problem)
 #
 # Conditional build:
 %bcond_with	qmail	# build the router-qmail subpackage
 
 #define	_snap	20060921
-%define	_svn	20070215.3259
+%define	_svn	20070305.3262
 #define	_rc		RC3
-%define	_rel	0.187
+%define	_rel	0.189
 
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
@@ -25,7 +24,7 @@ License:	GPL
 Group:		Applications/WWW
 #Source0:	http://downloads.mysql.com/snapshots/eventum/%{name}-nightly-%{_snap}.tar.gz
 Source0:	%{name}-%{_svn}.tar.bz2
-# Source0-md5:	385f0e67a53086c7f7ae80a916464fdd
+# Source0-md5:	66c32cc70128a303c0b242120e614448
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
