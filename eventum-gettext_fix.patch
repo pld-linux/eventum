@@ -1,0 +1,12 @@
+diff -urN eventum.backup.3/htdocs/stats_chart.php eventum/htdocs/stats_chart.php
+--- eventum.backup.3/stats_chart.php	2007-03-06 09:24:49.000000000 +0100
++++ eventum/stats_chart.php	2007-03-06 15:05:17.000000000 +0100
+@@ -52,7 +52,7 @@
+ $colors = array();
+ if ($_GET["plot"] == "status") {
+     $data = Stats::getAssocStatus();
+-    $graph_title = "Issues by Status";
++    $graph_title = ev_gettext("Issues by Status");
+     foreach ($data as $sta_title => $trash) {
+         $sta_id = Status::getStatusID($sta_title);
+         $status_details = Status::getDetails($sta_id);
