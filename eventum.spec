@@ -12,7 +12,7 @@
 #define	_snap	20060921
 %define	_svn	20070305.3262
 #define	_rc		RC3
-%define	_rel	0.189
+%define	_rel	0.190
 
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
@@ -39,6 +39,7 @@ Source12:	%{name}-upgrade.sh
 Source13:	%{name}-router-postfix.sh
 Source14:	%{name}.logrotate
 Source15:	%{name}-lighttpd.conf
+Source16:	%{name}-pl_PL.po
 Patch0:		%{name}-lf.patch
 Patch1:		%{name}-timetracking-advanced-logic.patch
 Patch2:		%{name}-email-notify-display.patch
@@ -55,6 +56,8 @@ Patch106:	%{name}-mem-limits.patch
 Patch107:	%{name}-gettext.patch
 # some tests
 Patch200:	%{name}-fixed-nav.patch
+Patch300:	%{name}-gettext_fix.patch
+Patch301:	%{name}-pl_PL.patch
 URL:		http://dev.mysql.com/downloads/other/eventum/
 BuildRequires:	gettext-devel
 BuildRequires:	rpm-php-pearprov >= 4.0.2-98
@@ -489,6 +492,8 @@ rm rpc/xmlrpc_client.php
 %patch105 -p1
 %patch106 -p1
 %patch107 -p1
+%patch300 -p1
+%patch301 -p1
 
 cat <<'EOF'> mysql-permissions.sql
 # use this schema if you want to grant permissions manually instead of using setup
@@ -504,6 +509,7 @@ mv misc/localization/it{_IT,}
 mv misc/localization/nl{_NL,}
 mv misc/localization/ru{_RU,}
 mv misc/localization/sv{_SE,}
+mkdir -p misc/localization/pl/LC_MESSAGES
 
 # oops, the file got truncated - quick fix
 cp misc/localization/eventum.po misc/localization/de/LC_MESSAGES/eventum.po
@@ -513,6 +519,8 @@ cp misc/localization/eventum.po misc/localization/fr/LC_MESSAGES/eventum.po
 cp misc/localization/eventum.po misc/localization/nl/LC_MESSAGES/eventum.po
 cp misc/localization/eventum.po misc/localization/ru/LC_MESSAGES/eventum.po
 cp misc/localization/eventum.po misc/localization/en_US/LC_MESSAGES/eventum.po
+
+install %{SOURCE16} misc/localization/pl/LC_MESSAGES/eventum.po
 
 sed -e '1s,#!.*/bin/php -q,#!%{_bindir}/php,' misc/cli/eventum > %{name}-cli
 mv misc/cli/eventumrc_example eventumrc
