@@ -1,0 +1,38 @@
+--- eventum/include/class.mail.php~	2007-03-08 13:27:15.425240847 +0200
++++ eventum/include/class.mail.php	2007-03-08 13:26:30.000000000 +0200
+@@ -230,6 +230,7 @@
+         $t = Mail_RFC822::parseAddressList($address, null, null, false);
+         if (PEAR::isError($t)) {
+             Error_Handler::logError(array($t->getMessage(), $t->getDebugInfo()), __FILE__, __LINE__);
++            return $t;
+         }
+         if ($multiple) {
+             $returns = array();
+@@ -279,6 +280,10 @@
+     function getName($address, $multiple = false)
+     {
+         $info = Mail_API::getAddressInfo($address, true);
++        if (PEAR::isError($info)) {
++            Error_Handler::logError(array($info->getMessage(), $info->getDebugInfo()), __FILE__, __LINE__);
++            return $info;
++        }
+         $returns = array();
+         foreach ($info as $row) {
+             if (!empty($row['sender_name'])) {
+--- eventum/include/class.support.php~	2007-03-08 13:27:16.435263463 +0200
++++ eventum/include/class.support.php	2007-03-08 13:26:30.000000000 +0200
+@@ -1253,7 +1253,13 @@
+                 if ((empty($res[$i]["sup_to"])) && (!empty($res[$i]["sup_iss_id"]))) {
+                     $res[$i]["sup_to"] = "Notification List";
+                 } else {
+-                    $res[$i]["sup_to"] = Mime_Helper::fixEncoding(Mail_API::getName($res[$i]["sup_to"]));
++                    $to = Mail_API::getName($res[$i]["sup_to"]);
++                    # FIXME: just ignore the unformattable header?
++                    if (PEAR::isError($to)) {
++                        Error_Handler::logError(array($to->getMessage(), $to->getDebugInfo()), __FILE__, __LINE__);
++                    } else {
++                        $res[$i]['sup_to'] = Mime_Helper::fixEncoding($to);
++                    }
+                 }
+                 if (Customer::hasCustomerIntegration($prj_id)) {
+                     @$res[$i]['customer_title'] = $company_titles[$res[$i]['sup_customer_id']];
