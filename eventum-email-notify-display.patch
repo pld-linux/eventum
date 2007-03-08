@@ -60,29 +60,6 @@
          "categories"   => Category::getAssocList($prj_id),
          "priorities"   => Priority::getAssocList($prj_id),
          "status"       => $statuses,
---- eventum/templates/update_form.tpl.html~	2007-03-08 19:47:00.217544732 +0200
-+++ eventum/templates/update_form.tpl.html	2007-03-08 19:48:10.199121024 +0200
-@@ -29,10 +29,18 @@
-               {else}
-                 <br /><br />
-               {/if}
-+ 
-+              {if $notify_list|@count > 0}
-+                <b>{t}E-mail about issue update was sent to:{/t}</b><br />
-+                {foreach from=$notify_list item=email_address}
-+                  &nbsp;&nbsp;{$email_address|escape:"html"}<br />
-+                {/foreach}
-+                <br />
-+              {/if}
- 
-               <b>
--                <a href="update.php?id={$smarty.post.issue_id}" class="link">{t 1=$smarty.post.issue_id}Update Issue #%1{/t}</a><br />
--                <a href="view.php?id={$smarty.post.issue_id}" class="link">{t 1=$smarty.post.issue_id}Return to Issue #%1 Details Page{/t}</a>
-+                <a href="view.php?id={$smarty.post.issue_id}" class="link">{t 1=$smarty.post.issue_id}Return to Issue #%1 Details Page{/t}</a><br />
-+                <a href="update.php?id={$smarty.post.issue_id}" class="link">{t 1=$smarty.post.issue_id}Update Issue #%1{/t}</a>
-               </b>
-             {/if}
-           </td>
 --- eventum-20060830/close.php	2006-09-04 14:46:53.766630207 +0300
 +++ eventum-20060830/close.php	2006-09-04 13:57:56.000000000 +0300
 @@ -68,9 +68,12 @@
@@ -123,3 +100,20 @@
              <ul>
                <li><a href="view.php?id={$smarty.post.issue_id}" class="link">{t}Open the Issue Details Page{/t}</a></li>
                <li><a href="list.php" class="link">{t}Open the Issue Listing Page{/t}</a></li>
+--- eventum/templates/update_form.tpl.html~	2007-03-08 20:20:57.093496949 +0200
++++ eventum/templates/update_form.tpl.html	2007-03-08 20:21:22.614073459 +0200
+@@ -34,6 +34,14 @@
+                 <br /><br />
+               {/if}
+ 
++              {if $notify_list|@count > 0}
++                <b>{t}E-mail about issue update was sent to:{/t}</b><br />
++                {foreach from=$notify_list item=email_address}
++                  &nbsp;&nbsp;{$email_address|escape:"html"}<br />
++                {/foreach}
++                <br />
++              {/if}
++
+               <div align="center">
+                 <b>
+                   <a href="view.php?id={$smarty.post.issue_id}" class="link">{t 1=$smarty.post.issue_id}Return to Issue #%1 Details Page{/t}</a><br />
