@@ -1,4 +1,4 @@
-include javascript files client side, not from smarty.
+include javascript files client side, not from Smarty.
 as i've separated very clearly files available as htdocs and files that are not.
 
 and besides, js files should be (can be) cached at client side, which is good.
@@ -76,3 +76,15 @@ glen 2005-07-30, 2005-11-30
  <br />
  <form method="post" action="{$smarty.server.PHP_SELF}" name="recent_activity">
  <input type="hidden" name="cat" value="generate">
+--- eventum/templates/update.tpl.html~	2007-03-08 19:56:02.839767679 +0200
++++ eventum/templates/update.tpl.html	2007-03-08 19:56:04.349801696 +0200
+@@ -1,8 +1,6 @@
+ {include file="header.tpl.html"}
+ {include file="navigation.tpl.html"}
+-<script language="javascript">
+-{include file="js/httpclient.js"}
+-</script>
++<script src="{$rel_url}js/httpclient.js"></script>
+ 
+ {if $issue == ""}
+   <table width="300" align="center">

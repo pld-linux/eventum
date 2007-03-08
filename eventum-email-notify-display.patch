@@ -60,13 +60,13 @@
          "categories"   => Category::getAssocList($prj_id),
          "priorities"   => Priority::getAssocList($prj_id),
          "status"       => $statuses,
---- eventum/templates/update_form.tpl.html	2007-03-08 01:31:42.106275486 +0200
-+++ eventum/templates/update_form.tpl.html	2007-03-08 14:03:42.716418728 +0200
-@@ -15,9 +15,17 @@
-                 <br />{t}Also, all issues that are marked as duplicates from this one were updated as well.{/t}
+--- eventum/templates/update_form.tpl.html~	2007-03-08 19:47:00.217544732 +0200
++++ eventum/templates/update_form.tpl.html	2007-03-08 19:48:10.199121024 +0200
+@@ -29,10 +29,18 @@
+               {else}
+                 <br /><br />
                {/if}
-               <br /><br />
-+
++ 
 +              {if $notify_list|@count > 0}
 +                <b>{t}E-mail about issue update was sent to:{/t}</b><br />
 +                {foreach from=$notify_list item=email_address}
@@ -74,6 +74,7 @@
 +                {/foreach}
 +                <br />
 +              {/if}
+ 
                <b>
 -                <a href="update.php?id={$smarty.post.issue_id}" class="link">{t 1=$smarty.post.issue_id}Update Issue #%1{/t}</a><br />
 -                <a href="view.php?id={$smarty.post.issue_id}" class="link">{t 1=$smarty.post.issue_id}Return to Issue #%1 Details Page{/t}</a>
