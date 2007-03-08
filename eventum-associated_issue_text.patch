@@ -36,7 +36,7 @@ Index: js/validation.js
 +        last_issue_number_validation_value = form_value;
 +    }
 +    validate_issue_http_client = new HTTPClient();
-+    validate_issue_http_client.loadRemoteContent(baseURL + 'misc/validate.php?action=validateIssueNumbers&values=' + 
++    validate_issue_http_client.loadRemoteContent(baseURL + '/validate.php?action=validateIssueNumbers&values=' + 
 +        form_value + '&field_name=' + field_name + '&form_name=' + form_name, 'displayIssueFieldValidation');
 +}
  
@@ -101,10 +101,10 @@ Index: include/class.issue.php
                      if (!in_array($associated_id, $current['associated_issues'])) {
                          Issue::addAssociation($issue_id, $associated_id, $usr_id);
                      } else {
-Index: misc/validate.php
+Index: validate.php
 ===================================================================
---- misc/validate.php	(revision 0)
-+++ misc/validate.php	(revision 0)
+--- validate.php	(revision 0)
++++ validate.php	(revision 0)
 @@ -0,0 +1,63 @@
 +<?php
 +/* vim: set expandtab tabstop=4 shiftwidth=4 encoding=utf-8: */
@@ -136,7 +136,7 @@ Index: misc/validate.php
 +// @(#) $Id$
 +//
 +
-+require_once(dirname(__FILE__) . '/../init.php');
++require_once(dirname(__FILE__) . '/init.php');
 +include_once(APP_INC_PATH . "class.auth.php");
 +include_once(APP_INC_PATH . "class.issue.php");
 +include_once(APP_INC_PATH . "db_access.php");
