@@ -8,12 +8,11 @@
          }
          if ($multiple) {
              $returns = array();
-@@ -279,6 +280,10 @@
+@@ -279,6 +280,9 @@
      function getName($address, $multiple = false)
      {
          $info = Mail_API::getAddressInfo($address, true);
 +        if (PEAR::isError($info)) {
-+            Error_Handler::logError(array($info->getMessage(), $info->getDebugInfo()), __FILE__, __LINE__);
 +            return $info;
 +        }
          $returns = array();
