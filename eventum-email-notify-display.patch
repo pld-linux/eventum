@@ -60,9 +60,9 @@
          "categories"   => Category::getAssocList($prj_id),
          "priorities"   => Priority::getAssocList($prj_id),
          "status"       => $statuses,
---- eventum/templates/update_form.tpl.html~	2007-03-08 01:30:14.584304536 +0200
-+++ eventum/templates/update_form.tpl.html	2007-03-08 01:31:42.106275486 +0200
-@@ -15,6 +15,14 @@
+--- eventum/templates/update_form.tpl.html	2007-03-08 01:31:42.106275486 +0200
++++ eventum/templates/update_form.tpl.html	2007-03-08 14:03:42.716418728 +0200
+@@ -15,9 +15,17 @@
                  <br />{t}Also, all issues that are marked as duplicates from this one were updated as well.{/t}
                {/if}
                <br /><br />
@@ -75,8 +75,13 @@
 +                <br />
 +              {/if}
                <b>
-                 <a href="update.php?id={$smarty.post.issue_id}" class="link">{t 1=$smarty.post.issue_id}Update Issue #%1{/t}</a><br />
-                 <a href="view.php?id={$smarty.post.issue_id}" class="link">{t 1=$smarty.post.issue_id}Return to Issue #%1 Details Page{/t}</a>
+-                <a href="update.php?id={$smarty.post.issue_id}" class="link">{t 1=$smarty.post.issue_id}Update Issue #%1{/t}</a><br />
+-                <a href="view.php?id={$smarty.post.issue_id}" class="link">{t 1=$smarty.post.issue_id}Return to Issue #%1 Details Page{/t}</a>
++                <a href="view.php?id={$smarty.post.issue_id}" class="link">{t 1=$smarty.post.issue_id}Return to Issue #%1 Details Page{/t}</a><br />
++                <a href="update.php?id={$smarty.post.issue_id}" class="link">{t 1=$smarty.post.issue_id}Update Issue #%1{/t}</a>
+               </b>
+             {/if}
+           </td>
 --- eventum-20060830/close.php	2006-09-04 14:46:53.766630207 +0300
 +++ eventum-20060830/close.php	2006-09-04 13:57:56.000000000 +0300
 @@ -68,9 +68,12 @@
