@@ -12,7 +12,7 @@
 #define	_snap	20060921
 %define	_svn	20070308.3269
 #define	_rc		RC3
-%define	_rel	0.194
+%define	_rel	0.196
 
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
@@ -45,6 +45,7 @@ Patch2:		%{name}-email-notify-display.patch
 Patch3:		%{name}-backtraces.patch
 Patch4:		%{name}-errorhandler.patch
 Patch5:		%{name}-utf_on_charts.patch
+Patch6:		%{name}-propagate-error.patch
 # packaging patches that probably never go upstream
 Patch100:	%{name}-paths.patch
 Patch101:	%{name}-cvs-config.patch
@@ -479,6 +480,7 @@ rm rpc/xmlrpc_client.php
 %patch3 -p1
 %patch4 -p1
 %patch5 -p1
+%patch6 -p1
 
 #%patch200 -p1
 
