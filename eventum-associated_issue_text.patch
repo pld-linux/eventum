@@ -1,0 +1,252 @@
+# This is a BitKeeper generated diff -Nru style patch.
+#
+# ChangeSet
+#   2005/06/22 01:27:38-05:00 bryan@hermes. 
+#   Changed associated issues to be a text field.
+# 
+# include/class.issue.php
+#   2005/06/22 01:27:36-05:00 bryan@hermes. +18 -3
+#   Handle associated issues being submitted as a text field instead of a select box.
+# 
+# js/validation.js
+#   2005/06/22 01:27:37-05:00 bryan@hermes. +29 -0
+#   Added method to check via AJAX if an issue number exists.
+# 
+# misc/validate.php
+#   2005/06/22 01:27:37-05:00 bryan@hermes. +63 -0
+#   New BitKeeper file ``misc/validate.php''
+# 
+# misc/validate.php
+#   2005/06/22 01:27:37-05:00 bryan@hermes. +0 -0
+#   BitKeeper file C:/work/eventum-internal/misc/validate.php
+# 
+# templates/en/update.tpl.html
+#   2005/06/22 01:27:37-05:00 bryan@hermes. +3 -0
+#   Inlcude httpclient javascript
+# 
+# templates/en/update_form.tpl.html
+#   2005/06/22 01:27:37-05:00 bryan@hermes. +17 -6
+#   Changed associated issues to be a text field.
+# 
+# update.php
+#   2005/06/22 01:27:37-05:00 bryan@hermes. +1 -1
+#   Changed associated issues to be a text field.
+# 
+diff -Nru a/include/class.issue.php b/include/class.issue.php
+--- a/include/class.issue.php	2007-03-08 10:40:23 -06:00
++++ b/include/class.issue.php	2007-03-08 10:40:23 -06:00
+@@ -1085,6 +1085,9 @@
+     function update($issue_id)
+     {
+         global $HTTP_POST_VARS;
++        global $errors;
++        
++        $errors = array();
+         
+         $issue_id = Misc::escapeInteger($issue_id);
+ 
+@@ -1093,12 +1096,24 @@
+         // get all of the 'current' information of this issue
+         $current = Issue::getDetails($issue_id);
+         // update the issue associations
+-        $association_diff = Misc::arrayDiff($current['associated_issues'], @$HTTP_POST_VARS['associated_issues']);
++        if (empty($HTTP_POST_VARS['associated_issues'])) {
++            $associated_issues = array();
++        } else {
++            $associated_issues = explode(',', @$HTTP_POST_VARS['associated_issues']);
++            // make sure all associated issues are valid (and in this project)
++            for ($i = 0; $i < count($associated_issues); $i++) {
++                if (!Issue::exists(trim($associated_issues[$i]))) {
++                    $errors['Associated Issues'][] = 'Issue #' . $associated_issues[$i] . ' does not exist and was removed from the list of associated issues.';
++                    unset($associated_issues[$i]);
++                } 
++            }
++        }
++        $association_diff = Misc::arrayDiff($current['associated_issues'], $associated_issues);
+         if (count($association_diff) > 0) {
+             // go through the new assocations, if association already exists, skip it
+             $associations_to_remove = $current['associated_issues'];
+-            if (count(@$HTTP_POST_VARS['associated_issues']) > 0) {
+-                foreach ($HTTP_POST_VARS['associated_issues'] as $index => $associated_id) {
++            if (count($associated_issues) > 0) {
++                foreach ($associated_issues as $index => $associated_id) {
+                     if (!in_array($associated_id, $current['associated_issues'])) {
+                         Issue::addAssociation($issue_id, $associated_id, $usr_id);
+                     } else {
+diff -Nru a/js/validation.js b/js/validation.js
+--- a/js/validation.js	2007-03-08 10:40:23 -06:00
++++ b/js/validation.js	2007-03-08 10:40:23 -06:00
+@@ -1,5 +1,34 @@
+ <!--
+ // @(#) $Id$
++
++last_issue_number_validation_value = '';
++function validateIssueNumberField(baseURL, form_name, field_name)
++{
++    form_value = getFormElement(getForm(form_name), field_name).value;
++    if (last_issue_number_validation_value == form_value) {
++        return;
++    } else {
++        last_issue_number_validation_value = form_value;
++    }
++    validate_issue_http_client = new HTTPClient();
++    validate_issue_http_client.loadRemoteContent(baseURL + 'misc/validate.php?action=validateIssueNumbers&values=' + 
++        form_value + '&field_name=' + field_name + '&form_name=' + form_name, 'displayIssueFieldValidation');
++}
++
++function displayIssueFieldValidation(response)
++{
++    var chunks = response.responseText.split(':',3);
++    f = getForm(chunks[0]);
++    error_span = getPageElement(chunks[1] + '_error');
++    if (chunks[2] != 'ok') {
++        selectField(f, chunks[1]);
++        error_span.innerHTML = '<b>Error</b>: The following issues are invalid: ' + chunks[2];
++    } else {
++        errorDetails(f, chunks[0], false);
++        error_span.innerHTML = '';
++    }
++}
++
+ function isValidDate(f, field_prefix)
+ {
+     var selected_date = new Date();
+diff -Nru a/misc/validate.php b/misc/validate.php
+--- /dev/null	Wed Dec 31 16:00:00 196900
++++ b/misc/validate.php	2007-03-08 10:40:23 -06:00
+@@ -0,0 +1,63 @@
++<?php
++/* vim: set expandtab tabstop=4 shiftwidth=4: */
++// +----------------------------------------------------------------------+
++// | Eventum - Issue Tracking System                                      |
++// +----------------------------------------------------------------------+
++// | Copyright (c) 2003, 2004 MySQL AB                                    |
++// |                                                                      |
++// | This program is free software; you can redistribute it and/or modify |
++// | it under the terms of the GNU General Public License as published by |
++// | the Free Software Foundation; either version 2 of the License, or    |
++// | (at your option) any later version.                                  |
++// |                                                                      |
++// | This program is distributed in the hope that it will be useful,      |
++// | but WITHOUT ANY WARRANTY; without even the implied warranty of       |
++// | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        |
++// | GNU General Public License for more details.                         |
++// |                                                                      |
++// | You should have received a copy of the GNU General Public License    |
++// | along with this program; if not, write to:                           |
++// |                                                                      |
++// | Free Software Foundation, Inc.                                       |
++// | 59 Temple Place - Suite 330                                          |
++// | Boston, MA 02111-1307, USA.                                          |
++// +----------------------------------------------------------------------+
++// | Authors: Bryan Alsdorf <bryan@mysql.com>                             |
++// +----------------------------------------------------------------------+
++//
++// @(#) $Id$
++//
++include_once("../config.inc.php");
++include_once(APP_INC_PATH . "class.auth.php");
++include_once(APP_INC_PATH . "class.issue.php");
++include_once(APP_INC_PATH . "db_access.php");
++
++Auth::checkAuthentication(APP_COOKIE);
++
++$valid_functions = array('validateIssueNumbers');
++$action = Misc::escapeString($_REQUEST['action']);
++if (in_array($action, $valid_functions)) {
++    echo $action();
++} else {
++    echo "ERROR: Unable to call function $action";
++}
++exit;
++
++function validateIssueNumbers()
++{
++    $issues = @explode(',', $_REQUEST['values']);
++    $bad_issues = array();
++    if (count($issues) > 0) {
++        for ($i = 0; $i < count($issues); $i++) {
++            if (!Issue::exists(trim($issues[$i]))) {
++                $bad_issues[] = $issues[$i];
++            }
++        }
++    }
++    if (count($bad_issues) > 0) {
++        return $_REQUEST['form_name'] . ':' . $_REQUEST['field_name'] . ':' . join(', ', $bad_issues);
++    } else {
++        return $_REQUEST['form_name'] . ':' . $_REQUEST['field_name'] . ':' . 'ok';
++    }
++}
++?>
+\ No newline at end of file
+diff -Nru a/templates/en/update.tpl.html b/templates/en/update.tpl.html
+--- a/templates/en/update.tpl.html	2007-03-08 10:40:23 -06:00
++++ b/templates/en/update.tpl.html	2007-03-08 10:40:23 -06:00
+@@ -1,5 +1,8 @@
+ {include file="header.tpl.html"}
+ {include file="navigation.tpl.html"}
++<script language="javascript">
++{include file="js/httpclient.js"}
++</script>
+ 
+ {if $issue == ""}
+   <table width="300" align="center">
+diff -Nru a/templates/en/update_form.tpl.html b/templates/en/update_form.tpl.html
+--- a/templates/en/update_form.tpl.html	2007-03-08 10:40:23 -06:00
++++ b/templates/en/update_form.tpl.html	2007-03-08 10:40:23 -06:00
+@@ -14,7 +14,20 @@
+               {if $has_duplicates == 'yes'}
+                 Also, all issues that are marked as duplicates from this one were updated as well. 
+               {/if}
+-              <br /><br />
++              {if $errors|@count > 0}
++              <br /><br />However, there are some warnings you should be aware of.<br />
++              <ul>
++              {foreach from=$errors key=section item=sub_errors}
++                <li>{$section}<br />
++                  {foreach from=$sub_errors item=msg}
++                    &nbsp;&nbsp;&nbsp;&nbsp;{$msg}<br />
++                  {/foreach}
++                </li>
++              {/foreach}
++              </ul>
++              {else}
++                <br /><br />
++              {/if}
+               <a href="view.php?id={$smarty.post.issue_id}" class="link">Return to Issue #{$smarty.post.issue_id} Details Page</a>
+             {/if}
+           </td>
+@@ -175,11 +188,9 @@
+             <nobr><b>Associated Issues:</b></nobr>
+           </td>
+           <td bgcolor="{$light_color}">
+-            <select size="4" multiple name="associated_issues[]" class="default" onChange="showSelections('update_form', 'associated_issues[]')">
+-              {html_options values=$issues output=$issues selected=$issue.associated_issues}
+-            </select><input type="button" class="shortcut" value="Clear Selections" onClick="javascript:clearSelectedOptions(getFormElement(this.form, 'associated_issues[]'));showSelections('update_form', 'associated_issues[]');"><br />
+-            {include file="lookup_field.tpl.html" lookup_field_name="search" lookup_field_target="associated_issues[]" callbacks="new Array('showSelections(\'update_form\', \'associated_issues[]\')')"}
+-            <div class="default" id="selection_associated_issues[]">{if $issue.associated_issues}Current Selections: {section name="i" loop=$issue.associated_issues}{if %i.rownum% > 1},&nbsp;{/if}{$issue.associated_issues[i]}{/section}{/if}</div>
++            <input type="text" name="associated_issues" value="{", "|join:$issue.associated_issues}" class="default" onBlur="validateIssueNumberField('{$rel_url}', 'update_form', 'associated_issues')">
++            {include file="error_icon.tpl.html" field="associated_issues"}
++            <span id="associated_issues_error" class="default"></span>
+           </td>
+           {/if}
+           <input type="hidden" name="keep" value="yes">
+diff -Nru a/update.php b/update.php
+--- a/update.php	2007-03-08 10:40:23 -06:00
++++ b/update.php	2007-03-08 10:40:23 -06:00
+@@ -69,6 +69,7 @@
+     if (@$HTTP_POST_VARS["cat"] == "update") {
+         $res = Issue::update($HTTP_POST_VARS["issue_id"]);
+         $tpl->assign("update_result", $res);
++        $tpl->assign("errors", $errors);
+         if (Issue::hasDuplicates($HTTP_POST_VARS["issue_id"])) {
+             $tpl->assign("has_duplicates", "yes");
+         }
+@@ -101,7 +102,6 @@
+         "resolutions"  => Resolution::getAssocList(),
+         "users"        => Project::getUserAssocList($prj_id, 'active', User::getRoleID('Standard User')),// XXX: Internal only, GPL should have 'Customer' instead of standard user.
+         "issues"       => Issue::getColList(),
+-        "assoc_issues" => Issue::getAssocList(),
+         "one_week_ts"  => time() + (7 * DAY),
+         "allow_unassigned_issues"   =>  @$setup["allow_unassigned_issues"],
+         "groups"       => Group::getAssocList($prj_id)
