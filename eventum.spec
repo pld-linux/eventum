@@ -10,9 +10,9 @@
 %bcond_with	qmail	# build the router-qmail subpackage
 
 #define	_snap	20060921
-%define	_svn	20070308.3273
+%define	_svn	20070312.3276
 #define	_rc		RC3
-%define	_rel	0.206
+%define	_rel	0.211
 
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
@@ -24,7 +24,7 @@ License:	GPL
 Group:		Applications/WWW
 #Source0:	http://downloads.mysql.com/snapshots/eventum/%{name}-nightly-%{_snap}.tar.gz
 Source0:	%{name}-%{_svn}.tar.bz2
-# Source0-md5:	f4920575cee36a977dbf99d82540cfcc
+# Source0-md5:	5d29d402072d647c25a47e0d26bbb7db
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -47,6 +47,7 @@ Patch4:		%{name}-errorhandler.patch
 Patch5:		%{name}-utf_on_charts.patch
 Patch6:		%{name}-propagate-error.patch
 Patch7:		%{name}-associated_issue_text.patch
+Patch8:		%{name}-mail-aliases.patch
 # packaging patches that probably never go upstream
 Patch100:	%{name}-paths.patch
 Patch101:	%{name}-cvs-config.patch
@@ -96,7 +97,7 @@ Requires:	webserver(php) >= 4.2.0
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
-%define		_noautoreq	'pear(/etc/webapps/.*)' 'pear(jpgraph_dir.php)' 'pear(.*Smarty.class.php)' 'pear(Benchmark/.*)'
+%define		_noautoreq	'pear(/etc/webapps/.*)' 'pear(%{_appdir}/.*)' 'pear(jpgraph_dir.php)' 'pear(.*Smarty.class.php)' 'pear(Benchmark/.*)'
 
 %define		_libdir		%{_prefix}/lib/%{name}
 %define		_appdir		%{_datadir}/%{name}
@@ -475,6 +476,7 @@ rm rpc/xmlrpc_client.php
 
 # bug fixes.
 %patch7 -p0
+%patch8 -p0
 %patch0 -p1
 
 %patch1 -p1
@@ -525,6 +527,8 @@ sed -e '1s,#!.*/bin/php -q,#!%{_bindir}/php,' misc/cli/eventum > %{name}-cli
 mv misc/cli/eventumrc_example eventumrc
 sed -i -e '1i#!%{_bindir}/php' misc/*.php
 chmod +x misc/*.php
+
+sed -i -e "s,require_once.*init.php.*;,require_once '%{_appdir}/htdocs/init.php';," misc/upgrade/*/*.php
 
 # remove backups from patching as we use globs to package files to buildroot
 find '(' -name '*~' -o -name '*.orig' ')' | xargs -r rm -v
@@ -809,6 +813,11 @@ EOF
 
 %triggerpostun -- eventum < 1.7.1-4.132.20061119.3143
 %{_appdir}/upgrade/upgrade.sh %{_appdir}/upgrade/v1.7.1_to_v2.0 <<EOF
+database_changes.php Perform database changes
+EOF
+
+%triggerpostun -- eventum < 2.0-0.211
+%{_appdir}/upgrade/upgrade.sh %{_appdir}/upgrade/v2.0_to_v2.0.1 <<EOF
 database_changes.php Perform database changes
 EOF
 
