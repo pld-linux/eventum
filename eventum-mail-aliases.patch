@@ -88,7 +88,7 @@ Index: include/class.support.php
              if (!empty($to)) {
                  $to_addresses = Mail_API::getAddressInfo($to, true);
 --- /dev/null	2006-03-28 14:00:37.387408000 +0300
-+++ misc/upgrade/v2.0_to_2.0.1/index.html	2007-03-12 21:05:51.003840510 +0200
++++ misc/upgrade/v2.0_to_v2.0.1/index.html	2007-03-12 21:05:51.003840510 +0200
 @@ -0,0 +1,13 @@
 +<html>
 +<head>
@@ -104,7 +104,7 @@ Index: include/class.support.php
 +</body>
 +</html>
 --- /dev/null	2006-03-28 14:00:37.387408000 +0300
-+++ misc/upgrade/v2.0_to_2.0.1/database_changes.php	2007-03-12 21:06:40.874963549 +0200
++++ misc/upgrade/v2.0_to_v2.0.1/database_changes.php	2007-03-12 21:06:40.874963549 +0200
 @@ -0,0 +1,18 @@
 +<?php
 +require_once(dirname(__FILE__) . '/../../../init.php');
