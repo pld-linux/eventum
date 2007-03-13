@@ -14,22 +14,24 @@ Index: templates/manage/projects.tpl.html
 ===================================================================
 --- templates/manage/projects.tpl.html	(revisione 3273)
 +++ templates/manage/projects.tpl.html	(copia locale)
-@@ -43,6 +43,14 @@
+@@ -43,6 +43,16 @@
                        alert('{/literal}{t escape=js}Please enter a valid outgoing sender address for this project.{/t}{literal}');
                        return false;
                    }
-+                  aliases = f.mail_aliases.value.split(',');
-+                  for (idx in aliases) {
-+	                  if (!isEmail(aliases[idx])) {
-+	                      selectField(f, 'mail_aliases');
-+	                      alert('{/literal}{t escape=js}Please enter a comma separated list of valid mail address aliases for this project{/t}{literal}');
-+	                      return false;
-+	                  }
-+                  }
++                  if (f.mail_aliases.value) {
++                      aliases = f.mail_aliases.value.split(',');
++                      for (idx in aliases) {
++	                      if (!isEmail(aliases[idx])) {
++	                          selectField(f, 'mail_aliases');
++	                          alert('{/literal}{t escape=js}Please enter a comma separated list of valid mail address aliases for this project{/t}{literal}');
++	                          return false;
++	                      }
++                      }
++		  }
                    return true;
                }
                function checkLeadSelection(f)
-@@ -191,6 +199,15 @@
+@@ -191,6 +201,15 @@
                  </td>
                </tr>
                <tr>
