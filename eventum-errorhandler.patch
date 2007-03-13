@@ -1,5 +1,3 @@
-Index: include/class.mail_queue.php
-===================================================================
 --- include/class.mail_queue.php	(revision 3278)
 +++ include/class.mail_queue.php	(working copy)
 @@ -236,11 +236,9 @@
@@ -17,10 +15,8 @@ Index: include/class.mail_queue.php
              return $res;
          } else {
              return true;
-Index: include/class.error_handler.php
-===================================================================
---- include/class.error_handler.php	(revision 3278)
-+++ include/class.error_handler.php	(working copy)
+--- include/class.error_handler.php	(working copy)
++++ include/class.error_handler.php	2007-03-14 00:15:44.804500919 +0200
 @@ -32,8 +32,6 @@
  require_once(APP_INC_PATH . "class.mail.php");
  require_once(APP_INC_PATH . "class.setup.php");
@@ -30,7 +26,7 @@ Index: include/class.error_handler.php
  /**
   * Class to manage all tasks related to error conditions of the site, such as
   * logging facilities or alert notifications to the site administrators.
-@@ -45,126 +43,159 @@
+@@ -45,126 +43,167 @@
  class Error_Handler
  {
      /**
@@ -192,7 +188,15 @@ Index: include/class.error_handler.php
 +        }
 +
 +        if (strlen($error_msg) > 1024) {
-+            $msg .= "'" . substr($error_msg, 0, 1024) . "' (truncated)\n";
++            $msg .= "'" . substr($error_msg, 0, 1024) . "' ...";
++
++            // try to find native code from DB error
++            // [nativecode=1153 ** Got a packet bigger than 'max_allowed_packet' bytes]'
++            $nativecode = strstr($error_msg, '[nativecode=');
++            if ($nativecode) {
++                $msg .= ' ' . $nativecode;
++            }
++            $msg .= "\n";
          } else {
 -            $msg .= "'$error_msg'\n\n";
 +            $msg .= "'" . $error_msg . "'\n";
@@ -213,6 +217,10 @@ Index: include/class.error_handler.php
 -            $contents = ob_get_contents();
 -            $msg .= $contents;
 -            ob_end_clean();
+-        }
+-        $fp = @fopen(APP_ERROR_LOG, "a");
+-        @fwrite($fp, $msg);
+-        @fclose($fp);
 +            array_splice($backtrace, 0, 2);
 +
 +            // we process backtrace to truncate large blobs
@@ -253,10 +261,7 @@ Index: include/class.error_handler.php
 +            }
 +
 +            $msg .= "\n\n";
-         }
--        $fp = @fopen(APP_ERROR_LOG, "a");
--        @fwrite($fp, $msg);
--        @fclose($fp);
++        }
 +        return $msg;
      }
  }
