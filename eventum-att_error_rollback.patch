@@ -1,35 +1,5 @@
---- eventum/include/class.attachment.php	2007-03-13 22:51:55.221849908 +0200
-+++ eventum/include/class.attachment.php	2007-03-13 23:55:08.216793025 +0200
-@@ -433,6 +434,11 @@
-      * Method used to associate an attachment to an issue, and all of its
-      * related files. It also notifies any subscribers of this new attachment.
-      *
-+     * Error codes:
-+     * -1 - An error occurred while trying to process the uploaded file.
-+     * -2 - The uploaded file is already attached to the current issue.
-+     *  1 - The uploaded file was associated with the issue.
-+     *
-      * @access  public
-      * @param   integer $usr_id The user ID
-      * @param   string $status The attachment status
-@@ -466,7 +472,14 @@
-         }
-         $attachment_id = Attachment::add($_POST["issue_id"], $usr_id, @$_POST["file_description"], $internal_only);
-         foreach ($files as $file) {
--            Attachment::addFile($attachment_id, $_POST["issue_id"], $file["filename"], $file["type"], $file["blob"]);
-+            $res = Attachment::addFile($attachment_id, $_POST["issue_id"], $file["filename"], $file["type"], $file["blob"]);
-+            if ($res !== true) {
-+                // we must rollback whole attachment (all files)
-+                // XXX ::remove() adds history entry, but it should not as we rollback
-+                // XXX actually it doesn't and thats even more odd.
-+                Attachment::remove($attachment_id);
-+                return -1;
-+            }
-         }
- 
-         Issue::markAsUpdated($_POST["issue_id"], "file uploaded");
---- eventum/include/class.attachment.php	2007-03-14 00:57:47.631197371 +0200
-+++ eventum/include/class.attachment.php	2007-03-14 00:59:21.223301807 +0200
+--- eventum/include/class.attachment.php	2007-03-14 01:29:55.514861000 +0200
++++ eventum/include/class.attachment.php	2007-03-14 01:30:07.615137261 +0200
 @@ -272,6 +272,7 @@
  
      /**
@@ -38,7 +8,7 @@
       *
       * @param   integer $iat_id attachment_id.
       * @access  public
-@@ -279,6 +280,24 @@
+@@ -279,8 +280,26 @@
       */
      function remove($iat_id)
      {
@@ -46,6 +16,7 @@
 +        if ($res == 1) {
 +            Issue::markAsUpdated($issue_id);
 +            // need to save a history entry for this
++            $usr_id = Auth::getUserID();
 +            History::add($issue_id, $usr_id, History::getTypeID('attachment_removed'), 'Attachment removed by ' . User::getFullName($usr_id));
 +        }
 +        return $res;
@@ -61,9 +32,19 @@
 +    function _remove($iat_id)
 +    {
          $iat_id = Misc::escapeInteger($iat_id);
-         $usr_id = Auth::getUserID();
+-        $usr_id = Auth::getUserID();
          $stmt = "SELECT
-@@ -314,15 +333,11 @@
+                     iat_iss_id
+                  FROM
+@@ -288,6 +307,7 @@
+                  WHERE
+                     iat_id=$iat_id";
+         if (Auth::getCurrentRole() < User::getRoleID("Manager")) {
++            $usr_id = Auth::getUserID();
+             $stmt .= " AND
+                     iat_usr_id=$usr_id";
+         }
+@@ -314,15 +334,11 @@
                  for ($i = 0; $i < count($files); $i++) {
                      Attachment::removeFile($files[$i]['iaf_id']);
                  }
@@ -79,40 +60,29 @@
      /**
       * Method used to remove a specific file from an attachment, since every
       * attachment can have several files associated with it.
-@@ -476,9 +491,7 @@
-             $res = Attachment::addFile($attachment_id, $_POST["issue_id"], $file["filename"], $file["type"], $file["blob"]);
-             if ($res !== true) {
-                 // we must rollback whole attachment (all files)
--                // XXX ::remove() adds history entry, but it should not as we rollback
--                // XXX actually it doesn't and thats even more odd.
--                Attachment::remove($attachment_id);
+@@ -435,6 +451,11 @@
+      * Method used to associate an attachment to an issue, and all of its
+      * related files. It also notifies any subscribers of this new attachment.
+      *
++     * Error codes:
++     * -1 - An error occurred while trying to process the uploaded file.
++     * -2 - The uploaded file is already attached to the current issue.
++     *  1 - The uploaded file was associated with the issue.
++     *
+      * @access  public
+      * @param   integer $usr_id The user ID
+      * @param   string $status The attachment status
+@@ -468,7 +489,12 @@
+         }
+         $attachment_id = Attachment::add($_POST["issue_id"], $usr_id, @$_POST["file_description"], $internal_only);
+         foreach ($files as $file) {
+-            Attachment::addFile($attachment_id, $_POST["issue_id"], $file["filename"], $file["type"], $file["blob"]);
++            $res = Attachment::addFile($attachment_id, $_POST["issue_id"], $file["filename"], $file["type"], $file["blob"]);
++            if ($res !== true) {
++                // we must rollback whole attachment (all files)
 +                Attachment::_remove($attachment_id);
-                 return -1;
-             }
++                return -1;
++            }
          }
---- eventum/include/class.attachment.php	2007-03-14 01:05:14.801252479 +0200
-+++ eventum/include/class.attachment.php	2007-03-14 01:02:59.558211284 +0200
-@@ -284,6 +284,7 @@
-         if ($res == 1) {
-             Issue::markAsUpdated($issue_id);
-             // need to save a history entry for this
-+            $usr_id = Auth::getUserID();
-             History::add($issue_id, $usr_id, History::getTypeID('attachment_removed'), 'Attachment removed by ' . User::getFullName($usr_id));
-         }
-         return $res;
-@@ -299,7 +300,6 @@
-     function _remove($iat_id)
-     {
-         $iat_id = Misc::escapeInteger($iat_id);
--        $usr_id = Auth::getUserID();
-         $stmt = "SELECT
-                     iat_iss_id
-                  FROM
-@@ -307,6 +307,7 @@
-                  WHERE
-                     iat_id=$iat_id";
-         if (Auth::getCurrentRole() < User::getRoleID("Manager")) {
-+            $usr_id = Auth::getUserID();
-             $stmt .= " AND
-                     iat_usr_id=$usr_id";
-         }
+ 
+         Issue::markAsUpdated($_POST["issue_id"], "file uploaded");
