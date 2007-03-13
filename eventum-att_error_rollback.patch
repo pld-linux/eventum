@@ -1,0 +1,38 @@
+--- eventum/include/class.attachment.php	2007-03-13 22:51:55.221849908 +0200
++++ eventum/include/class.attachment.php	2007-03-13 23:55:08.216793025 +0200
+@@ -273,6 +273,7 @@
+     /**
+      * Method used to remove attachments from the database.
+      *
++     * @param   integer $iat_id attachment_id.
+      * @access  public
+      * @return  integer Numeric code used to check for any errors
+      */
+@@ -433,6 +434,11 @@
+      * Method used to associate an attachment to an issue, and all of its
+      * related files. It also notifies any subscribers of this new attachment.
+      *
++     * Error codes:
++     * -1 - An error occurred while trying to process the uploaded file.
++     * -2 - The uploaded file is already attached to the current issue.
++     *  1 - The uploaded file was associated with the issue.
++     *
+      * @access  public
+      * @param   integer $usr_id The user ID
+      * @param   string $status The attachment status
+@@ -466,7 +472,14 @@
+         }
+         $attachment_id = Attachment::add($_POST["issue_id"], $usr_id, @$_POST["file_description"], $internal_only);
+         foreach ($files as $file) {
+-            Attachment::addFile($attachment_id, $_POST["issue_id"], $file["filename"], $file["type"], $file["blob"]);
++            $res = Attachment::addFile($attachment_id, $_POST["issue_id"], $file["filename"], $file["type"], $file["blob"]);
++            if ($res !== true) {
++                // we must rollback whole attachment (all files)
++                // XXX ::remove() adds history entry, but it should not as we rollback
++                // XXX actually it doesn't and thats even more odd.
++                Attachment::remove($attachment_id);
++                return -1;
++            }
+         }
+ 
+         Issue::markAsUpdated($_POST["issue_id"], "file uploaded");
