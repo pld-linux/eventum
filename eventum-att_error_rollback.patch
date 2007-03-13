@@ -1,13 +1,5 @@
 --- eventum/include/class.attachment.php	2007-03-13 22:51:55.221849908 +0200
 +++ eventum/include/class.attachment.php	2007-03-13 23:55:08.216793025 +0200
-@@ -273,6 +273,7 @@
-     /**
-      * Method used to remove attachments from the database.
-      *
-+     * @param   integer $iat_id attachment_id.
-      * @access  public
-      * @return  integer Numeric code used to check for any errors
-      */
 @@ -433,6 +434,11 @@
       * Method used to associate an attachment to an issue, and all of its
       * related files. It also notifies any subscribers of this new attachment.
@@ -36,3 +28,65 @@
          }
  
          Issue::markAsUpdated($_POST["issue_id"], "file uploaded");
+--- eventum/include/class.attachment.php	2007-03-14 00:57:47.631197371 +0200
++++ eventum/include/class.attachment.php	2007-03-14 00:59:21.223301807 +0200
+@@ -272,6 +272,7 @@
+ 
+     /**
+      * Method used to remove attachments from the database.
++     * Additionally logs history entry on success.
+      *
+      * @param   integer $iat_id attachment_id.
+      * @access  public
+@@ -279,6 +280,24 @@
+      */
+     function remove($iat_id)
+     {
++        $res = Attachment::_remove($iat_id);
++        if ($res == 1) {
++            Issue::markAsUpdated($issue_id);
++            // need to save a history entry for this
++            History::add($issue_id, $usr_id, History::getTypeID('attachment_removed'), 'Attachment removed by ' . User::getFullName($usr_id));
++        }
++        return $res;
++    }
++
++    /**
++     * Method used to remove attachments from the database.
++     *
++     * @param   integer $iat_id attachment_id.
++     * @access  private
++     * @return  integer Numeric code used to check for any errors
++     */
++    function _remove($iat_id)
++    {
+         $iat_id = Misc::escapeInteger($iat_id);
+         $usr_id = Auth::getUserID();
+         $stmt = "SELECT
+@@ -314,15 +333,11 @@
+                 for ($i = 0; $i < count($files); $i++) {
+                     Attachment::removeFile($files[$i]['iaf_id']);
+                 }
+-                Issue::markAsUpdated($issue_id);
+-                // need to save a history entry for this
+-                History::add($issue_id, $usr_id, History::getTypeID('attachment_removed'), 'Attachment removed by ' . User::getFullName($usr_id));
+                 return 1;
+             }
+         }
+     }
+ 
+-
+     /**
+      * Method used to remove a specific file from an attachment, since every
+      * attachment can have several files associated with it.
+@@ -476,9 +491,7 @@
+             $res = Attachment::addFile($attachment_id, $_POST["issue_id"], $file["filename"], $file["type"], $file["blob"]);
+             if ($res !== true) {
+                 // we must rollback whole attachment (all files)
+-                // XXX ::remove() adds history entry, but it should not as we rollback
+-                // XXX actually it doesn't and thats even more odd.
+-                Attachment::remove($attachment_id);
++                Attachment::_remove($attachment_id);
+                 return -1;
+             }
+         }
