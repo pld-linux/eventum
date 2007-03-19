@@ -50,8 +50,8 @@
          }
          $attachment_id = Attachment::add($_POST["issue_id"], $usr_id, @$_POST["file_description"], $internal_only);
          foreach ($files as $file) {
--            Attachment::addFile($attachment_id, $_POST["issue_id"], $file["filename"], $file["type"], $file["blob"]);
-+            $res = Attachment::addFile($attachment_id, $_POST["issue_id"], $file["filename"], $file["type"], $file["blob"]);
+-            Attachment::addFile($attachment_id, $file["filename"], $file["type"], $file["blob"]);
++            $res = Attachment::addFile($attachment_id, $file["filename"], $file["type"], $file["blob"]);
 +            if ($res !== true) {
 +                // we must rollback whole attachment (all files)
 +                Attachment::remove($attachment_id, false);

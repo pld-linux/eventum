@@ -10,9 +10,9 @@
 %bcond_with	qmail	# build the router-qmail subpackage
 
 #define	_snap	20060921
-%define	_svn	20070314.3279
+%define	_svn	r3282
 #define	_rc		RC3
-%define	_rel	0.224
+%define	_rel	0.228
 
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
@@ -24,7 +24,7 @@ License:	GPL
 Group:		Applications/WWW
 #Source0:	http://downloads.mysql.com/snapshots/eventum/%{name}-nightly-%{_snap}.tar.gz
 Source0:	%{name}-%{_svn}.tar.bz2
-# Source0-md5:	d9c90ba2d98afb4928e9ae9af59a31a7
+# Source0-md5:	e4fc090b80d9b28723ba3b63be192594
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -461,7 +461,7 @@ Szczegóły na temat instalacji można przeczytać pod
 </eventum/help.php?topic=scm_integration_installation>.
 
 %prep
-%setup -q %{?_snap:-n %{name}-%{_snap}}%{?_svn:-n %{name}}
+%setup -q %{?_snap:-n %{name}-%{_snap}}%{?_svn:-n %{name}-%{_svn}}
 # undos the source
 find . -type f -print0 | xargs -0 sed -i -e 's,\r$,,'
 
