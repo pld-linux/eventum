@@ -10,9 +10,9 @@
 %bcond_with	qmail	# build the router-qmail subpackage
 
 #define	_snap	20060921
-%define	_svn	r3282
+%define	_svn	r3284
 #define	_rc		RC3
-%define	_rel	0.228
+%define	_rel	0.229
 
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
@@ -519,7 +519,6 @@ mkdir -p misc/localization/pl/LC_MESSAGES
 # oops, the file got truncated - quick fix
 cp misc/localization/eventum.po misc/localization/de/LC_MESSAGES/eventum.po
 cp misc/localization/eventum.po misc/localization/es/LC_MESSAGES/eventum.po
-cp misc/localization/eventum.po misc/localization/fi/LC_MESSAGES/eventum.po
 cp misc/localization/eventum.po misc/localization/fr/LC_MESSAGES/eventum.po
 cp misc/localization/eventum.po misc/localization/nl/LC_MESSAGES/eventum.po
 cp misc/localization/eventum.po misc/localization/ru/LC_MESSAGES/eventum.po
