@@ -11,7 +11,7 @@
 +     * @param   array   array(ERROR_CODE, ERROR_STRING) of error to bounce
 +     * @return  void
 +     */
-+    function BounceEmail($message, $error)
++    function bounceMessage($message, $error)
 +    {
 +        // open text template
 +        $tpl = new Template_API;
@@ -74,7 +74,7 @@
 +                        if ($return !== true) {
 +                            // in case of error, create bounce, but still
 +                            // delete email not to send bounce in next process :)
-+                            Support::BounceEmail($email, $return);
++                            Support::bounceMessage($email, $return);
                          }
 +
 +                        Support::deleteMessage($info, $mbox, $num);
