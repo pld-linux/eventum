@@ -1,3 +1,11 @@
+TODO:
+
+
+02:32:31  lordrashmi> drafts are restricted too
+02:33:14  lordrashmi> the delete thing will be a problem
+02:34:25  lordrashmi> we need some way to indicate that a message has been processed
+
+
 --- include/class.support.php	(working copy)
 +++ include/class.support.php	2007-04-03 01:53:39.881559822 +0300
 @@ -461,6 +461,50 @@
