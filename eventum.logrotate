@@ -5,5 +5,5 @@
 	notifempty
 	rotate 52
 	create 620 root eventum
-	olddir /var/log/archiv/eventum
+	olddir /var/log/archive/eventum
 }
