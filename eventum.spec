@@ -916,7 +916,7 @@ fi
 
 %dir %attr(731,root,eventum) /var/log/%{name}
 %attr(620,root,eventum) %ghost /var/log/%{name}/*
-%dir %attr(750,root,root) /var/log/archiv/%{name}
+%dir %attr(750,root,root) /var/log/archive/%{name}
 %config(noreplace) %verify(not md5 mtime size) /etc/logrotate.d/%{name}
 
 %dir %{_appdir}/htdocs
