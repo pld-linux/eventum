@@ -546,7 +546,7 @@ install -d \
 	$RPM_BUILD_ROOT{%{_webappdir},%{_sysconfdir},%{_bindir},%{_sbindir},%{_libdir}} \
 	$RPM_BUILD_ROOT/etc/{rc.d/init.d,cron.d,sysconfig} \
 	$RPM_BUILD_ROOT/var/{run,cache,lib}/%{name} \
-	$RPM_BUILD_ROOT/var/log/{archiv/,}%{name} \
+	$RPM_BUILD_ROOT/var/log/{archive/,}%{name} \
 	$RPM_BUILD_ROOT/var/lib/%{name}/routed_{emails,drafts,notes} \
 	$RPM_BUILD_ROOT%{_appdir}/{include,htdocs/misc,upgrade} \
 
