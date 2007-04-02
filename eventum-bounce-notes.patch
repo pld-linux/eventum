@@ -1,8 +1,6 @@
-Index: include/class.support.php
-===================================================================
---- include/class.support.php	(revision 3290)
-+++ include/class.support.php	(working copy)
-@@ -456,6 +461,50 @@
+--- include/class.support.php	(working copy)
++++ include/class.support.php	2007-04-03 01:53:39.881559822 +0300
+@@ -461,6 +461,50 @@
  
  
      /**
@@ -53,7 +51,7 @@ Index: include/class.support.php
       * Method used to get the information about a specific message
       * from a given mailbox.
       *
-@@ -531,10 +580,11 @@
+@@ -536,10 +580,11 @@
                      $res = Routing::getMatchingIssueIDs($addresses, 'email');
                      if ($res != false) {
                          $return = Routing::route_emails($message);
@@ -66,22 +64,24 @@ Index: include/class.support.php
                          return;
                      }
                  }
-@@ -542,10 +592,13 @@
+@@ -547,10 +592,13 @@
                      $res = Routing::getMatchingIssueIDs($addresses, 'note');
                      if ($res != false) {
                          $return = Routing::route_notes($message);
 -                        if ($return == true) {
-+                        if ($return === true) {
-                             Support::deleteMessage($info, $mbox, $num);
-                             return;
+-                            Support::deleteMessage($info, $mbox, $num);
+-                            return;
++                        if ($return !== true) {
++                            // in case of error, create bounce, but still
++                            // delete email not to send bounce in next process :)
++                            Support::BounceEmail($email, $return);
                          }
 +
-+                        // create bounce
-+                        Support::BounceEmail($email, $return);
++                        Support::deleteMessage($info, $mbox, $num);
                          return;
                      }
                  }
-@@ -553,10 +606,11 @@
+@@ -558,10 +606,11 @@
                      $res = Routing::getMatchingIssueIDs($addresses, 'draft');
                      if ($res != false) {
                          $return = Routing::route_drafts($message);
@@ -94,8 +94,6 @@ Index: include/class.support.php
                          return;
                      }
                  }
-Index: templates/notifications/bounced_email.tpl.text
-===================================================================
 --- templates/notifications/bounced_email.tpl.text	(revision 0)
 +++ templates/notifications/bounced_email.tpl.text	(revision 0)
 @@ -0,0 +1,12 @@
