@@ -6,6 +6,13 @@ TODO:
 02:34:25  lordrashmi> we need some way to indicate that a message has been processed
 
 
+22:55:08  lordrashmi> glen_: Only thing I can think of for that mail issue is a seperate table
+22:55:14  lordrashmi> and record the message ID in it
+22:55:17  lordrashmi> and possible the error
+23:01:52  lordrashmi> eventum_bounce
+23:02:21  lordrashmi> bon_id, bon_message_id, bon_error
+
+
 --- include/class.support.php	(working copy)
 +++ include/class.support.php	2007-04-03 01:53:39.881559822 +0300
 @@ -461,6 +461,50 @@
