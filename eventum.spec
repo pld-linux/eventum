@@ -10,9 +10,9 @@
 %bcond_with	qmail	# build the router-qmail subpackage
 
 #define	_snap	20060921
-#define	_svn	r3291
+%define	_svn	r3317
 #define	_rc		RC3
-%define	_rel	0.236
+%define	_rel	0.237
 
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
@@ -23,9 +23,9 @@ Release:	%{?_rc:%{_rc}.}%{_rel}%{?_snap:.%{_snap}}%{?_svn:.%{_svn}}
 License:	GPL
 Group:		Applications/WWW
 #Source0:	http://downloads.mysql.com/snapshots/eventum/%{name}-nightly-%{_snap}.tar.gz
-Source0:	http://eventum.mysql.org/downloads/eventum-2.0.RC3.tar.gz
-# Source0-md5:	0d149562d9eb01ac0bc1853b6e968063
-#Source0:	%{name}-%{_svn}.tar.bz2
+#Source0:	http://eventum.mysql.org/downloads/eventum-2.0.RC3.tar.gz
+Source0:	%{name}-%{_svn}.tar.bz2
+# Source0-md5:	5f32c951237d0baa513fa2c2d2b14620
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -41,15 +41,6 @@ Source13:	%{name}-router-postfix.sh
 Source14:	%{name}.logrotate
 Source15:	%{name}-lighttpd.conf
 Patch0:		%{name}-lf.patch
-Patch1:		%{name}-timetracking-advanced-logic.patch
-Patch2:		%{name}-email-notify-display.patch
-Patch3:		%{name}-backtraces.patch
-Patch4:		%{name}-errorhandler.patch
-Patch5:		%{name}-utf_on_charts.patch
-Patch6:		%{name}-propagate-error.patch
-Patch7:		%{name}-associated_issue_text.patch
-Patch8:		%{name}-mail-aliases.patch
-Patch9:		%{name}-att_error_rollback.patch
 Patch10:	%{name}-bounce-notes.patch
 # packaging patches that probably never go upstream
 Patch100:	%{name}-paths.patch
@@ -478,18 +469,8 @@ rm -r include/php-gettext
 rm rpc/xmlrpc_client.php
 
 # bug fixes.
-%patch4 -p0
-%patch7 -p0
-%patch8 -p0
-%patch9 -p1
 %patch0 -p1
 %patch10 -p0
-
-%patch1 -p1
-%patch2 -p1
-%patch3 -p1
-%patch5 -p1
-%patch6 -p1
 
 #%patch200 -p1
 
