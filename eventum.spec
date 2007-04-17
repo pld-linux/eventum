@@ -10,9 +10,9 @@
 %bcond_with	qmail	# build the router-qmail subpackage
 
 #define	_snap	20060921
-%define	_svn	r3291
+#define	_svn	r3291
 #define	_rc		RC3
-%define	_rel	0.234
+%define	_rel	0.236
 
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
@@ -23,8 +23,9 @@ Release:	%{?_rc:%{_rc}.}%{_rel}%{?_snap:.%{_snap}}%{?_svn:.%{_svn}}
 License:	GPL
 Group:		Applications/WWW
 #Source0:	http://downloads.mysql.com/snapshots/eventum/%{name}-nightly-%{_snap}.tar.gz
-Source0:	%{name}-%{_svn}.tar.bz2
-# Source0-md5:	8cbb2677b347a6c9552182739747dccf
+Source0:	http://eventum.mysql.org/downloads/eventum-2.0.RC3.tar.gz
+# Source0-md5:	0d149562d9eb01ac0bc1853b6e968063
+#Source0:	%{name}-%{_svn}.tar.bz2
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -889,6 +890,11 @@ ln -sf process_cvs_commits $RPM_BUILD_ROOT%{_libdir}/scm
 %{__sed} -i -e '
 	/define.*APP_URL/d
 ' %{_webappdir}/config.php
+
+%triggerpostun -- %{name} < 2.0-0.235
+%{_appdir}/upgrade/upgrade.sh %{_appdir}/upgrade/v2.0-beta_to_v2.0 <<EOF
+database_changes.php Perform database changes
+EOF
 
 %triggerpostun irc -- %{name}-irc < 1.7.1-5.181
 # change from 1.7.0-3.4
