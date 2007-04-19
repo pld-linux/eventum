@@ -1,0 +1,69 @@
+Index: include/class.history.php
+===================================================================
+--- include/class.history.php	(revision 3318)
++++ include/class.history.php	(working copy)
+@@ -271,6 +271,9 @@
+                         $details = Customer::getDetails($row["iss_prj_id"], $row["iss_customer_id"]);
+                         $row["customer_name"] = $details["customer_name"];
+                     }
++                    $timeForIssue = Time_Tracking::getTimeSpentByIssueAndTime($row['iss_id'], $start, $end);
++                    $row['time_spent'] = Misc::getFormattedTime($timeForIssue, false);
++
+                     if (($separate_closed) && ($row['sta_is_closed'] == 1)) {
+                         $data['closed'][] = $row;
+                     } else {
+Index: include/class.time_tracking.php
+===================================================================
+--- include/class.time_tracking.php	(revision 3318)
++++ include/class.time_tracking.php	(working copy)
+@@ -541,6 +541,37 @@
+             return $res;
+         }
+     }
++
++    /**
++     * Method used to get the time spent for a specific issue
++     * at a specific time.
++     *
++     * @access  public
++     * @param   integer $issue_id The issue ID
++     * @param   date $start The start date
++     * @param   date $end The end date
++     * @return  integer The total time spent
++     */
++    function getTimeSpentByIssueAndTime($issue_id, $start, $end)
++    {
++        $stmt = "SELECT
++                    SUM(ttr_time_spent)
++                 FROM
++                    " . APP_DEFAULT_DB . "." . APP_TABLE_PREFIX . "time_tracking
++                 WHERE
++                    ttr_created_date BETWEEN '" . Misc::escapeString($start) . "' AND '" . Misc::escapeString($end) . "' AND
++                    ttr_iss_id=" . Misc::escapeInteger($issue_id);
++        $res = $GLOBALS["db_api"]->dbh->getOne($stmt);
++        if (PEAR::isError($res)) {
++            Error_Handler::logError(array($res->getMessage(), $res->getDebugInfo()), __FILE__, __LINE__);
++            return 0;
++        } else {
++            return $res;
++        }
++    }
++
++
++
+ }
+ 
+ // benchmarking the included file (aka setup time)
+Index: templates/reports/weekly_data.tpl.html
+===================================================================
+--- templates/reports/weekly_data.tpl.html	(revision 3318)
++++ templates/reports/weekly_data.tpl.html	(working copy)
+@@ -3,7 +3,7 @@
+ {$application_title} {t}issues worked on{/t}:
+ 
+ {section name=issue loop=$data.issues.other}
+-{$data.issues.other[issue].iss_id|str_pad:4:" ":"STR_PAD_LEFT"} {$data.issues.other[issue].iss_summary|htmlspecialchars}
++{$data.issues.other[issue].iss_id|str_pad:4:" ":"STR_PAD_LEFT"}  {$data.issues.other[issue].iss_summary|htmlspecialchars} ({$data.issues.other[issue].time_spent})
+ {sectionelse}
+ {t}No issues touched this time period{/t}
+ {/section}
