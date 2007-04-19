@@ -10,9 +10,9 @@
 %bcond_with	qmail	# build the router-qmail subpackage
 
 #define	_snap	20060921
-%define	_svn	r3317
+%define	_svn	r3319
 #define	_rc		RC3
-%define	_rel	0.237
+%define	_rel	0.239
 
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
@@ -25,7 +25,7 @@ Group:		Applications/WWW
 #Source0:	http://downloads.mysql.com/snapshots/eventum/%{name}-nightly-%{_snap}.tar.gz
 #Source0:	http://eventum.mysql.org/downloads/eventum-2.0.RC3.tar.gz
 Source0:	%{name}-%{_svn}.tar.bz2
-# Source0-md5:	5f32c951237d0baa513fa2c2d2b14620
+# Source0-md5:	3c271b6f0918af0d4ffc36de4f7d5b70
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -41,7 +41,8 @@ Source13:	%{name}-router-postfix.sh
 Source14:	%{name}.logrotate
 Source15:	%{name}-lighttpd.conf
 Patch0:		%{name}-lf.patch
-Patch10:	%{name}-bounce-notes.patch
+Patch1:		%{name}-bounce-notes.patch
+Patch2:		%{name}-reports-tt.patch
 # packaging patches that probably never go upstream
 Patch100:	%{name}-paths.patch
 Patch101:	%{name}-cvs-config.patch
@@ -470,7 +471,8 @@ rm rpc/xmlrpc_client.php
 
 # bug fixes.
 %patch0 -p1
-%patch10 -p0
+%patch1 -p0
+%patch2 -p0
 
 #%patch200 -p1
 
@@ -499,14 +501,6 @@ mv misc/localization/nl{_NL,}
 mv misc/localization/ru{_RU,}
 mv misc/localization/sv{_SE,}
 mkdir -p misc/localization/pl/LC_MESSAGES
-
-# oops, the file got truncated - quick fix
-cp misc/localization/eventum.po misc/localization/de/LC_MESSAGES/eventum.po
-cp misc/localization/eventum.po misc/localization/es/LC_MESSAGES/eventum.po
-cp misc/localization/eventum.po misc/localization/fr/LC_MESSAGES/eventum.po
-cp misc/localization/eventum.po misc/localization/nl/LC_MESSAGES/eventum.po
-cp misc/localization/eventum.po misc/localization/ru/LC_MESSAGES/eventum.po
-cp misc/localization/eventum.po misc/localization/en_US/LC_MESSAGES/eventum.po
 
 sed -e '1s,#!.*/bin/php -q,#!%{_bindir}/php,' misc/cli/eventum > %{name}-cli
 mv misc/cli/eventumrc_example eventumrc
