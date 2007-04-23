@@ -1,69 +1,83 @@
-Index: include/class.history.php
-===================================================================
---- include/class.history.php	(revision 3318)
-+++ include/class.history.php	(working copy)
-@@ -271,6 +271,9 @@
+--- eventum-r3319.old/include/class.history.php	2007-04-23 16:41:31.705254000 +0300
++++ eventum-r3319/include/class.history.php	2007-04-23 16:56:09.570910295 +0300
+@@ -271,7 +271,7 @@
                          $details = Customer::getDetails($row["iss_prj_id"], $row["iss_customer_id"]);
                          $row["customer_name"] = $details["customer_name"];
                      }
-+                    $timeForIssue = Time_Tracking::getTimeSpentByIssueAndTime($row['iss_id'], $start, $end);
-+                    $row['time_spent'] = Misc::getFormattedTime($timeForIssue, false);
-+
+-                    $timeForIssue = Time_Tracking::getTimeSpentByIssueAndTime($row['iss_id'], $start, $end);
++                    $timeForIssue = Time_Tracking::getTimeSpentByIssueAndTime($row['iss_id'], $usr_id, $start, $end);
+                     $row['time_spent'] = Misc::getFormattedTime($timeForIssue, false);
+ 
                      if (($separate_closed) && ($row['sta_is_closed'] == 1)) {
-                         $data['closed'][] = $row;
-                     } else {
-Index: include/class.time_tracking.php
-===================================================================
---- include/class.time_tracking.php	(revision 3318)
-+++ include/class.time_tracking.php	(working copy)
-@@ -541,6 +541,37 @@
+--- eventum-r3319.old/include/class.time_tracking.php	2007-04-23 16:41:31.709255000 +0300
++++ eventum-r3319/include/class.time_tracking.php	2007-04-23 16:56:09.478906751 +0300
+@@ -548,17 +548,19 @@
+      *
+      * @access  public
+      * @param   integer $issue_id The issue ID
+-     * @param   date $start The start date
+-     * @param   date $end The end date
+-     * @return  integer The total time spent
++     * @param   string $usr_id The ID of the user this report is for.
++     * @param   integer The timestamp of the beginning of the report.
++     * @param   integer The timestamp of the end of this report.
++     * @return  integer The time spent
+      */
+-    function getTimeSpentByIssueAndTime($issue_id, $start, $end)
++    function getTimeSpentByIssueAndTime($issue_id, $usr_id, $start, $end)
+     {
+         $stmt = "SELECT
+                     SUM(ttr_time_spent)
+                  FROM
+                     " . APP_DEFAULT_DB . "." . APP_TABLE_PREFIX . "time_tracking
+                  WHERE
++                    ttr_usr_id = " . Misc::escapeInteger($usr_id) . " AND
+                     ttr_created_date BETWEEN '" . Misc::escapeString($start) . "' AND '" . Misc::escapeString($end) . "' AND
+                     ttr_iss_id=" . Misc::escapeInteger($issue_id);
+         $res = $GLOBALS["db_api"]->dbh->getOne($stmt);
+@@ -569,9 +571,6 @@
              return $res;
          }
      }
-+
-+    /**
-+     * Method used to get the time spent for a specific issue
-+     * at a specific time.
-+     *
-+     * @access  public
-+     * @param   integer $issue_id The issue ID
-+     * @param   date $start The start date
-+     * @param   date $end The end date
-+     * @return  integer The total time spent
-+     */
-+    function getTimeSpentByIssueAndTime($issue_id, $start, $end)
-+    {
-+        $stmt = "SELECT
-+                    SUM(ttr_time_spent)
-+                 FROM
-+                    " . APP_DEFAULT_DB . "." . APP_TABLE_PREFIX . "time_tracking
-+                 WHERE
-+                    ttr_created_date BETWEEN '" . Misc::escapeString($start) . "' AND '" . Misc::escapeString($end) . "' AND
-+                    ttr_iss_id=" . Misc::escapeInteger($issue_id);
-+        $res = $GLOBALS["db_api"]->dbh->getOne($stmt);
-+        if (PEAR::isError($res)) {
-+            Error_Handler::logError(array($res->getMessage(), $res->getDebugInfo()), __FILE__, __LINE__);
-+            return 0;
-+        } else {
-+            return $res;
-+        }
-+    }
-+
-+
-+
+-
+-
+-
  }
  
  // benchmarking the included file (aka setup time)
-Index: templates/reports/weekly_data.tpl.html
-===================================================================
---- templates/reports/weekly_data.tpl.html	(revision 3318)
-+++ templates/reports/weekly_data.tpl.html	(working copy)
-@@ -3,7 +3,7 @@
+--- eventum-r3319.old/templates/reports/weekly.tpl.html	2007-04-23 16:41:31.545248000 +0300
++++ eventum-r3319/templates/reports/weekly.tpl.html	2007-04-23 16:56:09.554909678 +0300
+@@ -76,6 +76,11 @@
+             <input type="checkbox" name="ignore_statuses" value="1" class="default" {if $smarty.post.ignore_statuses == 1}checked{/if}>
+             <a id="link" class="link" href="javascript:void(null)"
+                             onClick="javascript:toggleCheckbox('weekly_report', 'ignore_statuses', 0)">{t}Ignore Issue Status Changes{/t}</a>&nbsp;
++            <br />
++            <input type="checkbox" name="show_per_issue" value="1" class="default" {if $smarty.post.show_per_issue == 1}checked{/if}>
++            <a id="link" class="link" href="javascript:void(null)"
++                            onClick="javascript:toggleCheckbox('weekly_report', 'show_per_issue', 0)">{t}Show Times spent on issue{/t}</a>&nbsp;
++
+           </td>
+         </tr>
+       </table>
+--- eventum-r3319.old/templates/reports/weekly_data.tpl.html	2007-04-23 16:41:31.709255000 +0300
++++ eventum-r3319/templates/reports/weekly_data.tpl.html	2007-04-23 16:56:09.558909832 +0300
+@@ -3,7 +3,8 @@
  {$application_title} {t}issues worked on{/t}:
  
  {section name=issue loop=$data.issues.other}
--{$data.issues.other[issue].iss_id|str_pad:4:" ":"STR_PAD_LEFT"} {$data.issues.other[issue].iss_summary|htmlspecialchars}
-+{$data.issues.other[issue].iss_id|str_pad:4:" ":"STR_PAD_LEFT"}  {$data.issues.other[issue].iss_summary|htmlspecialchars} ({$data.issues.other[issue].time_spent})
+-{$data.issues.other[issue].iss_id|str_pad:4:" ":"STR_PAD_LEFT"}  {$data.issues.other[issue].iss_summary|htmlspecialchars} ({$data.issues.other[issue].time_spent})
++{$data.issues.other[issue].iss_id|str_pad:4:" ":"STR_PAD_LEFT"} {$data.issues.other[issue].iss_summary|htmlspecialchars} {if
++$smarty.post.show_per_issue == 1}({$data.issues.other[issue].time_spent}){/if}
  {sectionelse}
  {t}No issues touched this time period{/t}
+ {/section}
+@@ -12,7 +13,8 @@
+ {t}Issues Closed{/t}:
+ 
+ {section name=issue loop=$data.issues.closed}
+-{$data.issues.closed[issue].iss_id|str_pad:4:" ":"STR_PAD_LEFT"} {$data.issues.closed[issue].iss_summary|htmlspecialchars}
++{$data.issues.closed[issue].iss_id|str_pad:4:" ":"STR_PAD_LEFT"} {$data.issues.closed[issue].iss_summary|htmlspecialchars}{if
++$smarty.post.show_per_issue == 1}({$data.issues.closed[issue].time_spent}){/if}
+ {sectionelse}
+ {t}No issues closed this time period{/t}
  {/section}
