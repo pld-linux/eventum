@@ -51,11 +51,11 @@
            </td>
          </tr>
        </table>
---- new/templates/reports/weekly_data.tpl.html	2007-04-20 15:36:17.000000000 +0300
-+++ eventum/templates/reports/weekly_data.tpl.html	2007-04-23 17:30:33.985899680 +0300
+--- old/templates/reports/weekly_data.tpl.html	2006-04-19 06:37:26.000000000 +0300
++++ new/templates/reports/weekly_data.tpl.html	2007-04-20 15:36:17.000000000 +0300
 @@ -3,7 +3,9 @@
  {$application_title} {t}issues worked on{/t}:
- {section name=issue loop=$data.issues.other}
+ 
  {section name=issue loop=$data.issues.other}
 -{$data.issues.other[issue].iss_id|str_pad:4:" ":"STR_PAD_LEFT"} {$data.issues.other[issue].iss_summary|htmlspecialchars}
 +{$data.issues.other[issue].iss_id|str_pad:4:" ":"STR_PAD_LEFT"} {$data.issues.other[issue].iss_summary|htmlspecialchars} {if
