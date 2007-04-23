@@ -12,7 +12,7 @@
 #define	_snap	20060921
 %define	_svn	r3319
 #define	_rc		RC3
-%define	_rel	0.239
+%define	_rel	0.240
 
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
@@ -25,7 +25,7 @@ Group:		Applications/WWW
 #Source0:	http://downloads.mysql.com/snapshots/eventum/%{name}-nightly-%{_snap}.tar.gz
 #Source0:	http://eventum.mysql.org/downloads/eventum-2.0.RC3.tar.gz
 Source0:	%{name}-%{_svn}.tar.bz2
-# Source0-md5:	3c271b6f0918af0d4ffc36de4f7d5b70
+# Source0-md5:	c37b26a5d44741c1d893b653ba26d17c
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -472,7 +472,7 @@ rm rpc/xmlrpc_client.php
 # bug fixes.
 %patch0 -p1
 %patch1 -p0
-%patch2 -p0
+%patch2 -p1
 
 #%patch200 -p1
 
