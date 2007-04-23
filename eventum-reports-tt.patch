@@ -37,7 +37,6 @@
  }
  
  // benchmarking the included file (aka setup time)
-
 --- old/templates/reports/weekly.tpl.html	2006-12-05 22:53:38.000000000 +0200
 +++ new/templates/reports/weekly.tpl.html	2007-04-20 12:31:32.000000000 +0300
 @@ -76,6 +76,11 @@
@@ -52,26 +51,27 @@
            </td>
          </tr>
        </table>
-
---- old/templates/reports/weekly_data.tpl.html	2006-04-19 06:37:26.000000000 +0300
-+++ new/templates/reports/weekly_data.tpl.html	2007-04-20 15:36:17.000000000 +0300
-@@ -3,7 +3,8 @@
+--- new/templates/reports/weekly_data.tpl.html	2007-04-20 15:36:17.000000000 +0300
++++ eventum/templates/reports/weekly_data.tpl.html	2007-04-23 17:30:33.985899680 +0300
+@@ -3,7 +3,9 @@
  {$application_title} {t}issues worked on{/t}:
-
+ {section name=issue loop=$data.issues.other}
  {section name=issue loop=$data.issues.other}
 -{$data.issues.other[issue].iss_id|str_pad:4:" ":"STR_PAD_LEFT"} {$data.issues.other[issue].iss_summary|htmlspecialchars}
 +{$data.issues.other[issue].iss_id|str_pad:4:" ":"STR_PAD_LEFT"} {$data.issues.other[issue].iss_summary|htmlspecialchars} {if
 +$smarty.post.show_per_issue == 1}({$data.issues.other[issue].time_spent}){/if}
++
  {sectionelse}
  {t}No issues touched this time period{/t}
  {/section}
-@@ -12,7 +13,8 @@
+@@ -12,7 +14,9 @@
  {t}Issues Closed{/t}:
-
+ 
  {section name=issue loop=$data.issues.closed}
 -{$data.issues.closed[issue].iss_id|str_pad:4:" ":"STR_PAD_LEFT"} {$data.issues.closed[issue].iss_summary|htmlspecialchars}
-+{$data.issues.closed[issue].iss_id|str_pad:4:" ":"STR_PAD_LEFT"} {$data.issues.closed[issue].iss_summary|htmlspecialchars}{if
++{$data.issues.closed[issue].iss_id|str_pad:4:" ":"STR_PAD_LEFT"} {$data.issues.closed[issue].iss_summary|htmlspecialchars} {if
 +$smarty.post.show_per_issue == 1}({$data.issues.closed[issue].time_spent}){/if}
++
  {sectionelse}
  {t}No issues closed this time period{/t}
  {/section}
