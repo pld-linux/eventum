@@ -10,22 +10,22 @@
 %bcond_with	qmail	# build the router-qmail subpackage
 
 #define	_snap	20060921
-%define	_svn	r3328
+%define	_svn	r3351
 #define	_rc		RC3
-%define	_rel	0.250
+%define	_rel	0.251
 
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl.UTF-8):	Eventum - system śledzenia spraw/błędów
 Name:		eventum
-Version:	2.0
+Version:	2.1
 Release:	%{?_rc:%{_rc}.}%{_rel}%{?_snap:.%{_snap}}%{?_svn:.%{_svn}}
 License:	GPL
 Group:		Applications/WWW
 #Source0:	http://downloads.mysql.com/snapshots/eventum/%{name}-nightly-%{_snap}.tar.gz
 #Source0:	http://eventum.mysql.org/downloads/eventum-2.0.RC3.tar.gz
 Source0:	%{name}-%{_svn}.tar.bz2
-# Source0-md5:	9835ff40e5f0e61c708b9e93ccf0b920
+# Source0-md5:	33b9194ebbb7db49a781308d4f81d8ae
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -796,6 +796,12 @@ EOF
 %triggerpostun -- eventum < 2.0-0.211
 %{_appdir}/upgrade/upgrade.sh %{_appdir}/upgrade/v2.0_to_v2.0.1 <<EOF
 database_changes.php Perform database changes
+EOF
+
+%triggerpostun -- eventum < 2.1
+%{_appdir}/upgrade/upgrade.sh %{_appdir}/upgrade/v2.0_to_v2.1 <<EOF
+database_changes.php Perform database changes
+update_custom_field_by_type.php Update custom field types
 EOF
 
 %triggerpostun irc -- eventum-irc < 1.6.1-3.14
