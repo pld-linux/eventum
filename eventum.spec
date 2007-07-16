@@ -10,9 +10,9 @@
 %bcond_with	qmail	# build the router-qmail subpackage
 
 #define	_snap	20060921
-%define	_svn	r3351
+%define	_svn	r3355
 #define	_rc		RC3
-%define	_rel	0.251
+%define	_rel	0.252
 
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
@@ -25,7 +25,7 @@ Group:		Applications/WWW
 #Source0:	http://downloads.mysql.com/snapshots/eventum/%{name}-nightly-%{_snap}.tar.gz
 #Source0:	http://eventum.mysql.org/downloads/eventum-2.0.RC3.tar.gz
 Source0:	%{name}-%{_svn}.tar.bz2
-# Source0-md5:	33b9194ebbb7db49a781308d4f81d8ae
+# Source0-md5:	15327d631e7bad5fbea23d856d501967
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
