@@ -10,9 +10,9 @@
 %bcond_with	qmail	# build the router-qmail subpackage
 
 #define	_snap	20060921
-%define	_svn	r3360
+%define	_svn	r3377
+%define	_rel	0.261
 #define	_rc		RC3
-%define	_rel	0.256
 
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
@@ -25,7 +25,7 @@ Group:		Applications/WWW
 #Source0:	http://downloads.mysql.com/snapshots/eventum/%{name}-nightly-%{_snap}.tar.gz
 #Source0:	http://eventum.mysql.org/downloads/eventum-2.0.RC3.tar.gz
 Source0:	%{name}-%{_svn}.tar.bz2
-# Source0-md5:	58678e65fc44ab6e85da8eb12247444f
+# Source0-md5:	bb759594b12c718f044747d5b009c308
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -51,6 +51,7 @@ Patch104:	%{name}-httpclient-clientside.patch
 Patch105:	%{name}-bot-reconnect.patch
 Patch106:	%{name}-mem-limits.patch
 Patch107:	%{name}-gettext.patch
+Patch108:	%{name}-upgrade.patch
 # some tests
 Patch200:	%{name}-fixed-nav.patch
 URL:		http://dev.mysql.com/downloads/other/eventum/
@@ -74,6 +75,7 @@ Requires:	php-pear-Date
 Requires:	php-pear-HTTP_Request
 Requires:	php-pear-Mail
 Requires:	php-pear-Mail_Mime
+Requires:	php-pear-Mail_mimeDecode
 Requires:	php-pear-Math_Stats
 Requires:	php-pear-Net_DIME
 Requires:	php-pear-Net_SMTP
@@ -483,6 +485,7 @@ rm rpc/xmlrpc_client.php
 %patch105 -p1
 %patch106 -p1
 %patch107 -p1
+%patch108 -p1
 
 cat <<'EOF'> mysql-permissions.sql
 # use this schema if you want to grant permissions manually instead of using setup
@@ -788,32 +791,6 @@ EOF
 database_changes.php Perform database changes
 EOF
 
-%triggerpostun -- eventum < 1.7.1-4.132.20061119.3143
-%{_appdir}/upgrade/upgrade.sh %{_appdir}/upgrade/v1.7.1_to_v2.0 <<EOF
-database_changes.php Perform database changes
-EOF
-
-%triggerpostun -- eventum < 2.0-0.211
-%{_appdir}/upgrade/upgrade.sh %{_appdir}/upgrade/v2.0_to_v2.0.1 <<EOF
-database_changes.php Perform database changes
-EOF
-
-%triggerpostun -- eventum < 2.1
-%{_appdir}/upgrade/upgrade.sh %{_appdir}/upgrade/v2.0_to_v2.1 <<EOF
-database_changes.php Perform database changes
-update_custom_field_by_type.php Update custom field types
-EOF
-
-%triggerpostun irc -- eventum-irc < 1.6.1-3.14
-sed -i -e '
-s,\$irc_host,$irc_server_hostname,
-s,\$irc_port,$irc_server_port,
-s,\$irc_nick,$nickname,
-s,\$irc_realname,$realname,
-s,\$irc_username,$username,
-s,\$irc_password,$password,
-' /etc/eventum/irc.php
-
 %triggerpostun -- eventum < 1.7.0-2.0.48
 # migrate from apache-config macros
 if [ -f /etc/%{name}/apache.conf.rpmsave ]; then
@@ -852,28 +829,47 @@ for i in apache.conf config.php private_key.php setup.php; do
 	fi
 done
 
-%triggerpostun cli -- %{name}-cli < 1.7.0-3.4
-if [ -f %{_webappdir}/cli.php.rpmsave ]; then
-	mv -f %{_sysconfdir}/cli.php{,.rpmnew}
-	mv -f %{_webappdir}/cli.php.rpmsave %{_sysconfdir}/cli.php
-fi
+%triggerpostun -- eventum < 1.7.1-4.132.20061119.3143
+%{_appdir}/upgrade/upgrade.sh %{_appdir}/upgrade/v1.7.1_to_v2.0 <<EOF
+database_changes.php Perform database changes
+EOF
 
-%triggerpostun scm -- %{name}-scm < 1.7.1-2.70.20060724
-if [ -f %{_sysconfdir}/cvs.php.rpmsave ]; then
-	mv -f %{_sysconfdir}/scm.php{,.rpmnew}
-	mv -f %{_sysconfdir}/cvs.php.rpmsave %{_sysconfdir}/scm.php
-fi
-ln -sf process_cvs_commits $RPM_BUILD_ROOT%{_libdir}/scm
-
-%triggerpostun -- %{name} < 1.7.1-5.165
+%triggerpostun -- eventum < 1.7.1-5.165
 %{__sed} -i -e '
 	/define.*APP_URL/d
 ' %{_webappdir}/config.php
 
-%triggerpostun -- %{name} < 2.0-0.235
+
+%triggerpostun -- eventum < 2.0-0.211
+%{_appdir}/upgrade/upgrade.sh %{_appdir}/upgrade/v2.0_to_v2.0.1 <<EOF
+database_changes.php Perform database changes
+EOF
+
+%triggerpostun -- eventum < 2.0-0.235
 %{_appdir}/upgrade/upgrade.sh %{_appdir}/upgrade/v2.0-beta_to_v2.0 <<EOF
 database_changes.php Perform database changes
 EOF
+
+%triggerpostun -- eventum < 2.1
+%{_appdir}/upgrade/upgrade.sh %{_appdir}/upgrade/v2.0_to_v2.1 <<EOF
+database_changes.php Perform database changes
+update_custom_field_by_type.php Update custom field types
+EOF
+
+%triggerpostun -- eventum < 2.1-0.259
+%{_appdir}/upgrade/upgrade.sh %{_appdir}/upgrade/v2.0_to_v2.1 <<EOF
+database_changes2.php Perform database changes
+EOF
+
+%triggerpostun irc -- eventum-irc < 1.6.1-3.14
+sed -i -e '
+s,\$irc_host,$irc_server_hostname,
+s,\$irc_port,$irc_server_port,
+s,\$irc_nick,$nickname,
+s,\$irc_realname,$realname,
+s,\$irc_username,$username,
+s,\$irc_password,$password,
+' /etc/eventum/irc.php
 
 %triggerpostun irc -- %{name}-irc < 1.7.1-5.181
 # change from 1.7.0-3.4
@@ -887,6 +883,19 @@ if [ -f %{_sysconfdir}/irc.php.rpmsave ]; then
 	mv -f %{_webappdir}/irc_config.php{,.rpmnew}
 	mv -f %{_sysconfdir}/irc.php.rpmsave %{_webappdir}/irc_config.php
 fi
+
+%triggerpostun cli -- %{name}-cli < 1.7.0-3.4
+if [ -f %{_webappdir}/cli.php.rpmsave ]; then
+	mv -f %{_sysconfdir}/cli.php{,.rpmnew}
+	mv -f %{_webappdir}/cli.php.rpmsave %{_sysconfdir}/cli.php
+fi
+
+%triggerpostun scm -- %{name}-scm < 1.7.1-2.70.20060724
+if [ -f %{_sysconfdir}/cvs.php.rpmsave ]; then
+	mv -f %{_sysconfdir}/scm.php{,.rpmnew}
+	mv -f %{_sysconfdir}/cvs.php.rpmsave %{_sysconfdir}/scm.php
+fi
+ln -sf process_cvs_commits $RPM_BUILD_ROOT%{_libdir}/scm
 
 %files -f %{name}.lang
 %defattr(644,root,root,755)
