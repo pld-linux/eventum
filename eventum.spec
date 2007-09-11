@@ -90,6 +90,7 @@ Requires:	webapps
 Requires:	webserver(access)
 Requires:	webserver(alias)
 Requires:	webserver(php) >= 4.2.0
+Conflicts:	logrotate < 3.7.4
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -913,7 +914,7 @@ ln -sf process_cvs_commits $RPM_BUILD_ROOT%{_libdir}/scm
 %dir %attr(731,root,eventum) /var/log/%{name}
 %attr(620,root,eventum) %ghost /var/log/%{name}/*
 %dir %attr(750,root,root) /var/log/archive/%{name}
-%config(noreplace) %verify(not md5 mtime size) /etc/logrotate.d/%{name}
+%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/logrotate.d/%{name}
 
 %dir %{_appdir}/htdocs
 %{_appdir}/htdocs/*.php
