@@ -67,48 +67,48 @@ TODO:
       * from a given mailbox.
       *
 @@ -536,10 +580,11 @@
-                     $res = Routing::getMatchingIssueIDs($addresses, 'email');
-                     if ($res != false) {
-                         $return = Routing::route_emails($message);
--                        if ($return == true) {
-+                        if ($return === true) {
-                             Support::deleteMessage($info, $mbox, $num);
-                             return;
-                         }
-+                        // TODO: handle errors?
+                 $res = Routing::getMatchingIssueIDs($addresses, 'email');
+                 if ($res != false) {
+                     $return = Routing::route_emails($message);
+-                    if ($return == true) {
++                    if ($return === true) {
+                         Support::deleteMessage($info, $mbox, $num);
                          return;
                      }
++                    // TODO: handle errors?
+                     return;
                  }
+             }
 @@ -547,10 +592,13 @@
-                     $res = Routing::getMatchingIssueIDs($addresses, 'note');
-                     if ($res != false) {
-                         $return = Routing::route_notes($message);
--                        if ($return == true) {
--                            Support::deleteMessage($info, $mbox, $num);
--                            return;
-+                        if ($return !== true) {
-+                            // in case of error, create bounce, but still
-+                            // delete email not to send bounce in next process :)
-+                            Support::bounceMessage($email, $return);
-                         }
+                 $res = Routing::getMatchingIssueIDs($addresses, 'note');
+                 if ($res != false) {
+                     $return = Routing::route_notes($message);
+-                    if ($return == true) {
+-                        Support::deleteMessage($info, $mbox, $num);
+-                        return;
++                    if ($return !== true) {
++                        // in case of error, create bounce, but still
++                        // delete email not to send bounce in next process :)
++                        Support::bounceMessage($email, $return);
+                     }
 +
-+                        Support::deleteMessage($info, $mbox, $num);
-                         return;
-                     }
++                    Support::deleteMessage($info, $mbox, $num);
+                     return;
                  }
+             }
 @@ -558,10 +606,11 @@
-                     $res = Routing::getMatchingIssueIDs($addresses, 'draft');
-                     if ($res != false) {
-                         $return = Routing::route_drafts($message);
--                        if ($return == true) {
-+                        if ($return === true) {
-                             Support::deleteMessage($info, $mbox, $num);
-                             return;
-                         }
-+                        // TODO: handle errors?
+                 $res = Routing::getMatchingIssueIDs($addresses, 'draft');
+                 if ($res != false) {
+                     $return = Routing::route_drafts($message);
+-                    if ($return == true) {
++                    if ($return === true) {
+                         Support::deleteMessage($info, $mbox, $num);
                          return;
                      }
++                    // TODO: handle errors?
+                     return;
                  }
+             }
 --- templates/notifications/bounced_email.tpl.text	(revision 0)
 +++ templates/notifications/bounced_email.tpl.text	(revision 0)
 @@ -0,0 +1,12 @@
