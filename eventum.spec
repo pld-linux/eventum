@@ -10,8 +10,8 @@
 %bcond_with	qmail	# build the router-qmail subpackage
 
 #define	_snap	20060921
-%define	_svn	r3386
-%define	_rel	0.264
+%define	_svn	r3399
+%define	_rel	0.265
 #define	_rc		RC3
 
 %include	/usr/lib/rpm/macros.php
@@ -25,7 +25,7 @@ Group:		Applications/WWW
 #Source0:	http://downloads.mysql.com/snapshots/eventum/%{name}-nightly-%{_snap}.tar.gz
 #Source0:	http://eventum.mysql.org/downloads/eventum-2.0.RC3.tar.gz
 Source0:	%{name}-%{_svn}.tar.bz2
-# Source0-md5:	3b49c72f1a4bb85e76189e8d9668a50a
+# Source0-md5:	1f0c9d8cf5bb901d54e73d1a57f20531
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -42,7 +42,6 @@ Source14:	%{name}.logrotate
 Source15:	%{name}-lighttpd.conf
 Patch0:		%{name}-lf.patch
 Patch1:		%{name}-bounce-notes.patch
-Patch2:		http://glen.alkohol.ee/pld/eventum/should_create_issue.patch
 # packaging patches that probably never go upstream
 Patch100:	%{name}-paths.patch
 Patch101:	%{name}-cvs-config.patch
@@ -475,7 +474,6 @@ rm rpc/xmlrpc_client.php
 # bug fixes / features
 %patch0 -p1
 %patch1 -p0
-%patch2 -p1
 
 #%patch200 -p1
 
@@ -862,6 +860,11 @@ EOF
 %triggerpostun -- eventum < 2.1-0.259
 %{_appdir}/upgrade/upgrade.sh %{_appdir}/upgrade/v2.0_to_v2.1 <<EOF
 database_changes2.php Perform database changes
+EOF
+
+%triggerpostun -- eventum < 2.1-0.265
+%{_appdir}/upgrade/upgrade.sh %{_appdir}/upgrade/v2.0_to_v2.1 <<EOF
+database_changes3.php Perform database changes
 EOF
 
 %triggerpostun irc -- eventum-irc < 1.6.1-3.14
