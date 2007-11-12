@@ -10,8 +10,8 @@
 %bcond_with	qmail	# build the router-qmail subpackage
 
 #define	_snap	20060921
-%define	_svn	r3400
-%define	_rel	0.266
+%define	_svn	r3467
+%define	_rel	0.267
 #define	_rc		RC3
 
 %include	/usr/lib/rpm/macros.php
@@ -24,8 +24,9 @@ License:	GPL
 Group:		Applications/WWW
 #Source0:	http://downloads.mysql.com/snapshots/eventum/%{name}-nightly-%{_snap}.tar.gz
 #Source0:	http://eventum.mysql.org/downloads/eventum-2.0.RC3.tar.gz
-Source0:	%{name}-%{_svn}.tar.bz2
-# Source0-md5:	f71d0169a852940e3327f8b2e6ea749b
+#Source0:	%{name}-%{_svn}.tar.bz2
+Source0:	http://glen.alkohol.ee/pld/eventum/eventum-r3467.tar.bz2
+# Source0-md5:	cb7db94f4cc86a246f11d723970be29c
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -46,7 +47,6 @@ Patch1:		%{name}-bounce-notes.patch
 Patch100:	%{name}-paths.patch
 Patch101:	%{name}-cvs-config.patch
 Patch102:	%{name}-irc-config.patch
-Patch103:	%{name}-PEAR.patch
 Patch104:	%{name}-httpclient-clientside.patch
 Patch105:	%{name}-bot-reconnect.patch
 Patch106:	%{name}-mem-limits.patch
@@ -481,7 +481,6 @@ rm rpc/xmlrpc_client.php
 %patch100 -p1
 %patch101 -p1
 %patch102 -p1
-%patch103 -p1
 %patch104 -p1
 %patch105 -p1
 %patch106 -p1
@@ -494,16 +493,6 @@ cat <<'EOF'> mysql-permissions.sql
 GRANT SELECT, UPDATE, DELETE, INSERT, ALTER, DROP, CREATE, INDEX ON eventum.* TO 'eventum'@'localhost' IDENTIFIED BY 'password';
 EOF
 
-mv misc/localization/de{_DE,}
-mv misc/localization/es{_ES,}
-mv misc/localization/fi{_FI,}
-mv misc/localization/fr{_FR,}
-mv misc/localization/it{_IT,}
-mv misc/localization/nl{_NL,}
-mv misc/localization/ru{_RU,}
-mv misc/localization/sv{_SE,}
-mkdir -p misc/localization/pl/LC_MESSAGES
-
 sed -e '1s,#!.*/bin/php -q,#!%{_bindir}/php,' misc/cli/eventum > %{name}-cli
 mv misc/cli/eventumrc_example eventumrc
 sed -i -e '1i#!%{_bindir}/php' misc/*.php
@@ -515,10 +504,7 @@ sed -i -e "s,require_once.*init.php.*;,require_once '%{_appdir}/htdocs/init.php'
 find '(' -name '*~' -o -name '*.orig' ')' | xargs -r rm -v
 
 %build
-cd misc/localization
-for a in */LC_MESSAGES; do
-	msgfmt -o $a/eventum.mo $a/eventum.po
-done
+%{__make} -C misc/localization
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -605,9 +591,10 @@ install %{SOURCE13} $RPM_BUILD_ROOT%{_libdir}/router-postfix
 install -D %{SOURCE14} $RPM_BUILD_ROOT/etc/logrotate.d/%{name}
 # locale
 cd misc/localization
-for a in */LC_MESSAGES; do
-	install -d $RPM_BUILD_ROOT%{_datadir}/locale/$a
-	cp -a $a/%{name}.mo $RPM_BUILD_ROOT%{_datadir}/locale/$a
+for a in */LC_MESSAGES/*.mo; do
+	d=${a%/*}
+	install -d $RPM_BUILD_ROOT%{_datadir}/locale/$d
+	cp -a $a $RPM_BUILD_ROOT%{_datadir}/locale/$d
 done
 cd -
 
