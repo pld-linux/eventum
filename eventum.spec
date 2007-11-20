@@ -10,8 +10,8 @@
 %bcond_with	qmail	# build the router-qmail subpackage
 
 #define	_snap	20060921
-%define	_svn	r3467
-%define	_rel	0.267
+%define	_svn	r3475
+%define	_rel	0.269
 #define	_rc		RC3
 
 %include	/usr/lib/rpm/macros.php
@@ -24,9 +24,8 @@ License:	GPL
 Group:		Applications/WWW
 #Source0:	http://downloads.mysql.com/snapshots/eventum/%{name}-nightly-%{_snap}.tar.gz
 #Source0:	http://eventum.mysql.org/downloads/eventum-2.0.RC3.tar.gz
-#Source0:	%{name}-%{_svn}.tar.bz2
-Source0:	http://glen.alkohol.ee/pld/eventum/eventum-r3467.tar.bz2
-# Source0-md5:	cb7db94f4cc86a246f11d723970be29c
+Source0:	%{name}-%{_svn}.tar.bz2
+# Source0-md5:	986f66a1afde05d3ff2c14159f97c85e
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -63,7 +62,6 @@ Requires(triggerpostun):	/usr/bin/php
 Requires(triggerpostun):	sed >= 4.0
 Requires:	%{name}-base = %{version}-%{release}
 Requires:	Smarty >= 2.6.10-4
-Requires:	apache(mod_dir)
 Requires:	php(gd)
 Requires:	php(imap)
 Requires:	php(mbstring)
@@ -89,6 +87,7 @@ Requires:	smarty-gettext
 Requires:	webapps
 Requires:	webserver(access)
 Requires:	webserver(alias)
+Requires:	webserver(indexfile)
 Requires:	webserver(php) >= 4.2.0
 Conflicts:	logrotate < 3.7-4
 BuildArch:	noarch
@@ -852,6 +851,11 @@ EOF
 %triggerpostun -- eventum < 2.1-0.265
 %{_appdir}/upgrade/upgrade.sh %{_appdir}/upgrade/v2.0_to_v2.1 <<EOF
 database_changes3.php Perform database changes
+EOF
+
+%triggerpostun -- eventum < 2.1-0.269
+%{_appdir}/upgrade/upgrade.sh %{_appdir}/upgrade/v2.0_to_v2.1 <<EOF
+database_changes4.php Perform database changes
 EOF
 
 %triggerpostun irc -- eventum-irc < 1.6.1-3.14
