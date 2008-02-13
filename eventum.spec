@@ -10,7 +10,7 @@
 %bcond_with	qmail	# build the router-qmail subpackage
 
 #define	_snap	20060921
-#define	_svn	r3540
+%define	_svn	r3540
 %define	_rel	2
 #define	_rc		RC3
 
@@ -24,9 +24,9 @@ License:	GPL
 Group:		Applications/WWW
 #Source0:	http://downloads.mysql.com/snapshots/eventum/%{name}-nightly-%{_snap}.tar.gz
 #Source0:	http://eventum.mysql.org/downloads/eventum-2.0.RC3.tar.gz
-#Source0:	%{name}-%{_svn}.tar.bz2
-Source0:	http://mysql.tonnikala.org/Downloads/eventum/%{name}-%{version}.tar.gz
-# Source0-md5:	5aa6b0fa776251887d3c96decdfe4da7
+#Source0:	http://mysql.tonnikala.org/Downloads/eventum/%{name}-%{version}.tar.gz
+Source0:	%{name}-%{_svn}.tar.bz2
+# Source0-md5:	18a4e4739e558875fc296746ecb2d6ab
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
