@@ -11,7 +11,7 @@
 
 #define	_snap	20060921
 #define	_svn	r3540
-%define	_rel	1
+%define	_rel	2
 #define	_rc		RC3
 
 %include	/usr/lib/rpm/macros.php
