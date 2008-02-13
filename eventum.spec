@@ -10,7 +10,7 @@
 %bcond_with	qmail	# build the router-qmail subpackage
 
 #define	_snap	20060921
-#define	_svn	r3475
+#define	_svn	r3540
 %define	_rel	1
 #define	_rc		RC3
 
@@ -18,7 +18,7 @@
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl.UTF-8):	Eventum - system śledzenia spraw/błędów
 Name:		eventum
-Version:	2.1
+Version:	2.1.1
 Release:	%{?_rc:%{_rc}.}%{_rel}%{?_snap:.%{_snap}}%{?_svn:.%{_svn}}
 License:	GPL
 Group:		Applications/WWW
@@ -26,7 +26,7 @@ Group:		Applications/WWW
 #Source0:	http://eventum.mysql.org/downloads/eventum-2.0.RC3.tar.gz
 #Source0:	%{name}-%{_svn}.tar.bz2
 Source0:	http://mysql.tonnikala.org/Downloads/eventum/%{name}-%{version}.tar.gz
-# Source0-md5:	bfb7270095e1d68c1b698315b85ba42e
+# Source0-md5:	5aa6b0fa776251887d3c96decdfe4da7
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -47,14 +47,13 @@ Patch1:		%{name}-bounce-notes.patch
 Patch100:	%{name}-paths.patch
 Patch101:	%{name}-cvs-config.patch
 Patch102:	%{name}-irc-config.patch
-Patch104:	%{name}-httpclient-clientside.patch
 Patch105:	%{name}-bot-reconnect.patch
 Patch106:	%{name}-mem-limits.patch
 Patch107:	%{name}-gettext.patch
 Patch108:	%{name}-upgrade.patch
 # some tests
 Patch200:	%{name}-fixed-nav.patch
-URL:		http://dev.mysql.com/downloads/other/eventum/
+URL:		http://eventum.mysql.org/
 BuildRequires:	gettext-devel
 BuildRequires:	rpm-php-pearprov >= 4.0.2-98
 BuildRequires:	rpmbuild(macros) >= 1.268
@@ -481,7 +480,6 @@ rm rpc/xmlrpc_client.php
 %patch100 -p1
 %patch101 -p1
 %patch102 -p1
-%patch104 -p1
 %patch105 -p1
 %patch106 -p1
 %patch107 -p1
