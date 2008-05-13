@@ -10,8 +10,8 @@
 %bcond_with	qmail	# build the router-qmail subpackage
 
 #define	snap	20060921
-%define	svn	r3569
-%define	rel	2.3
+%define	svn		r3570
+%define	rel		2.4
 #define	_rc		RC3
 
 %include	/usr/lib/rpm/macros.php
@@ -496,7 +496,11 @@ mv misc/cli/eventumrc_example eventumrc
 sed -i -e '1i#!%{_bindir}/php' misc/*.php
 chmod +x misc/*.php
 
-sed -i -e "s,require_once.*init.php.*;,require_once '%{_appdir}/htdocs/init.php';," misc/upgrade/*/*.php
+%{__sed} -i -e "
+s,require_once.*init.php.*;,require_once '%{_appdir}/htdocs/init.php';,
+s;define('CONFIG_PATH'.*');define('CONFIG_PATH', '%{_webappdir}');
+/define('INSTALL_PATH'/d
+" misc/upgrade/*/*.php
 
 # remove backups from patching as we use globs to package files to buildroot
 find '(' -name '*~' -o -name '*.orig' ')' | xargs -r rm -v
