@@ -9,9 +9,9 @@
 # Conditional build:
 %bcond_with	qmail	# build the router-qmail subpackage
 
-#define	_snap	20060921
-%define	_svn	r3558
-%define	_rel	2.2
+#define	snap	20060921
+%define	svn	r3569
+%define	rel	2.3
 #define	_rc		RC3
 
 %include	/usr/lib/rpm/macros.php
@@ -19,14 +19,14 @@ Summary:	Eventum Issue / Bug tracking system
 Summary(pl.UTF-8):	Eventum - system śledzenia spraw/błędów
 Name:		eventum
 Version:	2.1.1
-Release:	%{?_rc:%{_rc}.}%{_rel}%{?_snap:.%{_snap}}%{?_svn:.%{_svn}}
+Release:	%{?_rc:%{_rc}.}%{rel}%{?snap:.%{snap}}%{?svn:.%{svn}}
 License:	GPL
 Group:		Applications/WWW
-#Source0:	http://downloads.mysql.com/snapshots/eventum/%{name}-nightly-%{_snap}.tar.gz
+#Source0:	http://downloads.mysql.com/snapshots/eventum/%{name}-nightly-%{snap}.tar.gz
 #Source0:	http://eventum.mysql.org/downloads/eventum-2.0.RC3.tar.gz
 #Source0:	http://mysql.tonnikala.org/Downloads/eventum/%{name}-%{version}.tar.gz
-Source0:	%{name}-%{_svn}.tar.bz2
-# Source0-md5:	f690b75f42992bf261ef91600282bcd3
+Source0:	%{name}-%{svn}.tar.bz2
+# Source0-md5:	6aaa0b9100c1e0983636d9e6dc739221
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -456,7 +456,7 @@ Szczegóły na temat instalacji można przeczytać pod
 </eventum/help.php?topic=scm_integration_installation>.
 
 %prep
-%setup -q %{?_snap:-n %{name}-%{_snap}}%{?_svn:-n %{name}-%{_svn}}
+%setup -q %{?snap:-n %{name}-%{snap}}%{?svn:-n %{name}-%{svn}}
 # undos the source
 find . -type f -print0 | xargs -0 sed -i -e 's,\r$,,'
 
@@ -557,7 +557,7 @@ cp -a %{SOURCE9} $RPM_BUILD_ROOT/etc/sysconfig/eventum-irc
 
 
 %{__sed} -i -e "/define('APP_VERSION'/ {
-    idefine('APP_VERSION', '%{version}%{?_snap:-%{_snap}}%{?_rc:-%{_rc}}%{?_svn:-%{_svn}}');
+    idefine('APP_VERSION', '%{version}%{?snap:-%{snap}}%{?_rc:-%{_rc}}%{?svn:-%{svn}}');
     d
 
 }" $RPM_BUILD_ROOT%{_appdir}/htdocs/init.php
@@ -855,6 +855,11 @@ EOF
 %triggerpostun -- eventum < 2.1-0.269
 %{_appdir}/upgrade/upgrade.sh %{_appdir}/upgrade/v2.0_to_v2.1 <<EOF
 database_changes4.php Perform database changes
+EOF
+
+%triggerpostun -- eventum < 2.1.1-2.3
+%{_appdir}/upgrade/upgrade.sh %{_appdir}/upgrade/v2.1.1_to_v2.2 <<EOF
+database_changes.php Perform database changes
 EOF
 
 %triggerpostun irc -- eventum-irc < 1.6.1-3.14
