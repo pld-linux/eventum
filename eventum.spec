@@ -10,8 +10,8 @@
 %bcond_with	qmail	# build the router-qmail subpackage
 
 #define	snap	20060921
-%define	svn		r3570
-%define	rel		2.4
+%define	svn		r3576
+%define	rel		2.6
 #define	_rc		RC3
 
 %include	/usr/lib/rpm/macros.php
@@ -26,7 +26,7 @@ Group:		Applications/WWW
 #Source0:	http://eventum.mysql.org/downloads/eventum-2.0.RC3.tar.gz
 #Source0:	http://mysql.tonnikala.org/Downloads/eventum/%{name}-%{version}.tar.gz
 Source0:	%{name}-%{svn}.tar.bz2
-# Source0-md5:	a8a0e414d7af85feecc4a38ede8f432d
+# Source0-md5:	5881deb20233ed663e51a5da510912df
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -861,9 +861,14 @@ EOF
 database_changes4.php Perform database changes
 EOF
 
-%triggerpostun -- eventum < 2.1.1-2.3
+%triggerpostun -- eventum < 2.1.1-2.5
 %{_appdir}/upgrade/upgrade.sh %{_appdir}/upgrade/v2.1.1_to_v2.2 <<EOF
 database_changes.php Perform database changes
+EOF
+
+%triggerpostun -- eventum < 2.1.1-2.6
+%{_appdir}/upgrade/upgrade.sh %{_appdir}/upgrade/v2.1.1_to_v2.2 <<EOF
+database_changes2.php Perform database changes
 EOF
 
 %triggerpostun irc -- eventum-irc < 1.6.1-3.14
