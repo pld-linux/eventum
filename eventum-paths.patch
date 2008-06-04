@@ -54,8 +54,7 @@
      Header('Location: setup/');
      exit;
  }
-@@ -44,31 +44,31 @@
- define('APP_VERSION', '2.1.2');
+@@ -45,30 +45,30 @@
  
  // define base path
 -define('APP_PATH', realpath(dirname(__FILE__)) . '/');
