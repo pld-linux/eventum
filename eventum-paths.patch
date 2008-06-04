@@ -43,17 +43,19 @@
          return smarty_modifier_highlight_quoted($text);
      }
  
---- eventum/init.php	2007-01-30 19:05:56.897776515 +0200
-+++ eventum/init.php	2007-01-30 20:12:31.017572265 +0200
-@@ -27,5 +27,5 @@
+--- eventum-r3615/init.php~	2008-06-05 00:02:42.833798000 +0300
++++ eventum-r3615/init.php	2008-06-05 00:02:58.229406819 +0300
+@@ -26,7 +26,7 @@
+ // | Authors: Elan Ruusamäe <glen@delfi.ee>                               |
  // +----------------------------------------------------------------------+
  
 -if (!file_exists(dirname(__FILE__) . '/config/config.php')) {
 +if (!file_exists('/etc/webapps/eventum/config.php')) {
      Header('Location: setup/');
      exit;
-@@ -43,31 +43,31 @@
- define('APP_VERSION', '2.0-alpha');
+ }
+@@ -44,31 +44,31 @@
+ define('APP_VERSION', '2.1.2');
  
  // define base path
 -define('APP_PATH', realpath(dirname(__FILE__)) . '/');
@@ -91,7 +93,7 @@
  }
  
  if (!defined('APP_JPGRAPH_PATH')) {
-@@ -75,7 +75,7 @@
+@@ -76,7 +76,7 @@
  }
  
  if (!defined('APP_LOCKS_PATH')) {
@@ -100,7 +102,12 @@
  }
  
  if (!defined('APP_SETUP_FILE')) {
-@@ -83,7 +83,7 @@
+@@ -84,11 +84,11 @@
+ }
+ 
+ if (!defined('APP_SQL_PATCHES_PATH')) {
+-    define('APP_SQL_PATCHES_PATH', APP_PATH . 'misc/upgrade/patches');
++    define('APP_SQL_PATCHES_PATH', '/usr/share/eventum/upgrade/patches');
  }
  
  if (!defined('APP_LOG_PATH')) {
@@ -108,7 +115,7 @@
 +    define('APP_LOG_PATH', '/var/log/eventum/');
  }
  
- if (!defined('APP_ERROR_LOG')) {
+ if (!defined('APP_ROUTED_MAILS_SAVEDIR')) {
 --- eventum/setup/index.php~	2007-01-30 20:04:32.306824546 +0200
 +++ eventum/setup/index.php	2007-01-30 20:14:43.880555938 +0200
 @@ -38,17 +38,17 @@
