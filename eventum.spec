@@ -10,15 +10,15 @@
 %bcond_with	qmail	# build the router-qmail subpackage
 
 #define	snap	20060921
-%define	svn		r3576
-%define	rel		2.6
+%define	svn		r3615
+%define	rel		0.19
 #define	_rc		RC3
 
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl.UTF-8):	Eventum - system śledzenia spraw/błędów
 Name:		eventum
-Version:	2.1.1
+Version:	2.2
 Release:	%{?_rc:%{_rc}.}%{rel}%{?snap:.%{snap}}%{?svn:.%{svn}}
 License:	GPL
 Group:		Applications/WWW
@@ -26,7 +26,7 @@ Group:		Applications/WWW
 #Source0:	http://eventum.mysql.org/downloads/eventum-2.0.RC3.tar.gz
 #Source0:	http://mysql.tonnikala.org/Downloads/eventum/%{name}-%{version}.tar.gz
 Source0:	%{name}-%{svn}.tar.bz2
-# Source0-md5:	5881deb20233ed663e51a5da510912df
+# Source0-md5:	65014cd0db22f54d293b165504fb7b65
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -50,7 +50,6 @@ Patch102:	%{name}-irc-config.patch
 Patch105:	%{name}-bot-reconnect.patch
 Patch106:	%{name}-mem-limits.patch
 Patch107:	%{name}-gettext.patch
-Patch108:	%{name}-upgrade.patch
 # some tests
 Patch200:	%{name}-fixed-nav.patch
 URL:		http://eventum.mysql.org/
@@ -462,9 +461,9 @@ find . -type f -print0 | xargs -0 sed -i -e 's,\r$,,'
 
 rm benchmark.php
 rm -r misc/upgrade/*v1.[123]* # too old to support in PLD Linux
+rm -r misc/upgrade/v{1.,2.0,2.1_}* # no longer supported in PLD Linux
 rm misc/upgrade/flush_compiled_templates.php
-rm -r misc/upgrade/*/upgrade_config.php # not needed in PLD Linux
-rm -r misc/upgrade/*/index.html # not needed in PLD Linux
+rm -r misc/upgrade/{*/,}index.html # not needed in PLD Linux
 
 rm -r include/php-gettext
 # sample, not used in eventum
@@ -483,7 +482,6 @@ rm rpc/xmlrpc_client.php
 %patch105 -p1
 %patch106 -p1
 %patch107 -p1
-%patch108 -p1
 
 cat <<'EOF'> mysql-permissions.sql
 # use this schema if you want to grant permissions manually instead of using setup
@@ -500,7 +498,7 @@ chmod +x misc/*.php
 s,require_once.*init.php.*;,require_once '%{_appdir}/htdocs/init.php';,
 s;define('CONFIG_PATH'.*');define('CONFIG_PATH', '%{_webappdir}');
 /define('INSTALL_PATH'/d
-" misc/upgrade/*/*.php
+" misc/upgrade/{*/,}*.php
 
 # remove backups from patching as we use globs to package files to buildroot
 find '(' -name '*~' -o -name '*.orig' ')' | xargs -r rm -v
@@ -664,6 +662,9 @@ so that %{name}-setup is able to secure your Eventum installation.
 EOF
 fi
 
+# database update
+%{_appdir}/upgrade/update-database.php || :
+
 # nuke Smarty templates cache after upgrade
 rm -f /var/cache/eventum/*.php
 
@@ -745,167 +746,12 @@ fi
 %triggerun -- lighttpd
 %webapp_unregister lighttpd %{_webapp}
 
-# FIXME
-# only one upgrade trigger is called if you're upgrading over two
-# versions, say 1.5 to 1.5.3, only 1.5.3 trigger is called.
-# use common trigger (the highest version and rpmvercmp from poldek?)
-%triggerpostun -- eventum < 1.5.1-0.257
-%{_appdir}/upgrade/upgrade.sh %{_appdir}/upgrade/v1.5_to_v1.5.1 <<EOF
-database_changes.php Perform database changes
-EOF
-
-%triggerpostun -- eventum < 1.5.2-0.289
-%{_appdir}/upgrade/upgrade.sh %{_appdir}/upgrade/v1.5.1_to_v1.5.2 <<EOF
-database_changes.php Perform database changes
-set_priority_ranks.php Fix the ranking of priority values
-EOF
-
-%triggerpostun -- eventum < 1.5.3-0.291
-%{_appdir}/upgrade/upgrade.sh %{_appdir}/upgrade/v1.5.2_to_v1.5.3 <<EOF
-database_changes.php Perform database changes
-EOF
-
-%triggerpostun -- eventum < 1.5.4-1.12
-%{_appdir}/upgrade/upgrade.sh %{_appdir}/upgrade/v1.5.3_to_v1.5.4 <<EOF
-database_changes.php Perform database changes
-EOF
-
-%triggerpostun -- eventum < 1.6.0-RC2.6
-%{_appdir}/upgrade/upgrade.sh %{_appdir}/upgrade/v1.5.5_to_v1.6.0 <<EOF
-database_changes.php Perform database changes
-upgrade_saved_searches.php Upgrade existing custom filters (saved searches)
-EOF
-
-%triggerpostun -- eventum < 1.6.1-0.2
-%{_appdir}/upgrade/upgrade.sh %{_appdir}/upgrade/v1.6.0_to_v1.6.1 <<EOF
-database_changes.php Perform database changes
-EOF
-
-%triggerpostun -- eventum < 1.7.0-2.0.48
-# migrate from apache-config macros
-if [ -f /etc/%{name}/apache.conf.rpmsave ]; then
-	if [ -d /etc/apache/webapps.d ]; then
-		cp -f %{_webapps}/%{_webapp}/apache.conf{,.rpmnew}
-		cp -f /etc/%{name}/apache.conf.rpmsave %{_webapps}/%{_webapp}/apache.conf
-	fi
-
-	if [ -d /etc/httpd/webapps.d ]; then
-		cp -f %{_webapps}/%{_webapp}/httpd.conf{,.rpmnew}
-		cp -f /etc/%{name}/apache.conf.rpmsave %{_webapps}/%{_webapp}/httpd.conf
-	fi
-fi
-
-if [ -L /etc/apache/conf.d/99_%{_webapp}.conf ]; then
-	/usr/sbin/webapp register apache %{_webapp}
-	rm -f /etc/apache/conf.d/99_%{_webapp}.conf
-	%service -q apache reload
-fi
-if [ -L /etc/httpd/httpd.conf/99_%{_webapp}.conf ]; then
-	/usr/sbin/webapp register httpd %{_webapp}
-	rm -f /etc/httpd/httpd.conf/99_%{_webapp}.conf
-	%service -q httpd reload
-fi
-
-%{_appdir}/upgrade/upgrade.sh %{_appdir}/upgrade/v1.6.1_to_v1.7.0 <<EOF
-database_changes.php Perform database changes
-set_root_message_ids.php Set iss_root_message_id
-EOF
-
-# regular configs
-for i in apache.conf config.php private_key.php setup.php; do
-	if [ -f /etc/eventum/$i.rpmsave ]; then
-		mv -f %{_webappdir}/$i{,.rpmnew}
-		mv -f /etc/eventum/$i.rpmsave %{_webappdir}/$i
-	fi
-done
-
-%triggerpostun -- eventum < 1.7.1-4.132.20061119.3143
-%{_appdir}/upgrade/upgrade.sh %{_appdir}/upgrade/v1.7.1_to_v2.0 <<EOF
-database_changes.php Perform database changes
-EOF
-
-%triggerpostun -- eventum < 1.7.1-5.165
-%{__sed} -i -e '
-	/define.*APP_URL/d
-' %{_webappdir}/config.php
-
-
-%triggerpostun -- eventum < 2.0-0.211
-%{_appdir}/upgrade/upgrade.sh %{_appdir}/upgrade/v2.0_to_v2.0.1 <<EOF
-database_changes.php Perform database changes
-EOF
-
-%triggerpostun -- eventum < 2.0-0.235
-%{_appdir}/upgrade/upgrade.sh %{_appdir}/upgrade/v2.0-beta_to_v2.0 <<EOF
-database_changes.php Perform database changes
-EOF
-
-%triggerpostun -- eventum < 2.1
-%{_appdir}/upgrade/upgrade.sh %{_appdir}/upgrade/v2.0_to_v2.1 <<EOF
-database_changes.php Perform database changes
-update_custom_field_by_type.php Update custom field types
-EOF
-
-%triggerpostun -- eventum < 2.1-0.259
-%{_appdir}/upgrade/upgrade.sh %{_appdir}/upgrade/v2.0_to_v2.1 <<EOF
-database_changes2.php Perform database changes
-EOF
-
-%triggerpostun -- eventum < 2.1-0.265
-%{_appdir}/upgrade/upgrade.sh %{_appdir}/upgrade/v2.0_to_v2.1 <<EOF
-database_changes3.php Perform database changes
-EOF
-
-%triggerpostun -- eventum < 2.1-0.269
-%{_appdir}/upgrade/upgrade.sh %{_appdir}/upgrade/v2.0_to_v2.1 <<EOF
-database_changes4.php Perform database changes
-EOF
-
-%triggerpostun -- eventum < 2.1.1-2.5
+%triggerpostun -- eventum < 2.1.1-2.13
 %{_appdir}/upgrade/upgrade.sh %{_appdir}/upgrade/v2.1.1_to_v2.2 <<EOF
-database_changes.php Perform database changes
+db_version.php Add eventum_version table
 EOF
-
-%triggerpostun -- eventum < 2.1.1-2.6
-%{_appdir}/upgrade/upgrade.sh %{_appdir}/upgrade/v2.1.1_to_v2.2 <<EOF
-database_changes2.php Perform database changes
-EOF
-
-%triggerpostun irc -- eventum-irc < 1.6.1-3.14
-sed -i -e '
-s,\$irc_host,$irc_server_hostname,
-s,\$irc_port,$irc_server_port,
-s,\$irc_nick,$nickname,
-s,\$irc_realname,$realname,
-s,\$irc_username,$username,
-s,\$irc_password,$password,
-' /etc/eventum/irc.php
-
-%triggerpostun irc -- %{name}-irc < 1.7.1-5.181
-# change from 1.7.0-3.4
-if [ -f %{_webappdir}/irc.php.rpmsave ]; then
-	mv -f %{_webappdir}/irc_config.php{,.rpmnew}
-	mv -f %{_webappdir}/irc.php.rpmsave %{_webappdir}/irc_config.php
-fi
-
-# change from 1.7.1-5.181
-if [ -f %{_sysconfdir}/irc.php.rpmsave ]; then
-	mv -f %{_webappdir}/irc_config.php{,.rpmnew}
-	mv -f %{_sysconfdir}/irc.php.rpmsave %{_webappdir}/irc_config.php
-fi
-
-%triggerpostun cli -- %{name}-cli < 1.7.0-3.4
-if [ -f %{_webappdir}/cli.php.rpmsave ]; then
-	mv -f %{_sysconfdir}/cli.php{,.rpmnew}
-	mv -f %{_webappdir}/cli.php.rpmsave %{_sysconfdir}/cli.php
-fi
-
-%triggerpostun scm -- %{name}-scm < 1.7.1-2.70.20060724
-if [ -f %{_sysconfdir}/cvs.php.rpmsave ]; then
-	mv -f %{_sysconfdir}/scm.php{,.rpmnew}
-	mv -f %{_sysconfdir}/cvs.php.rpmsave %{_sysconfdir}/scm.php
-fi
-ln -sf process_cvs_commits $RPM_BUILD_ROOT%{_libdir}/scm
+# automated database update
+%{_appdir}/upgrade/update-database.php || :
 
 %files -f %{name}.lang
 %defattr(644,root,root,755)
@@ -937,9 +783,14 @@ ln -sf process_cvs_commits $RPM_BUILD_ROOT%{_libdir}/scm
 %{_appdir}/htdocs/rpc
 %{_appdir}/htdocs/misc
 %{_appdir}/templates
+
 %dir %{_appdir}/upgrade
 %attr(755,root,root) %{_appdir}/upgrade/upgrade.sh
-%{_appdir}/upgrade/[!u]*
+%attr(755,root,root) %{_appdir}/upgrade/update-database.php
+%dir %{_appdir}/upgrade/v*
+%attr(755,root,root) %{_appdir}/upgrade/v*/*.php
+%{_appdir}/upgrade/patches
+
 %{_smartyplugindir}
 
 %dir %{_appdir}/include
@@ -947,12 +798,9 @@ ln -sf process_cvs_commits $RPM_BUILD_ROOT%{_libdir}/scm
 %{_appdir}/include/custom_field
 %{_appdir}/include/jpgraph
 %{_appdir}/include/workflow
-%{_appdir}/include/class.[!m]*.php
-%{_appdir}/include/class.mail.php
-%{_appdir}/include/class.mail_queue.php
-%{_appdir}/include/class.mime_helper.php
-%{_appdir}/include/class.misc.php
+%{_appdir}/include/class.*.php
 %{_appdir}/include/db_access.php
+%exclude %{_appdir}/include/class.monitor.php
 
 %dir %attr(730,root,eventum) /var/run/%{name}
 %dir %attr(730,root,eventum) /var/cache/%{name}
