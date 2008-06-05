@@ -10,7 +10,7 @@
 %bcond_with	qmail	# build the router-qmail subpackage
 
 #define	snap	20060921
-%define	svn		r3625
+%define	svn		r3628
 %define	rel		0.22
 #define	_rc		RC3
 
@@ -26,7 +26,7 @@ Group:		Applications/WWW
 #Source0:	http://eventum.mysql.org/downloads/eventum-2.0.RC3.tar.gz
 #Source0:	http://mysql.tonnikala.org/Downloads/eventum/%{name}-%{version}.tar.gz
 Source0:	%{name}-%{svn}.tar.bz2
-# Source0-md5:	eefd9dd3e802fa0a6482adcfe5e855fd
+# Source0-md5:	09f6d3096bcdc2bf66bcd3ab4b68fd93
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -42,7 +42,6 @@ Source13:	%{name}-router-postfix.sh
 Source14:	%{name}.logrotate
 Source15:	%{name}-lighttpd.conf
 Patch0:		%{name}-lf.patch
-Patch1:		%{name}-bounce-notes.patch
 # packaging patches that probably never go upstream
 Patch100:	%{name}-paths.patch
 Patch101:	%{name}-cvs-config.patch
@@ -472,7 +471,6 @@ rm rpc/xmlrpc_client.php
 
 # bug fixes / features
 %patch0 -p1
-%patch1 -p0
 
 #%patch200 -p1
 
