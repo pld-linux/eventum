@@ -10,8 +10,8 @@
 %bcond_with	qmail	# build the router-qmail subpackage
 
 #define	snap	20060921
-%define	svn		r3615
-%define	rel		0.19
+%define	svn		r3624
+%define	rel		0.21
 #define	_rc		RC3
 
 %include	/usr/lib/rpm/macros.php
@@ -26,7 +26,7 @@ Group:		Applications/WWW
 #Source0:	http://eventum.mysql.org/downloads/eventum-2.0.RC3.tar.gz
 #Source0:	http://mysql.tonnikala.org/Downloads/eventum/%{name}-%{version}.tar.gz
 Source0:	%{name}-%{svn}.tar.bz2
-# Source0-md5:	65014cd0db22f54d293b165504fb7b65
+# Source0-md5:	37614e23e2e7ebd2a0cf1f1c394e1922
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -64,6 +64,7 @@ Requires:	Smarty >= 2.6.10-4
 Requires:	php(gd)
 Requires:	php(imap)
 Requires:	php(mbstring)
+Requires:	php(iconv)
 Requires:	php(mysql)
 Requires:	php(pcre)
 Requires:	php(session)
