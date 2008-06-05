@@ -13,80 +13,14 @@ TODO:
 23:02:21  lordrashmi> bon_id, bon_message_id, bon_error
 
 
---- include/class.support.php	(working copy)
-+++ include/class.support.php	2007-04-03 01:53:39.881559822 +0300
-@@ -461,6 +461,50 @@
- 
- 
-     /**
-+     * Bounce message to sender.
-+     *
-+     * @access  public
-+     * @param   object  $message parsed message structure.
-+     * @param   array   array(ERROR_CODE, ERROR_STRING) of error to bounce
-+     * @return  void
-+     */
-+    function bounceMessage($message, $error)
-+    {
-+        // open text template
-+        $tpl = new Template_API;
-+        $tpl->setTemplate('notifications/bounced_email.tpl.text');
-+        $tpl->bulkAssign(array(
-+            'error_code'        => $error[0],
-+            'error_message'     => $error[1],
-+            'date'              => $message->date,
-+            'subject'           => Mime_Helper::fixEncoding($message->subject),
-+            'from'              => Mime_Helper::fixEncoding($message->fromaddress),
-+            'to'                => Mime_Helper::fixEncoding($message->toaddress),
-+            'cc'                => Mime_Helper::fixEncoding(@$message->ccaddress),
-+        ));
-+
-+        $sender_email = Mail_API::getEmailAddress($message->fromaddress);
-+        $usr_id = User::getUserIDByEmail($sender_email);
-+        // change the current locale
-+        if ($usr_id) {
-+            Language::set(User::getLang($usr_id));
-+        }
-+
-+        $text_message = $tpl->getTemplateContents();
-+
-+        // send email (use PEAR's classes)
-+        $mail = new Mail_API;
-+        $mail->setTextBody($text_message);
-+        $setup = $mail->getSMTPSettings();
-+        $mail->send($setup['from'], $sender_email,
-+            APP_SHORT_NAME . ': ' . ev_gettext('Postmaster notify: see transcript for details'));
-+
-+        if ($usr_id) {
-+            Language::restore();
-+        }
-+    }
-+
-+    /**
-      * Method used to get the information about a specific message
-      * from a given mailbox.
-      *
-@@ -536,10 +580,11 @@
-                 $res = Routing::getMatchingIssueIDs($addresses, 'email');
-                 if ($res != false) {
-                     $return = Routing::route_emails($message);
--                    if ($return == true) {
-+                    if ($return === true) {
-                         Support::deleteMessage($info, $mbox, $num);
-                         return;
-                     }
-+                    // TODO: handle errors?
-                     return;
-                 }
-             }
-@@ -547,10 +592,13 @@
-                 $res = Routing::getMatchingIssueIDs($addresses, 'note');
+--- include/class.support.php	2008-06-05 23:25:40.511791440 +0300
++++ include/class.support.php	2008-06-05 23:11:57.268371086 +0300
+@@ -592,9 +592,12 @@
                  if ($res != false) {
                      $return = Routing::route_notes($message);
--                    if ($return == true) {
+                     if ($return !== true) {
 -                        Support::deleteMessage($info, $mbox, $num);
 -                        return;
-+                    if ($return !== true) {
 +                        // in case of error, create bounce, but still
 +                        // delete email not to send bounce in next process :)
 +                        Support::bounceMessage($email, $return);
@@ -96,31 +30,3 @@ TODO:
                      return;
                  }
              }
-@@ -558,10 +606,11 @@
-                 $res = Routing::getMatchingIssueIDs($addresses, 'draft');
-                 if ($res != false) {
-                     $return = Routing::route_drafts($message);
--                    if ($return == true) {
-+                    if ($return === true) {
-                         Support::deleteMessage($info, $mbox, $num);
-                         return;
-                     }
-+                    // TODO: handle errors?
-                     return;
-                 }
-             }
---- templates/notifications/bounced_email.tpl.text	(revision 0)
-+++ templates/notifications/bounced_email.tpl.text	(revision 0)
-@@ -0,0 +1,12 @@
-+----- {t escape=no}Eventum was unable to route your email{/t} -----
-+{$error_message}
-+
-+----- {t escape=no}The original message headers follow{/t} -----
-+{$original_message}
-+Date: {$date}
-+Subject: {$subject}
-+From: {$from}
-+To: {$to}
-+{if $cc!=''}
-+Cc: {$cc}
-+{/if}
