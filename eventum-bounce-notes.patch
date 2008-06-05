@@ -18,7 +18,7 @@ TODO:
 @@ -592,9 +592,12 @@
                  if ($res != false) {
                      $return = Routing::route_notes($message);
-                     if ($return !== true) {
+                     if ($return === true) {
 -                        Support::deleteMessage($info, $mbox, $num);
 -                        return;
 +                        // in case of error, create bounce, but still
