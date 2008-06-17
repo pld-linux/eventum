@@ -54,7 +54,7 @@ Patch200:	%{name}-fixed-nav.patch
 URL:		http://eventum.mysql.org/
 BuildRequires:	gettext-devel
 BuildRequires:	rpm-php-pearprov >= 4.0.2-98
-BuildRequires:	rpmbuild(macros) >= 1.268
+BuildRequires:	rpmbuild(macros) >= 1.461
 BuildRequires:	sed >= 4.0
 Requires(triggerpostun):	/usr/bin/php
 Requires(triggerpostun):	sed >= 4.0
@@ -97,7 +97,7 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define		_libdir		%{_prefix}/lib/%{name}
 %define		_appdir		%{_datadir}/%{name}
 %define		_smartyplugindir	%{_appdir}/include/smarty
-%define		_smartydir	/usr/share/php/Smarty
+%define		_smartydir	%{php_data_dir}/Smarty
 %define		_webapps	/etc/webapps
 %define		_webapp		%{name}
 %define		_webappdir	%{_webapps}/%{_webapp}
