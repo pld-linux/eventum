@@ -10,8 +10,8 @@
 %bcond_with	qmail	# build the router-qmail subpackage
 
 #define	snap	20060921
-%define	svn		r3628
-%define	rel		0.22
+%define	svn		r3712
+%define	rel		0.26
 #define	_rc		RC3
 
 %include	/usr/lib/rpm/macros.php
@@ -26,7 +26,7 @@ Group:		Applications/WWW
 #Source0:	http://eventum.mysql.org/downloads/eventum-2.0.RC3.tar.gz
 #Source0:	http://mysql.tonnikala.org/Downloads/eventum/%{name}-%{version}.tar.gz
 Source0:	%{name}-%{svn}.tar.bz2
-# Source0-md5:	09f6d3096bcdc2bf66bcd3ab4b68fd93
+# Source0-md5:	dac788f9576ed4064746b7823eee7a9d
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -60,13 +60,13 @@ Requires(triggerpostun):	/usr/bin/php
 Requires(triggerpostun):	sed >= 4.0
 Requires:	%{name}-base = %{version}-%{release}
 Requires:	Smarty >= 2.6.10-4
-Requires:	php(gd)
-Requires:	php(imap)
-Requires:	php(mbstring)
-Requires:	php(iconv)
-Requires:	php(mysql)
-Requires:	php(pcre)
-Requires:	php(session)
+Requires:	php-common >= 4:5.0
+Requires:	php-gd
+Requires:	php-iconv
+Requires:	php-imap
+Requires:	php-mbstring
+Requires:	php-mysql
+Requires:	php-pcre
 Requires:	php-pear-DB
 Requires:	php-pear-Date
 Requires:	php-pear-HTTP_Request
@@ -413,7 +413,7 @@ Summary(pl.UTF-8):	Interfejs linii poleceń dla Eventum
 Group:		Applications/WWW
 Requires:	%{name}-base = %{version}-%{release}
 Requires:	php-cli
-Requires:	php-common >= 3:4.1.0
+Requires:	php-common >= 4:5.0
 Requires:	php-pear-XML_RPC
 
 %description cli
@@ -429,9 +429,9 @@ Summary:	Eventum SCM integration
 Summary(pl.UTF-8):	Integracja SCM dla Eventum
 Group:		Applications/WWW
 Requires:	%{name}-base = %{version}-%{release}
-Requires:	php(pcre)
 Requires:	php-cli
-Requires:	php-common >= 3:4.1.0
+Requires:	php-common >= 4:5.0
+Requires:	php-pcre
 
 %description scm
 This feature allows your software development teams to integrate your
