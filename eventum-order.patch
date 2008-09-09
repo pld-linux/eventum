@@ -204,16 +204,14 @@
          $rows = Issue::getParam('rows');
          $hide_closed = Issue::getParam('hide_closed');
          if ($hide_closed === '') {
-@@ -2261,7 +2351,8 @@
-             "iss_summary",
-             "last_action_date",
-             "usr_full_name",
--            "iss_expected_resolution_date"
-+            "iss_expected_resolution_date",
-+            "isu_order"
+@@ -2582,6 +2582,7 @@
+             "last_action_date" => "desc",
+             "usr_full_name" => "asc",
+             "iss_expected_resolution_date" => "desc",
++            "isu_order" => "desc",
          );
-         $items = array(
-             "links"  => array(),
+ 
+         foreach ($custom_fields as $fld_id => $fld_name) {
 @@ -2975,6 +3066,8 @@
          $ids = implode(", ", $ids);
          $stmt = "SELECT
