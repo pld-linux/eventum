@@ -11,7 +11,7 @@
 
 #define	snap	20060921
 %define	svn		r3721
-%define	rel		0.31
+%define	rel		0.32
 #define	_rc		RC3
 
 %include	/usr/lib/rpm/macros.php
@@ -42,6 +42,7 @@ Source13:	%{name}-router-postfix.sh
 Source14:	%{name}.logrotate
 Source15:	%{name}-lighttpd.conf
 Patch0:		%{name}-lf.patch
+Patch1:		%{name}-order.patch
 # packaging patches that probably never go upstream
 Patch100:	%{name}-paths.patch
 Patch101:	%{name}-cvs-config.patch
@@ -471,6 +472,7 @@ rm rpc/xmlrpc_client.php
 
 # bug fixes / features
 %patch0 -p1
+%patch1 -p1
 
 #%patch200 -p1
 
