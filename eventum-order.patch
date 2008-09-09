@@ -1,26 +1,19 @@
---- eventum-1.7.0/include/class.display_column.php	2005-12-29 21:27:24.000000000 +0200
-+++ eventum/include/class.display_column.php	2006-03-22 18:03:06.000000000 +0200
-@@ -223,6 +223,9 @@
+--- eventum-r3721/include/class.display_column.php~	2008-09-09 22:45:13.000000000 +0300
++++ eventum-r3721/include/class.display_column.php	2008-09-09 22:46:04.000000000 +0300
+@@ -229,7 +229,10 @@
                  ),
                  "iss_expected_resolution_date"  =>  array(
-                     "title" =>  "Expected Resolution Date"
+                     "title" =>  ev_gettext("Expected Resolution Date")
+-                )
 +                ),
 +                "isu_order" => array(
-+                    "title" => "Order"
-                 )
++                    "title" => ev_gettext("Issue Order")
++                ),
              )
          );
+         return $columns[$page];
 --- eventum-1.7.0/include/class.issue.php	2005-12-29 21:27:25.000000000 +0200
 +++ eventum/include/class.issue.php	2006-03-27 15:33:02.000000000 +0300
-@@ -421,7 +421,7 @@
-             Reminder_Action::clearLastTriggered($issue_id);
- 
-             // if old status was closed and new status is not, clear closed data from issue.
--            if ($old_details['sta_is_closed'] == 1) {
-+            if (@$old_details['sta_is_closed'] == 1) {
-                 $new_details = Status::getDetails($status_id);
-                 if ($new_details['sta_is_closed'] != 1) {
-                     Issue::clearClosed($issue_id);
 @@ -1245,6 +1245,7 @@
              Error_Handler::logError(array($res->getMessage(), $res->getDebugInfo()), __FILE__, __LINE__);
              return -1;
@@ -394,16 +387,8 @@ diff -ru eventum-1.7.0/list.php eventum/list.php
  $list = Issue::getListing($prj_id, $options, $pagerRow, $rows);
  $tpl->assign("list", $list["list"]);
  $tpl->assign("list_info", $list["info"]);
-@@ -130,4 +150,4 @@
- $tpl->assign("refresh_page", "list.php");
- 
- $tpl->displayTemplate();
--?>
-\ No newline at end of file
-+?>
-diff -ru eventum-1.7.0/templates/en/list.tpl.html eventum/templates/en/list.tpl.html
---- eventum-1.7.0/templates/en/list.tpl.html	2005-12-29 21:27:24.000000000 +0200
-+++ eventum/templates/en/list.tpl.html	2006-03-23 16:28:30.000000000 +0200
+--- eventum-1.7.0/templates/list.tpl.html	2005-12-29 21:27:24.000000000 +0200
++++ eventum/templates/list.tpl.html	2006-03-23 16:28:30.000000000 +0200
 @@ -89,6 +89,28 @@
      f.target = '_popup';
      f.submit();
@@ -412,17 +397,17 @@ diff -ru eventum-1.7.0/templates/en/list.tpl.html eventum/templates/en/list.tpl.
 +{
 +    url = page_url + "?";
 +    url += "reorder_user=" + order_user;
-+	
++
 +    items = document.getElementsByName("item[]");
 +    checkedcount = 0;
 +    for (var i = 0; i < items.length; i++) {
-+	if (items[i].checked) {
-+	    url += "&reorder_source[" + checkedcount + "]=" + items[i].value;
-+	    checkedcount++;
-+	}
++      if (items[i].checked) {
++        url += "&reorder_source[" + checkedcount + "]=" + items[i].value;
++        checkedcount++;
++      }
 +    }
 +    if (checkedcount == 0) {
-+        alert('Please choose which issues to move to the new palce.');
++        alert('{/literal}{t escape=js}Please choose which issues to move to the new place.{/t}{literal}');
 +        return false;
 +    }
 +
@@ -439,7 +424,7 @@ diff -ru eventum-1.7.0/templates/en/list.tpl.html eventum/templates/en/list.tpl.
                  </td>
 -              {/foreach}
 -          {else}
-+	    {/foreach}
++              {/foreach}
 +          {elseif $field_name != 'isu_order' || $isu_order_user}
            <td align="{$column.align|default:'center'}" class="default_white" nowrap {if $column.width != ''}width="{$column.width}"{/if}>
              {if $field_name == 'iss_summary'}
@@ -448,13 +433,13 @@ diff -ru eventum-1.7.0/templates/en/list.tpl.html eventum/templates/en/list.tpl.
                </tr>
              </table>
              {elseif $sorting.links[$field_name] != ''}
--              <a title="sort by {$column.title}" href="{$sorting.links[$field_name]}" class="white_link">{$column.title}</a>
--              {if $sorting.images[$field_name] != ""}<a title="sort by {$column.title}" href="{$sorting.links[$field_name]}" class="white_link"><img border="0" src="{$sorting.images[$field_name]}"></a>{/if}
-+	    <a title="sort by {$column.title}" href="{$sorting.links[$field_name]}" class="white_link">{$column.title}</a>
-+	    {if $field_name == 'isu_order'}
-+	      <br>{$users[$isu_order_user]}
-+	    {/if}
-+            {if $sorting.images[$field_name] != ""}<a title="sort by {$column.title}" href="{$sorting.links[$field_name]}" class="white_link"><img border="0" src="{$sorting.images[$field_name]}"></a>{/if}
+-              <a title="{t}sort by{/t} {$column.title}" href="{$sorting.links[$field_name]}" class="white_link">{$column.title}</a>
+-              {if $sorting.images[$field_name] != ""}<a title="{t}sort by{/t} {$column.title}" href="{$sorting.links[$field_name]}" class="white_link"><img border="0" src="{$sorting.images[$field_name]}"></a>{/if}
++              <a title="{t}sort by{/t} {$column.title}" href="{$sorting.links[$field_name]}" class="white_link">{$column.title}</a>
++              {if $field_name == 'isu_order'}
++                 <br>{$users[$isu_order_user]}
++              {/if}
++              {if $sorting.images[$field_name] != ""}<a title="{t}sort by{/t} {$column.title}" href="{$sorting.links[$field_name]}" class="white_link"><img border="0" src="{$sorting.images[$field_name]}"></a>{/if}
              {else}
                {$column.title}
              {/if}
@@ -472,20 +457,20 @@ diff -ru eventum-1.7.0/templates/en/list.tpl.html eventum/templates/en/list.tpl.
                {if $list[i].iss_private == 1}
                    <b>[Private]</b>
 -              {/if}
-+	      {/if}
++              {/if}
 +	    {elseif $field_name == 'isu_order'}
 +	      {if $isu_order_user}
 +	        {assign var="order" value=$list[i].assigned_users_order[$isu_order_user]}
 +	        {if $order}
-+		<a class="link" title="hide / show reordering options" href="javascript:void(null);" onClick="javascript:toggleVisibility('order{$list[i].iss_id}_');">{$order}</a>
++		<a class="link" title="{t}hide / show reordering options{/t}" href="javascript:void(null);" onClick="javascript:toggleVisibility('order{$list[i].iss_id}_');">{$order}</a>
 +		<div id="order{$list[i].iss_id}_1" style="display: none">
 +	          <table>
 +                    <tr>
-+		      <td class="default">{if $order > 1}<a class="link" title="move up" href="list.php?reorder_user={$isu_order_user}&reorder_source[0]={$list[i].iss_id}&reorder_neworder={math equation="x - 1" x=$order}">Up</a>{/if}</td>
-+		      <td class="default"><a class="link" title="move up" href="list.php?reorder_user={$isu_order_user}&reorder_source[0]={$list[i].iss_id}&reorder_neworder={math equation="x + 1" x=$order}">Down</a></td>
++		      <td class="default">{if $order > 1}<a class="link" title="{t}move up{/t}" href="list.php?reorder_user={$isu_order_user}&reorder_source[0]={$list[i].iss_id}&reorder_neworder={math equation="x - 1" x=$order}">{t}Up{/t}</a>{/if}</td>
++		      <td class="default"><a class="link" title="{t}move up{/t}" href="list.php?reorder_user={$isu_order_user}&reorder_source[0]={$list[i].iss_id}&reorder_neworder={math equation="x + 1" x=$order}">{t}Down{/t}</a></td>
 +	            </tr>
 +		    <tr>
-+                      <td class="default"><a class="link" title="move here" href="javascript:void(null);" onClick="javascript:reorderBulk({$isu_order_user}, {$order})">Move here</a></td>
++                      <td class="default"><a class="link" title="{t}move here{/t}" href="javascript:void(null);" onClick="javascript:reorderBulk({$isu_order_user}, {$order})">{t}Move here{/t}</a></td>
 +	            </tr>
 +	          </table>
 +	        {/if}
@@ -493,15 +478,6 @@ diff -ru eventum-1.7.0/templates/en/list.tpl.html eventum/templates/en/list.tpl.
              {/if}
            </td>
            {/if}
-@@ -348,4 +390,4 @@
- <br />
- 
- {include file="app_info.tpl.html"}
--{include file="footer.tpl.html"}
-\ No newline at end of file
-+{include file="footer.tpl.html"}
-
-
 --- /dev/null	2006-03-28 14:00:37.000000000 +0300
 +++ ./order_patch-patch.sql	2008-08-27 17:16:21.444016830 +0300
 @@ -0,0 +1,3 @@
