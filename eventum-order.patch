@@ -22,14 +22,6 @@
              $prj_id = Issue::getProjectID($issue_id);
  
              // add note with the reason to close the issue
-@@ -1349,7 +1350,6 @@
-                     $assignment_notifications[] = $assignee;
-                     $assignments_changed = true;
-                 }
--                $assignments_changed = true;
-             }
-             if (count($assignment_notifications) > 0) {
-                 Notification::notifyNewAssignment($assignment_notifications, $issue_id);
 @@ -1596,16 +1596,33 @@
      {
          $issue_id = Misc::escapeInteger($issue_id);
@@ -177,21 +169,6 @@
              return 1;
          }
      }
-@@ -2047,14 +2140,6 @@
-                     }
-                 }
-             }
--            if (count($users) > 0) {
--                // automatically change the status to 'Assigned'
--                Issue::setStatus($new_issue_id, Status::getStatusID('Assigned'), FALSE);
--
--                // set this special variable to false, to avoid triggering
--                // another status update on the workflow class
--                $has_assignee = false;
--            }
- 
-             // now process any files being uploaded
-             $found = 0;
 @@ -2161,6 +2246,11 @@
      {
          $sort_by = Issue::getParam('sort_by');
