@@ -325,7 +325,6 @@
  // benchmarking the included file (aka setup time)
  if (APP_BENCHMARK) {
      $GLOBALS['bench']->setMarker('Included Issue Class');
-diff -ru eventum-1.7.0/list.php eventum/list.php
 --- eventum-1.7.0/list.php	2005-12-29 21:27:24.000000000 +0200
 +++ eventum/list.php	2006-03-30 14:57:06.000000000 +0300
 @@ -67,6 +67,11 @@
@@ -455,7 +454,9 @@ diff -ru eventum-1.7.0/list.php eventum/list.php
            {/if}
 --- /dev/null	2006-03-28 14:00:37.000000000 +0300
 +++ ./order_patch-patch.sql	2008-08-27 17:16:21.444016830 +0300
-@@ -0,0 +1,3 @@
+@@ -0,0 +1,5 @@
 +ALTER TABLE eventum_issue_user
 +    ADD isu_order int(11) NOT NULL DEFAULT '0' AFTER isu_assigned_date,
 +    ADD INDEX isu_order (isu_order);
++// set at least some order for now
++update eventum_issue_user set isu_order=isu_iss_id;
