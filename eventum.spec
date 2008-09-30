@@ -8,7 +8,7 @@
 #
 # Conditional build:
 %bcond_with	qmail	# build the router-qmail subpackage
-%bcond_with	order	# with experimental order pathc
+%bcond_with	order	# with experimental order patch
 
 #define	snap	20060921
 %define	svn		r3729
