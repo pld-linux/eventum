@@ -12,7 +12,7 @@
 
 #define	snap	20060921
 %define	svn		r3729
-%define	rel		0.34
+%define	rel		0.40
 #define	_rc		RC3
 
 %include	/usr/lib/rpm/macros.php
@@ -568,7 +568,8 @@ cp -a %{SOURCE9} $RPM_BUILD_ROOT/etc/sysconfig/eventum-irc
 
 # config
 > $RPM_BUILD_ROOT%{_webappdir}/setup.php
-> $RPM_BUILD_ROOT%{_webappdir}/config.php
+cat <<'EOF'> $RPM_BUILD_ROOT%{_webappdir}/config.php
+EOF
 
 install -d $RPM_BUILD_ROOT%{_smartyplugindir}
 # These plugins are not in Smarty package (Smarty-2.6.2-3)
@@ -663,6 +664,13 @@ so that %{name}-setup is able to secure your Eventum installation.
 
 EOF
 fi
+
+# greate empty ghost files
+for a in cli.log errors.log irc_bot.log login_attempts.log; do
+	if [ ! -f /var/log/%{name}/$a ]; then
+		install -m620 -oroot -geventum /dev/null /var/log/%{name}/$a
+	fi
+done
 
 # database update
 %{_appdir}/upgrade/update-database.php || :
