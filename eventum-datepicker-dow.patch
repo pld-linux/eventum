@@ -1,0 +1,11 @@
+--- /home/glen/svn/eventum/js/global.js~	2008-10-06 18:53:37.274388321 +0300
++++ /home/glen/svn/eventum/js/global.js	2008-10-06 19:07:20.596246824 +0300
+@@ -795,7 +795,7 @@
+ $(document).ready(function() {
+     $(".date_picker").each(function() {
+         $(this).datepicker({
+-			dateFormat: 'yy-mm-dd', firstDay: 0 // FIXME: make it configurable
++			dateFormat: 'yy-mm-dd', firstDay: 1 // FIXME: make it configurable
+ 		});
+     });
+ });

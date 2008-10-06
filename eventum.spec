@@ -11,8 +11,8 @@
 %bcond_with	order	# with experimental order patch
 
 #define	snap	20060921
-%define	svn		r3729
-%define	rel		0.40
+%define	svn		r3745
+%define	rel		0.41
 #define	_rc		RC3
 
 %include	/usr/lib/rpm/macros.php
@@ -27,7 +27,7 @@ Group:		Applications/WWW
 #Source0:	http://eventum.mysql.org/downloads/eventum-2.0.RC3.tar.gz
 #Source0:	http://mysql.tonnikala.org/Downloads/eventum/%{name}-%{version}.tar.gz
 Source0:	%{name}-%{svn}.tar.bz2
-# Source0-md5:	a5b8860ab537f839b3a4b385e1ecd6b4
+# Source0-md5:	2899bb0b7cd4820aa18c7a4710702970
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -44,6 +44,7 @@ Source14:	%{name}.logrotate
 Source15:	%{name}-lighttpd.conf
 Patch0:		%{name}-lf.patch
 Patch1:		%{name}-order.patch
+Patch2:		%{name}-datepicker-dow.patch
 # packaging patches that probably never go upstream
 Patch100:	%{name}-paths.patch
 Patch101:	%{name}-cvs-config.patch
@@ -474,6 +475,7 @@ rm rpc/xmlrpc_client.php
 # bug fixes / features
 %patch0 -p1
 %{?with_order:%patch1 -p1}
+%patch2 -p1
 
 #%patch200 -p1
 
