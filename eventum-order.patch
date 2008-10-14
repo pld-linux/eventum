@@ -1,4 +1,3 @@
-diff -ur eventum/ajax/order.php eventum-new/ajax/order.php
 --- eventum/ajax/order.php	2008-10-15 01:46:20.000000000 +0300
 +++ eventum-new/ajax/order.php	2008-10-15 02:02:25.000000000 +0300
 @@ -0,0 +1,72 @@
@@ -75,7 +74,6 @@ diff -ur eventum/ajax/order.php eventum-new/ajax/order.php
 +    }
 +}
 \ No newline at end of file
-diff -ur eventum/ajax/update.php eventum-new/ajax/update.php
 --- eventum/ajax/update.php	2008-10-15 01:46:20.000000000 +0300
 +++ eventum-new/ajax/update.php	2008-10-15 02:02:25.000000000 +0300
 @@ -0,0 +1,30 @@
@@ -109,7 +107,6 @@ diff -ur eventum/ajax/update.php eventum-new/ajax/update.php
 +      die('object type not supported');
 +  break;
 +}
-diff -ur eventum/include/class.display_column.php eventum-new/include/class.display_column.php
 --- eventum/include/class.display_column.php	2008-10-15 01:46:20.000000000 +0300
 +++ eventum-new/include/class.display_column.php	2008-10-15 02:02:25.000000000 +0300
 @@ -229,7 +229,10 @@
@@ -124,7 +121,6 @@ diff -ur eventum/include/class.display_column.php eventum-new/include/class.disp
              )
          );
          return $columns[$page];
-diff -ur eventum/include/class.issue.php eventum-new/include/class.issue.php
 --- eventum/include/class.issue.php	2008-10-15 01:46:20.000000000 +0300
 +++ eventum-new/include/class.issue.php	2008-10-15 02:02:25.000000000 +0300
 @@ -1356,6 +1356,7 @@
@@ -651,7 +647,6 @@ diff -ur eventum/include/class.issue.php eventum-new/include/class.issue.php
  // benchmarking the included file (aka setup time)
  if (APP_BENCHMARK) {
      $GLOBALS['bench']->setMarker('Included Issue Class');
-diff -ur eventum/include/class.misc.php eventum-new/include/class.misc.php
 --- eventum/include/class.misc.php	2008-10-15 01:46:20.000000000 +0300
 +++ eventum-new/include/class.misc.php	2008-10-15 02:02:25.000000000 +0300
 @@ -744,6 +744,45 @@
@@ -700,22 +695,14 @@ diff -ur eventum/include/class.misc.php eventum-new/include/class.misc.php
  }
  
  // benchmarking the included file (aka setup time)
-diff -ur eventum/js/global.js eventum-new/js/global.js
---- eventum/js/global.js	2008-10-15 02:02:33.000000000 +0300
-+++ eventum-new/js/global.js	2008-10-15 02:02:25.000000000 +0300
-@@ -792,10 +792,44 @@
- }
- 
- // call when document ready
--$(document).ready(function() {
-+$(document).ready(function(){
-     $('.date_picker').datepicker({
-         dateFormat: 'yy-mm-dd', firstDay: 0  // FIXME: make it configurable
+--- eventum-r3749/js/global.js~	2008-10-15 02:03:48.000000000 +0300
++++ eventum-r3749/js/global.js	2008-10-15 02:06:00.000000000 +0300
+@@ -799,4 +799,39 @@
+ 		});
      });
--}
-+});
+ });
 +
-+$(document).ready(function(){
++$(document).ready(function() {
 +    // dialog type calender isn't working in Konqueror beacuse it's not a supported browser for either jQuery or jQuery UI
 +    // http://groups.google.com/group/jquery-ui/browse_thread/thread/ea61238c34cb5f33/046837b02fb90b5c
 +    if (navigator.appName != 'Konqueror') {
@@ -723,7 +710,7 @@ diff -ur eventum/js/global.js eventum-new/js/global.js
 +        var masterObj = this;
 +        var masterObjPos = $(masterObj).offset();
 +        // offset gives uses top and left but datepicker needs pageX and pageY
-+        var masterObjPos = {pageX:masterObjPos.left, pageY:masterObjPos.top};
++        var masterObjPos = {pageX: masterObjPos.left, pageY: masterObjPos.top};
 +        $(this).datepicker(
 +            // we use dialog type calender so we won't haveto have a hidden element on the page
 +            'dialog',
@@ -748,12 +735,8 @@ diff -ur eventum/js/global.js eventum-new/js/global.js
 +        });
 +    }
 +});
- 
--//-->
-+//-->
-\ No newline at end of file
-Only in eventum-new/js/jquery: jquery.tablednd_0_5.js
-diff -ur eventum/list.php eventum-new/list.php
++
+ //-->
 --- eventum/list.php	2008-10-15 01:46:20.000000000 +0300
 +++ eventum-new/list.php	2008-10-15 02:02:25.000000000 +0300
 @@ -67,6 +67,11 @@
@@ -790,7 +773,6 @@ diff -ur eventum/list.php eventum-new/list.php
  $list = Issue::getListing($prj_id, $options, $pagerRow, $rows);
  $tpl->assign("list", $list["list"]);
  $tpl->assign("list_info", $list["info"]);
-diff -ur eventum/templates/list.tpl.html eventum-new/templates/list.tpl.html
 --- eventum/templates/list.tpl.html	2008-10-15 01:46:20.000000000 +0300
 +++ eventum-new/templates/list.tpl.html	2008-10-15 02:02:25.000000000 +0300
 @@ -89,6 +89,28 @@
