@@ -1,5 +1,117 @@
---- eventum-r3721/include/class.display_column.php~	2008-09-09 22:45:13.000000000 +0300
-+++ eventum-r3721/include/class.display_column.php	2008-09-09 22:46:04.000000000 +0300
+diff -ur eventum/ajax/order.php eventum-new/ajax/order.php
+--- eventum/ajax/order.php	2008-10-15 01:46:20.000000000 +0300
++++ eventum-new/ajax/order.php	2008-10-15 02:02:25.000000000 +0300
+@@ -0,0 +1,72 @@
++<?
++require_once(dirname(__FILE__) . '/../init.php');
++require_once(APP_INC_PATH . "class.auth.php");
++require_once(APP_INC_PATH . "class.issue.php");
++
++// check login
++if (!Auth::hasValidCookie(APP_COOKIE)) {
++	exit;
++}
++
++
++
++if (!isset($_POST['before']) || !isset($_POST['after'])) {
++	exit;
++}
++
++$before = Misc::explode_url($_POST['before']);
++$after = Misc::explode_url($_POST['after']);
++
++$before = $before['issue_list_table'];
++$after = $after['issue_list_table'];
++
++
++$before = array_slice($before, 2, count($before)-3);
++$after = array_slice($after, 2, count($after)-3);
++
++if (count($before) != count($after) or count($before) < 1) {
++	exit;
++}
++
++$usr_id = Auth::getUserID();
++
++$order = Issue::getIssueOrderByUser($usr_id);
++
++if (!count($order)) {
++    // no prev order list
++    exit;
++}
++
++$after_filterd = array();
++$before_filterd = array();
++
++// remove issues that are not assigned to me
++foreach ($after as $id) {
++    if (isset($order[$id])) {
++        $after_filterd[] = $id;
++    }
++}
++foreach ($before as $id) {
++    if (isset($order[$id])) {
++        $before_filterd[] = $id;
++    }
++}
++
++foreach ($after_filterd as $key => $nID) {
++    if ($nID != $before_filterd[$key]) {
++        if ($nID) {
++            $stmt = "UPDATE
++                        " . APP_DEFAULT_DB . "." . APP_TABLE_PREFIX . "issue_user
++                     SET
++                        isu_order = " . $order[$before_filterd[$key]] . "
++                     WHERE
++                        isu_iss_id = $nID AND
++                        isu_usr_id = $usr_id";
++            $res = $GLOBALS["db_api"]->dbh->query($stmt);
++            if (PEAR::isError($res)) {
++                Error_Handler::logError(array($res->getMessage(), $res->getDebugInfo()), __FILE__, __LINE__);
++                die('update failed');
++            }
++        }
++    }
++}
+\ No newline at end of file
+diff -ur eventum/ajax/update.php eventum-new/ajax/update.php
+--- eventum/ajax/update.php	2008-10-15 01:46:20.000000000 +0300
++++ eventum-new/ajax/update.php	2008-10-15 02:02:25.000000000 +0300
+@@ -0,0 +1,30 @@
++<?
++require_once(dirname(__FILE__) . '/../init.php');
++require_once(APP_INC_PATH . "class.auth.php");
++require_once(APP_INC_PATH . "class.issue.php");
++
++// check login
++if (!Auth::hasValidCookie(APP_COOKIE)) {
++    exit;
++}
++
++if (!is_numeric($_POST['issueID'])) {
++    exit;
++}
++
++switch ($_POST['fieldName']) {
++  case 'expected_resolution_date':
++    $day = (int)$_POST['day'];
++    $month = (int)$_POST['month'];
++    $year = (int)$_POST['year'];
++    if (Issue::updateField($_POST['issueID'], $_POST['fieldName'], sprintf('%04d-%02d-%02d', $year, $month, $day)) !== -1) {
++        echo Date_API::getSimpleDate(sprintf('%04d-%02d-%02d', $year, $month, $day), false);
++    } else {
++        echo 'update failed';
++    }
++    exit;
++  break;
++  default:
++      die('object type not supported');
++  break;
++}
+diff -ur eventum/include/class.display_column.php eventum-new/include/class.display_column.php
+--- eventum/include/class.display_column.php	2008-10-15 01:46:20.000000000 +0300
++++ eventum-new/include/class.display_column.php	2008-10-15 02:02:25.000000000 +0300
 @@ -229,7 +229,10 @@
                  ),
                  "iss_expected_resolution_date"  =>  array(
@@ -7,22 +119,200 @@
 -                )
 +                ),
 +                "isu_order" => array(
-+                    "title" => ev_gettext("Issue Order")
++                    "title" => ev_gettext("Order")
 +                ),
              )
          );
          return $columns[$page];
---- eventum-1.7.0/include/class.issue.php	2005-12-29 21:27:25.000000000 +0200
-+++ eventum/include/class.issue.php	2006-03-27 15:33:02.000000000 +0300
-@@ -1245,6 +1245,7 @@
+diff -ur eventum/include/class.issue.php eventum-new/include/class.issue.php
+--- eventum/include/class.issue.php	2008-10-15 01:46:20.000000000 +0300
++++ eventum-new/include/class.issue.php	2008-10-15 02:02:25.000000000 +0300
+@@ -1356,6 +1356,7 @@
              Error_Handler::logError(array($res->getMessage(), $res->getDebugInfo()), __FILE__, __LINE__);
              return -1;
          } else {
 +            Issue::moveOrderForAllUsers($issue_id, 1000);
              $prj_id = Issue::getProjectID($issue_id);
  
-             // add note with the reason to close the issue
-@@ -1596,16 +1596,33 @@
+             // record the change
+@@ -1659,6 +1660,176 @@
+         }
+     }
+ 
++    /**
++     * Method used to update the a single detail field of a specific issue.
++     *
++     * @param integer $issue_id
++     * @param string $field_name
++     * @param string $field_value
++     * @param string $field_type string or integer (for escape)
++     * @return integer 1 on success, -1 otherwise
++     */
++    function updateField($issue_id, $field_name, $filed_value) {
++
++        $issue_id = Misc::escapeInteger($issue_id);
++
++        $usr_id = Auth::getUserID();
++        $prj_id = Issue::getProjectID($issue_id);
++
++        // get all of the 'current' information of this issue
++        $current = Issue::getDetails($issue_id);
++
++        $stmt = "UPDATE
++                    " . APP_DEFAULT_DB . "." . APP_TABLE_PREFIX . "issue
++                 SET
++                    iss_updated_date='" . Date_API::getCurrentDateGMT() . "',
++                    iss_last_public_action_date='" . Date_API::getCurrentDateGMT() . "',
++                    iss_last_public_action_type='updated'";
++
++        switch ($field_name) {
++            case 'category':
++                $stmt .= ", iss_prc_id = " . Misc::escapeInteger($filed_value);
++            break;
++            case 'release':
++                $stmt .= ", iss_pre_id = " . Misc::escapeInteger($filed_value);
++            break;
++            case 'expected_resolution_date':
++                $stmt .= ", iss_expected_resolution_date = '" . Misc::escapeString($filed_value) . "'";
++            break;
++            case 'release':
++                $stmt .= ", iss_pre_id = " . Misc::escapeInteger($filed_value);
++            break;
++            case 'priority':
++                $stmt .= ", iss_pri_id = " . Misc::escapeInteger($filed_value);
++            break;
++            case 'status':
++                $stmt .= ", iss_sta_id = " . Misc::escapeInteger($filed_value);
++            break;
++            case 'resolution':
++                $stmt .= ", iss_res_id = " . Misc::escapeInteger($filed_value);
++            break;
++            case 'summary':
++                $stmt .= ", iss_summary = '" . Misc::escapeString($filed_value) . "'";
++            break;
++            case 'description':
++                $stmt .= ", iss_description = '" . Misc::escapeString($filed_value) . "'";
++            break;
++            case 'estimated_dev_time':
++                $stmt .= ", iss_dev_time = '" . Misc::escapeString($filed_value) . "'";
++            break;
++            case 'percent_complete':
++                $stmt .= ", iss_percent_complete = '" . Misc::escapeString($filed_value) . "'";
++            break;
++            case 'trigger_reminders':
++                $stmt .= ", iss_trigger_reminders = " . Misc::escapeInteger($filed_value);
++            break;
++            case 'group':
++                $stmt .= ", iss_grp_id = " . Misc::escapeInteger($filed_value);
++            break;
++            case 'private':
++                $stmt .= ", iss_private = " . Misc::escapeInteger($filed_value);
++            break;
++            default:
++                Error_Handler::logError("Unknown field name $field_name", __FILE__, __LINE__);
++                return -1;
++            break;
++        }
++
++        $stmt .= "
++                 WHERE
++                    iss_id=$issue_id";
++
++        $res = $GLOBALS["db_api"]->dbh->query($stmt);
++        if (PEAR::isError($res)) {
++            Error_Handler::logError(array($res->getMessage(), $res->getDebugInfo()), __FILE__, __LINE__);
++            return -1;
++        } else {
++            $new = array(
++                'category' => $current['iss_prc_id'],
++                'release' => $current['iss_pre_id'],
++                'expected_resolution_date' => $current['iss_expected_resolution_date'],
++                'release' => $current['iss_pre_id'],
++                'priority' => $current['iss_pri_id'],
++                'status' => $current['iss_sta_id'],
++                'resolution' => $current['iss_res_id'],
++                'summary' => $current['iss_summary'],
++                'description' => $current['iss_description'],
++                'estimated_dev_time' => $current['iss_dev_time'],
++                'percent_complete' => $current['iss_percent_complete'],
++                'trigger_reminders' => $current['iss_trigger_reminders'],
++                'group' => $current['iss_grp_id'],
++                'iss_private' => $current['private']
++            );
++            $new[$field_name] = $filed_value;
++
++            // add change to the history (only for changes on specific fields?)
++            $updated_fields = array();
++            if ($field_name == 'expected_resolution_date' && $current["iss_expected_resolution_date"] != $filed_value) {
++                $updated_fields["Expected Resolution Date"] = History::formatChanges($current["iss_expected_resolution_date"], $filed_value);
++            }
++            if ($field_name == 'category' && $current["iss_prc_id"] != $filed_value) {
++                $updated_fields["Category"] = History::formatChanges(Category::getTitle($current["iss_prc_id"]), Category::getTitle($filed_value));
++            }
++            if ($field_name == 'release' && $current["iss_pre_id"] != $filed_value) {
++                $updated_fields["Release"] = History::formatChanges(Release::getTitle($current["iss_pre_id"]), Release::getTitle($filed_value));
++            }
++            if ($field_name == 'priority' && $current["iss_pri_id"] != $filed_value) {
++                $updated_fields["Priority"] = History::formatChanges(Priority::getTitle($current["iss_pri_id"]), Priority::getTitle($filed_value));
++                Workflow::handlePriorityChange($prj_id, $issue_id, $usr_id, $current, $new);
++            }
++            if ($field_name == 'status' && $current["iss_sta_id"] != $filed_value) {
++                // clear out the last-triggered-reminder flag when changing the status of an issue
++                Reminder_Action::clearLastTriggered($issue_id);
++
++                // if old status was closed and new status is not, clear closed data from issue.
++                $old_status_details = Status::getDetails($current['iss_sta_id']);
++                if ($old_status_details['sta_is_closed'] == 1) {
++                    $new_status_details = Status::getDetails($filed_value);
++                    if ($new_status_details['sta_is_closed'] != 1) {
++                        Issue::clearClosed($issue_id);
++                    }
++                }
++                $updated_fields["Status"] = History::formatChanges(Status::getStatusTitle($current["iss_sta_id"]), Status::getStatusTitle($filed_value));
++            }
++            if ($field_name == 'resolution' && $current["iss_res_id"] != $filed_value) {
++                $updated_fields["Resolution"] = History::formatChanges(Resolution::getTitle($current["iss_res_id"]), Resolution::getTitle($filed_value));
++            }
++            if ($field_name == 'estimated_dev_time' && $current["iss_dev_time"] != $filed_value) {
++                $updated_fields["Estimated Dev. Time"] = History::formatChanges(Misc::getFormattedTime(($current["iss_dev_time"]*60)), Misc::getFormattedTime(($filed_value*60)));
++            }
++            if ($field_name == 'summary' && $current["iss_summary"] != $filed_value) {
++                $updated_fields["Summary"] = '';
++            }
++            if ($field_name == 'description' && $current["iss_description"] != $filed_value) {
++                $updated_fields["Description"] = '';
++            }
++            if ($field_name == 'private' && ($filed_value != $current['iss_private'])) {
++                $updated_fields["Private"] = History::formatChanges(Misc::getBooleanDisplayValue($current['iss_private']), Misc::getBooleanDisplayValue($filed_value));
++            }
++            if (count($updated_fields) > 0) {
++                // log the changes
++                $changes = '';
++                $i = 0;
++                foreach ($updated_fields as $key => $value) {
++                    if ($i > 0) {
++                        $changes .= "; ";
++                    }
++                    if (($key != "Summary") && ($key != "Description")) {
++                        $changes .= "$key: $value";
++                    } else {
++                        $changes .= "$key";
++                    }
++                    $i++;
++                }
++
++                History::add($issue_id, $usr_id, History::getTypeID('issue_updated'), "Issue updated ($changes) by " . User::getFullName($usr_id));
++                // send notifications for the issue being updated
++                Notification::notifyIssueUpdated($issue_id, $current, $new);
++            }
++        }
++        return 1;
++    }
++
+ 
+     /**
+      * Move the issue to a new project
+@@ -1820,16 +1991,33 @@
      {
          $issue_id = Misc::escapeInteger($issue_id);
          $assignee_usr_id = Misc::escapeInteger($assignee_usr_id);
@@ -58,7 +348,7 @@
                   )";
          $res = $GLOBALS["db_api"]->dbh->query($stmt);
          if (PEAR::isError($res)) {
-@@ -1620,6 +1637,78 @@
+@@ -1844,6 +2032,78 @@
          }
      }
  
@@ -137,7 +427,7 @@
  
      /**
       * Method used to delete all user assignments for a specific issue.
-@@ -1635,6 +1724,7 @@
+@@ -1859,6 +2119,7 @@
          if (is_array($issue_id)) {
              $issue_id = implode(", ", $issue_id);
          }
@@ -145,7 +435,7 @@
          $stmt = "DELETE FROM
                      " . APP_DEFAULT_DB . "." . APP_TABLE_PREFIX . "issue_user
                   WHERE
-@@ -1647,6 +1737,7 @@
+@@ -1871,6 +2132,7 @@
              if ($usr_id) {
                  History::add($issue_id, $usr_id, History::getTypeID('user_all_unassociated'), 'Issue assignments removed by ' . User::getFullName($usr_id));
              }
@@ -153,7 +443,7 @@
              return 1;
          }
      }
-@@ -1665,6 +1756,7 @@
+@@ -1889,6 +2151,7 @@
      {
          $issue_id = Misc::escapeInteger($issue_id);
          $usr_id = Misc::escapeInteger($usr_id);
@@ -161,7 +451,7 @@
          $stmt = "DELETE FROM
                      " . APP_DEFAULT_DB . "." . APP_TABLE_PREFIX . "issue_user
                   WHERE
-@@ -1679,6 +1771,7 @@
+@@ -1903,6 +2166,7 @@
                  History::add($issue_id, Auth::getUserID(), History::getTypeID('user_unassociated'),
                      User::getFullName($usr_id) . ' removed from issue by ' . User::getFullName(Auth::getUserID()));
              }
@@ -169,7 +459,7 @@
              return 1;
          }
      }
-@@ -2161,6 +2246,11 @@
+@@ -2379,6 +2643,11 @@
      {
          $sort_by = Issue::getParam('sort_by');
          $sort_order = Issue::getParam('sort_order');
@@ -181,7 +471,7 @@
          $rows = Issue::getParam('rows');
          $hide_closed = Issue::getParam('hide_closed');
          if ($hide_closed === '') {
-@@ -2582,6 +2582,7 @@
+@@ -2483,6 +2752,7 @@
              "last_action_date" => "desc",
              "usr_full_name" => "asc",
              "iss_expected_resolution_date" => "desc",
@@ -189,7 +479,7 @@
          );
  
          foreach ($custom_fields as $fld_id => $fld_name) {
-@@ -2975,6 +3066,8 @@
+@@ -3275,6 +3545,8 @@
          $ids = implode(", ", $ids);
          $stmt = "SELECT
                      isu_iss_id,
@@ -198,7 +488,7 @@
                      usr_full_name
                   FROM
                      " . APP_DEFAULT_DB . "." . APP_TABLE_PREFIX . "issue_user,
-@@ -2986,6 +3079,7 @@
+@@ -3286,6 +3558,7 @@
          if (PEAR::isError($res)) {
              Error_Handler::logError(array($res->getMessage(), $res->getDebugInfo()), __FILE__, __LINE__);
          } else {
@@ -206,7 +496,7 @@
              $t = array();
              for ($i = 0; $i < count($res); $i++) {
                  if (!empty($t[$res[$i]['isu_iss_id']])) {
-@@ -2994,9 +3088,18 @@
+@@ -3294,9 +3567,18 @@
                      $t[$res[$i]['isu_iss_id']] = $res[$i]['usr_full_name'];
                  }
              }
@@ -225,7 +515,7 @@
              }
          }
      }
-@@ -3963,6 +4066,7 @@
+@@ -4264,6 +4546,7 @@
              Error_Handler::logError(array($res->getMessage(), $res->getDebugInfo()), __FILE__, __LINE__);
              return -1;
          }
@@ -233,7 +523,7 @@
      }
  
  
-@@ -4021,8 +4125,91 @@
+@@ -4322,8 +4605,127 @@
          }
          return $returns[$msg_id];
      }
@@ -300,6 +590,42 @@
 +        }
 +    }
 +
++
++    /**
++     * Get users issue order list
++     * @access public
++     * @param $user_id User
++     * @param $order_list Order of the issues
++     * @return void
++     */
++    function getIssueOrderByUser($usr_id) {
++
++        if (!is_numeric($usr_id)) {
++            return false;
++        }
++
++        $stmt = "SELECT
++                    isu_iss_id, isu_order
++                FROM
++                    " . APP_DEFAULT_DB . "." . APP_TABLE_PREFIX . "issue_user
++                WHERE
++                    isu_usr_id = " . $usr_id ;
++
++        $order_list = array();
++
++        $res = $GLOBALS["db_api"]->dbh->getAll($stmt, DB_FETCHMODE_ASSOC);
++
++        if (PEAR::isError($res)) {
++            Error_Handler::logError(array($res->getMessage(), $res->getDebugInfo()), __FILE__, __LINE__);
++            return array();
++        } else {
++            foreach ($res as $row) {
++                $order_list[$row["isu_iss_id"]] = $row["isu_order"];
++            }
++        }
++        return $order_list;
++    }
++
 +    function moveOrderForAllUsers($issue_id, $neworder)
 +    {
 +        // Move the issue to the top priority for the ppl it's assigned to
@@ -325,8 +651,111 @@
  // benchmarking the included file (aka setup time)
  if (APP_BENCHMARK) {
      $GLOBALS['bench']->setMarker('Included Issue Class');
---- eventum-1.7.0/list.php	2005-12-29 21:27:24.000000000 +0200
-+++ eventum/list.php	2006-03-30 14:57:06.000000000 +0300
+diff -ur eventum/include/class.misc.php eventum-new/include/class.misc.php
+--- eventum/include/class.misc.php	2008-10-15 01:46:20.000000000 +0300
++++ eventum-new/include/class.misc.php	2008-10-15 02:02:25.000000000 +0300
+@@ -744,6 +744,45 @@
+     {
+         return self::$messages;
+     }
++
++    /**
++     * Parse url query string to php array
++     *
++     * @access  public
++     * @link http://php.net/manual/en/function.parse-str.php#79154
++     * @param   string $str The url that will be exploded
++     * @return  array The variables from url
++     */
++    function explode_url($str) {
++        $return = array();
++        // Separate all name-value pairs
++        $pairs = explode('&', $str);
++        foreach($pairs as $pair) {
++            // Pull out the names and the values
++            list($name, $value) = explode('=', $pair, 2);
++            // Decode the variable name and look for arrays
++            list($name, $index) = split('[][]', urldecode($name));
++            // Arrays
++            if(isset($index)) {
++                // Declare or add to the global array defined by $name
++                if(!isset($return[$name])) {
++                    $return[$name] = array();
++                }
++                // Associative array
++                if(strlen($index) > 0) {
++                    $return[$name][$index] = addslashes(urldecode($value));
++                } else {
++                    // Ordered array
++                    array_push($return[$name], addslashes(urldecode($value)));
++                }
++                // Variables
++            } else {
++                // Declare or overwrite the global variable defined by $name
++                $return[$name] = addslashes(urldecode($value));
++            }
++        }
++            return $return;
++    }
+ }
+ 
+ // benchmarking the included file (aka setup time)
+diff -ur eventum/js/global.js eventum-new/js/global.js
+--- eventum/js/global.js	2008-10-15 02:02:33.000000000 +0300
++++ eventum-new/js/global.js	2008-10-15 02:02:25.000000000 +0300
+@@ -792,10 +792,44 @@
+ }
+ 
+ // call when document ready
+-$(document).ready(function() {
++$(document).ready(function(){
+     $('.date_picker').datepicker({
+         dateFormat: 'yy-mm-dd', firstDay: 0  // FIXME: make it configurable
+     });
+-}
++});
++
++$(document).ready(function(){
++    // dialog type calender isn't working in Konqueror beacuse it's not a supported browser for either jQuery or jQuery UI
++    // http://groups.google.com/group/jquery-ui/browse_thread/thread/ea61238c34cb5f33/046837b02fb90b5c
++    if (navigator.appName != 'Konqueror') {
++        $(".inline_date_pick").click(function() {
++        var masterObj = this;
++        var masterObjPos = $(masterObj).offset();
++        // offset gives uses top and left but datepicker needs pageX and pageY
++        var masterObjPos = {pageX:masterObjPos.left, pageY:masterObjPos.top};
++        $(this).datepicker(
++            // we use dialog type calender so we won't haveto have a hidden element on the page
++            'dialog',
++            // selected date
++            masterObj.innerHTML,
++            // onclick handler
++            function (date, dteObj) {
++                fieldName = masterObj.id.substr(0,masterObj.id.indexOf('|'));
++                issueID = masterObj.id.substr(masterObj.id.indexOf('|')+1);
++                $.post("/ajax/update.php", {fieldName: fieldName, issueID: issueID, day: dteObj.selectedDay, month: (dteObj.selectedMonth+1), year: dteObj.selectedYear}, function(data) {
++                    if (data.length > 0) {
++                        masterObj.innerHTML = data;
++                    }
++                }, "text");
++            },
++            // config
++            {dateFormat: 'dd M yy', duration: ""},
++            // position of the datepicker calender - taken from div's offset
++            masterObjPos
++        );
++        return false;
++        });
++    }
++});
+ 
+-//-->
++//-->
+\ No newline at end of file
+Only in eventum-new/js/jquery: jquery.tablednd_0_5.js
+diff -ur eventum/list.php eventum-new/list.php
+--- eventum/list.php	2008-10-15 01:46:20.000000000 +0300
++++ eventum-new/list.php	2008-10-15 02:02:25.000000000 +0300
 @@ -67,6 +67,11 @@
              $profile['sort_by'] . "&sort_order=" . $profile['sort_order']);
  }
@@ -339,9 +768,9 @@
  $options = Issue::saveSearchParams();
  $tpl->assign("options", $options);
  $tpl->assign("sorting", Issue::getSortingInfo($options));
-@@ -104,6 +109,21 @@
-     }
+@@ -90,6 +95,21 @@
  }
+ $assign_options += $users;
  
 +// get the isu_order (assignated users) ordering user
 +if (!empty($options["users"])) {
@@ -361,8 +790,9 @@
  $list = Issue::getListing($prj_id, $options, $pagerRow, $rows);
  $tpl->assign("list", $list["list"]);
  $tpl->assign("list_info", $list["info"]);
---- eventum-1.7.0/templates/list.tpl.html	2005-12-29 21:27:24.000000000 +0200
-+++ eventum/templates/list.tpl.html	2006-03-23 16:28:30.000000000 +0200
+diff -ur eventum/templates/list.tpl.html eventum-new/templates/list.tpl.html
+--- eventum/templates/list.tpl.html	2008-10-15 01:46:20.000000000 +0300
++++ eventum-new/templates/list.tpl.html	2008-10-15 02:02:25.000000000 +0300
 @@ -89,6 +89,28 @@
      f.target = '_popup';
      f.submit();
@@ -392,71 +822,152 @@
  function hideClosed(f)
  {
      if (f.hide_closed.checked) {
-@@ -202,8 +224,8 @@
-                 <td align="{$column.align|default:'center'}" class="default_white" nowrap>
-                   {$fld_title|escape:"html"}
+@@ -150,6 +172,13 @@
+         f.go.disabled = true;
+     }
+ }
++function updateCustomFields(issue_id)
++{
++    var features = 'width=560,height=460,top=30,left=30,resizable=yes,scrollbars=yes,toolbar=no,location=no,menubar=no,status=no';
++    var customWin = window.open('custom_fields.php?issue_id=' + issue_id, '_custom_fields', features);
++    customWin.focus();
++    return false;
++}
+ //-->
+ </script>
+ {/literal}
+@@ -166,11 +195,11 @@
+   <input type="hidden" name="cat" value="bulk_update">
+   <tr>
+     <td>
+-      <table bgcolor="#FFFFFF" width="100%" cellspacing="1" cellpadding="2" border="0">
+-        <tr>
++      <table bgcolor="#FFFFFF" width="100%" cellspacing="1" cellpadding="2" border="0" id="issue_list_table">
++        <tr class="nodrag">
+           <td colspan="{$col_count}" class="default">
+             <table width="100%" cellspacing="0" cellpadding="0" border="0">
+-              <tr>
++              <tr class="nodrag">
+                 <td class="default">
+                   <b>{t}Search Results{/t} ({$list_info.total_rows} {t}issues found{/t}{if $list_info.end_offset > 0}, {math equation="x + 1" x=$list_info.start_offset} - {$list_info.end_offset} {t}shown{/t}{/if})</b>
+                   {include file="help_link.tpl.html" topic="list"}
+@@ -190,7 +219,7 @@
+             </table>
+           </td>
+         </tr>
+-        <tr bgcolor="{$cell_color}">
++        <tr bgcolor="{$cell_color}" class="nodrag">
+           {if $current_role > $roles.developer}
+           <td width="1%">
+             <input type="button" value="{t}All{/t}" class="shortcut" onClick="javascript:toggleSelectAll(this.form, 'item[]');toggleBulkUpdate();">
+@@ -205,7 +234,7 @@
+                   {if $sorting.images[$fld_name_id] != ""}<a title="{t}sort by{/t} {$fld_title|escape:"html"}" href="{$sorting.links[$fld_name_id]}" class="white_link"><img border="0" src="{$sorting.images[$fld_name_id]}"></a>{/if}
                  </td>
--              {/foreach}
+               {/foreach}
 -          {else}
-+              {/foreach}
 +          {elseif $field_name != 'isu_order' || $isu_order_user}
            <td align="{$column.align|default:'center'}" class="default_white" nowrap {if $column.width != ''}width="{$column.width}"{/if}>
              {if $field_name == 'iss_summary'}
              <table cellspacing="0" cellpadding="1" width="100%">
-@@ -218,8 +240,11 @@
-               </tr>
+@@ -221,6 +250,9 @@
              </table>
              {elseif $sorting.links[$field_name] != ''}
--              <a title="{t}sort by{/t} {$column.title}" href="{$sorting.links[$field_name]}" class="white_link">{$column.title}</a>
--              {if $sorting.images[$field_name] != ""}<a title="{t}sort by{/t} {$column.title}" href="{$sorting.links[$field_name]}" class="white_link"><img border="0" src="{$sorting.images[$field_name]}"></a>{/if}
-+              <a title="{t}sort by{/t} {$column.title}" href="{$sorting.links[$field_name]}" class="white_link">{$column.title}</a>
+               <a title="{t}sort by{/t} {$column.title}" href="{$sorting.links[$field_name]}" class="white_link">{$column.title}</a>
 +              {if $field_name == 'isu_order'}
 +                 <br>{$users[$isu_order_user]}
 +              {/if}
-+              {if $sorting.images[$field_name] != ""}<a title="{t}sort by{/t} {$column.title}" href="{$sorting.links[$field_name]}" class="white_link"><img border="0" src="{$sorting.images[$field_name]}"></a>{/if}
+               {if $sorting.images[$field_name] != ""}<a title="{t}sort by{/t} {$column.title}" href="{$sorting.links[$field_name]}" class="white_link"><img border="0" src="{$sorting.images[$field_name]}"></a>{/if}
              {else}
                {$column.title}
-             {/if}
-@@ -239,7 +264,7 @@
-                   {$fld_value|formatCustomValue:$fld_id:$list[i].iss_id}
+@@ -229,19 +261,20 @@
+           {/if}
+           {/foreach}
+         </tr>
++        <tbody>
+         {section name="i" loop=$list}
+-        <tr {if $current_role >= $roles.developer AND $list[i].iqu_status > 0}style="text-decoration: line-through;"{/if}>
++        <tr {if $current_role >= $roles.developer AND $list[i].iqu_status > 0}style="text-decoration: line-through;"{/if} id="{$list[i].iss_id}" {if !$list[i].assigned_users_order[$current_user_id]}class="nodrag"{/if}>
+           {if $current_role > $roles.developer}
+           <td bgcolor="{$list[i].status_color}" width="1%" class="default" align="center"><input type="checkbox" name="item[]" value="{$list[i].iss_id}" onchange="toggleBulkUpdate();"></td>
+           {/if}
+           {foreach from=$columns item=column key=field_name}
+           {if $field_name == 'custom_fields'}
+             {foreach from=$list[i].custom_field key=fld_id item=fld_value}
+-                <td bgcolor="{$list[i].status_color}" align="{$column.align|default:'center'}" class="default">
+-                  {$fld_value|formatCustomValue:$fld_id:$list[i].iss_id}
++                <td bgcolor="{$list[i].status_color}" align="{$column.align|default:'center'}" class="default custom_field" onclick="return updateCustomFields({$list[i].iss_id});">
++                    {$fld_value|formatCustomValue:$fld_id:$list[i].iss_id}
                  </td>
                {/foreach}
 -          {else}
 +          {elseif $field_name != 'isu_order' || $isu_order_user}
            <td bgcolor="{$list[i].status_color}" align="{$column.align|default:'center'}" class="default">
              {if $field_name == 'iss_id'}
-               <a href="view.php?id={$list[i].iss_id}" class="link" title="view issue details">{$list[i].iss_id}</a>
-@@ -278,7 +303,24 @@
-               {/if}
+               <a href="view.php?id={$list[i].iss_id}" class="link" title="{t}view issue details{/t}">{$list[i].iss_id}</a>
+@@ -276,7 +309,7 @@
+             {elseif $field_name == 'iss_percent_complete'}
+               {$list[i].iss_percent_complete|escape:"html"}%
+             {elseif $field_name == 'iss_expected_resolution_date'}
+-              {$list[i].iss_expected_resolution_date|escape:"html"}
++              <div class="inline_date_pick" id="expected_resolution_date|{$list[i].iss_id}">{$list[i].iss_expected_resolution_date|escape:"html"}&nbsp;</div>
+             {elseif $field_name == 'iss_summary'}
+               <a href="view.php?id={$list[i].iss_id}" class="link" title="{t}view issue details{/t}">{$list[i].iss_summary|escape:"html"}</a>
+               {if $list[i].redeemed}
+@@ -285,6 +318,10 @@
                {if $list[i].iss_private == 1}
                    <b>[Private]</b>
--              {/if}
+               {/if}
++            {elseif $field_name == 'isu_order'}
++              {if $list[i].assigned_users_order[$current_user_id]}
++                <img src="{$rel_url}images/updown.gif" alt="move">
 +              {/if}
-+	    {elseif $field_name == 'isu_order'}
-+	      {if $isu_order_user}
-+	        {assign var="order" value=$list[i].assigned_users_order[$isu_order_user]}
-+	        {if $order}
-+		<a class="link" title="{t}hide / show reordering options{/t}" href="javascript:void(null);" onClick="javascript:toggleVisibility('order{$list[i].iss_id}_');">{$order}</a>
-+		<div id="order{$list[i].iss_id}_1" style="display: none">
-+	          <table>
-+                    <tr>
-+		      <td class="default">{if $order > 1}<a class="link" title="{t}move up{/t}" href="list.php?reorder_user={$isu_order_user}&reorder_source[0]={$list[i].iss_id}&reorder_neworder={math equation="x - 1" x=$order}">{t}Up{/t}</a>{/if}</td>
-+		      <td class="default"><a class="link" title="{t}move up{/t}" href="list.php?reorder_user={$isu_order_user}&reorder_source[0]={$list[i].iss_id}&reorder_neworder={math equation="x + 1" x=$order}">{t}Down{/t}</a></td>
-+	            </tr>
-+		    <tr>
-+                      <td class="default"><a class="link" title="{t}move here{/t}" href="javascript:void(null);" onClick="javascript:reorderBulk({$isu_order_user}, {$order})">{t}Move here{/t}</a></td>
-+	            </tr>
-+	          </table>
-+	        {/if}
-+	      {/if}
              {/if}
            </td>
            {/if}
---- /dev/null	2006-03-28 14:00:37.000000000 +0300
-+++ ./order_patch-patch.sql	2008-08-27 17:16:21.444016830 +0300
-@@ -0,0 +1,5 @@
-+ALTER TABLE eventum_issue_user
-+    ADD isu_order int(11) NOT NULL DEFAULT '0' AFTER isu_assigned_date,
-+    ADD INDEX isu_order (isu_order);
-+// set at least some order for now
-+update eventum_issue_user set isu_order=isu_iss_id;
+@@ -297,10 +334,11 @@
+           </td>
+         </tr>
+         {/section}
+-        <tr bgcolor="{$cell_color}">
++	</tbody>
++        <tr bgcolor="{$cell_color}" class="nodrag">
+           <td colspan="{$col_count}">
+             <table width="100%" cellspacing="0" cellpadding="0">
+-              <tr>
++              <tr class="nodrag">
+                 <td width="30%" nowrap>
+                   {if $current_role > $roles.developer}
+                   <input type="button" value="{t}All{/t}" class="shortcut" onClick="javascript:toggleSelectAll(this.form, 'item[]');">
+@@ -352,6 +390,29 @@
+   </form>
+ </table>
+ <br />
+-
++<script type="text/javascript">
++{*
++ * Order issues by drag and drop:
++ * only if sorted by order and viewing your own issues
++ *}
++{if $options.sort_by == "isu_order" and $current_user_id == $isu_order_user}
++{literal}
++var before = ''; // make it global variable
++$('#issue_list_table').tableDnD({
++    onDragClass: "tDnD_whileDrag",
++    onDragStart: function(table, row) {
++        before = $.tableDnD.serialize('id');
++    },
++    onDrop: function(table, row) {
++        $.post("/ajax/order.php", {before: before, after: $.tableDnD.serialize('id')}, function(data) {
++                if (data.length > 0) {
++                alert(data);
++            }
++        }, "text");
++    }
++});
++{/literal}
++{/if}
++</script>
+ {include file="app_info.tpl.html"}
+-{include file="footer.tpl.html"}
++{include file="footer.tpl.html"}
+\ No newline at end of file
