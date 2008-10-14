@@ -2323,10 +2323,9 @@ Index: js/jquery/ui.datepicker.js
  });
  
 Index: js/global.js
-===================================================================
 --- js/global.js	(revision 3749)
 +++ js/global.js	(working copy)
-@@ -793,10 +793,9 @@
+@@ -793,8 +793,6 @@
  
  // call when document ready
  $(document).ready(function() {
@@ -2337,10 +2336,6 @@ Index: js/global.js
 +    $('.date_picker').datepicker({
 +        dateFormat: 'yy-mm-dd', firstDay: 0  // FIXME: make it configurable
      });
--});
-+}
-+
- //-->
 Index: css/style.css
 ===================================================================
 --- css/style.css	(revision 3749)
@@ -2364,7 +2359,6 @@ Index: css/style.css
  }
 \ No newline at end of file
 Index: css/dynCalendar.css
-===================================================================
 --- css/dynCalendar.css	(revision 3749)
 +++ css/dynCalendar.css	(working copy)
 @@ -1,35 +0,0 @@
@@ -2404,7 +2398,6 @@ Index: css/dynCalendar.css
 -	left: 1px;
 -}
 Index: css/ui.datepicker.css
-===================================================================
 --- css/ui.datepicker.css	(revision 0)
 +++ css/ui.datepicker.css	(revision 0)
 @@ -0,0 +1,213 @@
