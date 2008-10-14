@@ -43,9 +43,9 @@ Source13:	%{name}-router-postfix.sh
 Source14:	%{name}.logrotate
 Source15:	%{name}-lighttpd.conf
 Patch0:		%{name}-lf.patch
-Patch1:		%{name}-order.patch
-Patch2:		%{name}-jquery.patch
-Patch3:		%{name}-datepicker-dow.patch
+Patch1:		%{name}-jquery.patch
+Patch2:		%{name}-datepicker-dow.patch
+Patch3:		%{name}-order.patch
 # packaging patches that probably never go upstream
 Patch100:	%{name}-paths.patch
 Patch101:	%{name}-cvs-config.patch
@@ -460,8 +460,6 @@ Szczegóły na temat instalacji można przeczytać pod
 
 %prep
 %setup -q %{?snap:-n %{name}-%{snap}}%{?svn:-n %{name}-%{svn}}
-# undos the source
-find . -type f -print0 | xargs -0 sed -i -e 's,\r$,,'
 
 rm benchmark.php
 rm -r misc/upgrade/*v1.[123]* # too old to support in PLD Linux
@@ -475,9 +473,9 @@ rm rpc/xmlrpc_client.php
 
 # bug fixes / features
 %patch0 -p1
-%{?with_order:%patch1 -p1}
-%patch2 -p0
-%patch3 -p1
+%patch1 -p0
+%patch2 -p1
+%{?with_order:%patch3 -p1}
 
 #%patch200 -p1
 
