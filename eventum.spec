@@ -12,7 +12,7 @@
 
 #define	snap	20060921
 %define	svn		r3749
-%define	rel		0.42
+%define	rel		0.43
 #define	_rc		RC3
 
 %include	/usr/lib/rpm/macros.php
@@ -476,6 +476,9 @@ rm rpc/xmlrpc_client.php
 %patch1 -p0
 %patch2 -p1
 %{?with_order:%patch3 -p1}
+
+rm css/dynCalendar.css
+mv css/ui.datepicker.css js/jquery/ui.datepicker.css
 
 #%patch200 -p1
 
