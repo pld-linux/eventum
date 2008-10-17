@@ -1,4 +1,4 @@
---- eventum/ajax/order.php	2008-10-15 01:46:20.000000000 +0300
+--- eventum-new/ajax/order.php	2008-10-15 02:02:25.000000000 +0300
 +++ eventum-new/ajax/order.php	2008-10-15 02:02:25.000000000 +0300
 @@ -0,0 +1,72 @@
 +<?
@@ -17,8 +17,8 @@
 +	exit;
 +}
 +
-+$before = Misc::explode_url($_POST['before']);
-+$after = Misc::explode_url($_POST['after']);
++parse_str($_POST['before'], $before);
++parse_str($_POST['after'], $after);
 +
 +$before = $before['issue_list_table'];
 +$after = $after['issue_list_table'];
@@ -73,7 +73,6 @@
 +        }
 +    }
 +}
-\ No newline at end of file
 --- eventum/ajax/update.php	2008-10-15 01:46:20.000000000 +0300
 +++ eventum-new/ajax/update.php	2008-10-15 02:02:25.000000000 +0300
 @@ -0,0 +1,30 @@
@@ -647,54 +646,6 @@
  // benchmarking the included file (aka setup time)
  if (APP_BENCHMARK) {
      $GLOBALS['bench']->setMarker('Included Issue Class');
---- eventum/include/class.misc.php	2008-10-15 01:46:20.000000000 +0300
-+++ eventum-new/include/class.misc.php	2008-10-15 02:02:25.000000000 +0300
-@@ -744,6 +744,45 @@
-     {
-         return self::$messages;
-     }
-+
-+    /**
-+     * Parse url query string to php array
-+     *
-+     * @access  public
-+     * @link http://php.net/manual/en/function.parse-str.php#79154
-+     * @param   string $str The url that will be exploded
-+     * @return  array The variables from url
-+     */
-+    function explode_url($str) {
-+        $return = array();
-+        // Separate all name-value pairs
-+        $pairs = explode('&', $str);
-+        foreach($pairs as $pair) {
-+            // Pull out the names and the values
-+            list($name, $value) = explode('=', $pair, 2);
-+            // Decode the variable name and look for arrays
-+            list($name, $index) = split('[][]', urldecode($name));
-+            // Arrays
-+            if(isset($index)) {
-+                // Declare or add to the global array defined by $name
-+                if(!isset($return[$name])) {
-+                    $return[$name] = array();
-+                }
-+                // Associative array
-+                if(strlen($index) > 0) {
-+                    $return[$name][$index] = addslashes(urldecode($value));
-+                } else {
-+                    // Ordered array
-+                    array_push($return[$name], addslashes(urldecode($value)));
-+                }
-+                // Variables
-+            } else {
-+                // Declare or overwrite the global variable defined by $name
-+                $return[$name] = addslashes(urldecode($value));
-+            }
-+        }
-+            return $return;
-+    }
- }
- 
- // benchmarking the included file (aka setup time)
 --- eventum-r3749/js/global.js~	2008-10-15 02:03:48.000000000 +0300
 +++ eventum-r3749/js/global.js	2008-10-15 02:06:00.000000000 +0300
 @@ -799,4 +799,39 @@
