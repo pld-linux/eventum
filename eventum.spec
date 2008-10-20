@@ -11,8 +11,8 @@
 %bcond_with	order	# with experimental order patch
 
 #define	snap	20060921
-%define	svn		r3749
-%define	rel		0.43
+%define	svn		r3755
+%define	rel		0.45
 #define	_rc		RC3
 
 %include	/usr/lib/rpm/macros.php
@@ -27,7 +27,7 @@ Group:		Applications/WWW
 #Source0:	http://eventum.mysql.org/downloads/eventum-2.0.RC3.tar.gz
 #Source0:	http://mysql.tonnikala.org/Downloads/eventum/%{name}-%{version}.tar.gz
 Source0:	%{name}-%{svn}.tar.bz2
-# Source0-md5:	3570d7a9f407fd9f3452f0d75778576d
+# Source0-md5:	521d2b4624dbbe2b96392ba4d9ead7e3
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -43,9 +43,8 @@ Source13:	%{name}-router-postfix.sh
 Source14:	%{name}.logrotate
 Source15:	%{name}-lighttpd.conf
 Patch0:		%{name}-lf.patch
-Patch1:		%{name}-jquery.patch
-Patch2:		%{name}-datepicker-dow.patch
-Patch3:		%{name}-order.patch
+Patch1:		%{name}-datepicker-dow.patch
+Patch2:		%{name}-order.patch
 # packaging patches that probably never go upstream
 Patch100:	%{name}-paths.patch
 Patch101:	%{name}-cvs-config.patch
@@ -473,12 +472,8 @@ rm rpc/xmlrpc_client.php
 
 # bug fixes / features
 %patch0 -p1
-%patch1 -p0
-%patch2 -p1
-%{?with_order:%patch3 -p1}
-
-rm css/dynCalendar.css
-mv css/ui.datepicker.css js/jquery/ui.datepicker.css
+%patch1 -p1
+%{?with_order:%patch2 -p1}
 
 #%patch200 -p1
 
