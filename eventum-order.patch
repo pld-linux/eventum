@@ -904,3 +904,11 @@
 -{include file="footer.tpl.html"}
 +{include file="footer.tpl.html"}
 \ No newline at end of file
+--- /dev/null	2006-03-28 14:00:37.000000000 +0300
++++ ./order_patch-patch.sql	2008-08-27 17:16:21.444016830 +0300
+@@ -0,0 +1,5 @@
++ALTER TABLE eventum_issue_user
++    ADD isu_order int(11) NOT NULL DEFAULT '0' AFTER isu_assigned_date,
++    ADD INDEX isu_order (isu_order);
++// set at least some order for now
++update eventum_issue_user set isu_order=isu_iss_id;
