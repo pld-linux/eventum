@@ -904,8 +904,6 @@
 -{include file="footer.tpl.html"}
 +{include file="footer.tpl.html"}
 \ No newline at end of file
-Index: js/jquery/jquery.tablednd.js
-===================================================================
 --- ./js/jquery/jquery.tablednd.js	(revision 0)
 +++ ./js/jquery/jquery.tablednd.js	(revision 0)
 @@ -0,0 +1,382 @@
@@ -1310,3 +1308,17 @@ Index: js/jquery/jquery.tablednd.js
 +    ADD INDEX isu_order (isu_order);
 +// set at least some order for now
 +update eventum_issue_user set isu_order=isu_iss_id;
+--- eventum-r3765/css/style.css~	2008-06-19 08:30:31.000000000 +0300
++++ eventum-r3765/css/style.css	2008-10-29 17:28:49.393768970 +0200
+@@ -172,4 +172,9 @@
+     font-size: 70%;
+     font-family: Verdana, Arial, Helvetica, sans-serif;
+     padding: 10px;
+-}
+\ No newline at end of file
++}
++
++.tDnD_whileDrag td {
++	background-color: #ffffdd;
++	border: 1px solid red;
++}
