@@ -8,11 +8,11 @@
 #
 # Conditional build:
 %bcond_with	qmail	# build the router-qmail subpackage
-%bcond_with	order	# with experimental order patch
+%bcond_without	order	# with experimental order patch
 
 #define	snap	20060921
 %define	svn		r3765
-%define	rel		0.46
+%define	rel		0.52
 #define	_rc		RC3
 
 %include	/usr/lib/rpm/macros.php
@@ -42,6 +42,8 @@ Source12:	%{name}-upgrade.sh
 Source13:	%{name}-router-postfix.sh
 Source14:	%{name}.logrotate
 Source15:	%{name}-lighttpd.conf
+Source16:	http://glen.alkohol.ee/pld/eventum/updown.gif
+# Source16-md5:	6ad017595c70112a29eb553460ff7054
 Patch0:		%{name}-lf.patch
 Patch2:		%{name}-order.patch
 # packaging patches that probably never go upstream
@@ -473,6 +475,8 @@ rm rpc/xmlrpc_client.php
 %patch0 -p1
 %{?with_order:%patch2 -p1}
 
+cp -a %{SOURCE16} images
+
 #%patch200 -p1
 
 # packaging
@@ -516,7 +520,7 @@ install -d \
 	$RPM_BUILD_ROOT/var/lib/%{name}/routed_{emails,drafts,notes} \
 	$RPM_BUILD_ROOT%{_appdir}/{include,htdocs/misc,upgrade} \
 
-cp -a *.php css customer images js manage reports rpc setup $RPM_BUILD_ROOT%{_appdir}/htdocs
+cp -a *.php css customer images js manage reports rpc setup %{?with_order:ajax} $RPM_BUILD_ROOT%{_appdir}/htdocs
 cp -a misc/*.html $RPM_BUILD_ROOT%{_appdir}/htdocs/misc
 cp -a misc/*.php $RPM_BUILD_ROOT%{_appdir}
 cp -a templates $RPM_BUILD_ROOT%{_appdir}
@@ -790,6 +794,9 @@ EOF
 %{_appdir}/htdocs/reports
 %{_appdir}/htdocs/rpc
 %{_appdir}/htdocs/misc
+%if %{with order}
+%{_appdir}/htdocs/ajax
+%endif
 %{_appdir}/templates
 
 %dir %{_appdir}/upgrade
