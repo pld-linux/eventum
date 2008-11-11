@@ -1322,3 +1322,91 @@
 +	background-color: #ffffdd;
 +	border: 1px solid red;
 +}
+--- eventum~/css/style.css	2008-11-06 16:54:30.000000000 +0200
++++ eventum/css/style.css	2008-11-06 16:20:50.038350957 +0200
+@@ -173,8 +173,21 @@
+     font-family: Verdana, Arial, Helvetica, sans-serif;
+     padding: 10px;
+ }
+-
+ .tDnD_whileDrag td {
+-	background-color: #ffffdd;
+-	border: 1px solid red;
++    background-color: #ffffdd;
++}
++.tDnD_whileDrag td {
++    border: 1px solid red;
++}
++.inline_date_pick {
++    cursor: pointer;
++}
++.custom_field {
++    cursor: pointer;
++}
++.showDragHandle {
++    cursor: move;
++	background-image: url(../images/updown2.gif);
++    background-repeat: no-repeat;
++    background-position: center center;
+ }
+--- eventum~/templates/list.tpl.html	2008-11-06 16:54:30.000000000 +0200
++++ eventum/templates/list.tpl.html	2008-11-11 11:22:36.206950437 +0200
+@@ -250,9 +250,6 @@
+             </table>
+             {elseif $sorting.links[$field_name] != ''}
+               <a title="{t}sort by{/t} {$column.title}" href="{$sorting.links[$field_name]}" class="white_link">{$column.title}</a>
+-              {if $field_name == 'isu_order'}
+-                 <br>{$users[$isu_order_user]}
+-              {/if}
+               {if $sorting.images[$field_name] != ""}<a title="{t}sort by{/t} {$column.title}" href="{$sorting.links[$field_name]}" class="white_link"><img border="0" src="{$sorting.images[$field_name]}"></a>{/if}
+             {else}
+               {$column.title}
+@@ -275,7 +272,7 @@
+                 </td>
+               {/foreach}
+           {elseif $field_name != 'isu_order' || $isu_order_user}
+-          <td bgcolor="{$list[i].status_color}" align="{$column.align|default:'center'}" class="default">
++          <td bgcolor="{$list[i].status_color}" align="{$column.align|default:'center'}" class="default{if $field_name == 'isu_order'} dragHandle{/if}">
+             {if $field_name == 'iss_id'}
+               <a href="view.php?id={$list[i].iss_id}" class="link" title="{t}view issue details{/t}">{$list[i].iss_id}</a>
+             {elseif $field_name == 'pri_rank'}
+@@ -319,9 +316,7 @@
+                   <b>[Private]</b>
+               {/if}
+             {elseif $field_name == 'isu_order'}
+-              {if $list[i].assigned_users_order[$current_user_id]}
+-                <img src="{$rel_url}images/updown.gif" alt="move">
+-              {/if}
++              {if $options.sort_by == "isu_order" and $current_user_id == $isu_order_user}&nbsp;{/if}
+             {/if}
+           </td>
+           {/if}
+@@ -334,7 +329,7 @@
+           </td>
+         </tr>
+         {/section}
+-	</tbody>
++        </tbody>
+         <tr bgcolor="{$cell_color}" class="nodrag">
+           <td colspan="{$col_count}">
+             <table width="100%" cellspacing="0" cellpadding="0">
+@@ -409,10 +404,16 @@
+                 alert(data);
+             }
+         }, "text");
+-    }
++    },
++	dragHandle: "dragHandle"
++});
++$("#issue_list_table tr").hover(function() {
++    $('#' + this.id + ' .dragHandle').addClass('showDragHandle');
++}, function() {
++    $('#' + this.id + ' .dragHandle').removeClass('showDragHandle');
+ });
+ {/literal}
+ {/if}
+ </script>
+ {include file="app_info.tpl.html"}
+-{include file="footer.tpl.html"}
+\ No newline at end of file
++{include file="footer.tpl.html"}

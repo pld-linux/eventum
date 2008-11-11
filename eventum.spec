@@ -11,8 +11,8 @@
 %bcond_without	order	# with experimental order patch
 
 #define	snap	20060921
-%define	svn		r3765
-%define	rel		0.52
+%define	svn		r3775
+%define	rel		0.57
 #define	_rc		RC3
 
 %include	/usr/lib/rpm/macros.php
@@ -27,7 +27,7 @@ Group:		Applications/WWW
 #Source0:	http://eventum.mysql.org/downloads/eventum-2.0.RC3.tar.gz
 #Source0:	http://mysql.tonnikala.org/Downloads/eventum/%{name}-%{version}.tar.gz
 Source0:	%{name}-%{svn}.tar.bz2
-# Source0-md5:	d9c3e9d38563aa2ab9d8f1abf156ac96
+# Source0-md5:	52266bfa32287fb2c5b6ca0e50ebf65f
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -42,8 +42,8 @@ Source12:	%{name}-upgrade.sh
 Source13:	%{name}-router-postfix.sh
 Source14:	%{name}.logrotate
 Source15:	%{name}-lighttpd.conf
-Source16:	http://glen.alkohol.ee/pld/eventum/updown.gif
-# Source16-md5:	6ad017595c70112a29eb553460ff7054
+Source16:	http://www.isocra.com/images/updown2.gif
+# Source16-md5:	deb6eeb2552ba757d3a949ed10c4107d
 Patch0:		%{name}-lf.patch
 Patch2:		%{name}-order.patch
 # packaging patches that probably never go upstream
