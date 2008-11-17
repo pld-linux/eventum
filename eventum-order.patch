@@ -1300,14 +1300,6 @@
  <link rel="stylesheet" href="{$rel_url}js/jquery/ui.datepicker.css">
  <script language="JavaScript">
  <!--
---- /dev/null	2006-03-28 14:00:37.000000000 +0300
-+++ ./order_patch-patch.sql	2008-08-27 17:16:21.444016830 +0300
-@@ -0,0 +1,5 @@
-+ALTER TABLE eventum_issue_user
-+    ADD isu_order int(11) NOT NULL DEFAULT '0' AFTER isu_assigned_date,
-+    ADD INDEX isu_order (isu_order);
-+// set at least some order for now
-+update eventum_issue_user set isu_order=isu_iss_id;
 --- eventum-r3765/css/style.css~	2008-06-19 08:30:31.000000000 +0300
 +++ eventum-r3765/css/style.css	2008-10-29 17:28:49.393768970 +0200
 @@ -172,4 +172,9 @@
@@ -1410,3 +1402,31 @@
 -{include file="footer.tpl.html"}
 \ No newline at end of file
 +{include file="footer.tpl.html"}
+--- eventum-r3776/misc/upgrade/update-database.php	2008-11-18 01:10:18.806283202 +0200
++++ eventum/misc/upgrade/update-database.php	2008-11-18 01:15:20.703082655 +0200
+@@ -83,6 +83,7 @@
+ 		1 => '01_notes.php',
+ 		2 => '02_usr_alias.php',
+ 		3 => '03_prj_mail_aliases.php',
++		4 => '04_isu_order.php',
+ 	);
+ 
+ 	// sanity check. check that the version table exists.
+--- /dev/null	2008-11-04 20:33:38.146691408 +0200
++++ eventum/misc/upgrade/patches/04_isu_order.php	2008-11-18 01:14:02.972104347 +0200
+@@ -0,0 +1,15 @@
++<?php
++
++function db_patch_4() {
++	$stmts = array();
++
++	$columns = db_getCol('DESC %TABLE_PREFIX%issue_user');
++	if (in_array('isu_order', $columns)) {
++		return $stmts;
++	}
++
++	$stmts[] = "ALTER TABLE %TABLE_PREFIX%issue_user ADD isu_order int(11) NOT NULL DEFAULT '0' AFTER isu_assigned_date, ADD INDEX isu_order (isu_order)";
++	$stmts[] = "UPDATE %TABLE_PREFIX%issue_user set isu_order=isu_iss_id";
++
++	return $stmts;
++}
