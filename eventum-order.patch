@@ -1430,3 +1430,63 @@
 +
 +	return $stmts;
 +}
+--- ../eventum-old2/ajax/update.php	2008-10-13 11:14:23.673428821 +0300
++++ ./ajax/update.php	2008-11-19 15:05:54.490054961 +0200
+@@ -16,9 +16,17 @@
+   case 'expected_resolution_date':
+     $day = (int)$_POST['day'];
+     $month = (int)$_POST['month'];
+-    $year = (int)$_POST['year'];
+-    if (Issue::updateField($_POST['issueID'], $_POST['fieldName'], sprintf('%04d-%02d-%02d', $year, $month, $day)) !== -1) {
+-        echo Date_API::getSimpleDate(sprintf('%04d-%02d-%02d', $year, $month, $day), false);
++	$year = (int)$_POST['year'];
++	if ($day == 0 && $month == 1 && $year == 0) {
++		// clear button
++		$date = null;
++	} else {
++		$date = sprintf('%04d-%02d-%02d', $year, $month, $day);
++	}
++	if (Issue::updateField($_POST['issueID'], $_POST['fieldName'], $date) !== -1) {
++		if (!is_null($date)) {
++            echo Date_API::getSimpleDate(sprintf('%04d-%02d-%02d', $year, $month, $day), false);
++		}
+     } else {
+         echo 'update failed';
+     }
+--- eventum_tar/js/global.js	2008-11-06 16:54:30.000000000 +0200
++++ ./js/global.js	2008-11-19 15:06:21.820071605 +0200
+@@ -817,10 +817,15 @@
+             function (date, dteObj) {
+                 fieldName = masterObj.id.substr(0,masterObj.id.indexOf('|'));
+                 issueID = masterObj.id.substr(masterObj.id.indexOf('|')+1);
++				if (date == '') {
++					// clear button
++					dteObj.selectedDay = 0;
++					dteObj.selectedMonth = 0;
++					dteObj.selectedYear = 0;
++				}
++				//alertProperties(date);
+                 $.post("/ajax/update.php", {fieldName: fieldName, issueID: issueID, day: dteObj.selectedDay, month: (dteObj.selectedMonth+1), year: dteObj.selectedYear}, function(data) {
+-                    if (data.length > 0) {
+-                        masterObj.innerHTML = data;
+-                    }
++                    masterObj.innerHTML = data;
+                 }, "text");
+             },
+             // config
+--- eventum-old2/include/class.issue.php	2008-10-15 18:30:31.590172372 +0300
++++ ./include/class.issue.php	2008-11-19 15:04:43.710659328 +0200
+@@ -1694,7 +1694,11 @@
+                 $stmt .= ", iss_pre_id = " . Misc::escapeInteger($filed_value);
+             break;
+             case 'expected_resolution_date':
+-                $stmt .= ", iss_expected_resolution_date = '" . Misc::escapeString($filed_value) . "'";
++                if (is_null($filed_value)) {
++                    $stmt .= ", iss_expected_resolution_date = null";
++                } else {
++                    $stmt .= ", iss_expected_resolution_date = '" . Misc::escapeString($filed_value) . "'";
++                }
+             break;
+             case 'release':
+                 $stmt .= ", iss_pre_id = " . Misc::escapeInteger($filed_value);
+
