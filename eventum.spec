@@ -11,8 +11,8 @@
 %bcond_without	order	# with experimental order patch
 
 #define	snap	20060921
-%define	svn		r3775
-%define	rel		0.57
+%define	svn		r3787
+%define	rel		0.64
 #define	_rc		RC3
 
 %include	/usr/lib/rpm/macros.php
@@ -27,7 +27,7 @@ Group:		Applications/WWW
 #Source0:	http://eventum.mysql.org/downloads/eventum-2.0.RC3.tar.gz
 #Source0:	http://mysql.tonnikala.org/Downloads/eventum/%{name}-%{version}.tar.gz
 Source0:	%{name}-%{svn}.tar.bz2
-# Source0-md5:	52266bfa32287fb2c5b6ca0e50ebf65f
+# Source0-md5:	c1d1d5951668f16f1abe83433fc94305
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
