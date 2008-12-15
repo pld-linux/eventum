@@ -1490,3 +1490,22 @@
              case 'release':
                  $stmt .= ", iss_pre_id = " . Misc::escapeInteger($filed_value);
 
+--- eventum/include/class.issue.php	2008-10-15 01:46:20.000000000 +0300
++++ eventum-new/include/class.issue.php	2008-10-15 02:02:25.000000000 +0300
+@@ -2050,7 +2050,7 @@
+                     " . APP_DEFAULT_DB . "." . APP_TABLE_PREFIX . "issue_user
+                  WHERE
+                  isu_iss_id IN ($issue_id)";
+-        if ($usr_id !== FALSE) {
++        if (!empty($usr_id)) {
+             $stmt.= " AND isu_usr_id IN ($usr_id)";
+         }
+         $stmt.= "ORDER BY isu_order";
+@@ -2135,7 +2135,6 @@
+             if ($usr_id) {
+                 History::add($issue_id, $usr_id, History::getTypeID('user_all_unassociated'), 'Issue assignments removed by ' . User::getFullName($usr_id));
+             }
+-            Issue::rearrangeDeleteUserAsssociationOrderList($deleted_order_list);
+             return 1;
+         }
+     }
