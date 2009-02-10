@@ -11,8 +11,8 @@
 %bcond_without	order	# with experimental order patch
 
 #define	snap	20060921
-#define	svn		r3806
-%define	rel		1
+%define	svn		r3834
+%define	rel		1.3
 #define	_rc		RC3
 
 %include	/usr/lib/rpm/macros.php
@@ -25,9 +25,9 @@ License:	GPL
 Group:		Applications/WWW
 #Source0:	http://downloads.mysql.com/snapshots/eventum/%{name}-nightly-%{snap}.tar.gz
 #Source0:	http://eventum.mysql.org/downloads/eventum-2.0.RC3.tar.gz
-#Source0:	%{name}-%{svn}.tar.bz2
-Source0:	http://mysql.easynet.be/Downloads/eventum/%{name}-%{version}.tar.gz
-# Source0-md5:	2b35f0482a70292d6ab0e586501ab2ab
+#Source0:	http://mysql.easynet.be/Downloads/eventum/%{name}-%{version}.tar.gz
+Source0:	%{name}-%{svn}.tar.bz2
+# Source0-md5:	c830b2bd1524d8579156e3d1dcc133fa
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -96,7 +96,7 @@ Conflicts:	logrotate < 3.7-4
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
-%define		_noautoreq	'pear(/etc/webapps/.*)' 'pear(%{_appdir}/.*)' 'pear(jpgraph_dir.php)' 'pear(.*Smarty.class.php)' 'pear(Benchmark/.*)'
+%define		_noautoreq	'pear(/etc/webapps/.*)' 'pear(%{_appdir}/.*)' 'pear(jpgraph_dir.php)' 'pear(.*Smarty.class.php)'
 
 %define		_libdir		%{_prefix}/lib/%{name}
 %define		_appdir		%{_datadir}/%{name}
@@ -461,7 +461,6 @@ Szczegóły na temat instalacji można przeczytać pod
 %prep
 %setup -q %{?snap:-n %{name}-%{snap}}%{?svn:-n %{name}-%{svn}}
 
-rm benchmark.php
 rm -r misc/upgrade/*v1.[123]* # too old to support in PLD Linux
 rm -r misc/upgrade/v{1.,2.0,2.1_}* # no longer supported in PLD Linux
 rm misc/upgrade/flush_compiled_templates.php
@@ -542,7 +541,6 @@ install misc/irc/bot.php $RPM_BUILD_ROOT%{_sbindir}/%{name}-bot
 # scm
 install misc/scm/process_cvs_commits.php $RPM_BUILD_ROOT%{_libdir}/process_cvs_commits
 install misc/scm/process_svn_commits.php $RPM_BUILD_ROOT%{_libdir}/process_svn_commits
-ln -s process_cvs_commits $RPM_BUILD_ROOT%{_libdir}/scm
 install %{SOURCE6} $RPM_BUILD_ROOT%{_sysconfdir}/scm.php
 
 # private key
@@ -899,5 +897,3 @@ EOF
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/scm.php
 %attr(755,root,root) %{_libdir}/process_cvs_commits
 %attr(755,root,root) %{_libdir}/process_svn_commits
-# legacy
-%ghost %{_libdir}/scm

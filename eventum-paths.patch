@@ -1,6 +1,6 @@
---- eventum/misc/cli/config.inc.php	2007-01-30 20:32:58.965186306 +0200
-+++ eventum/misc/cli/config.inc.php	2007-01-30 20:57:01.887651515 +0200
-@@ -32,9 +32,8 @@
+--- eventum-r3833/misc/cli/config.inc.php~	2009-02-10 09:30:34.000000000 +0200
++++ eventum-r3833/misc/cli/config.inc.php	2009-02-10 09:31:11.928169361 +0200
+@@ -33,8 +33,7 @@
  set_time_limit(0);
  
  // definitions of path related variables
@@ -9,11 +9,10 @@
 -define('APP_PEAR_PATH', APP_INC_PATH . 'pear/');
 +define('APP_INC_PATH', '/usr/share/eventum/cli/');
 +define('APP_PEAR_PATH', '/usr/share/pear/');
- define('APP_BENCHMARK', false);
  
  set_include_path(get_include_path() . PATH_SEPARATOR . APP_PEAR_PATH);
---- eventum/include/class.template.php~	2007-01-30 18:52:59.020179406 +0200
-+++ eventum/include/class.template.php	2007-01-30 18:53:24.620759076 +0200
+--- eventum/include/class.template_helper.php~	2007-01-30 18:52:59.020179406 +0200
++++ eventum/include/class.template_helper.php	2007-01-30 18:53:24.620759076 +0200
 @@ -61,6 +61,7 @@
          $this->smarty = new Smarty;
          $this->smarty->template_dir = APP_TPL_PATH;

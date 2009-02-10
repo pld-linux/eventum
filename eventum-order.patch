@@ -65,7 +65,7 @@
 +                     WHERE
 +                        isu_iss_id = $nID AND
 +                        isu_usr_id = $usr_id";
-+            $res = $GLOBALS["db_api"]->dbh->query($stmt);
++            $res = DB_Helper::getInstance()->query($stmt);
 +            if (PEAR::isError($res)) {
 +                Error_Handler::logError(array($res->getMessage(), $res->getDebugInfo()), __FILE__, __LINE__);
 +                die('update failed');
@@ -96,7 +96,7 @@
 +    $month = (int)$_POST['month'];
 +    $year = (int)$_POST['year'];
 +    if (Issue::updateField($_POST['issueID'], $_POST['fieldName'], sprintf('%04d-%02d-%02d', $year, $month, $day)) !== -1) {
-+        echo Date_API::getSimpleDate(sprintf('%04d-%02d-%02d', $year, $month, $day), false);
++        echo Date_Helper::getSimpleDate(sprintf('%04d-%02d-%02d', $year, $month, $day), false);
 +    } else {
 +        echo 'update failed';
 +    }
@@ -156,8 +156,8 @@
 +        $stmt = "UPDATE
 +                    " . APP_DEFAULT_DB . "." . APP_TABLE_PREFIX . "issue
 +                 SET
-+                    iss_updated_date='" . Date_API::getCurrentDateGMT() . "',
-+                    iss_last_public_action_date='" . Date_API::getCurrentDateGMT() . "',
++                    iss_updated_date='" . Date_Helper::getCurrentDateGMT() . "',
++                    iss_last_public_action_date='" . Date_Helper::getCurrentDateGMT() . "',
 +                    iss_last_public_action_type='updated'";
 +
 +        switch ($field_name) {
@@ -213,7 +213,7 @@
 +                 WHERE
 +                    iss_id=$issue_id";
 +
-+        $res = $GLOBALS["db_api"]->dbh->query($stmt);
++        $res = DB_Helper::getInstance()->query($stmt);
 +        if (PEAR::isError($res)) {
 +            Error_Handler::logError(array($res->getMessage(), $res->getDebugInfo()), __FILE__, __LINE__);
 +            return -1;
@@ -320,7 +320,7 @@
 +                 WHERE
 +                    isu_usr_id = $assignee_usr_id AND
 +                    isu_order >= $order";
-+        $res = $GLOBALS["db_api"]->dbh->query($stmt);
++        $res = DB_Helper::getInstance()->query($stmt);
 +        if (PEAR::isError($res)) {
 +            Error_Handler::logError(array($res->getMessage(), $res->getDebugInfo()), __FILE__, __LINE__);
 +            return -1;
@@ -337,11 +337,11 @@
                   ) VALUES (
                      $issue_id,
                      $assignee_usr_id,
--                    '" . Date_API::getCurrentDateGMT() . "'
-+                    '" . Date_API::getCurrentDateGMT() . "',
+-                    '" . Date_Helper::getCurrentDateGMT() . "'
++                    '" . Date_Helper::getCurrentDateGMT() . "',
 +                    $order
                   )";
-         $res = $GLOBALS["db_api"]->dbh->query($stmt);
+         $res = DB_Helper::getInstance()->query($stmt);
          if (PEAR::isError($res)) {
 @@ -1844,6 +2032,78 @@
          }
@@ -366,7 +366,7 @@
 +            $stmt.= " AND isu_usr_id IN ($usr_id)";
 +        }
 +        $stmt.= "ORDER BY isu_order";
-+        $res = $GLOBALS["db_api"]->dbh->getAll($stmt, DB_FETCHMODE_ASSOC);
++        $res = DB_Helper::getInstance()->getAll($stmt, DB_FETCHMODE_ASSOC);
 +        if (PEAR::isError($res)) {
 +            Error_Handler::logError(array($res->getMessage(), $res->getDebugInfo()), __FILE__, __LINE__);
 +            return -1;
@@ -409,7 +409,7 @@
 +                    $stmt.=  " AND
 +                            isu_order < " . $orders[$i+1];
 +                }
-+                $res = $GLOBALS["db_api"]->dbh->query($stmt);
++                $res = DB_Helper::getInstance()->query($stmt);
 +                if (PEAR::isError($res)) {
 +                    Error_Handler::logError(array($res->getMessage(), $res->getDebugInfo()), __FILE__, __LINE__);
 +                    return -1;
@@ -518,7 +518,7 @@
      }
  
  
-@@ -4322,8 +4605,127 @@
+@@ -4322,5 +4605,121 @@
          }
          return $returns[$msg_id];
      }
@@ -561,7 +561,7 @@
 +                 WHERE
 +                    isu_usr_id = $usr_id AND
 +                    isu_order >= $neworder";
-+        $res = $GLOBALS["db_api"]->dbh->query($stmt);
++        $res = DB_Helper::getInstance()->query($stmt);
 +        if (PEAR::isError($res)) {
 +            Error_Handler::logError(array($res->getMessage(), $res->getDebugInfo()), __FILE__, __LINE__);
 +            return -1;
@@ -576,7 +576,7 @@
 +                     WHERE
 +                        isu_usr_id = $usr_id AND
 +                        isu_iss_id = $iss_id";
-+            $res = $GLOBALS["db_api"]->dbh->query($stmt);
++            $res = DB_Helper::getInstance()->query($stmt);
 +            if (PEAR::isError($res)) {
 +                Error_Handler::logError(array($res->getMessage(), $res->getDebugInfo()), __FILE__, __LINE__);
 +                return -1;
@@ -608,7 +608,7 @@
 +
 +        $order_list = array();
 +
-+        $res = $GLOBALS["db_api"]->dbh->getAll($stmt, DB_FETCHMODE_ASSOC);
++        $res = DB_Helper::getInstance()->getAll($stmt, DB_FETCHMODE_ASSOC);
 +
 +        if (PEAR::isError($res)) {
 +            Error_Handler::logError(array($res->getMessage(), $res->getDebugInfo()), __FILE__, __LINE__);
@@ -628,7 +628,7 @@
 +                    "  . APP_DEFAULT_DB . "." . APP_TABLE_PREFIX . "issue_user
 +                 WHERE
 +                    isu_iss_id = " . Misc::escapeInteger($issue_id);
-+        $res = $GLOBALS["db_api"]->dbh->getAll($stmt, DB_FETCHMODE_ASSOC);
++        $res = DB_Helper::getInstance()->getAll($stmt, DB_FETCHMODE_ASSOC);
 +        if (PEAR::isError($res)) {
 +            Error_Handler::logError(array($res->getMessage(), $res->getDebugInfo()), __FILE__, __LINE__);
 +            return -1;
@@ -640,12 +640,6 @@
 +    
  }
  
-+
-+
-+
- // benchmarking the included file (aka setup time)
- if (APP_BENCHMARK) {
-     $GLOBALS['bench']->setMarker('Included Issue Class');
 --- eventum-r3749/js/global.js~	2008-10-15 02:03:48.000000000 +0300
 +++ eventum-r3749/js/global.js	2008-10-15 02:06:00.000000000 +0300
 @@ -799,4 +799,39 @@
@@ -1438,7 +1432,7 @@
      $month = (int)$_POST['month'];
 -    $year = (int)$_POST['year'];
 -    if (Issue::updateField($_POST['issueID'], $_POST['fieldName'], sprintf('%04d-%02d-%02d', $year, $month, $day)) !== -1) {
--        echo Date_API::getSimpleDate(sprintf('%04d-%02d-%02d', $year, $month, $day), false);
+-        echo Date_Helper::getSimpleDate(sprintf('%04d-%02d-%02d', $year, $month, $day), false);
 +	$year = (int)$_POST['year'];
 +	if ($day == 0 && $month == 1 && $year == 0) {
 +		// clear button
@@ -1448,7 +1442,7 @@
 +	}
 +	if (Issue::updateField($_POST['issueID'], $_POST['fieldName'], $date) !== -1) {
 +		if (!is_null($date)) {
-+            echo Date_API::getSimpleDate(sprintf('%04d-%02d-%02d', $year, $month, $day), false);
++            echo Date_Helper::getSimpleDate(sprintf('%04d-%02d-%02d', $year, $month, $day), false);
 +		}
      } else {
          echo 'update failed';
@@ -1489,7 +1483,6 @@
              break;
              case 'release':
                  $stmt .= ", iss_pre_id = " . Misc::escapeInteger($filed_value);
-
 --- eventum/include/class.issue.php	2008-10-15 01:46:20.000000000 +0300
 +++ eventum-new/include/class.issue.php	2008-10-15 02:02:25.000000000 +0300
 @@ -2050,7 +2050,7 @@
