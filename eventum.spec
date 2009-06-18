@@ -11,8 +11,8 @@
 %bcond_without	order	# with experimental order patch
 
 #define	snap	20060921
-%define	svn		r3834
-%define	rel		1.3
+%define	rev		r3843
+%define	rel		2.13
 #define	_rc		RC3
 
 %include	/usr/lib/rpm/macros.php
@@ -20,14 +20,15 @@ Summary:	Eventum Issue / Bug tracking system
 Summary(pl.UTF-8):	Eventum - system śledzenia spraw/błędów
 Name:		eventum
 Version:	2.2
-Release:	%{?_rc:%{_rc}.}%{rel}%{?snap:.%{snap}}%{?svn:.%{svn}}
+Release:	%{?_rc:%{_rc}.}%{rel}%{?snap:.%{snap}}%{?rev:.%{rev}}
 License:	GPL
 Group:		Applications/WWW
 #Source0:	http://downloads.mysql.com/snapshots/eventum/%{name}-nightly-%{snap}.tar.gz
 #Source0:	http://eventum.mysql.org/downloads/eventum-2.0.RC3.tar.gz
 #Source0:	http://mysql.easynet.be/Downloads/eventum/%{name}-%{version}.tar.gz
-Source0:	%{name}-%{svn}.tar.bz2
-# Source0-md5:	c830b2bd1524d8579156e3d1dcc133fa
+# bzr branch lp:eventum eventum && tar -cjf eventum.tar.bz2 --exclude=.bzr --exclude=.bzrignore eventum
+Source0:	%{name}-%{rev}.tar.bz2
+# Source0-md5:	394e94ebc88ad96fe9a71666e396113e
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -459,7 +460,7 @@ Szczegóły na temat instalacji można przeczytać pod
 </eventum/help.php?topic=scm_integration_installation>.
 
 %prep
-%setup -q %{?snap:-n %{name}-%{snap}}%{?svn:-n %{name}-%{svn}}
+%setup -q %{?snap:-n %{name}-%{snap}}%{?rev:-n %{name}-%{rev}}
 
 rm -r misc/upgrade/*v1.[123]* # too old to support in PLD Linux
 rm -r misc/upgrade/v{1.,2.0,2.1_}* # no longer supported in PLD Linux
@@ -525,7 +526,8 @@ cp -a misc/*.php $RPM_BUILD_ROOT%{_appdir}
 cp -a templates $RPM_BUILD_ROOT%{_appdir}
 cp -a include/{customer,custom_field,jpgraph,workflow} $RPM_BUILD_ROOT%{_appdir}/include
 cp -a include/*.php $RPM_BUILD_ROOT%{_appdir}/include
-cp -a logs/* $RPM_BUILD_ROOT/var/log/%{name}
+touch $RPM_BUILD_ROOT/var/log/%{name}/{cli.log,errors.log,irc_bot.log,login_attempts.log}
+
 cp -a misc/upgrade $RPM_BUILD_ROOT%{_appdir}
 
 cp -a favicon.ico $RPM_BUILD_ROOT%{_appdir}/htdocs/favicon.ico
@@ -811,6 +813,7 @@ EOF
 %{_appdir}/include/custom_field
 %{_appdir}/include/jpgraph
 %{_appdir}/include/workflow
+%{_appdir}/include/autoload.php
 %{_appdir}/include/class.*.php
 %{_appdir}/include/db_access.php
 %exclude %{_appdir}/include/class.monitor.php
