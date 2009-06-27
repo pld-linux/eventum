@@ -10,8 +10,8 @@
 %bcond_without	order	# with experimental order patch
 
 #define	snap	20060921
-%define	rev		r3862
-%define	rel		2.23
+%define	rev		r3880
+%define	rel		2.26
 #define	_rc		RC3
 
 %include	/usr/lib/rpm/macros.php
@@ -27,7 +27,7 @@ Group:		Applications/WWW
 #Source0:	http://mysql.easynet.be/Downloads/eventum/%{name}-%{version}.tar.gz
 # bzr branch lp:eventum eventum && tar -cjf eventum.tar.bz2 --exclude=.bzr --exclude=.bzrignore eventum
 Source0:	eventum-%{version}-dev-%{rev}.tar.gz
-# Source0-md5:	4d24ab27c68c632740fe90f6efc584c4
+# Source0-md5:	bae6efb9785771495bb78e8262f695ae
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -48,7 +48,6 @@ Patch2:		%{name}-order.patch
 Patch100:	%{name}-paths.patch
 Patch101:	%{name}-cvs-config.patch
 Patch105:	%{name}-bot-reconnect.patch
-Patch106:	%{name}-mem-limits.patch
 Patch107:	%{name}-gettext.patch
 # some tests
 Patch200:	%{name}-fixed-nav.patch
@@ -455,7 +454,6 @@ cp -a %{SOURCE16} images
 %patch100 -p1
 %patch101 -p1
 %patch105 -p1
-%patch106 -p1
 %patch107 -p1
 
 cat <<'EOF'> mysql-permissions.sql

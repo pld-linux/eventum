@@ -8,6 +8,20 @@
          foreach ($required_directories as $dir_path => $options) {
              // check if directory exists
              if (!file_exists($dir_path)) {
+--- ./cli/eventum	2009-06-27 19:46:44.401524716 +0300
++++ ./cli/eventum	2009-06-27 19:45:22.781438493 +0300
+@@ -12,9 +12,8 @@
+ // @(#) $Id$
+ 
+ // definitions of path related variables
+-define('APP_PATH', dirname(__FILE__) . '/');
+-define('APP_INC_PATH', APP_PATH . '/lib/eventum');
+-define('APP_PEAR_PATH', APP_PATH . '/lib/pear');
++define('APP_PATH', '/usr/share/eventum');
++define('APP_INC_PATH', APP_PATH . '/cli');
+ 
+ if (defined('APP_PEAR_PATH')) {
+     set_include_path(APP_PEAR_PATH . PATH_SEPARATOR . get_include_path());
 --- trunk/init.php~	2009-06-27 17:31:32.000000000 +0300
 +++ trunk/init.php	2009-06-27 17:33:35.745565456 +0300
 @@ -26,7 +26,7 @@

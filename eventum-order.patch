@@ -126,8 +126,8 @@
              Error_Handler::logError(array($res->getMessage(), $res->getDebugInfo()), __FILE__, __LINE__);
              return -1;
          } else {
-+            Issue::moveOrderForAllUsers($issue_id, 1000);
-             $prj_id = Issue::getProjectID($issue_id);
++            self::moveOrderForAllUsers($issue_id, 1000);
+             $prj_id = self::getProjectID($issue_id);
  
              // record the change
 @@ -1659,6 +1660,176 @@
@@ -148,10 +148,10 @@
 +        $issue_id = Misc::escapeInteger($issue_id);
 +
 +        $usr_id = Auth::getUserID();
-+        $prj_id = Issue::getProjectID($issue_id);
++        $prj_id = self::getProjectID($issue_id);
 +
 +        // get all of the 'current' information of this issue
-+        $current = Issue::getDetails($issue_id);
++        $current = self::getDetails($issue_id);
 +
 +        $stmt = "UPDATE
 +                    " . APP_DEFAULT_DB . "." . APP_TABLE_PREFIX . "issue
@@ -260,7 +260,7 @@
 +                if ($old_status_details['sta_is_closed'] == 1) {
 +                    $new_status_details = Status::getDetails($filed_value);
 +                    if ($new_status_details['sta_is_closed'] != 1) {
-+                        Issue::clearClosed($issue_id);
++                        self::clearClosed($issue_id);
 +                    }
 +                }
 +                $updated_fields["Status"] = History::formatChanges(Status::getStatusTitle($current["iss_sta_id"]), Status::getStatusTitle($filed_value));
@@ -426,7 +426,7 @@
          if (is_array($issue_id)) {
              $issue_id = implode(", ", $issue_id);
          }
-+        $deleted_order_list = Issue::getDeleteUserAssociationOrderList($issue_id);
++        $deleted_order_list = self::getDeleteUserAssociationOrderList($issue_id);
          $stmt = "DELETE FROM
                      " . APP_DEFAULT_DB . "." . APP_TABLE_PREFIX . "issue_user
                   WHERE
@@ -434,7 +434,7 @@
              if ($usr_id) {
                  History::add($issue_id, $usr_id, History::getTypeID('user_all_unassociated'), 'Issue assignments removed by ' . User::getFullName($usr_id));
              }
-+            Issue::rearrangeDeleteUserAsssociationOrderList($deleted_order_list);
++            self::rearrangeDeleteUserAsssociationOrderList($deleted_order_list);
              return 1;
          }
      }
@@ -442,7 +442,7 @@
      {
          $issue_id = Misc::escapeInteger($issue_id);
          $usr_id = Misc::escapeInteger($usr_id);
-+        $delete_order_list = Issue::getDeleteUserAssociationOrderList($issue_id, $usr_id);
++        $delete_order_list = self::getDeleteUserAssociationOrderList($issue_id, $usr_id);
          $stmt = "DELETE FROM
                      " . APP_DEFAULT_DB . "." . APP_TABLE_PREFIX . "issue_user
                   WHERE
@@ -450,21 +450,21 @@
                  History::add($issue_id, Auth::getUserID(), History::getTypeID('user_unassociated'),
                      User::getFullName($usr_id) . ' removed from issue by ' . User::getFullName(Auth::getUserID()));
              }
-+            Issue::rearrangeDeleteUserAssociationOrderList($delete_order_list);
++            self::rearrangeDeleteUserAssociationOrderList($delete_order_list);
              return 1;
          }
      }
 @@ -2379,6 +2643,11 @@
      {
-         $sort_by = Issue::getParam('sort_by');
-         $sort_order = Issue::getParam('sort_order');
-+        $users = Issue::getParam('users');
+         $sort_by = self::getParam('sort_by');
+         $sort_order = self::getParam('sort_order');
++        $users = self::getParam('users');
 +        if (empty($users) && ($sort_by == 'isu_order')) { // Sorting by isu_order is impossible when no user specified
 +            unset($sort_by);
 +            unset($sort_order);
 +        }
-         $rows = Issue::getParam('rows');
-         $hide_closed = Issue::getParam('hide_closed');
+         $rows = self::getParam('rows');
+         $hide_closed = self::getParam('hide_closed');
          if ($hide_closed === '') {
 @@ -2483,6 +2752,7 @@
              "last_action_date" => "desc",
@@ -514,7 +514,7 @@
              Error_Handler::logError(array($res->getMessage(), $res->getDebugInfo()), __FILE__, __LINE__);
              return -1;
          }
-+        Issue::moveOrderForAllUsers($issue_id, 1);
++        self::moveOrderForAllUsers($issue_id, 1);
      }
  
  
@@ -551,8 +551,8 @@
 +            $issue_id = array($issue_id);
 +        }
 +        // do a nasty pretending to be deleting stuff so that reordering happens as if these elements were deleted
-+        $orderlist = Issue::getDeleteUserAssociationOrderList($issue_id_str, $usr_id);
-+        Issue::rearrangeDeleteUserAssociationOrderList($orderlist);
++        $orderlist = self::getDeleteUserAssociationOrderList($issue_id_str, $usr_id);
++        self::rearrangeDeleteUserAssociationOrderList($orderlist);
 +        // move down the orders to free the "order space" needed
 +        $stmt = "UPDATE 
 +                    " . APP_DEFAULT_DB . "." . APP_TABLE_PREFIX . "issue_user
@@ -634,7 +634,7 @@
 +            return -1;
 +        }
 +        foreach ($res as $row) {
-+            Issue::reorderUserIssues($row["isu_usr_id"], $issue_id, $neworder);
++            self::reorderUserIssues($row["isu_usr_id"], $issue_id, $neworder);
 +        }
 +    }
 +    
@@ -1284,12 +1284,12 @@
 +	}
 +);
 \ No newline at end of file
---- trunk/templates/header.tpl.html~	2009-06-27 16:15:57.000000000 +0300
-+++ trunk/templates/header.tpl.html	2009-06-27 16:16:44.992783169 +0300
+--- eventum-2.2/templates/header.tpl.html~	2009-06-27 18:48:02.000000000 +0300
++++ eventum-2.2/templates/header.tpl.html	2009-06-27 18:48:50.905140848 +0300
 @@ -8,6 +8,7 @@
- <script type="text/javascript" src="{$rel_url}js/jquery/form.js"></script>
- <script type="text/javascript" src="{$rel_url}js/jquery/blockui.js"></script>
- <script type="text/javascript" src="{$rel_url}js/jquery/ui.datepicker.js"></script>
+ <script type="text/javascript" src="{$rel_url}js/jquery/form.js?c=9984"></script>
+ <script type="text/javascript" src="{$rel_url}js/jquery/blockui.js?c=eb13"></script>
+ <script type="text/javascript" src="{$rel_url}js/jquery/ui.datepicker.js?c=a911"></script>
 +<script type="text/javascript" src="{$rel_url}js/jquery/jquery.tablednd.js"></script>
  <link rel="stylesheet" href="{$rel_url}js/jquery/ui.datepicker.css">
  <script type="text/javascript">
@@ -1498,7 +1498,7 @@
              if ($usr_id) {
                  History::add($issue_id, $usr_id, History::getTypeID('user_all_unassociated'), 'Issue assignments removed by ' . User::getFullName($usr_id));
              }
--            Issue::rearrangeDeleteUserAsssociationOrderList($deleted_order_list);
+-            self::rearrangeDeleteUserAsssociationOrderList($deleted_order_list);
              return 1;
          }
      }
