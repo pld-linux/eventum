@@ -1,5 +1,5 @@
---- eventum-new/ajax/order.php	2008-10-15 02:02:25.000000000 +0300
-+++ eventum-new/ajax/order.php	2008-10-15 02:02:25.000000000 +0300
+--- eventum-new/htdocs/ajax/order.php	2008-10-15 02:02:25.000000000 +0300
++++ eventum-new/htdocs/ajax/order.php	2008-10-15 02:02:25.000000000 +0300
 @@ -0,0 +1,72 @@
 +<?
 +require_once(dirname(__FILE__) . '/../init.php');
@@ -73,8 +73,8 @@
 +        }
 +    }
 +}
---- eventum/ajax/update.php	2008-10-15 01:46:20.000000000 +0300
-+++ eventum-new/ajax/update.php	2008-10-15 02:02:25.000000000 +0300
+--- eventum/htdocs/ajax/update.php	2008-10-15 01:46:20.000000000 +0300
++++ eventum-new/htdocs/ajax/update.php	2008-10-15 02:02:25.000000000 +0300
 @@ -0,0 +1,30 @@
 +<?
 +require_once(dirname(__FILE__) . '/../init.php');
@@ -106,8 +106,8 @@
 +      die('object type not supported');
 +  break;
 +}
---- eventum/include/class.display_column.php	2008-10-15 01:46:20.000000000 +0300
-+++ eventum-new/include/class.display_column.php	2008-10-15 02:02:25.000000000 +0300
+--- eventum/lib/eventum/class.display_column.php	2008-10-15 01:46:20.000000000 +0300
++++ eventum-new/lib/eventum/class.display_column.php	2008-10-15 02:02:25.000000000 +0300
 @@ -229,7 +229,10 @@
                  ),
                  "iss_expected_resolution_date"  =>  array(
@@ -120,8 +120,8 @@
              )
          );
          return $columns[$page];
---- eventum/include/class.issue.php	2008-10-15 01:46:20.000000000 +0300
-+++ eventum-new/include/class.issue.php	2008-10-15 02:02:25.000000000 +0300
+--- eventum/lib/eventum/class.issue.php	2008-10-15 01:46:20.000000000 +0300
++++ eventum-new/lib/eventum/class.issue.php	2008-10-15 02:02:25.000000000 +0300
 @@ -1356,6 +1356,7 @@
              Error_Handler::logError(array($res->getMessage(), $res->getDebugInfo()), __FILE__, __LINE__);
              return -1;
@@ -640,8 +640,8 @@
 +    
  }
  
---- eventum-r3749/js/global.js~	2008-10-15 02:03:48.000000000 +0300
-+++ eventum-r3749/js/global.js	2008-10-15 02:06:00.000000000 +0300
+--- eventum-r3749/htdocs/js/global.js~	2008-10-15 02:03:48.000000000 +0300
++++ eventum-r3749/htdocs/js/global.js	2008-10-15 02:06:00.000000000 +0300
 @@ -799,4 +799,39 @@
  		});
      });
@@ -682,8 +682,8 @@
 +});
 +
  //-->
---- eventum/list.php	2008-10-15 01:46:20.000000000 +0300
-+++ eventum-new/list.php	2008-10-15 02:02:25.000000000 +0300
+--- eventum/htdocs/list.php	2008-10-15 01:46:20.000000000 +0300
++++ eventum-new/htdocs/list.php	2008-10-15 02:02:25.000000000 +0300
 @@ -67,6 +67,11 @@
              $profile['sort_by'] . "&sort_order=" . $profile['sort_order']);
  }
@@ -898,8 +898,8 @@
 -{include file="footer.tpl.html"}
 +{include file="footer.tpl.html"}
 \ No newline at end of file
---- ./js/jquery/jquery.tablednd.js	(revision 0)
-+++ ./js/jquery/jquery.tablednd.js	(revision 0)
+--- ./htdocs/js/jquery/jquery.tablednd.js	(revision 0)
++++ ./htdocs/js/jquery/jquery.tablednd.js	(revision 0)
 @@ -0,0 +1,382 @@
 +/**
 + * TableDnD plug-in for JQuery, allows you to drag and drop table rows
@@ -1284,18 +1284,18 @@
 +	}
 +);
 \ No newline at end of file
---- eventum-r3765/templates/header.tpl.html~	2008-10-28 20:23:04.000000000 +0200
-+++ eventum-r3765/templates/header.tpl.html	2008-10-28 22:39:10.604728264 +0200
+--- trunk/templates/header.tpl.html~	2009-06-27 16:15:57.000000000 +0300
++++ trunk/templates/header.tpl.html	2009-06-27 16:16:44.992783169 +0300
 @@ -8,6 +8,7 @@
- <script language="JavaScript" src="{$rel_url}js/jquery/jquery.js"></script>
- <script language="JavaScript" src="{$rel_url}js/jquery/form.js"></script>
- <script language="JavaScript" src="{$rel_url}js/jquery/ui.datepicker.js"></script>
-+<script language="JavaScript" src="{$rel_url}js/jquery/jquery.tablednd.js"></script>
+ <script type="text/javascript" src="{$rel_url}js/jquery/form.js"></script>
+ <script type="text/javascript" src="{$rel_url}js/jquery/blockui.js"></script>
+ <script type="text/javascript" src="{$rel_url}js/jquery/ui.datepicker.js"></script>
++<script type="text/javascript" src="{$rel_url}js/jquery/jquery.tablednd.js"></script>
  <link rel="stylesheet" href="{$rel_url}js/jquery/ui.datepicker.css">
- <script language="JavaScript">
+ <script type="text/javascript">
  <!--
---- eventum-r3765/css/style.css~	2008-06-19 08:30:31.000000000 +0300
-+++ eventum-r3765/css/style.css	2008-10-29 17:28:49.393768970 +0200
+--- eventum-r3765/htdocs/css/style.css~	2008-06-19 08:30:31.000000000 +0300
++++ eventum-r3765/htdocs/css/style.css	2008-10-29 17:28:49.393768970 +0200
 @@ -172,4 +172,9 @@
      font-size: 70%;
      font-family: Verdana, Arial, Helvetica, sans-serif;
@@ -1308,8 +1308,8 @@
 +	background-color: #ffffdd;
 +	border: 1px solid red;
 +}
---- eventum~/css/style.css	2008-11-06 16:54:30.000000000 +0200
-+++ eventum/css/style.css	2008-11-06 16:20:50.038350957 +0200
+--- eventum~/htdocs/css/style.css	2008-11-06 16:54:30.000000000 +0200
++++ eventum/htdocs/css/style.css	2008-11-06 16:20:50.038350957 +0200
 @@ -173,8 +173,21 @@
      font-family: Verdana, Arial, Helvetica, sans-serif;
      padding: 10px;
@@ -1396,8 +1396,8 @@
 -{include file="footer.tpl.html"}
 \ No newline at end of file
 +{include file="footer.tpl.html"}
---- eventum-r3776/misc/upgrade/update-database.php	2008-11-18 01:10:18.806283202 +0200
-+++ eventum/misc/upgrade/update-database.php	2008-11-18 01:15:20.703082655 +0200
+--- eventum-r3776/upgrade/update-database.php	2008-11-18 01:10:18.806283202 +0200
++++ eventum/upgrade/update-database.php	2008-11-18 01:15:20.703082655 +0200
 @@ -83,6 +83,7 @@
  		1 => '01_notes.php',
  		2 => '02_usr_alias.php',
@@ -1407,7 +1407,7 @@
  
  	// sanity check. check that the version table exists.
 --- /dev/null	2008-11-04 20:33:38.146691408 +0200
-+++ eventum/misc/upgrade/patches/04_isu_order.php	2008-11-18 01:14:02.972104347 +0200
++++ eventum/upgrade/patches/04_isu_order.php	2008-11-18 01:14:02.972104347 +0200
 @@ -0,0 +1,15 @@
 +<?php
 +
@@ -1424,8 +1424,8 @@
 +
 +	return $stmts;
 +}
---- ../eventum-old2/ajax/update.php	2008-10-13 11:14:23.673428821 +0300
-+++ ./ajax/update.php	2008-11-19 15:05:54.490054961 +0200
+--- ../eventum-old2/htdocs/ajax/update.php	2008-10-13 11:14:23.673428821 +0300
++++ ./htdocs/ajax/update.php	2008-11-19 15:05:54.490054961 +0200
 @@ -16,9 +16,17 @@
    case 'expected_resolution_date':
      $day = (int)$_POST['day'];
@@ -1447,8 +1447,8 @@
      } else {
          echo 'update failed';
      }
---- eventum_tar/js/global.js	2008-11-06 16:54:30.000000000 +0200
-+++ ./js/global.js	2008-11-19 15:06:21.820071605 +0200
+--- eventum_tar/htdocs/js/global.js	2008-11-06 16:54:30.000000000 +0200
++++ ./htdocs/js/global.js	2008-11-19 15:06:21.820071605 +0200
 @@ -817,10 +817,15 @@
              function (date, dteObj) {
                  fieldName = masterObj.id.substr(0,masterObj.id.indexOf('|'));
@@ -1468,8 +1468,8 @@
                  }, "text");
              },
              // config
---- eventum-old2/include/class.issue.php	2008-10-15 18:30:31.590172372 +0300
-+++ ./include/class.issue.php	2008-11-19 15:04:43.710659328 +0200
+--- eventum-old2/lib/eventum/class.issue.php	2008-10-15 18:30:31.590172372 +0300
++++ ./lib/eventum/class.issue.php	2008-11-19 15:04:43.710659328 +0200
 @@ -1694,7 +1694,11 @@
                  $stmt .= ", iss_pre_id = " . Misc::escapeInteger($filed_value);
              break;
@@ -1483,8 +1483,8 @@
              break;
              case 'release':
                  $stmt .= ", iss_pre_id = " . Misc::escapeInteger($filed_value);
---- eventum/include/class.issue.php	2008-10-15 01:46:20.000000000 +0300
-+++ eventum-new/include/class.issue.php	2008-10-15 02:02:25.000000000 +0300
+--- eventum/lib/eventum/class.issue.php	2008-10-15 01:46:20.000000000 +0300
++++ eventum-new/lib/eventum/class.issue.php	2008-10-15 02:02:25.000000000 +0300
 @@ -2050,7 +2050,7 @@
                      " . APP_DEFAULT_DB . "." . APP_TABLE_PREFIX . "issue_user
                   WHERE

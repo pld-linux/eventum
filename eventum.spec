@@ -7,12 +7,11 @@
 #  - A few other small javascript libraries
 #
 # Conditional build:
-%bcond_with	qmail	# build the router-qmail subpackage
 %bcond_without	order	# with experimental order patch
 
 #define	snap	20060921
-%define	rev		r3843
-%define	rel		2.13
+%define	rev		r3862
+%define	rel		2.23
 #define	_rc		RC3
 
 %include	/usr/lib/rpm/macros.php
@@ -27,8 +26,8 @@ Group:		Applications/WWW
 #Source0:	http://eventum.mysql.org/downloads/eventum-2.0.RC3.tar.gz
 #Source0:	http://mysql.easynet.be/Downloads/eventum/%{name}-%{version}.tar.gz
 # bzr branch lp:eventum eventum && tar -cjf eventum.tar.bz2 --exclude=.bzr --exclude=.bzrignore eventum
-Source0:	%{name}-%{rev}.tar.bz2
-# Source0-md5:	394e94ebc88ad96fe9a71666e396113e
+Source0:	eventum-%{version}-dev-%{rev}.tar.gz
+# Source0-md5:	4d24ab27c68c632740fe90f6efc584c4
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -38,8 +37,6 @@ Source6:	%{name}-cvs.php
 Source7:	%{name}-irc.php
 Source8:	%{name}-irc.init
 Source9:	%{name}-irc.sysconfig
-Source10:	%{name}-router-qmail.sh
-Source12:	%{name}-upgrade.sh
 Source13:	%{name}-router-postfix.sh
 Source14:	%{name}.logrotate
 Source15:	%{name}-lighttpd.conf
@@ -50,7 +47,6 @@ Patch2:		%{name}-order.patch
 # packaging patches that probably never go upstream
 Patch100:	%{name}-paths.patch
 Patch101:	%{name}-cvs-config.patch
-Patch102:	%{name}-irc-config.patch
 Patch105:	%{name}-bot-reconnect.patch
 Patch106:	%{name}-mem-limits.patch
 Patch107:	%{name}-gettext.patch
@@ -97,11 +93,10 @@ Conflicts:	logrotate < 3.7-4
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
-%define		_noautoreq	'pear(/etc/webapps/.*)' 'pear(%{_appdir}/.*)' 'pear(jpgraph_dir.php)' 'pear(.*Smarty.class.php)'
+%define		_noautoreq	'pear(init.php)' 'pear(/etc/webapps/.*)' 'pear(%{_appdir}/.*)' 'pear(jpgraph_dir.php)' 'pear(.*Smarty.class.php)'
 
 %define		_libdir		%{_prefix}/lib/%{name}
 %define		_appdir		%{_datadir}/%{name}
-%define		_smartyplugindir	%{_appdir}/include/smarty
 %define		_smartydir	%{php_data_dir}/Smarty
 %define		_webapps	/etc/webapps
 %define		_webapp		%{name}
@@ -271,7 +266,7 @@ Requires:	eventum(router)
 
 %description route-drafts
 The draft routing feature is used to automatically associate a thread
-of drafts into an Eventum issue. By setting up qmail (or even Postfix)
+of drafts into an Eventum issue. By setting up Postfix
 to deliver emails sent to a specific address (usually
 draft-<number>@<domain>) to the above script, users are able to send
 drafts written in their mail client to be stored in Eventum. These
@@ -279,7 +274,7 @@ drafts will NOT broadcasted to the notification list.
 
 %description route-drafts -l pl.UTF-8
 Przekazywanie szkiców służy do automatycznego wiązania wątku szkiców z
-problemem w Eventum. Ustawiając qmaila (czy nawet Postfiksa), aby
+problemem w Eventum. Ustawiając Postfiksa, aby
 dostarczał pocztę wysłaną na podany adres (zwykle
 draft-<liczba>@<domena>) do tego skryptu umożliwia się użytkownikom
 wysyłanie szkiców napisanych w ich kliencie pocztowym do zapisania w
@@ -294,7 +289,7 @@ Requires:	eventum(router)
 
 %description route-emails
 The email routing feature is used to automatically associate a thread
-of emails into an Eventum issue. By setting up qmail (or even postfix)
+of emails into an Eventum issue. By setting up Postfix
 to deliver emails sent to a specific address (usually
 issue-<number>@<domain>) to the above script, users are able to use
 their email clients to reply to emails coming from Eventum, and those
@@ -303,8 +298,8 @@ broadcasted to the entire notification list.
 
 %description route-emails -l pl.UTF-8
 Funkcjonalność przekazywania poczty służy do automatycznego wiązania
-wątku listów ze sprawą w Eventum. Po ustawieniu qmaila (czy nawet
-postfiksa), aby dostarczał listy wysyłane na pewien adres (zwykle
+wątku listów ze sprawą w Eventum. Po ustawieniu czy nawet
+Postfiksa, aby dostarczał listy wysyłane na pewien adres (zwykle
 issue-<numer>@<domena>) na powyższy skrypt, użytkownicy będą mogli
 używać klientów pocztowych do odpowiadania na listy przychodzące z
 Eventum, a odpowiedzi te będą automatycznie wiązane ze sprawą i
@@ -319,7 +314,7 @@ Requires:	eventum(router)
 
 %description route-notes
 The note routing feature is used to automatically associate a thread
-of notes into an Eventum issue. By setting up qmail (or even postfix)
+of notes into an Eventum issue. By setting up Postfix
 to deliver emails sent to a specific address (usually
 note-<number>@<domain>) to the above script, users are able to use
 their email clients to reply to internal notes coming from Eventum,
@@ -328,31 +323,12 @@ broadcasted to the notification list staff members.
 
 %description route-notes -l pl.UTF-8
 Funkcjonalność przekazywania notatek służy do automatycznego wiązania
-wątku notatek ze sprawą w Eventum. Po ustawieniu qmaila (czy nawet
-postfiksa), aby dostarczał listy wysyłane na pewien adres (zwykle
+wątku notatek ze sprawą w Eventum. Po ustawieniu
+Postfiksa, aby dostarczał listy wysyłane na pewien adres (zwykle
 note-<numer>@<domena>) na powyższy skrypt, użytkownicy będą mogli
 używać klientów pocztowych do odpowiadania na wewnętrzne notatki
 pochodzące od Eventu, a odpowiedzi te będą automatycznie wiązane ze
 sprawą i rozprowadzane do członków personelu listy ogłoszeniowej.
-
-%package router-qmail
-Summary:	Eventum Mail Routing - qmail
-Summary(pl.UTF-8):	Przekazywanie poczty Eventum - qmail
-Group:		Applications/Mail
-# loose dep is intentional. qmail subpackage isn't built on PLD
-# builders and there really nothing changes.
-Requires:	%{name} >= %{version}-%{release}
-Requires:	qmail >= 1.03
-Provides:	eventum(router)
-Obsoletes:	eventum(router)
-
-%description router-qmail
-This package provides way of routing notes and emails back to Eventum
-via qmail.
-
-%description router-qmail -l pl.UTF-8
-Ten pakiet udostępnia metodę przekazywania notatek i listów do Eventum
-przez qmaila.
 
 %package router-postfix
 Summary:	Eventum Mail Routing - Postfix
@@ -460,16 +436,12 @@ Szczegóły na temat instalacji można przeczytać pod
 </eventum/help.php?topic=scm_integration_installation>.
 
 %prep
-%setup -q %{?snap:-n %{name}-%{snap}}%{?rev:-n %{name}-%{rev}}
+%setup -q
 
-rm -r misc/upgrade/*v1.[123]* # too old to support in PLD Linux
-rm -r misc/upgrade/v{1.,2.0,2.1_}* # no longer supported in PLD Linux
-rm misc/upgrade/flush_compiled_templates.php
-rm -r misc/upgrade/{*/,}index.html # not needed in PLD Linux
-
-rm -r include/php-gettext
-# sample, not used in eventum
-rm rpc/xmlrpc_client.php
+rm -r upgrade/*v1.[123]* # too old to support in PLD Linux
+rm -r upgrade/v{1.,2.0,2.1_}* # no longer supported in PLD Linux
+rm upgrade/flush_compiled_templates.php
+rm -r upgrade/{*/,}index.html # not needed in PLD Linux
 
 # bug fixes / features
 %patch0 -p1
@@ -482,7 +454,6 @@ cp -a %{SOURCE16} images
 # packaging
 %patch100 -p1
 %patch101 -p1
-%patch102 -p1
 %patch105 -p1
 %patch106 -p1
 %patch107 -p1
@@ -493,22 +464,15 @@ cat <<'EOF'> mysql-permissions.sql
 GRANT SELECT, UPDATE, DELETE, INSERT, ALTER, DROP, CREATE, INDEX ON eventum.* TO 'eventum'@'localhost' IDENTIFIED BY 'password';
 EOF
 
-sed -e '1s,#!.*/bin/php -q,#!%{_bindir}/php,' misc/cli/eventum > %{name}-cli
-mv misc/cli/eventumrc_example eventumrc
-sed -i -e '1i#!%{_bindir}/php' misc/*.php
-chmod +x misc/*.php
-
 %{__sed} -i -e "
-s,require_once.*init.php.*;,require_once '%{_appdir}/htdocs/init.php';,
 s;define('CONFIG_PATH'.*');define('CONFIG_PATH', '%{_webappdir}');
-/define('INSTALL_PATH'/d
-" misc/upgrade/{*/,}*.php
+" upgrade/{*/,}*.php
 
 # remove backups from patching as we use globs to package files to buildroot
 find '(' -name '*~' -o -name '*.orig' ')' | xargs -r rm -v
 
 %build
-%{__make} -C misc/localization
+%{__make} -C localization
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -520,90 +484,44 @@ install -d \
 	$RPM_BUILD_ROOT/var/lib/%{name}/routed_{emails,drafts,notes} \
 	$RPM_BUILD_ROOT%{_appdir}/{include,htdocs/misc,upgrade} \
 
-cp -a *.php css customer images js manage reports rpc setup %{?with_order:ajax} $RPM_BUILD_ROOT%{_appdir}/htdocs
-cp -a misc/*.html $RPM_BUILD_ROOT%{_appdir}/htdocs/misc
-cp -a misc/*.php $RPM_BUILD_ROOT%{_appdir}
-cp -a templates $RPM_BUILD_ROOT%{_appdir}
-cp -a include/{customer,custom_field,jpgraph,workflow} $RPM_BUILD_ROOT%{_appdir}/include
-cp -a include/*.php $RPM_BUILD_ROOT%{_appdir}/include
-touch $RPM_BUILD_ROOT/var/log/%{name}/{cli.log,errors.log,irc_bot.log,login_attempts.log}
+%{__make} install-eventum install-cli install-irc install-scm install-jpgraph install-localization \
+	sysconfdir=%{_webappdir} \
+	DESTDIR=$RPM_BUILD_ROOT
 
-cp -a misc/upgrade $RPM_BUILD_ROOT%{_appdir}
+%{?with_order:cp -a htdocs/ajax $RPM_BUILD_ROOT%{_appdir}/htdocs}
 
-cp -a favicon.ico $RPM_BUILD_ROOT%{_appdir}/htdocs/favicon.ico
-install %{SOURCE12} $RPM_BUILD_ROOT%{_appdir}/upgrade/upgrade.sh
-
-# cli
-install -d $RPM_BUILD_ROOT%{_appdir}/cli
-cp -a misc/cli/include/class.{misc,command_line}.php $RPM_BUILD_ROOT%{_appdir}/cli
-cp -a misc/cli/config.inc.php $RPM_BUILD_ROOT%{_sysconfdir}/cli.php
-install %{name}-cli $RPM_BUILD_ROOT%{_bindir}/%{name}
-install misc/irc/bot.php $RPM_BUILD_ROOT%{_sbindir}/%{name}-bot
-
-# scm
-install misc/scm/process_cvs_commits.php $RPM_BUILD_ROOT%{_libdir}/process_cvs_commits
-install misc/scm/process_svn_commits.php $RPM_BUILD_ROOT%{_libdir}/process_svn_commits
-install %{SOURCE6} $RPM_BUILD_ROOT%{_sysconfdir}/scm.php
-
-# private key
-echo '<?php
-$private_key = "DEFAULTPRIVATEKEY";' > $RPM_BUILD_ROOT%{_webappdir}/private_key.php
 touch $RPM_BUILD_ROOT%{_webappdir}/htpasswd
-
 cp -a %{SOURCE1} $RPM_BUILD_ROOT%{_webappdir}/apache.conf
 cp -a %{SOURCE1} $RPM_BUILD_ROOT%{_webappdir}/httpd.conf
 cp -a %{SOURCE15} $RPM_BUILD_ROOT%{_webappdir}/lighttpd.conf
+
 cp -a %{SOURCE2} $RPM_BUILD_ROOT/etc/cron.d/%{name}-mail-queue
 cp -a %{SOURCE3} $RPM_BUILD_ROOT/etc/cron.d/%{name}-mail-download
 cp -a %{SOURCE4} $RPM_BUILD_ROOT/etc/cron.d/%{name}-reminder
 cp -a %{SOURCE5} $RPM_BUILD_ROOT/etc/cron.d/%{name}-monitor
+
 cp -a %{SOURCE7} $RPM_BUILD_ROOT%{_webappdir}/irc_config.php
+
 cp -a %{SOURCE8} $RPM_BUILD_ROOT/etc/rc.d/init.d/eventum-irc
 cp -a %{SOURCE9} $RPM_BUILD_ROOT/etc/sysconfig/eventum-irc
 
-
-%{__sed} -i -e "/define('APP_VERSION'/ {
-    idefine('APP_VERSION', '%{version}%{?snap:-%{snap}}%{?_rc:-%{_rc}}%{?svn:-%{svn}}');
-    d
-
-}" $RPM_BUILD_ROOT%{_appdir}/htdocs/init.php
-
-# config
-> $RPM_BUILD_ROOT%{_webappdir}/setup.php
-cat <<'EOF'> $RPM_BUILD_ROOT%{_webappdir}/config.php
-EOF
-
-install -d $RPM_BUILD_ROOT%{_smartyplugindir}
-# These plugins are not in Smarty package (Smarty-2.6.2-3)
-cp -a \
-	include/Smarty/plugins/function.{calendar,get_{display_style,innerhtml,textarea_size}}.php \
-	include/Smarty/plugins/modifier.highlight_quoted.php \
-	$RPM_BUILD_ROOT%{_smartyplugindir}
-
-# qmail router
-%if %{with qmail}
-d=$RPM_BUILD_ROOT/var/lib/%{name}
-echo 'root' > $d/.qmail
-echo 'root' > $d/.qmail-default
-echo '| %{_libdir}/router-qmail drafts' > $d/.qmail-draft-default
-echo '| %{_libdir}/router-qmail emails 1' > $d/.qmail-issue-default
-echo '| %{_libdir}/router-qmail notes' > $d/.qmail-note-default
-install %{SOURCE10} $RPM_BUILD_ROOT%{_libdir}/router-qmail
-%endif
 # postfix router
 install %{SOURCE13} $RPM_BUILD_ROOT%{_libdir}/router-postfix
 
 install -D %{SOURCE14} $RPM_BUILD_ROOT/etc/logrotate.d/%{name}
-# locale
-cd misc/localization
-for a in */LC_MESSAGES/*.mo; do
-	d=${a%/*}
-	install -d $RPM_BUILD_ROOT%{_datadir}/locale/$d
-	cp -a $a $RPM_BUILD_ROOT%{_datadir}/locale/$d
-done
-cd -
 
 %find_lang %{name}
+
+# scm
+install %{SOURCE6} $RPM_BUILD_ROOT%{_sysconfdir}/scm.php
+
+# old compat
+ln -s %{_sbindir}/eventum-cvs-hook $RPM_BUILD_ROOT%{_libdir}/process_cvs_commits
+ln -s %{_sbindir}/eventum-svn-hook $RPM_BUILD_ROOT%{_libdir}/process_svn_commits
+
+# skip pear for cli
+rm -rf $RPM_BUILD_ROOT%{_datadir}/%{name}/cli
+cp -a cli/lib/eventum $RPM_BUILD_ROOT%{_datadir}/%{name}/cli
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -696,30 +614,6 @@ if [ "$1" = "0" ]; then
 	%groupremove %{name}
 fi
 
-%post router-qmail
-CF=/etc/qmail/control/virtualdomains
-if ! grep -q ':%{name}\b' $CF 2>/dev/null; then
-	FQDN=$(awk -F'"' '/define/ && $2 ~ /APP_HOSTNAME/ {print $4}' %{_webappdir}/config.php 2>/dev/null)
-	[ "$FQDN" ] || FQDN=$(hostname -f 2>/dev/null || echo localhost)
-	umask 022
-	echo "#${FQDN}:%{name}" >> $CF
-
-%banner %{name}-qmail -e <<EOF
-
-Added "#${FQDN}:%{name}" to $CF,
-Please verify that it is correct and restart qmail:
-# service qmail reload
-
-Consult qmail-send(8) for more information on virtualdomains.
-
-EOF
-fi
-
-%preun router-qmail
-if [ "$1" = "0" ]; then
-	sed -i -e '/:%{name}\b/d' /etc/qmail/control/virtualdomains
-fi
-
 %post setup
 chmod 660 %{_webappdir}/{config,private_key}.php
 chown root:eventum %{_webappdir}/{config,private_key}.php
@@ -758,17 +652,10 @@ fi
 %triggerun -- lighttpd
 %webapp_unregister lighttpd %{_webapp}
 
-%triggerpostun -- eventum < 2.1.1-2.13
-%{_appdir}/upgrade/upgrade.sh %{_appdir}/upgrade/v2.1.1_to_v2.2 <<EOF
-db_version.php Add eventum_version table
-EOF
-# automated database update
-%{_appdir}/upgrade/update-database.php || :
-
 %files -f %{name}.lang
 %defattr(644,root,root,755)
 %doc ChangeLog FAQ INSTALL README UPGRADE CONTRIB
-%doc docs/* setup/schema.sql mysql-permissions.sql
+%doc docs/* htdocs/setup/schema.sql mysql-permissions.sql
 %attr(751,root,root) %dir %{_webappdir}
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/apache.conf
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/httpd.conf
@@ -783,6 +670,7 @@ EOF
 %dir %attr(750,root,root) /var/log/archive/%{name}
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/logrotate.d/%{name}
 
+%{_appdir}/init.php
 %dir %{_appdir}/htdocs
 %{_appdir}/htdocs/*.php
 %{_appdir}/htdocs/*.ico
@@ -800,23 +688,16 @@ EOF
 %{_appdir}/templates
 
 %dir %{_appdir}/upgrade
-%attr(755,root,root) %{_appdir}/upgrade/upgrade.sh
+%{_appdir}/upgrade/init.php
 %attr(755,root,root) %{_appdir}/upgrade/update-database.php
 %dir %{_appdir}/upgrade/v*
 %attr(755,root,root) %{_appdir}/upgrade/v*/*.php
 %{_appdir}/upgrade/patches
 
-%{_smartyplugindir}
-
-%dir %{_appdir}/include
-%{_appdir}/include/customer
-%{_appdir}/include/custom_field
-%{_appdir}/include/jpgraph
-%{_appdir}/include/workflow
-%{_appdir}/include/autoload.php
-%{_appdir}/include/class.*.php
-%{_appdir}/include/db_access.php
-%exclude %{_appdir}/include/class.monitor.php
+%dir %{_appdir}/lib
+%{_appdir}/lib/eventum
+%{_appdir}/lib/jpgraph
+%exclude %{_appdir}/lib/eventum/class.monitor.php
 
 %dir %attr(730,root,eventum) /var/run/%{name}
 %dir %attr(730,root,eventum) /var/cache/%{name}
@@ -826,8 +707,7 @@ EOF
 %attr(751,root,root) %dir %{_sysconfdir}
 %dir %{_libdir}
 %dir %{_appdir}
-# qmail will ignore user, if it's home directory is not owned
-%attr(750,eventum,eventum) %dir /var/lib/%{name}
+%attr(755,root,root) %dir /var/lib/%{name}
 # saved mail copies
 %attr(770,root,eventum) %dir /var/lib/%{name}/routed_emails
 %attr(770,root,eventum) %dir /var/lib/%{name}/routed_drafts
@@ -854,7 +734,7 @@ EOF
 
 %files monitor
 %defattr(644,root,root,755)
-%{_appdir}/include/class.monitor.php
+%{_appdir}/lib/eventum/class.monitor.php
 %attr(755,root,root) %{_appdir}/monitor.php
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/cron.d/%{name}-monitor
 
@@ -870,13 +750,6 @@ EOF
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_appdir}/route_notes.php
 
-%if %{with qmail}
-%files router-qmail
-%defattr(644,root,root,755)
-%attr(640,root,eventum) %config(noreplace) %verify(not md5 mtime size) /var/lib/%{name}/.qmail*
-%attr(755,root,root) %{_libdir}/router-qmail
-%endif
-
 %files router-postfix
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/router-postfix
@@ -885,13 +758,12 @@ EOF
 %defattr(644,root,root,755)
 %attr(640,root,eventum) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/irc_config.php
 %attr(640,root,eventum) %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/eventum-irc
-%attr(755,root,root) %{_sbindir}/%{name}-bot
+%attr(755,root,root) %{_sbindir}/%{name}-irc-bot
 %attr(754,root,root) /etc/rc.d/init.d/%{name}-irc
 
 %files cli
 %defattr(644,root,root,755)
-%doc eventumrc
-%config %verify(not md5 mtime size) %{_sysconfdir}/cli.php
+%doc cli/eventumrc
 %attr(755,root,root) %{_bindir}/%{name}
 %{_appdir}/cli
 
@@ -900,3 +772,5 @@ EOF
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/scm.php
 %attr(755,root,root) %{_libdir}/process_cvs_commits
 %attr(755,root,root) %{_libdir}/process_svn_commits
+%attr(755,root,root) %{_sbindir}/eventum-cvs-hook
+%attr(755,root,root) %{_sbindir}/eventum-svn-hook

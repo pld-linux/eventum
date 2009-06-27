@@ -1,35 +1,35 @@
---- eventum/misc/route_drafts.php~	2007-02-15 01:39:42.575673579 +0200
-+++ eventum/misc/route_drafts.php	2007-02-15 01:40:02.046113147 +0200
-@@ -27,6 +27,7 @@
+--- trunk/route_drafts.php~	2009-06-27 17:36:08.000000000 +0300
++++ trunk/route_drafts.php	2009-06-27 17:36:29.036049928 +0300
+@@ -29,6 +29,7 @@
  //
  // @(#) $Id$
  
 +ini_set('memory_limit', '1024M');
- require_once(dirname(__FILE__) . "/htdocs/init.php");
- require_once(APP_INC_PATH . "db_access.php");
- require_once(APP_INC_PATH . "class.routing.php");
---- eventum/misc/route_emails.php~	2007-02-15 01:39:42.575673579 +0200
-+++ eventum/misc/route_emails.php	2007-02-15 01:40:42.017015531 +0200
-@@ -27,6 +27,7 @@
+ require_once 'init.php';
+ 
+ $full_message = Misc::getInput();
+--- trunk/route_emails.php~	2009-06-27 17:36:08.000000000 +0300
++++ trunk/route_emails.php	2009-06-27 17:36:57.725685544 +0300
+@@ -29,6 +29,7 @@
  //
  // @(#) $Id$
  
 +ini_set('memory_limit', '1024M');
- require_once(dirname(__FILE__) . "/htdocs/init.php");
- require_once(APP_INC_PATH . "db_access.php");
- require_once(APP_INC_PATH . "class.routing.php");
---- eventum/misc/route_notes.php~	2007-02-15 01:39:42.575673579 +0200
-+++ eventum/misc/route_notes.php	2007-02-15 01:41:13.727731426 +0200
-@@ -27,6 +27,7 @@
+ require_once 'init.php';
+ 
+ $full_message = Misc::getInput();
+--- trunk/route_notes.php~	2009-06-27 17:36:08.000000000 +0300
++++ trunk/route_notes.php	2009-06-27 17:37:14.485553825 +0300
+@@ -29,6 +29,7 @@
  //
  // @(#) $Id$
  
 +ini_set('memory_limit', '1024M');
- require_once(dirname(__FILE__) . "/htdocs/init.php");
- require_once(APP_INC_PATH . "db_access.php");
- require_once(APP_INC_PATH . "class.routing.php");
---- eventum-20060830/misc/download_emails.php	2006-09-05 00:11:48.396726556 +0300
-+++ eventum-20060830.mem/misc/download_emails.php	2006-09-05 00:12:09.647203129 +0300
+ require_once 'init.php';
+ 
+ $full_message = Misc::getInput();
+--- eventum-20060830/download_emails.php	2006-09-05 00:11:48.396726556 +0300
++++ eventum-20060830.mem/download_emails.php	2006-09-05 00:12:09.647203129 +0300
 @@ -28,7 +28,7 @@
  //
  // @(#) $Id$
@@ -39,8 +39,8 @@
  
  require_once("/etc/webapps/eventum/core.php");
  require_once(APP_INC_PATH . "class.support.php");
---- eventum-20060830/misc/process_mail_queue.php	2006-09-05 00:11:48.396726556 +0300
-+++ eventum-20060830.mem/misc/process_mail_queue.php	2006-09-05 00:12:09.647203129 +0300
+--- eventum-20060830/process_mail_queue.php	2006-09-05 00:11:48.396726556 +0300
++++ eventum-20060830.mem/process_mail_queue.php	2006-09-05 00:12:09.647203129 +0300
 @@ -28,7 +28,7 @@
  //
  // @(#) $Id$
@@ -50,8 +50,8 @@
  
  require_once("/etc/webapps/eventum/core.php");
  require_once(APP_INC_PATH . "db_access.php");
---- eventum/misc/irc/bot.php~	2007-01-16 21:24:17.009987152 +0200
-+++ eventum/misc/irc/bot.php	2007-01-16 21:24:57.050882112 +0200
+--- eventum/irc/eventum-irc-bot~	2007-01-16 21:24:17.009987152 +0200
++++ eventum/irc/eventum-irc-bot	2007-01-16 21:24:57.050882112 +0200
 @@ -26,6 +26,6 @@
  //
  

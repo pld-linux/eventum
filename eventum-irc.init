@@ -28,7 +28,7 @@ start() {
 	if [ ! -f /var/lock/subsys/eventum-irc ]; then
 		msg_starting "Eventum IRC Bot"
 		start-stop-daemon --start \
-			--exec /usr/sbin/eventum-bot \
+			--exec /usr/sbin/eventum-irc-bot \
 			--pidfile $PIDFILE \
 			--chuid eventum \
 			--background
@@ -73,7 +73,7 @@ restart)
 	start
 ;;
 status)
-	status eventum-bot php
+	status eventum-irc-bot php
 	exit $?
 ;;
 *)

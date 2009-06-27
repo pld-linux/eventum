@@ -1,5 +1,5 @@
---- eventum-r3475/include/class.language.php~	2007-11-20 19:11:35.000000000 +0200
-+++ eventum-r3475/include/class.language.php	2007-11-20 19:12:05.696195147 +0200
+--- eventum-r3475/lib/eventum/class.language.php~	2007-11-20 19:11:35.000000000 +0200
++++ eventum-r3475/lib/eventum/class.language.php	2007-11-20 19:12:05.696195147 +0200
 @@ -237,7 +237,6 @@
  }
  
