@@ -1284,14 +1284,14 @@
 +	}
 +);
 \ No newline at end of file
---- eventum-2.2/templates/header.tpl.html~	2009-06-27 18:48:02.000000000 +0300
-+++ eventum-2.2/templates/header.tpl.html	2009-06-27 18:48:50.905140848 +0300
+--- eventum-2.2/templates/header.tpl.html~	2009-06-30 02:07:28.000000000 +0300
++++ eventum-2.2/templates/header.tpl.html	2009-06-30 02:07:49.981934267 +0300
 @@ -8,6 +8,7 @@
  <script type="text/javascript" src="{$rel_url}js/jquery/form.js?c=9984"></script>
  <script type="text/javascript" src="{$rel_url}js/jquery/blockui.js?c=eb13"></script>
  <script type="text/javascript" src="{$rel_url}js/jquery/ui.datepicker.js?c=a911"></script>
 +<script type="text/javascript" src="{$rel_url}js/jquery/jquery.tablednd.js"></script>
- <link rel="stylesheet" href="{$rel_url}js/jquery/ui.datepicker.css">
+ <link rel="stylesheet" href="{$rel_url}js/jquery/ui.datepicker.css?c=5096">
  <script type="text/javascript">
  <!--
 --- eventum-r3765/htdocs/css/style.css~	2008-06-19 08:30:31.000000000 +0300
