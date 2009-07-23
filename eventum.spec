@@ -10,8 +10,8 @@
 %bcond_without	order	# with experimental order patch
 
 #define	snap	20060921
-%define	rev		r3880
-%define	rel		2.26
+%define	rev		r3890
+%define	rel		2.28
 #define	_rc		RC3
 
 %include	/usr/lib/rpm/macros.php
@@ -27,7 +27,7 @@ Group:		Applications/WWW
 #Source0:	http://mysql.easynet.be/Downloads/eventum/%{name}-%{version}.tar.gz
 # bzr branch lp:eventum eventum && tar -cjf eventum.tar.bz2 --exclude=.bzr --exclude=.bzrignore eventum
 Source0:	eventum-%{version}-dev-%{rev}.tar.gz
-# Source0-md5:	bae6efb9785771495bb78e8262f695ae
+# Source0-md5:	2c1a0fb3a6d7ee885184376d4db49264
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
