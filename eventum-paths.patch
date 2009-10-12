@@ -22,16 +22,16 @@
  
  if (defined('APP_PEAR_PATH')) {
      set_include_path(APP_PEAR_PATH . PATH_SEPARATOR . get_include_path());
---- trunk/init.php~	2009-06-27 17:31:32.000000000 +0300
-+++ trunk/init.php	2009-06-27 17:33:35.745565456 +0300
-@@ -26,7 +26,7 @@
+--- eventum-2.2/init.php~	2009-10-12 22:40:04.000000000 +0300
++++ eventum-2.2/init.php	2009-10-12 22:40:41.619219457 +0300
+@@ -27,7 +27,7 @@
  // | Authors: Elan Ruusamäe <glen@delfi.ee>                               |
  // +----------------------------------------------------------------------+
  
--if (!file_exists(dirname(__FILE__) . '/config/config.php')) {
-+if (!file_exists('/etc/webapps/eventum/config.php')) {
+-if (!file_exists(dirname(__FILE__) . '/config/config.php') || !filesize(dirname(__FILE__) . '/config/config.php')) {
++if (!file_exists('/etc/webapps/eventum/config/config.php') || !filesize('/etc/webapps/eventum/config/config.php')) {
      Header('Location: setup/');
-     exit;
+     exit(0);
  }
 @@ -46,7 +46,7 @@
  
@@ -82,13 +82,13 @@
  }
  
  if (!defined('APP_ROUTED_MAILS_SAVEDIR')) {
---- trunk/htdocs/setup/index.php~	2009-06-27 17:34:22.000000000 +0300
-+++ trunk/htdocs/setup/index.php	2009-06-27 17:35:07.108898271 +0300
+--- eventum-2.2/htdocs/setup/index.php~	2009-10-12 22:41:28.000000000 +0300
++++ eventum-2.2/htdocs/setup/index.php	2009-10-12 22:43:06.524225893 +0300
 @@ -42,14 +42,14 @@
  define('APP_PATH', realpath(dirname(__FILE__) . '/../..'));
  define('APP_INC_PATH', APP_PATH . '/lib/eventum');
- define('APP_PEAR_PATH', APP_INC_PATH . '/lib/pear');
--define('APP_SMARTY_PATH', APP_INC_PATH . '/lib/Smarty');
+ define('APP_PEAR_PATH', APP_PATH . '/lib/pear');
+-define('APP_SMARTY_PATH', APP_PATH . '/lib/Smarty');
 -define('APP_CONFIG_PATH', APP_PATH . '/config');
 +define('APP_SMARTY_PATH', '/usr/share/php/Smarty');
 +define('APP_CONFIG_PATH', '/etc/webapps/eventum');
@@ -104,15 +104,15 @@
  
  header('Content-Type: text/html; charset=' . APP_CHARSET);
  
-@@ -192,10 +192,6 @@
-     if (ini_get('file_uploads') != "1") {
-         $errors[] = "The 'file_uploads' directive needs to be enabled in your PHP.INI file in order for Eventum to work properly.";
+@@ -241,10 +241,6 @@
+         $warnings[] = "The Multibyte String Functions extension is not enabled in your PHP installation. For localization to work properly " .
+             "you need to install this extension. If you do not install this extension localization will be disabled.";
      }
 -    $error = checkPermissions(APP_CONFIG_PATH, "Directory '" . APP_CONFIG_PATH . "'", TRUE);
 -    if (!empty($error)) {
 -        $errors[] = $error;
 -    }
-     $error = checkPermissions(APP_LOCKS_PATH, "Directory '" . APP_LOCKS_PATH . "'", TRUE);
+     $error = checkPermissions(APP_SETUP_FILE, "File '" . APP_SETUP_FILE. "'");
      if (!empty($error)) {
          $errors[] = $error;
 @@ -329,10 +325,6 @@

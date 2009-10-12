@@ -10,8 +10,8 @@
 %bcond_without	order	# with experimental order patch
 
 #define	snap	20060921
-%define	rev		r3903
-%define	rel		2.29
+%define	rev		r3934
+%define	rel		2.30
 #define	_rc		RC3
 
 %include	/usr/lib/rpm/macros.php
@@ -26,8 +26,8 @@ Group:		Applications/WWW
 #Source0:	http://eventum.mysql.org/downloads/eventum-2.0.RC3.tar.gz
 #Source0:	http://mysql.easynet.be/Downloads/eventum/%{name}-%{version}.tar.gz
 # bzr branch lp:eventum eventum && tar -cjf eventum.tar.bz2 --exclude=.bzr --exclude=.bzrignore eventum
-Source0:	eventum-%{version}-dev-%{rev}.tar.gz
-# Source0-md5:	30160fd1733dc845e5242af878bfe36f
+Source0:	%{name}-%{version}-dev-%{rev}.tar.gz
+# Source0-md5:	2913cf48467a40785c26dbe4aacc7e68
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -82,6 +82,7 @@ Requires:	php-pear-Net_UserAgent_Detect
 Requires:	php-pear-PEAR-core
 Requires:	php-pear-Text_Diff
 Requires:	php-pear-XML_RPC
+Requires:	php-session
 Requires:	smarty-gettext
 Requires:	webapps
 Requires:	webserver(access)
@@ -265,19 +266,19 @@ Requires:	eventum(router)
 
 %description route-drafts
 The draft routing feature is used to automatically associate a thread
-of drafts into an Eventum issue. By setting up Postfix
-to deliver emails sent to a specific address (usually
-draft-<number>@<domain>) to the above script, users are able to send
-drafts written in their mail client to be stored in Eventum. These
-drafts will NOT broadcasted to the notification list.
+of drafts into an Eventum issue. By setting up Postfix to deliver
+emails sent to a specific address (usually draft-<number>@<domain>) to
+the above script, users are able to send drafts written in their mail
+client to be stored in Eventum. These drafts will NOT broadcasted to
+the notification list.
 
 %description route-drafts -l pl.UTF-8
 Przekazywanie szkiców służy do automatycznego wiązania wątku szkiców z
-problemem w Eventum. Ustawiając Postfiksa, aby
-dostarczał pocztę wysłaną na podany adres (zwykle
-draft-<liczba>@<domena>) do tego skryptu umożliwia się użytkownikom
-wysyłanie szkiców napisanych w ich kliencie pocztowym do zapisania w
-Eventum. Szkice te NIE będą wysyłane na listę powiadomień.
+problemem w Eventum. Ustawiając Postfiksa, aby dostarczał pocztę
+wysłaną na podany adres (zwykle draft-<liczba>@<domena>) do tego
+skryptu umożliwia się użytkownikom wysyłanie szkiców napisanych w ich
+kliencie pocztowym do zapisania w Eventum. Szkice te NIE będą wysyłane
+na listę powiadomień.
 
 %package route-emails
 Summary:	Eventum Email Routing
@@ -288,17 +289,17 @@ Requires:	eventum(router)
 
 %description route-emails
 The email routing feature is used to automatically associate a thread
-of emails into an Eventum issue. By setting up Postfix
-to deliver emails sent to a specific address (usually
-issue-<number>@<domain>) to the above script, users are able to use
-their email clients to reply to emails coming from Eventum, and those
-replies will be automatically associated with the issue and
-broadcasted to the entire notification list.
+of emails into an Eventum issue. By setting up Postfix to deliver
+emails sent to a specific address (usually issue-<number>@<domain>) to
+the above script, users are able to use their email clients to reply
+to emails coming from Eventum, and those replies will be automatically
+associated with the issue and broadcasted to the entire notification
+list.
 
 %description route-emails -l pl.UTF-8
 Funkcjonalność przekazywania poczty służy do automatycznego wiązania
-wątku listów ze sprawą w Eventum. Po ustawieniu czy nawet
-Postfiksa, aby dostarczał listy wysyłane na pewien adres (zwykle
+wątku listów ze sprawą w Eventum. Po ustawieniu czy nawet Postfiksa,
+aby dostarczał listy wysyłane na pewien adres (zwykle
 issue-<numer>@<domena>) na powyższy skrypt, użytkownicy będą mogli
 używać klientów pocztowych do odpowiadania na listy przychodzące z
 Eventum, a odpowiedzi te będą automatycznie wiązane ze sprawą i
@@ -313,17 +314,17 @@ Requires:	eventum(router)
 
 %description route-notes
 The note routing feature is used to automatically associate a thread
-of notes into an Eventum issue. By setting up Postfix
-to deliver emails sent to a specific address (usually
-note-<number>@<domain>) to the above script, users are able to use
-their email clients to reply to internal notes coming from Eventum,
-and those replies will be automatically associated with the issue and
-broadcasted to the notification list staff members.
+of notes into an Eventum issue. By setting up Postfix to deliver
+emails sent to a specific address (usually note-<number>@<domain>) to
+the above script, users are able to use their email clients to reply
+to internal notes coming from Eventum, and those replies will be
+automatically associated with the issue and broadcasted to the
+notification list staff members.
 
 %description route-notes -l pl.UTF-8
 Funkcjonalność przekazywania notatek służy do automatycznego wiązania
-wątku notatek ze sprawą w Eventum. Po ustawieniu
-Postfiksa, aby dostarczał listy wysyłane na pewien adres (zwykle
+wątku notatek ze sprawą w Eventum. Po ustawieniu Postfiksa, aby
+dostarczał listy wysyłane na pewien adres (zwykle
 note-<numer>@<domena>) na powyższy skrypt, użytkownicy będą mogli
 używać klientów pocztowych do odpowiadania na wewnętrzne notatki
 pochodzące od Eventu, a odpowiedzi te będą automatycznie wiązane ze
@@ -705,7 +706,7 @@ fi
 %attr(751,root,root) %dir %{_sysconfdir}
 %dir %{_libdir}
 %dir %{_appdir}
-%attr(755,root,root) %dir /var/lib/%{name}
+%dir /var/lib/%{name}
 # saved mail copies
 %attr(770,root,eventum) %dir /var/lib/%{name}/routed_emails
 %attr(770,root,eventum) %dir /var/lib/%{name}/routed_drafts

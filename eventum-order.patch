@@ -73,56 +73,13 @@
 +        }
 +    }
 +}
---- eventum-2.2/htdocs/ajax/update.php	1970-01-01 02:00:00.000000000 +0200
-+++ eventum-2.2-order/htdocs/ajax/update.php	2009-10-12 22:10:36.439185157 +0300
-@@ -0,0 +1,38 @@
-+<?
-+require_once(dirname(__FILE__) . '/../init.php');
-+require_once(APP_INC_PATH . "class.auth.php");
-+require_once(APP_INC_PATH . "class.issue.php");
+--- eventum-2.2/htdocs/css/style.css~	2009-10-12 22:27:13.000000000 +0300
++++ eventum-2.2/htdocs/css/style.css	2009-10-12 22:28:31.402712101 +0300
+@@ -176,3 +176,22 @@
+ .custom_field {
+     cursor: pointer;
+ }
 +
-+// check login
-+if (!Auth::hasValidCookie(APP_COOKIE)) {
-+    exit;
-+}
-+
-+if (!is_numeric($_POST['issueID'])) {
-+    exit;
-+}
-+
-+switch ($_POST['fieldName']) {
-+  case 'expected_resolution_date':
-+    $day = (int)$_POST['day'];
-+    $month = (int)$_POST['month'];
-+	$year = (int)$_POST['year'];
-+	if ($day == 0 && $month == 1 && $year == 0) {
-+		// clear button
-+		$date = null;
-+	} else {
-+		$date = sprintf('%04d-%02d-%02d', $year, $month, $day);
-+	}
-+	if (Issue::updateField($_POST['issueID'], $_POST['fieldName'], $date) !== -1) {
-+		if (!is_null($date)) {
-+            echo Date_Helper::getSimpleDate(sprintf('%04d-%02d-%02d', $year, $month, $day), false);
-+		}
-+    } else {
-+        echo 'update failed';
-+    }
-+    exit;
-+  break;
-+  default:
-+      die('object type not supported');
-+  break;
-+}
---- eventum-2.2/htdocs/css/style.css	2009-09-14 18:07:55.000000000 +0300
-+++ eventum-2.2-order/htdocs/css/style.css	2009-10-12 22:10:36.439185157 +0300
-@@ -172,4 +172,22 @@
-     font-size: 70%;
-     font-family: Verdana, Arial, Helvetica, sans-serif;
-     padding: 10px;
--}
-\ No newline at end of file
-+}
 +.tDnD_whileDrag td {
 +    background-color: #ffffdd;
 +}
@@ -141,53 +98,6 @@
 +    background-repeat: no-repeat;
 +    background-position: center center;
 +}
---- eventum-2.2/htdocs/js/global.js	2009-09-14 18:07:55.000000000 +0300
-+++ eventum-2.2-order/htdocs/js/global.js	2009-10-12 22:10:36.439185157 +0300
-@@ -798,4 +798,44 @@
-         firstDay: user_prefs.week_firstday
-     });
- });
-+
-+$(document).ready(function() {
-+    // dialog type calender isn't working in Konqueror beacuse it's not a supported browser for either jQuery or jQuery UI
-+    // http://groups.google.com/group/jquery-ui/browse_thread/thread/ea61238c34cb5f33/046837b02fb90b5c
-+    if (navigator.appName != 'Konqueror') {
-+        $(".inline_date_pick").click(function() {
-+        var masterObj = this;
-+        var masterObjPos = $(masterObj).offset();
-+        // offset gives uses top and left but datepicker needs pageX and pageY
-+        var masterObjPos = {pageX: masterObjPos.left, pageY: masterObjPos.top};
-+        $(this).datepicker(
-+            // we use dialog type calender so we won't haveto have a hidden element on the page
-+            'dialog',
-+            // selected date
-+            masterObj.innerHTML,
-+            // onclick handler
-+            function (date, dteObj) {
-+                fieldName = masterObj.id.substr(0,masterObj.id.indexOf('|'));
-+                issueID = masterObj.id.substr(masterObj.id.indexOf('|')+1);
-+				if (date == '') {
-+					// clear button
-+					dteObj.selectedDay = 0;
-+					dteObj.selectedMonth = 0;
-+					dteObj.selectedYear = 0;
-+				}
-+				//alertProperties(date);
-+                $.post("/ajax/update.php", {fieldName: fieldName, issueID: issueID, day: dteObj.selectedDay, month: (dteObj.selectedMonth+1), year: dteObj.selectedYear}, function(data) {
-+                    masterObj.innerHTML = data;
-+                }, "text");
-+            },
-+            // config
-+            {dateFormat: 'dd M yy', duration: ""},
-+            // position of the datepicker calender - taken from div's offset
-+            masterObjPos
-+        );
-+        return false;
-+        });
-+    }
-+});
-+
- //-->
 --- eventum-2.2/htdocs/js/jquery/jquery.tablednd.js	1970-01-01 02:00:00.000000000 +0200
 +++ eventum-2.2-order/htdocs/js/jquery/jquery.tablednd.js	2009-10-12 22:10:36.435851675 +0300
 @@ -0,0 +1,382 @@
@@ -1227,7 +1137,7 @@
            <td align="{$column.align|default:'center'}" class="default_white" nowrap {if $column.width != ''}width="{$column.width}"{/if}>
              {if $field_name == 'iss_summary'}
              <table cellspacing="0" cellpadding="1" width="100%">
-@@ -232,20 +261,21 @@
+@@ -268,8 +268,9 @@
            {/if}
            {/foreach}
          </tr>
@@ -1238,13 +1148,8 @@
            {if $current_role > $roles.developer}
            <td bgcolor="{$list[i].status_color}" width="1%" class="default" align="center"><input type="checkbox" name="item[]" value="{$list[i].iss_id}" onchange="toggleBulkUpdate();"></td>
            {/if}
-           {foreach from=$columns item=column key=field_name}
-           {if $field_name == 'custom_fields'}
-             {foreach from=$list[i].custom_field key=fld_id item=fld_value}
--                <td bgcolor="{$list[i].status_color}" align="{$column.align|default:'center'}" class="default">
--                  {$fld_value|formatCustomValue:$fld_id:$list[i].iss_id}
-+                <td bgcolor="{$list[i].status_color}" align="{$column.align|default:'center'}" class="default custom_field" onclick="return updateCustomFields({$list[i].iss_id});">
-+                    {$fld_value|formatCustomValue:$fld_id:$list[i].iss_id}
+@@ -280,8 +281,8 @@
+                   {$fld_value|formatCustomValue:$fld_id:$list[i].iss_id}
                  </td>
                {/foreach}
 -          {else}
@@ -1254,15 +1159,6 @@
              {if $field_name == 'iss_id'}
                <a href="view.php?id={$list[i].iss_id}" class="link" title="{t}view issue details{/t}">{$list[i].iss_id}</a>
              {elseif $field_name == 'pri_rank'}
-@@ -279,7 +309,7 @@
-             {elseif $field_name == 'iss_percent_complete'}
-               {$list[i].iss_percent_complete|escape:"html"}%
-             {elseif $field_name == 'iss_expected_resolution_date'}
--              {$list[i].iss_expected_resolution_date|escape:"html"}
-+              <div class="inline_date_pick" id="expected_resolution_date|{$list[i].iss_id}">{$list[i].iss_expected_resolution_date|escape:"html"}&nbsp;</div>
-             {elseif $field_name == 'iss_summary'}
-               <a href="view.php?id={$list[i].iss_id}" class="link" title="{t}view issue details{/t}">{$list[i].iss_summary|escape:"html"}</a>
-               {if $list[i].redeemed}
 @@ -288,6 +318,8 @@
                {if $list[i].iss_private == 1}
                    <b>[Private]</b>
@@ -1323,31 +1219,3 @@
 +</script>
  {include file="app_info.tpl.html"}
  {include file="footer.tpl.html"}
---- eventum-2.2/upgrade/patches/04_isu_order.php	1970-01-01 02:00:00.000000000 +0200
-+++ eventum-2.2-order/upgrade/patches/04_isu_order.php	2009-10-12 22:10:36.439185157 +0300
-@@ -0,0 +1,15 @@
-+<?php
-+
-+function db_patch_4() {
-+	$stmts = array();
-+
-+	$columns = db_getCol('DESC %TABLE_PREFIX%issue_user');
-+	if (in_array('isu_order', $columns)) {
-+		return $stmts;
-+	}
-+
-+	$stmts[] = "ALTER TABLE %TABLE_PREFIX%issue_user ADD isu_order int(11) NOT NULL DEFAULT '0' AFTER isu_assigned_date, ADD INDEX isu_order (isu_order)";
-+	$stmts[] = "UPDATE %TABLE_PREFIX%issue_user set isu_order=isu_iss_id";
-+
-+	return $stmts;
-+}
---- eventum-2.2/upgrade/update-database.php	2009-09-14 18:07:55.000000000 +0300
-+++ eventum-2.2-order/upgrade/update-database.php	2009-10-12 22:10:36.439185157 +0300
-@@ -73,6 +73,7 @@
- 		1 => '01_notes.php',
- 		2 => '02_usr_alias.php',
- 		3 => '03_prj_mail_aliases.php',
-+		4 => '04_isu_order.php',
- 	);
- 
- 	// sanity check. check that the version table exists.
