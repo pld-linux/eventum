@@ -1,16 +1,13 @@
 --- eventum-2.2/htdocs/ajax/order.php	1970-01-01 02:00:00.000000000 +0200
 +++ eventum-2.2-order/htdocs/ajax/order.php	2009-10-12 22:10:36.429185594 +0300
-@@ -0,0 +1,72 @@
+@@ -0,0 +1,69 @@
 +<?
-+require_once(dirname(__FILE__) . '/../init.php');
-+require_once(APP_INC_PATH . "class.auth.php");
-+require_once(APP_INC_PATH . "class.issue.php");
++require_once dirname(__FILE__) . '/../../init.php';
 +
 +// check login
 +if (!Auth::hasValidCookie(APP_COOKIE)) {
 +	exit;
 +}
-+
 +
 +
 +if (!isset($_POST['before']) || !isset($_POST['after'])) {
@@ -544,188 +541,7 @@
              $prj_id = self::getProjectID($issue_id);
  
              // record the change
-@@ -1636,6 +1637,180 @@
-         }
-     }
- 
-+    /**
-+     * Method used to update the a single detail field of a specific issue.
-+     *
-+     * @param integer $issue_id
-+     * @param string $field_name
-+     * @param string $field_value
-+     * @param string $field_type string or integer (for escape)
-+     * @return integer 1 on success, -1 otherwise
-+     */
-+    function updateField($issue_id, $field_name, $filed_value) {
-+
-+        $issue_id = Misc::escapeInteger($issue_id);
-+
-+        $usr_id = Auth::getUserID();
-+        $prj_id = self::getProjectID($issue_id);
-+
-+        // get all of the 'current' information of this issue
-+        $current = self::getDetails($issue_id);
-+
-+        $stmt = "UPDATE
-+                    " . APP_DEFAULT_DB . "." . APP_TABLE_PREFIX . "issue
-+                 SET
-+                    iss_updated_date='" . Date_Helper::getCurrentDateGMT() . "',
-+                    iss_last_public_action_date='" . Date_Helper::getCurrentDateGMT() . "',
-+                    iss_last_public_action_type='updated'";
-+
-+        switch ($field_name) {
-+            case 'category':
-+                $stmt .= ", iss_prc_id = " . Misc::escapeInteger($filed_value);
-+            break;
-+            case 'release':
-+                $stmt .= ", iss_pre_id = " . Misc::escapeInteger($filed_value);
-+            break;
-+            case 'expected_resolution_date':
-+                if (is_null($filed_value)) {
-+                    $stmt .= ", iss_expected_resolution_date = null";
-+                } else {
-+                    $stmt .= ", iss_expected_resolution_date = '" . Misc::escapeString($filed_value) . "'";
-+                }
-+            break;
-+            case 'release':
-+                $stmt .= ", iss_pre_id = " . Misc::escapeInteger($filed_value);
-+            break;
-+            case 'priority':
-+                $stmt .= ", iss_pri_id = " . Misc::escapeInteger($filed_value);
-+            break;
-+            case 'status':
-+                $stmt .= ", iss_sta_id = " . Misc::escapeInteger($filed_value);
-+            break;
-+            case 'resolution':
-+                $stmt .= ", iss_res_id = " . Misc::escapeInteger($filed_value);
-+            break;
-+            case 'summary':
-+                $stmt .= ", iss_summary = '" . Misc::escapeString($filed_value) . "'";
-+            break;
-+            case 'description':
-+                $stmt .= ", iss_description = '" . Misc::escapeString($filed_value) . "'";
-+            break;
-+            case 'estimated_dev_time':
-+                $stmt .= ", iss_dev_time = '" . Misc::escapeString($filed_value) . "'";
-+            break;
-+            case 'percent_complete':
-+                $stmt .= ", iss_percent_complete = '" . Misc::escapeString($filed_value) . "'";
-+            break;
-+            case 'trigger_reminders':
-+                $stmt .= ", iss_trigger_reminders = " . Misc::escapeInteger($filed_value);
-+            break;
-+            case 'group':
-+                $stmt .= ", iss_grp_id = " . Misc::escapeInteger($filed_value);
-+            break;
-+            case 'private':
-+                $stmt .= ", iss_private = " . Misc::escapeInteger($filed_value);
-+            break;
-+            default:
-+                Error_Handler::logError("Unknown field name $field_name", __FILE__, __LINE__);
-+                return -1;
-+            break;
-+        }
-+
-+        $stmt .= "
-+                 WHERE
-+                    iss_id=$issue_id";
-+
-+        $res = DB_Helper::getInstance()->query($stmt);
-+        if (PEAR::isError($res)) {
-+            Error_Handler::logError(array($res->getMessage(), $res->getDebugInfo()), __FILE__, __LINE__);
-+            return -1;
-+        } else {
-+            $new = array(
-+                'category' => $current['iss_prc_id'],
-+                'release' => $current['iss_pre_id'],
-+                'expected_resolution_date' => $current['iss_expected_resolution_date'],
-+                'release' => $current['iss_pre_id'],
-+                'priority' => $current['iss_pri_id'],
-+                'status' => $current['iss_sta_id'],
-+                'resolution' => $current['iss_res_id'],
-+                'summary' => $current['iss_summary'],
-+                'description' => $current['iss_description'],
-+                'estimated_dev_time' => $current['iss_dev_time'],
-+                'percent_complete' => $current['iss_percent_complete'],
-+                'trigger_reminders' => $current['iss_trigger_reminders'],
-+                'group' => $current['iss_grp_id'],
-+                'iss_private' => $current['private']
-+            );
-+            $new[$field_name] = $filed_value;
-+
-+            // add change to the history (only for changes on specific fields?)
-+            $updated_fields = array();
-+            if ($field_name == 'expected_resolution_date' && $current["iss_expected_resolution_date"] != $filed_value) {
-+                $updated_fields["Expected Resolution Date"] = History::formatChanges($current["iss_expected_resolution_date"], $filed_value);
-+            }
-+            if ($field_name == 'category' && $current["iss_prc_id"] != $filed_value) {
-+                $updated_fields["Category"] = History::formatChanges(Category::getTitle($current["iss_prc_id"]), Category::getTitle($filed_value));
-+            }
-+            if ($field_name == 'release' && $current["iss_pre_id"] != $filed_value) {
-+                $updated_fields["Release"] = History::formatChanges(Release::getTitle($current["iss_pre_id"]), Release::getTitle($filed_value));
-+            }
-+            if ($field_name == 'priority' && $current["iss_pri_id"] != $filed_value) {
-+                $updated_fields["Priority"] = History::formatChanges(Priority::getTitle($current["iss_pri_id"]), Priority::getTitle($filed_value));
-+                Workflow::handlePriorityChange($prj_id, $issue_id, $usr_id, $current, $new);
-+            }
-+            if ($field_name == 'status' && $current["iss_sta_id"] != $filed_value) {
-+                // clear out the last-triggered-reminder flag when changing the status of an issue
-+                Reminder_Action::clearLastTriggered($issue_id);
-+
-+                // if old status was closed and new status is not, clear closed data from issue.
-+                $old_status_details = Status::getDetails($current['iss_sta_id']);
-+                if ($old_status_details['sta_is_closed'] == 1) {
-+                    $new_status_details = Status::getDetails($filed_value);
-+                    if ($new_status_details['sta_is_closed'] != 1) {
-+                        self::clearClosed($issue_id);
-+                    }
-+                }
-+                $updated_fields["Status"] = History::formatChanges(Status::getStatusTitle($current["iss_sta_id"]), Status::getStatusTitle($filed_value));
-+            }
-+            if ($field_name == 'resolution' && $current["iss_res_id"] != $filed_value) {
-+                $updated_fields["Resolution"] = History::formatChanges(Resolution::getTitle($current["iss_res_id"]), Resolution::getTitle($filed_value));
-+            }
-+            if ($field_name == 'estimated_dev_time' && $current["iss_dev_time"] != $filed_value) {
-+                $updated_fields["Estimated Dev. Time"] = History::formatChanges(Misc::getFormattedTime(($current["iss_dev_time"]*60)), Misc::getFormattedTime(($filed_value*60)));
-+            }
-+            if ($field_name == 'summary' && $current["iss_summary"] != $filed_value) {
-+                $updated_fields["Summary"] = '';
-+            }
-+            if ($field_name == 'description' && $current["iss_description"] != $filed_value) {
-+                $updated_fields["Description"] = '';
-+            }
-+            if ($field_name == 'private' && ($filed_value != $current['iss_private'])) {
-+                $updated_fields["Private"] = History::formatChanges(Misc::getBooleanDisplayValue($current['iss_private']), Misc::getBooleanDisplayValue($filed_value));
-+            }
-+            if (count($updated_fields) > 0) {
-+                // log the changes
-+                $changes = '';
-+                $i = 0;
-+                foreach ($updated_fields as $key => $value) {
-+                    if ($i > 0) {
-+                        $changes .= "; ";
-+                    }
-+                    if (($key != "Summary") && ($key != "Description")) {
-+                        $changes .= "$key: $value";
-+                    } else {
-+                        $changes .= "$key";
-+                    }
-+                    $i++;
-+                }
-+
-+                History::add($issue_id, $usr_id, History::getTypeID('issue_updated'), "Issue updated ($changes) by " . User::getFullName($usr_id));
-+                // send notifications for the issue being updated
-+                Notification::notifyIssueUpdated($issue_id, $current, $new);
-+            }
-+        }
-+        return 1;
-+    }
-+
- 
-     /**
-      * Move the issue to a new project
-@@ -1800,16 +1975,33 @@
+@@ -1800,16 +1801,33 @@
      {
          $issue_id = Misc::escapeInteger($issue_id);
          $assignee_usr_id = Misc::escapeInteger($assignee_usr_id);
@@ -761,7 +577,7 @@
                   )";
          $res = DB_Helper::getInstance()->query($stmt);
          if (PEAR::isError($res)) {
-@@ -1824,6 +2016,78 @@
+@@ -1824,6 +1842,78 @@
          }
      }
  
@@ -840,7 +656,7 @@
  
      /**
       * Method used to delete all user assignments for a specific issue.
-@@ -1839,6 +2103,7 @@
+@@ -1839,6 +1929,7 @@
          if (is_array($issue_id)) {
              $issue_id = implode(", ", $issue_id);
          }
@@ -848,7 +664,7 @@
          $stmt = "DELETE FROM
                      " . APP_DEFAULT_DB . "." . APP_TABLE_PREFIX . "issue_user
                   WHERE
-@@ -1869,6 +2134,7 @@
+@@ -1869,6 +1960,7 @@
      {
          $issue_id = Misc::escapeInteger($issue_id);
          $usr_id = Misc::escapeInteger($usr_id);
@@ -856,7 +672,7 @@
          $stmt = "DELETE FROM
                      " . APP_DEFAULT_DB . "." . APP_TABLE_PREFIX . "issue_user
                   WHERE
-@@ -1883,6 +2149,7 @@
+@@ -1883,6 +1975,7 @@
                  History::add($issue_id, Auth::getUserID(), History::getTypeID('user_unassociated'),
                      User::getFullName($usr_id) . ' removed from issue by ' . User::getFullName(Auth::getUserID()));
              }
@@ -864,7 +680,7 @@
              return 1;
          }
      }
-@@ -2342,6 +2609,11 @@
+@@ -2342,6 +2435,11 @@
      {
          $sort_by = self::getParam('sort_by');
          $sort_order = self::getParam('sort_order');
@@ -876,7 +692,7 @@
          $rows = self::getParam('rows');
          $hide_closed = self::getParam('hide_closed');
          if ($hide_closed === '') {
-@@ -2448,6 +2720,7 @@
+@@ -2448,6 +2546,7 @@
              "iss_expected_resolution_date" => "desc",
              "pre_title" => "asc",
              "assigned" => "asc",
@@ -884,7 +700,7 @@
          );
  
          foreach ($custom_fields as $fld_id => $fld_name) {
-@@ -3253,6 +3526,8 @@
+@@ -3253,6 +3352,8 @@
          $ids = implode(", ", $ids);
          $stmt = "SELECT
                      isu_iss_id,
@@ -893,7 +709,7 @@
                      usr_full_name
                   FROM
                      " . APP_DEFAULT_DB . "." . APP_TABLE_PREFIX . "issue_user,
-@@ -3264,6 +3539,7 @@
+@@ -3264,6 +3365,7 @@
          if (PEAR::isError($res)) {
              Error_Handler::logError(array($res->getMessage(), $res->getDebugInfo()), __FILE__, __LINE__);
          } else {
@@ -901,7 +717,7 @@
              $t = array();
              for ($i = 0; $i < count($res); $i++) {
                  if (!empty($t[$res[$i]['isu_iss_id']])) {
-@@ -3272,9 +3548,18 @@
+@@ -3272,9 +3374,18 @@
                      $t[$res[$i]['isu_iss_id']] = $res[$i]['usr_full_name'];
                  }
              }
@@ -920,7 +736,7 @@
              }
          }
      }
-@@ -4247,6 +4532,7 @@
+@@ -4247,6 +4358,7 @@
              Error_Handler::logError(array($res->getMessage(), $res->getDebugInfo()), __FILE__, __LINE__);
              return -1;
          }
@@ -928,7 +744,7 @@
      }
  
  
-@@ -4346,4 +4632,120 @@
+@@ -4346,4 +4458,120 @@
          History::add($issue_id, Auth::getUserID(), History::getTypeID('user_associated'),
                          "Issue assignment to changed (" . History::formatChanges(join(', ', $old_assignee_names), join(', ', $assignee_names)) . ") by " . User::getFullName(Auth::getUserID()));
      }
