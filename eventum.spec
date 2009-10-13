@@ -11,7 +11,7 @@
 
 #define	snap	20060921
 %define	rev		r3934
-%define	rel		2.30
+%define	rel		2.35
 #define	_rc		RC3
 
 %include	/usr/lib/rpm/macros.php
@@ -93,7 +93,7 @@ Conflicts:	logrotate < 3.7-4
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
-%define		_noautoreq	'pear(init.php)' 'pear(/etc/webapps/.*)' 'pear(%{_appdir}/.*)' 'pear(jpgraph_dir.php)' 'pear(.*Smarty.class.php)'
+%define		_noautoreq	'pear(init.php)' 'pear(/etc/webapps/.*)' 'pear(%{_appdir}/.*)' 'pear(jpgraph_dir.php)' 'pear(.*Smarty.class.php)' 'pear(Services/JSON.php)'
 
 %define		_libdir		%{_prefix}/lib/%{name}
 %define		_appdir		%{_datadir}/%{name}
@@ -447,7 +447,8 @@ rm -r upgrade/{*/,}index.html # not needed in PLD Linux
 %patch0 -p1
 %{?with_order:%patch2 -p1}
 
-cp -a %{SOURCE16} images
+cp -a %{SOURCE16} htdocs/images
+rm htdocs/images/eventum_high_quality.tiff
 
 #%patch200 -p1
 
