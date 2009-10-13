@@ -29,7 +29,7 @@
  // +----------------------------------------------------------------------+
  
 -if (!file_exists(dirname(__FILE__) . '/config/config.php') || !filesize(dirname(__FILE__) . '/config/config.php')) {
-+if (!file_exists('/etc/webapps/eventum/config/config.php') || !filesize('/etc/webapps/eventum/config/config.php')) {
++if (!file_exists('/etc/webapps/eventum/config.php') || !filesize('/etc/webapps/eventum/config.php')) {
      Header('Location: setup/');
      exit(0);
  }
