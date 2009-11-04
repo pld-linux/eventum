@@ -10,8 +10,8 @@
 %bcond_without	order	# with experimental order patch
 
 #define	snap	20060921
-%define	rev		r3934
-%define	rel		2.35
+%define	rev		r3966
+%define	rel		2.39
 #define	_rc		RC3
 
 %include	/usr/lib/rpm/macros.php
@@ -27,7 +27,7 @@ Group:		Applications/WWW
 #Source0:	http://mysql.easynet.be/Downloads/eventum/%{name}-%{version}.tar.gz
 # bzr branch lp:eventum eventum && tar -cjf eventum.tar.bz2 --exclude=.bzr --exclude=.bzrignore eventum
 Source0:	%{name}-%{version}-dev-%{rev}.tar.gz
-# Source0-md5:	2913cf48467a40785c26dbe4aacc7e68
+# Source0-md5:	4ce83d59543ee2e3bfe530e5b4e7d29b
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -89,6 +89,7 @@ Requires:	webserver(access)
 Requires:	webserver(alias)
 Requires:	webserver(indexfile)
 Requires:	webserver(php) >= 4.2.0
+Suggests:	localedb
 Conflicts:	logrotate < 3.7-4
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -448,7 +449,6 @@ rm -r upgrade/{*/,}index.html # not needed in PLD Linux
 %{?with_order:%patch2 -p1}
 
 cp -a %{SOURCE16} htdocs/images
-rm htdocs/images/eventum_high_quality.tiff
 
 #%patch200 -p1
 
@@ -467,6 +467,15 @@ EOF
 %{__sed} -i -e "
 s;define('CONFIG_PATH'.*');define('CONFIG_PATH', '%{_webappdir}');
 " upgrade/{*/,}*.php
+
+
+install -d examples
+for a in lib/eventum/*/*example*.php; do
+	d=${a%/*} d=${d##lib/eventum/}
+	f=${a##*/}
+	install -d examples/$d
+	mv $a examples/$d/$f
+done
 
 # remove backups from patching as we use globs to package files to buildroot
 find '(' -name '*~' -o -name '*.orig' ')' | xargs -r rm -v
@@ -655,7 +664,7 @@ fi
 %files -f %{name}.lang
 %defattr(644,root,root,755)
 %doc ChangeLog FAQ INSTALL README UPGRADE CONTRIB
-%doc docs/* htdocs/setup/schema.sql mysql-permissions.sql
+%doc docs/* examples htdocs/setup/schema.sql mysql-permissions.sql
 %attr(751,root,root) %dir %{_webappdir}
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/apache.conf
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/httpd.conf
