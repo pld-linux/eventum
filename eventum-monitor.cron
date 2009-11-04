@@ -3,5 +3,3 @@
 MAILTO=root
 
 */10 * * * * eventum /usr/share/eventum/monitor.php
-
-# vim:syn=crontab

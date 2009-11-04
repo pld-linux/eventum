@@ -12,5 +12,3 @@ MAILTO=root
 # Administration >>> Manage Email Accounts
 
 #0 * * * * eventum /usr/share/eventum/download_emails.php username_here mail.domain.com INBOX
-
-# vim:syn=crontab

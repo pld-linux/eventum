@@ -9,5 +9,3 @@ MAILTO=root
 # go to:
 #
 # Administration >>> General Setup > SMTP (Outgoing Email) Settings
-
-# vim:syn=crontab
