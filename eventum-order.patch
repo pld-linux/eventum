@@ -495,11 +495,11 @@
  $options = Issue::saveSearchParams();
  $tpl->assign("options", $options);
  $tpl->assign("sorting", Issue::getSortingInfo($options));
-@@ -78,6 +83,21 @@
+@@ -78,6 +83,24 @@
  }
  $assign_options += $users;
  
-+// get the isu_order (assignated users) ordering user
++// get the isu_order (assigned users) ordering user
 +if (!empty($options["users"])) {
 +    if ($options["users"] == -2) {
 +        $isu_order_user = $usr_id;
@@ -512,7 +512,10 @@
 +} else {
 +    unset($isu_order_user);
 +}
-+$tpl->assign("isu_order_user", $isu_order_user);
++
++if (isset($isu_order_user)) {
++    $tpl->assign("isu_order_user", $isu_order_user);
++}
 +
  $list = Issue::getListing($prj_id, $options, $pagerRow, $rows);
  $tpl->assign("list", $list["list"]);
@@ -865,16 +868,16 @@
 +    }
 +    
  }
---- eventum-2.2/templates/header.tpl.html~	2009-11-04 21:14:31.000000000 +0200
-+++ eventum-2.2/templates/header.tpl.html	2009-11-04 21:14:55.177881015 +0200
-@@ -21,6 +21,7 @@
+--- eventum-2.2/templates/header.tpl.html~	2009-11-05 17:04:54.000000000 +0200
++++ eventum-2.2/templates/header.tpl.html	2009-11-05 17:05:17.976837914 +0200
+@@ -18,6 +18,7 @@
  <script type="text/javascript" src="{$rel_url}js/jquery/form.js?c=9984"></script>
  <script type="text/javascript" src="{$rel_url}js/jquery/blockui.js?c=eb13"></script>
  <script type="text/javascript" src="{$rel_url}js/jquery/ui.datepicker.js?c=a911"></script>
 +<script type="text/javascript" src="{$rel_url}js/jquery/jquery.tablednd.js"></script>
- {if $refresh_rate}
- <meta http-equiv="Refresh" content="{$refresh_rate};URL={$rel_url}{$refresh_page}">
- {/if}
+ <script type="text/javascript" src="{$rel_url}js/validation.js?c=901a"></script>
+ <script type="text/javascript" src="{$rel_url}js/browserSniffer.js?c=c046"></script>
+ <script type="text/javascript" src="{$rel_url}js/global.js?c=42a4"></script>
 --- eventum-2.2/templates/list.tpl.html	2009-09-14 18:07:55.000000000 +0300
 +++ eventum-2.2-order/templates/list.tpl.html	2009-10-12 22:10:36.439185157 +0300
 @@ -92,6 +92,28 @@

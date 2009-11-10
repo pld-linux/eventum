@@ -1,5 +1,5 @@
---- eventum-r3797/scm/eventum-cvs-hook~	2009-01-13 14:21:31.000000000 +0200
-+++ eventum-r3797/scm/eventum-cvs-hook	2009-01-13 14:22:25.200134375 +0200
+--- eventum-2.2/scm/eventum-cvs-hook~	2009-11-05 17:05:43.000000000 +0200
++++ eventum-2.2/scm/eventum-cvs-hook	2009-11-05 17:06:26.898467237 +0200
 @@ -27,14 +27,7 @@
  // | Authors: João Prado Maia <jpm@mysql.com>                             |
  // +----------------------------------------------------------------------+
@@ -8,29 +8,22 @@
 -// https is supported transparently by PHP 5 if you have openssl module enabled.
 -$eventum_url = 'http://eventum.example.com/';
 -
--
 -//
 -// DO NOT CHANGE ANYTHING AFTER THIS LINE
 -//
-+include '/etc/eventum/scm.php';
- 
- if (isset($eventum_url)) {
-     $data = parse_url($eventum_url);
---- eventum/scm/eventum-svn-hook~	2007-02-17 20:45:06.580266717 +0200
-+++ eventum/scm/eventum-svn-hook	2007-02-17 20:48:25.014819809 +0200
-@@ -33,13 +33,8 @@
- 
- // See http://eventum.mysql.org/wiki/index.php/Subversion_integration about SVN integration.
- 
--// URL to your Eventum installation.
--// https is supported transparently by PHP 5 if you have openssl module enabled.
--$eventum_url = 'http://rabbit.impleo.net/';
 -
--//
--// DO NOT CHANGE ANYTHING AFTER THIS LINE
--//
-+include '/etc/eventum/scm.php';
-+
- if (isset($eventum_url)) {
-     $data = parse_url($eventum_url);
- } else {
++require_once '/etc/eventum/scm.php';
+ 
+ // remove the first element which is the name of this script
+ $PROGRAM = basename(array_shift($argv));
+--- eventum-2.2/scm/eventum-svn-hook~	2009-11-10 13:31:10.000000000 +0200
++++ eventum-2.2/scm/eventum-svn-hook	2009-11-10 13:31:37.571582772 +0200
+@@ -36,7 +36,7 @@
+ 
+ // URL to your Eventum installation.
+ // https is supported transparently by PHP 5 if you have openssl module enabled.
+-$eventum_url = 'http://eventum.example.com/';
++require_once '/etc/eventum/scm.php';
+ 
+ //
+ // DO NOT CHANGE ANYTHING AFTER THIS LINE
