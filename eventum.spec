@@ -10,8 +10,8 @@
 %bcond_without	order	# with experimental order patch
 
 #define	snap	20060921
-%define	rev		r3984
-%define	rel		2.41
+%define	rev		r4018
+%define	rel		2.48
 #define	_rc		RC3
 
 %include	/usr/lib/rpm/macros.php
@@ -25,9 +25,9 @@ Group:		Applications/WWW
 #Source0:	http://downloads.mysql.com/snapshots/eventum/%{name}-nightly-%{snap}.tar.gz
 #Source0:	http://eventum.mysql.org/downloads/eventum-2.0.RC3.tar.gz
 #Source0:	http://mysql.easynet.be/Downloads/eventum/%{name}-%{version}.tar.gz
-# bzr branch lp:eventum eventum && tar -cjf eventum.tar.bz2 --exclude=.bzr --exclude=.bzrignore eventum
+# bzr branch lp:eventum eventum && cd eventum && make dist
 Source0:	%{name}-%{version}-dev-%{rev}.tar.gz
-# Source0-md5:	198d379dd62132a8727308ddfba7e7a3
+# Source0-md5:	74cc4307c0641c2fbe7e543e994cfbe0
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -94,7 +94,15 @@ Conflicts:	logrotate < 3.7-4
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
-%define		_noautoreq	'pear(init.php)' 'pear(/etc/webapps/.*)' 'pear(%{_appdir}/.*)' 'pear(jpgraph_dir.php)' 'pear(.*Smarty.class.php)' 'pear(Services/JSON.php)'
+%define		_noautopear	'pear(init.php)' 'pear(/etc/webapps/.*)' 'pear(%{_appdir}/.*)' 'pear(jpgraph_dir.php)' 'pear(.*Smarty.class.php)' 'pear(Services/JSON.php)'
+
+# exclude optional php dependencies
+%define		_noautophp	'php(gnupg)' 'php(hash)' 'php(pecl-http)' 'php(json)' 'php(tk)'
+
+# we don't want php(xxx) being resolved to php-xxx
+%define		_noautoreqdep	'^php(.*)$'
+
+%define		_noautoreq	%{_noautophp} %{_noautopear}
 
 %define		_libdir		%{_prefix}/lib/%{name}
 %define		_appdir		%{_datadir}/%{name}
