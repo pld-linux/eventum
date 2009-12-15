@@ -11,9 +11,10 @@
 
 #define	snap	20060921
 %define	rev		r4018
-%define	rel		2.48
+%define	rel		2.49
 #define	_rc		RC3
 
+%define		php_min_version 5.1.2
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl.UTF-8):	Eventum - system śledzenia spraw/błędów
@@ -60,7 +61,7 @@ Requires(triggerpostun):	/usr/bin/php
 Requires(triggerpostun):	sed >= 4.0
 Requires:	%{name}-base = %{version}-%{release}
 Requires:	Smarty >= 2.6.10-4
-Requires:	php-common >= 4:5.0
+Requires:	php-common >= 4:%{php_min_version}
 Requires:	php-gd
 Requires:	php-iconv
 Requires:	php-imap
@@ -69,7 +70,6 @@ Requires:	php-mysql
 Requires:	php-pcre
 Requires:	php-pear-DB
 Requires:	php-pear-Date
-Requires:	php-pear-HTTP_Request
 Requires:	php-pear-Mail
 Requires:	php-pear-Mail_Mime
 Requires:	php-pear-Mail_mimeDecode
@@ -403,7 +403,7 @@ Summary(pl.UTF-8):	Interfejs linii poleceń dla Eventum
 Group:		Applications/WWW
 Requires:	%{name}-base = %{version}-%{release}
 Requires:	php-cli
-Requires:	php-common >= 4:5.0
+Requires:	php-common >= 4:%{php_min_version}
 Requires:	php-pear-XML_RPC
 
 %description cli
@@ -420,7 +420,7 @@ Summary(pl.UTF-8):	Integracja SCM dla Eventum
 Group:		Applications/WWW
 Requires:	%{name}-base = %{version}-%{release}
 Requires:	php-cli
-Requires:	php-common >= 4:5.0
+Requires:	php-common >= 4:%{php_min_version}
 Requires:	php-pcre
 
 %description scm
