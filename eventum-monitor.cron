@@ -2,4 +2,4 @@
 # bounce messages back to root
 MAILTO=root
 
-*/10 * * * * eventum /usr/share/eventum/monitor.php
+*/10 * * * * http /usr/share/eventum/monitor.php

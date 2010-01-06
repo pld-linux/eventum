@@ -10,8 +10,8 @@
 %bcond_without	order	# with experimental order patch
 
 #define	snap	20060921
-%define	rev		r4018
-%define	rel		2.49
+%define	rev		r4022
+%define	rel		2.54
 #define	_rc		RC3
 
 %define		php_min_version 5.1.2
@@ -28,7 +28,7 @@ Group:		Applications/WWW
 #Source0:	http://mysql.easynet.be/Downloads/eventum/%{name}-%{version}.tar.gz
 # bzr branch lp:eventum eventum && cd eventum && make dist
 Source0:	%{name}-%{version}-dev-%{rev}.tar.gz
-# Source0-md5:	74cc4307c0641c2fbe7e543e994cfbe0
+# Source0-md5:	660e9e1e8cd45e848fc84f7d02361fb8
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -57,8 +57,6 @@ BuildRequires:	gettext-devel
 BuildRequires:	rpm-php-pearprov >= 4.0.2-98
 BuildRequires:	rpmbuild(macros) >= 1.461
 BuildRequires:	sed >= 4.0
-Requires(triggerpostun):	/usr/bin/php
-Requires(triggerpostun):	sed >= 4.0
 Requires:	%{name}-base = %{version}-%{release}
 Requires:	Smarty >= 2.6.10-4
 Requires:	php-common >= 4:%{php_min_version}
@@ -367,7 +365,6 @@ Summary:	Eventum IRC Notification Bot
 Summary(pl.UTF-8):	IRC-owy bot powiadamiający dla Eventum
 Group:		Applications/WWW
 Requires(post,preun):	/sbin/chkconfig
-Requires(triggerpostun):	sed >= 4.0
 Requires:	%{name} = %{version}-%{release}
 Requires:	php(sockets)
 Requires:	php-pear-Net_SmartIRC
@@ -660,21 +657,32 @@ fi
 %triggerun -- lighttpd
 %webapp_unregister lighttpd %{_webapp}
 
+%triggerpostun -- %{name} < 2.2-2.54
+set -x
+chgrp http %{_webappdir}/config.php
+chgrp http %{_webappdir}/private_key.php
+chgrp http %{_webappdir}/setup.php
+chgrp http /var/log/%{name}/*
+# update crontab user
+for a in /etc/cron.d/eventum-*; do
+	awk '!/#/ && NR > 6 && $6 =="eventum" {sub("eventum", "http", $6)}{print}'  $a > $a.rpmtmp && cat $a.rpmtmp > $a
+	rm -f $a.rpmtmp
+done
+
 %files -f %{name}.lang
 %defattr(644,root,root,755)
-%doc ChangeLog FAQ INSTALL README UPGRADE CONTRIB
 %doc docs/* htdocs/setup/schema.sql mysql-permissions.sql
 %attr(751,root,root) %dir %{_webappdir}
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/apache.conf
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/httpd.conf
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/lighttpd.conf
-%attr(640,root,eventum) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/config.php
-%attr(640,root,eventum) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/private_key.php
-%attr(660,root,eventum) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/setup.php
+%attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/config.php
+%attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/private_key.php
+%attr(660,root,http) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/setup.php
 %attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/htpasswd
 
-%dir %attr(731,root,eventum) /var/log/%{name}
-%attr(620,root,eventum) %ghost /var/log/%{name}/*
+%dir %attr(731,root,http) /var/log/%{name}
+%attr(620,root,http) %ghost /var/log/%{name}/*
 %dir %attr(750,root,root) /var/log/archive/%{name}
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/logrotate.d/%{name}
 
@@ -707,8 +715,8 @@ fi
 %{_appdir}/lib/jpgraph
 %exclude %{_appdir}/lib/eventum/class.monitor.php
 
-%dir %attr(730,root,eventum) /var/run/%{name}
-%dir %attr(730,root,eventum) /var/cache/%{name}
+%dir %attr(730,root,http) /var/run/%{name}
+%dir %attr(730,root,http) /var/cache/%{name}
 
 %files base
 %defattr(644,root,root,755)
@@ -717,9 +725,9 @@ fi
 %dir %{_appdir}
 %dir /var/lib/%{name}
 # saved mail copies
-%attr(770,root,eventum) %dir /var/lib/%{name}/routed_emails
-%attr(770,root,eventum) %dir /var/lib/%{name}/routed_drafts
-%attr(770,root,eventum) %dir /var/lib/%{name}/routed_notes
+%attr(770,root,http) %dir /var/lib/%{name}/routed_emails
+%attr(770,root,http) %dir /var/lib/%{name}/routed_drafts
+%attr(770,root,http) %dir /var/lib/%{name}/routed_notes
 
 %files setup
 %defattr(644,root,root,755)
