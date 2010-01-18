@@ -10,8 +10,8 @@
 %bcond_without	order	# with experimental order patch
 
 #define	snap	20060921
-%define	rev		r4022
-%define	rel		2.54
+%define	rev		r4030
+%define	rel		2.56
 #define	_rc		RC3
 
 %define		php_min_version 5.1.2
@@ -28,7 +28,7 @@ Group:		Applications/WWW
 #Source0:	http://mysql.easynet.be/Downloads/eventum/%{name}-%{version}.tar.gz
 # bzr branch lp:eventum eventum && cd eventum && make dist
 Source0:	%{name}-%{version}-dev-%{rev}.tar.gz
-# Source0-md5:	660e9e1e8cd45e848fc84f7d02361fb8
+# Source0-md5:	a1cb91569360e55a0224bad2ec2113ca
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -95,10 +95,7 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define		_noautopear	'pear(init.php)' 'pear(/etc/webapps/.*)' 'pear(%{_appdir}/.*)' 'pear(jpgraph_dir.php)' 'pear(.*Smarty.class.php)' 'pear(Services/JSON.php)'
 
 # exclude optional php dependencies
-%define		_noautophp	'php(gnupg)' 'php(hash)' 'php(pecl-http)' 'php(json)' 'php(tk)'
-
-# we don't want php(xxx) being resolved to php-xxx
-%define		_noautoreqdep	'^php(.*)$'
+%define		_noautophp	'php-gnupg' 'php-hash' 'php-pecl-http' 'php-json' 'php-tk'
 
 %define		_noautoreq	%{_noautophp} %{_noautopear}
 
@@ -658,7 +655,6 @@ fi
 %webapp_unregister lighttpd %{_webapp}
 
 %triggerpostun -- %{name} < 2.2-2.54
-set -x
 chgrp http %{_webappdir}/config.php
 chgrp http %{_webappdir}/private_key.php
 chgrp http %{_webappdir}/setup.php
