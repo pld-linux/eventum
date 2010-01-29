@@ -17,5 +17,3 @@ $realname = 'Eventum Issue Tracking System';
 // so, fill in the next two variables
 $username = '';
 $password = '';
-
-?>
