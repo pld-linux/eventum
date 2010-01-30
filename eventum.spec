@@ -10,8 +10,8 @@
 %bcond_without	order	# with experimental order patch
 
 #define	snap	20060921
-%define	rev		r4030
-%define	rel		2.56
+%define	rev		r4034
+%define	rel		2.58
 #define	_rc		RC3
 
 %define		php_min_version 5.1.2
@@ -28,7 +28,7 @@ Group:		Applications/WWW
 #Source0:	http://mysql.easynet.be/Downloads/eventum/%{name}-%{version}.tar.gz
 # bzr branch lp:eventum eventum && cd eventum && make dist
 Source0:	%{name}-%{version}-dev-%{rev}.tar.gz
-# Source0-md5:	a1cb91569360e55a0224bad2ec2113ca
+# Source0-md5:	17c325c4a26d8da3f47eb5dcc24b0fe0
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -92,7 +92,7 @@ Conflicts:	logrotate < 3.7-4
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
-%define		_noautopear	'pear(init.php)' 'pear(/etc/webapps/.*)' 'pear(%{_appdir}/.*)' 'pear(jpgraph_dir.php)' 'pear(.*Smarty.class.php)' 'pear(Services/JSON.php)'
+%define		_noautopear	'pear(../init.php)' 'pear(init.php)' 'pear(/etc/webapps/.*)' 'pear(%{_appdir}/.*)' 'pear(jpgraph_dir.php)' 'pear(.*Smarty.class.php)' 'pear(Services/JSON.php)'
 
 # exclude optional php dependencies
 %define		_noautophp	'php-gnupg' 'php-hash' 'php-pecl-http' 'php-json' 'php-tk'
@@ -441,6 +441,9 @@ Szczegóły na temat instalacji można przeczytać pod
 %prep
 %setup -q
 
+# GPL v2
+rm docs/COPYING
+
 rm -r upgrade/*v1.[123]* # too old to support in PLD Linux
 rm -r upgrade/v{1.,2.0,2.1_}* # no longer supported in PLD Linux
 rm upgrade/flush_compiled_templates.php
@@ -654,7 +657,8 @@ fi
 %triggerun -- lighttpd
 %webapp_unregister lighttpd %{_webapp}
 
-%triggerpostun -- %{name} < 2.2-2.54
+%triggerpostun -- %{name} < 2.2-2.57
+# switching eventum->http user
 chgrp http %{_webappdir}/config.php
 chgrp http %{_webappdir}/private_key.php
 chgrp http %{_webappdir}/setup.php
@@ -664,6 +668,19 @@ for a in /etc/cron.d/eventum-*; do
 	awk '!/#/ && NR > 6 && $6 =="eventum" {sub("eventum", "http", $6)}{print}'  $a > $a.rpmtmp && cat $a.rpmtmp > $a
 	rm -f $a.rpmtmp
 done
+
+# crontabs moved to crons subdir
+%{__sed} -i -e '
+	s,/usr/share/eventum/process_mail_queue.php,/usr/share/eventum/crons/process_mail_queue.php,
+	s,/usr/share/eventum/download_emails.php,/usr/share/eventum/crons/download_emails.php,
+	s,/usr/share/eventum/check_reminders.php,/usr/share/eventum/crons/check_reminders.php,
+	s,/usr/share/eventum/monitor.php,/usr/share/eventum/crons/monitor.php,
+' /etc/cron.d/eventum-*
+
+%triggerpostun mail-download -- %{name}-mail-download < 2.2-2.57
+%triggerpostun reminder -- %{name}-reminder < 2.2-2.57
+%triggerpostun monitor -- %{name}-monitor < 2.2-2.57
+
 
 %files -f %{name}.lang
 %defattr(644,root,root,755)
@@ -682,6 +699,7 @@ done
 %dir %attr(750,root,root) /var/log/archive/%{name}
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/logrotate.d/%{name}
 
+%dir %{_appdir}/crons
 %{_appdir}/init.php
 %dir %{_appdir}/htdocs
 %{_appdir}/htdocs/*.php
@@ -731,23 +749,23 @@ done
 
 %files mail-queue
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_appdir}/process_mail_queue.php
+%attr(755,root,root) %{_appdir}/crons/process_mail_queue.php
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/cron.d/%{name}-mail-queue
 
 %files mail-download
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_appdir}/download_emails.php
+%attr(755,root,root) %{_appdir}/crons/download_emails.php
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/cron.d/%{name}-mail-download
 
 %files reminder
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_appdir}/check_reminders.php
+%attr(755,root,root) %{_appdir}/crons/check_reminders.php
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/cron.d/%{name}-reminder
 
 %files monitor
 %defattr(644,root,root,755)
 %{_appdir}/lib/eventum/class.monitor.php
-%attr(755,root,root) %{_appdir}/monitor.php
+%attr(755,root,root) %{_appdir}/crons/monitor.php
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/cron.d/%{name}-monitor
 
 %files route-drafts
