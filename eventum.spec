@@ -10,8 +10,8 @@
 %bcond_without	order	# with experimental order patch
 
 #define	snap	20060921
-%define	rev		r4034
-%define	rel		2.58
+%define	rev		r4040
+%define	rel		2.60
 #define	_rc		RC3
 
 %define		php_min_version 5.1.2
@@ -28,7 +28,7 @@ Group:		Applications/WWW
 #Source0:	http://mysql.easynet.be/Downloads/eventum/%{name}-%{version}.tar.gz
 # bzr branch lp:eventum eventum && cd eventum && make dist
 Source0:	%{name}-%{version}-dev-%{rev}.tar.gz
-# Source0-md5:	17c325c4a26d8da3f47eb5dcc24b0fe0
+# Source0-md5:	94b90dc34d8e2b1e82e702e36cf8f95e
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -602,6 +602,10 @@ done
 
 # nuke Smarty templates cache after upgrade
 rm -f /var/cache/eventum/*.php
+
+# restart webserver (actually php engines php-fcgi, php-fpm needed only)
+# on upgrade to get .po translations reloaded
+%php_webserver_restart
 
 %preun
 if [ "$1" = "0" ]; then
