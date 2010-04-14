@@ -10,8 +10,8 @@
 %bcond_without	order	# with experimental order patch
 
 #define	snap	20060921
-%define	rev		r4040
-%define	rel		2.60
+%define	rev		r4075
+%define	rel		2.62
 #define	_rc		RC3
 
 %define		php_min_version 5.1.2
@@ -28,7 +28,7 @@ Group:		Applications/WWW
 #Source0:	http://mysql.easynet.be/Downloads/eventum/%{name}-%{version}.tar.gz
 # bzr branch lp:eventum eventum && cd eventum && make dist
 Source0:	%{name}-%{version}-dev-%{rev}.tar.gz
-# Source0-md5:	94b90dc34d8e2b1e82e702e36cf8f95e
+# Source0-md5:	6fe28279980f06136ae38e94d907549d
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -463,12 +463,6 @@ cp -a %{SOURCE16} htdocs/images
 %patch105 -p1
 %patch107 -p1
 
-cat <<'EOF'> mysql-permissions.sql
-# use this schema if you want to grant permissions manually instead of using setup
-# this schema is extracted from setup/index.php.
-GRANT SELECT, UPDATE, DELETE, INSERT, ALTER, DROP, CREATE, INDEX ON eventum.* TO 'eventum'@'localhost' IDENTIFIED BY 'password';
-EOF
-
 %{__sed} -i -e "
 s;define('CONFIG_PATH'.*');define('CONFIG_PATH', '%{_webappdir}');
 " upgrade/{*/,}*.php
@@ -603,8 +597,8 @@ done
 # nuke Smarty templates cache after upgrade
 rm -f /var/cache/eventum/*.php
 
-# restart webserver (actually php engines php-fcgi, php-fpm needed only)
-# on upgrade to get .po translations reloaded
+# Restart webserver on upgrade to get .mo translations reloaded.
+# actually php engines "php-fcgi" and "php-fpm" needed only, apache is restarted anyway via webapp trigger.
 %php_webserver_restart
 
 %preun
@@ -681,14 +675,9 @@ done
 	s,/usr/share/eventum/monitor.php,/usr/share/eventum/crons/monitor.php,
 ' /etc/cron.d/eventum-*
 
-%triggerpostun mail-download -- %{name}-mail-download < 2.2-2.57
-%triggerpostun reminder -- %{name}-reminder < 2.2-2.57
-%triggerpostun monitor -- %{name}-monitor < 2.2-2.57
-
-
 %files -f %{name}.lang
 %defattr(644,root,root,755)
-%doc docs/* htdocs/setup/schema.sql mysql-permissions.sql
+%doc docs/* htdocs/setup/schema.sql
 %attr(751,root,root) %dir %{_webappdir}
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/apache.conf
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/httpd.conf
