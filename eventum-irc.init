@@ -61,6 +61,17 @@ stop() {
 	fi
 }
 
+condrestart() {
+	if [ ! -f /var/lock/subsys/eventum-irc ]; then
+		msg_not_running "Eventum IRC Bot"
+		RETVAL=$1
+		return
+	fi
+
+	stop
+	start
+}
+
 RETVAL=0
 # See how we were called.
 case "$1" in
@@ -74,12 +85,15 @@ case "$1" in
 	stop
 	start
 	;;
+  force-reload)
+	condrestart 7
+	;;
   status)
 	status eventum-irc-bot php
 	exit $?
 	;;
   *)
-	msg_usage "$0 {start|stop|restart|status}"
+	msg_usage "$0 {start|stop|restart|force-reload|status}"
 	exit 3
 esac
 
