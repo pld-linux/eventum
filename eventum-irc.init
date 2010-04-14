@@ -25,58 +25,60 @@ else
 fi
 
 start() {
-	if [ ! -f /var/lock/subsys/eventum-irc ]; then
-		msg_starting "Eventum IRC Bot"
-		start-stop-daemon --start \
-			--exec /usr/sbin/eventum-irc-bot \
-			--pidfile $PIDFILE \
-			--chuid http \
-			--background
-
-		RETVAL=$?
-		if [ $RETVAL -eq 0 ]; then
-			touch /var/lock/subsys/eventum-irc
-			ok
-		else
-			fail
-		fi
-	else
+	if [ -f /var/lock/subsys/eventum-irc ]; then
 		msg_already_running "Eventum IRC Bot"
+		return
+	fi
+
+	msg_starting "Eventum IRC Bot"
+	start-stop-daemon --start \
+		--exec /usr/sbin/eventum-irc-bot \
+		--pidfile $PIDFILE \
+		--chuid http \
+		--background
+
+	RETVAL=$?
+	if [ $RETVAL -eq 0 ]; then
+		touch /var/lock/subsys/eventum-irc
+		ok
+	else
+		fail
 	fi
 }
 
 stop() {
-	if [ -f /var/lock/subsys/eventum-irc ]; then
-		msg_stopping "Eventum IRC Bot"
-		if start-stop-daemon --stop --oknodo --pidfile $PIDFILE; then
-			rm -f $PIDFILE /var/lock/subsys/eventum-irc >/dev/null 2>&1
-			ok
-		else
-			fail
-		fi
-	else
+	if [ ! -f /var/lock/subsys/eventum-irc ]; then
 		msg_not_running "Eventum IRC Bot"
+		return
+	fi
+
+	msg_stopping "Eventum IRC Bot"
+	if start-stop-daemon --stop --oknodo --pidfile $PIDFILE; then
+		rm -f $PIDFILE /var/lock/subsys/eventum-irc >/dev/null 2>&1
+		ok
+	else
+		fail
 	fi
 }
 
 RETVAL=0
 # See how we were called.
 case "$1" in
-start)
+  start)
 	start
-;;
-stop)
+	;;
+  stop)
 	stop
-;;
-restart)
+	;;
+  restart)
 	stop
 	start
-;;
-status)
+	;;
+  status)
 	status eventum-irc-bot php
 	exit $?
-;;
-*)
+	;;
+  *)
 	msg_usage "$0 {start|stop|restart|status}"
 	exit 3
 esac
