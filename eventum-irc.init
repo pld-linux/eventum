@@ -30,7 +30,7 @@ start() {
 		start-stop-daemon --start \
 			--exec /usr/sbin/eventum-irc-bot \
 			--pidfile $PIDFILE \
-			--chuid eventum \
+			--chuid http \
 			--background
 
 		RETVAL=$?
