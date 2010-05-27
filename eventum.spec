@@ -10,8 +10,8 @@
 %bcond_without	order	# with experimental order patch
 
 #define	snap	20060921
-%define	rev		r4089
-%define	rel		2.64
+%define	rev		r4097
+%define	rel		2.67
 #define	_rc		RC3
 
 %define		php_min_version 5.1.2
@@ -28,7 +28,7 @@ Group:		Applications/WWW
 #Source0:	http://mysql.easynet.be/Downloads/eventum/%{name}-%{version}.tar.gz
 # bzr branch lp:eventum eventum && cd eventum && make dist
 Source0:	%{name}-%{version}-dev-%{rev}.tar.gz
-# Source0-md5:	8dbcfe39d29efa4cb8b2dd8c230fe979
+# Source0-md5:	906d09b73296888f5ce383ea0c7a045c
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -666,15 +666,15 @@ for a in /etc/cron.d/eventum-*; do
 	[ -f "$a" ] || continue
 	awk '!/#/ && NR > 6 && $6 =="eventum" {sub("eventum", "http", $6)}{print}'  $a > $a.rpmtmp && cat $a.rpmtmp > $a
 	rm -f $a.rpmtmp
-done
 
-# crontabs moved to crons subdir
-%{__sed} -i -e '
-	s,/usr/share/eventum/process_mail_queue.php,/usr/share/eventum/crons/process_mail_queue.php,
-	s,/usr/share/eventum/download_emails.php,/usr/share/eventum/crons/download_emails.php,
-	s,/usr/share/eventum/check_reminders.php,/usr/share/eventum/crons/check_reminders.php,
-	s,/usr/share/eventum/monitor.php,/usr/share/eventum/crons/monitor.php,
-' /etc/cron.d/eventum-*
+	# crontabs moved to crons subdir
+	%{__sed} -i -e '
+		s,/usr/share/eventum/process_mail_queue.php,/usr/share/eventum/crons/process_mail_queue.php,
+		s,/usr/share/eventum/download_emails.php,/usr/share/eventum/crons/download_emails.php,
+		s,/usr/share/eventum/check_reminders.php,/usr/share/eventum/crons/check_reminders.php,
+		s,/usr/share/eventum/monitor.php,/usr/share/eventum/crons/monitor.php,
+	' $a
+done
 
 %files -f %{name}.lang
 %defattr(644,root,root,755)
