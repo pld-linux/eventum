@@ -10,8 +10,8 @@
 %bcond_without	order	# with experimental order patch
 
 #define	snap	20060921
-%define	rev		r4097
-%define	rel		2.67
+%define	rev		r4128
+%define	rel		2.68
 #define	_rc		RC3
 
 %define		php_min_version 5.1.2
@@ -28,7 +28,7 @@ Group:		Applications/WWW
 #Source0:	http://mysql.easynet.be/Downloads/eventum/%{name}-%{version}.tar.gz
 # bzr branch lp:eventum eventum && cd eventum && make dist
 Source0:	%{name}-%{version}-dev-%{rev}.tar.gz
-# Source0-md5:	906d09b73296888f5ce383ea0c7a045c
+# Source0-md5:	732712a61a2761898c32db5d08b87f01
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron

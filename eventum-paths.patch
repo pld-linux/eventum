@@ -82,8 +82,8 @@
  }
  
  if (!defined('APP_ROUTED_MAILS_SAVEDIR')) {
---- eventum-2.2/htdocs/setup/index.php~	2009-10-12 22:41:28.000000000 +0300
-+++ eventum-2.2/htdocs/setup/index.php	2009-10-12 22:43:06.524225893 +0300
+--- eventum-2.2/htdocs/setup/index.php~	2010-07-28 12:09:26.000000000 +0300
++++ eventum-2.2/htdocs/setup/index.php	2010-07-28 12:09:48.715993083 +0300
 @@ -42,14 +42,14 @@
  define('APP_PATH', realpath(dirname(__FILE__) . '/../..'));
  define('APP_INC_PATH', APP_PATH . '/lib/eventum');
@@ -104,10 +104,10 @@
  
  header('Content-Type: text/html; charset=' . APP_CHARSET);
  
-@@ -241,10 +241,6 @@
-         $warnings[] = "The Multibyte String Functions extension is not enabled in your PHP installation. For localization to work properly " .
-             "you need to install this extension. If you do not install this extension localization will be disabled.";
+@@ -252,10 +252,6 @@
+             "You need to install this extension for optimal operation. If you do not install this extension some unicode data will be corrupted.";
      }
+ 
 -    $error = checkPermissions(APP_CONFIG_PATH, "Directory '" . APP_CONFIG_PATH . "'", TRUE);
 -    if (!empty($error)) {
 -        $errors[] = $error;
