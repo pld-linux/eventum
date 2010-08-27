@@ -9,26 +9,17 @@
 # Conditional build:
 %bcond_without	order	# with experimental order patch
 
-#define	snap	20060921
-%define	rev		r4128
-%define	rel		2.68
-#define	_rc		RC3
-
 %define		php_min_version 5.1.2
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl.UTF-8):	Eventum - system śledzenia spraw/błędów
 Name:		eventum
-Version:	2.2
-Release:	%{?_rc:%{_rc}.}%{rel}%{?snap:.%{snap}}%{?rev:.%{rev}}
+Version:	2.3
+Release:	1
 License:	GPL
 Group:		Applications/WWW
-#Source0:	http://downloads.mysql.com/snapshots/eventum/%{name}-nightly-%{snap}.tar.gz
-#Source0:	http://eventum.mysql.org/downloads/eventum-2.0.RC3.tar.gz
-#Source0:	http://mysql.easynet.be/Downloads/eventum/%{name}-%{version}.tar.gz
-# bzr branch lp:eventum eventum && cd eventum && make dist
-Source0:	%{name}-%{version}-dev-%{rev}.tar.gz
-# Source0-md5:	732712a61a2761898c32db5d08b87f01
+Source0:	http://launchpad.net/eventum/trunk/%{version}/+download/%{name}-%{version}.tar.gz
+# Source0-md5:	31c16e53f799dd41df2f08cfff75247b
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -92,10 +83,10 @@ Conflicts:	logrotate < 3.7-4
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
-%define		_noautopear	'pear(../init.php)' 'pear(init.php)' 'pear(/etc/webapps/.*)' 'pear(%{_appdir}/.*)' 'pear(jpgraph_dir.php)' 'pear(.*Smarty.class.php)' 'pear(Services/JSON.php)'
+%define		_noautopear	pear(../init.php) pear(init.php) pear(/etc/webapps/.*) pear(%{_appdir}/.*) pear(jpgraph_dir.php) pear(.*Smarty.class.php) pear(Services/JSON.php)
 
 # exclude optional php dependencies
-%define		_noautophp	'php-gnupg' 'php-hash' 'php-pecl-http' 'php-json' 'php-tk'
+%define		_noautophp	php-gnupg php-hash php-pecl-http php-json php-tk
 
 %define		_noautoreq	%{_noautophp} %{_noautopear}
 
@@ -529,61 +520,6 @@ rm -rf $RPM_BUILD_ROOT
 %addusertogroup http %{name}
 
 %post
-# check if the package is configured.
-if grep -q "Header('Location: setup/')" %{_webappdir}/config.php; then
-if [ -f %{_appdir}/htdocs/setup/index.php ]; then
-%banner %{name} -e <<EOF
-
-You haven't yet configured Eventum!
-Please open in browser <http://localhost/eventum/>
-If you need access from elsewhere, you need to edit
-%{_webappdir}/apache.conf and restart apache.
-
-IMPORTANT: When You have configured Eventum, please uninstall the
-setup package, so that %{name}-setup is able to secure your Eventum
-installation.
-
-EOF
-#' vim syntax hack
-else
-%banner %{name} -e <<EOF
-
-You haven't yet configured Eventum!
-
-To setup eventum, please install %{name}-setup and open in browser
-<http://localhost/eventum/>.
-If you need access from elsewhere, you need to edit
-%{_webappdir}/*.conf depending on webserver and restart the webserver.
-
-IMPORTANT: When You have configured Eventum, please uninstall the
-setup package, so that %{name}-setup is able to secure your Eventum
-installation.
-
-EOF
-#' vim syntax hack
-fi
-
-elif grep -q 'DEFAULTPRIVATEKEY' %{_webappdir}/private_key.php; then
-%banner %{name} -e <<EOF
-
-You have default private key installed!
-
-Install %{name}-setup and open up http://yourserver/eventum/setup/
--- that will help you setup initial config.
-
-when have configured Eventum, please uninstall the setup package,
-so that %{name}-setup is able to secure your Eventum installation.
-
-EOF
-	elif [ -d %{_appdir}/setup ]; then
-%banner %{name} -e <<EOF
-
-If you have have configured Eventum, please uninstall the setup package,
-so that %{name}-setup is able to secure your Eventum installation.
-
-EOF
-fi
-
 # greate empty ghost files
 for a in cli.log errors.log irc_bot.log login_attempts.log; do
 	if [ ! -f /var/log/%{name}/$a ]; then
@@ -619,12 +555,12 @@ fi
 
 %post setup
 chmod 660 %{_webappdir}/{config,private_key}.php
-chown root:eventum %{_webappdir}/{config,private_key}.php
+chown root:http %{_webappdir}/{config,private_key}.php
 
 %postun setup
 if [ "$1" = "0" ]; then
 	chmod 640 %{_webappdir}/{config,private_key}.php
-	chown root:eventum %{_webappdir}/{config,private_key}.php
+	chown root:http %{_webappdir}/{config,private_key}.php
 fi
 
 %post irc
