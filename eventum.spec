@@ -10,16 +10,19 @@
 %bcond_without	order	# with experimental order patch
 
 %define		php_min_version 5.1.2
+%define		subver	4155
+%define		rel		2
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl.UTF-8):	Eventum - system śledzenia spraw/błędów
 Name:		eventum
 Version:	2.3
-Release:	1
+Release:	%{rel}.bzr%{subver}
 License:	GPL
 Group:		Applications/WWW
-Source0:	http://launchpad.net/eventum/trunk/%{version}/+download/%{name}-%{version}.tar.gz
-# Source0-md5:	31c16e53f799dd41df2f08cfff75247b
+#Source0:	http://launchpad.net/eventum/trunk/%{version}/+download/%{name}-%{version}.tar.gz
+Source0:	%{name}-%{version}-dev-r%{subver}.tar.gz
+# Source0-md5:	3dc3793e8a5b9135b8ea05879f81159b
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -468,7 +471,7 @@ find '(' -name '*~' -o -name '*.orig' ')' | xargs -r rm -v
 rm -rf $RPM_BUILD_ROOT
 install -d \
 	$RPM_BUILD_ROOT{%{_webappdir},%{_sysconfdir},%{_bindir},%{_sbindir},%{_libdir}} \
-	$RPM_BUILD_ROOT/etc/{rc.d/init.d,cron.d,sysconfig} \
+	$RPM_BUILD_ROOT/etc/{rc.d/init.d,cron.d,logrotate.d,sysconfig} \
 	$RPM_BUILD_ROOT/var/{run,cache,lib}/%{name} \
 	$RPM_BUILD_ROOT/var/log/{archive/,}%{name} \
 	$RPM_BUILD_ROOT/var/lib/%{name}/routed_{emails,drafts,notes} \
@@ -492,13 +495,13 @@ cp -a %{SOURCE5} $RPM_BUILD_ROOT/etc/cron.d/%{name}-monitor
 
 cp -a %{SOURCE7} $RPM_BUILD_ROOT%{_webappdir}/irc_config.php
 
-cp -a %{SOURCE8} $RPM_BUILD_ROOT/etc/rc.d/init.d/eventum-irc
+install -p %{SOURCE8} $RPM_BUILD_ROOT/etc/rc.d/init.d/eventum-irc
 cp -a %{SOURCE9} $RPM_BUILD_ROOT/etc/sysconfig/eventum-irc
+
+cp -a %{SOURCE14} $RPM_BUILD_ROOT/etc/logrotate.d/%{name}
 
 # postfix router
 install %{SOURCE13} $RPM_BUILD_ROOT%{_libdir}/router-postfix
-
-install -D %{SOURCE14} $RPM_BUILD_ROOT/etc/logrotate.d/%{name}
 
 %find_lang %{name}
 
@@ -511,7 +514,7 @@ ln -s %{_sbindir}/eventum-svn-hook $RPM_BUILD_ROOT%{_libdir}/process_svn_commits
 
 # skip pear for cli
 rm -rf $RPM_BUILD_ROOT%{_datadir}/%{name}/cli
-cp -a cli/lib/eventum $RPM_BUILD_ROOT%{_datadir}/%{name}/cli
+install -p cli/lib/eventum $RPM_BUILD_ROOT%{_datadir}/%{name}/cli
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -523,7 +526,7 @@ rm -rf $RPM_BUILD_ROOT
 # greate empty ghost files
 for a in cli.log errors.log irc_bot.log login_attempts.log; do
 	if [ ! -f /var/log/%{name}/$a ]; then
-		install -m620 -oroot -geventum /dev/null /var/log/%{name}/$a
+		install -m 0620 -o root -g eventum /dev/null /var/log/%{name}/$a
 	fi
 done
 
