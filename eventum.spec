@@ -86,7 +86,7 @@ Conflicts:	logrotate < 3.7-4
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
-%define		_noautopear	pear(../init.php) pear(init.php) pear(/etc/webapps/.*) pear(%{_appdir}/.*) pear(jpgraph_dir.php) pear(.*Smarty.class.php) pear(Services/JSON.php)
+%define		_noautopear	pear(../init.php) pear(init.php) pear(/etc/webapps/.*) pear(%{_appdir}/.*) pear(jpgraph_dir.php) pear(.*Smarty.class.php) pear(Services/JSON.php) pear(class.date_helper.php)
 
 # exclude optional php dependencies
 %define		_noautophp	php-gnupg php-hash php-pecl-http php-json php-tk
