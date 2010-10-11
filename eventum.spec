@@ -15,7 +15,7 @@ Summary:	Eventum Issue / Bug tracking system
 Summary(pl.UTF-8):	Eventum - system śledzenia spraw/błędów
 Name:		eventum
 Version:	2.3
-Release:	1
+Release:	2
 License:	GPL
 Group:		Applications/WWW
 Source0:	http://launchpad.net/eventum/trunk/%{version}/+download/%{name}-%{version}.tar.gz
@@ -83,7 +83,7 @@ Conflicts:	logrotate < 3.7-4
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
-%define		_noautopear	pear(../init.php) pear(init.php) pear(/etc/webapps/.*) pear(%{_appdir}/.*) pear(jpgraph_dir.php) pear(.*Smarty.class.php) pear(Services/JSON.php)
+%define		_noautopear	pear(../init.php) pear(init.php) pear(/etc/webapps/.*) pear(%{_appdir}/.*) pear(jpgraph_dir.php) pear(.*Smarty.class.php) pear(Services/JSON.php) pear(class.date_helper.php)
 
 # exclude optional php dependencies
 %define		_noautophp	php-gnupg php-hash php-pecl-http php-json php-tk
