@@ -10,8 +10,8 @@
 %bcond_without	order	# with experimental order patch
 
 %define		php_min_version 5.1.2
-%define		subver	4155
-%define		rel		2
+%define		subver	4167
+%define		rel		4
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl.UTF-8):	Eventum - system śledzenia spraw/błędów
@@ -22,7 +22,7 @@ License:	GPL
 Group:		Applications/WWW
 #Source0:	http://launchpad.net/eventum/trunk/%{version}/+download/%{name}-%{version}.tar.gz
 Source0:	%{name}-%{version}-dev-r%{subver}.tar.gz
-# Source0-md5:	3dc3793e8a5b9135b8ea05879f81159b
+# Source0-md5:	12e3d13cf112815d18d060764d3507d3
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -514,7 +514,7 @@ ln -s %{_sbindir}/eventum-svn-hook $RPM_BUILD_ROOT%{_libdir}/process_svn_commits
 
 # skip pear for cli
 rm -rf $RPM_BUILD_ROOT%{_datadir}/%{name}/cli
-install -p cli/lib/eventum $RPM_BUILD_ROOT%{_datadir}/%{name}/cli
+cp -a cli/lib/eventum $RPM_BUILD_ROOT%{_datadir}/%{name}/cli
 
 %clean
 rm -rf $RPM_BUILD_ROOT
