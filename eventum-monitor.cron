@@ -1,5 +1,5 @@
-# eventum reminder
-# bounce messages back to root
+# eventum monitor
+# report status to root
 MAILTO=root
 
-*/10 * * * * http exec /usr/share/eventum/crons/monitor.php
+*/10 * * * * http exec /usr/share/eventum/crons/monitor.php -q
