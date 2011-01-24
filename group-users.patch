@@ -1,0 +1,59 @@
+=== modified file 'htdocs/post_note.php'
+--- htdocs/post_note.php	2011-01-19 10:31:30 +0000
++++ htdocs/post_note.php	2011-01-19 13:20:28 +0000
+@@ -85,9 +85,29 @@
+     $reply_subject = ev_gettext('Re: %1$s', $details['iss_summary']);
+ }
+ 
++$users = Project::getUserAssocList($prj_id, 'active', User::getRoleID('Customer'));
++$user_details = User::getDetailsAssoc(array_keys($users));
++function array_orderby() {
++    $args = func_get_args();
++    $data = array_shift($args);
++    foreach ($args as $n => $field) {
++        if (is_string($field)) {
++            $tmp = array();
++            foreach ($data as $key => $row)
++                $tmp[$key] = $row[$field];
++            $args[$n] = $tmp;
++            }
++    }
++    $args[] = &$data;
++    call_user_func_array('array_multisort', $args);
++    return array_pop($args);
++}
++$user_details = array_orderby($user_details, 'usr_grp_id', SORT_ASC, 'usr_full_name', SORT_ASC);
++
+ $tpl->assign(array(
+     'from'               => User::getFromHeader($usr_id),
+-    'users'              => Project::getUserAssocList($prj_id, 'active', User::getRoleID('Customer')),
++    'users'              => $users, // XXX: drop me, we use $user_details now
++    'user_details'       => $user_details,
+     'current_user_prefs' => Prefs::get($usr_id),
+     'subscribers'        => Notification::getSubscribers($issue_id, false, User::getRoleID("Standard User")),
+     'statuses'           => Status::getAssocStatusList($prj_id, false),
+
+=== modified file 'templates/post_note.tpl.html'
+--- templates/post_note.tpl.html	2010-10-07 11:47:17 +0000
++++ templates/post_note.tpl.html	2011-01-19 13:01:33 +0000
+@@ -127,8 +127,17 @@
+                 size="{$users|@count}"
+               {/if}
+               multiple name="note_cc[]" onChange="showSelections('post_note_form', 'note_cc[]');">
+-              {html_options options=$users}
+-            </select><input class="button" type="button" value="{t}Clear Selections{/t}" onClick="clearExtraRecipients();"><br />
++
++              {foreach from=$user_details item=usr}
++              {if $usr.group}
++                {assign var=display_name value="`$usr.group`: `$usr.usr_full_name`"}
++              {else}
++                {assign var=display_name value=$usr.usr_full_name}
++              {/if}
++                {html_options values=$usr.usr_id output=$display_name}
++              {/foreach}
++            </select>
++            <input class="button" type="button" value="{t}Clear Selections{/t}" onClick="clearExtraRecipients();"><br />
+             {include file="lookup_field.tpl.html" lookup_field_name="search" lookup_field_target="note_cc[]" callbacks="new Array('showSelections(\'post_note_form\', \'note_cc[]\')')"}
+             <div class="default" id="selection_note_cc[]"></div>
+           </td>
+
