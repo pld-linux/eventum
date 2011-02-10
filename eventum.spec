@@ -10,7 +10,7 @@
 %bcond_without	order	# with experimental order patch
 
 %define		php_min_version 5.1.2
-%define		subver	4214
+%define		subver	4282
 %define		rel		5
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
@@ -22,7 +22,7 @@ License:	GPL
 Group:		Applications/WWW
 #Source0:	http://launchpad.net/eventum/trunk/%{version}/+download/%{name}-%{version}.tar.gz
 Source0:	%{name}-%{version}-dev-r%{subver}.tar.gz
-# Source0-md5:	4979a4ecbac8d94462533cc587880547
+# Source0-md5:	f8b223aac11dbf3de54eb3c82c9f88d4
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -39,6 +39,7 @@ Source16:	http://www.isocra.com/images/updown2.gif
 # Source16-md5:	deb6eeb2552ba757d3a949ed10c4107d
 Patch0:		%{name}-lf.patch
 Patch2:		%{name}-order.patch
+Patch3:		group-users.patch
 # packaging patches that probably never go upstream
 Patch100:	%{name}-paths.patch
 Patch101:	%{name}-cvs-config.patch
@@ -54,6 +55,7 @@ BuildRequires:	sed >= 4.0
 Requires:	%{name}-base = %{version}-%{release}
 Requires:	Smarty >= 2.6.10-4
 Requires:	php-common >= 4:%{php_min_version}
+Requires:	php-filter
 Requires:	php-gd
 Requires:	php-iconv
 Requires:	php-imap
@@ -446,6 +448,7 @@ rm -r upgrade/{*/,}index.html # not needed in PLD Linux
 # bug fixes / features
 %patch0 -p1
 %{?with_order:%patch2 -p1}
+%patch3 -p0
 
 cp -a %{SOURCE16} htdocs/images
 
