@@ -17,7 +17,8 @@ Summary:	Eventum Issue / Bug tracking system
 Summary(pl.UTF-8):	Eventum - system śledzenia spraw/błędów
 Name:		eventum
 Version:	2.3.1
-Release:	%{rel}.bzr%{subver}
+#Release:	%{rel}.bzr%{subver}
+Release:	%{rel}
 License:	GPL
 Group:		Applications/WWW
 Source0:	http://launchpad.net/eventum/trunk/%{version}/+download/%{name}-%{version}.tar.gz
