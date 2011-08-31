@@ -10,20 +10,20 @@
 %bcond_without	order	# with experimental order patch
 
 %define		php_min_version 5.1.2
-%define		subver	4282
+%define		subver	4371
 %define		rel		1
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl.UTF-8):	Eventum - system śledzenia spraw/błędów
 Name:		eventum
 Version:	2.3.1
-#Release:	%{rel}.bzr%{subver}
-Release:	%{rel}
+#Release:	%{rel}
+Release:	%{rel}.bzr%{subver}
 License:	GPL
 Group:		Applications/WWW
-Source0:	http://launchpad.net/eventum/trunk/%{version}/+download/%{name}-%{version}.tar.gz
-# Source0-md5:	7eb5055260fcf096bc48b0e6c4758e3b
-#Source0:	%{name}-%{version}-dev-r%{subver}.tar.gz
+#Source0:	http://launchpad.net/eventum/trunk/%{version}/+download/%{name}-%{version}.tar.gz
+Source0:	%{name}-%{version}-dev-r%{subver}.tar.gz
+# Source0-md5:	2462dc71b438a4fc4fd1369c69f8fba1
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -451,7 +451,7 @@ rm -r upgrade/{*/,}index.html # not needed in PLD Linux
 %{?with_order:%patch2 -p1}
 %patch3 -p0
 
-cp -a %{SOURCE16} htdocs/images
+cp -p %{SOURCE16} htdocs/images
 
 #%patch200 -p1
 
@@ -488,24 +488,26 @@ install -d \
 %{?with_order:cp -a htdocs/ajax $RPM_BUILD_ROOT%{_appdir}/htdocs}
 
 touch $RPM_BUILD_ROOT%{_webappdir}/htpasswd
-cp -a %{SOURCE1} $RPM_BUILD_ROOT%{_webappdir}/apache.conf
-cp -a %{SOURCE1} $RPM_BUILD_ROOT%{_webappdir}/httpd.conf
-cp -a %{SOURCE15} $RPM_BUILD_ROOT%{_webappdir}/lighttpd.conf
+cp -p %{SOURCE1} $RPM_BUILD_ROOT%{_webappdir}/apache.conf
+cp -p %{SOURCE1} $RPM_BUILD_ROOT%{_webappdir}/httpd.conf
+cp -p %{SOURCE15} $RPM_BUILD_ROOT%{_webappdir}/lighttpd.conf
 
-cp -a %{SOURCE2} $RPM_BUILD_ROOT/etc/cron.d/%{name}-mail-queue
-cp -a %{SOURCE3} $RPM_BUILD_ROOT/etc/cron.d/%{name}-mail-download
-cp -a %{SOURCE4} $RPM_BUILD_ROOT/etc/cron.d/%{name}-reminder
-cp -a %{SOURCE5} $RPM_BUILD_ROOT/etc/cron.d/%{name}-monitor
+cp -p %{SOURCE2} $RPM_BUILD_ROOT/etc/cron.d/%{name}-mail-queue
+cp -p %{SOURCE3} $RPM_BUILD_ROOT/etc/cron.d/%{name}-mail-download
+cp -p %{SOURCE4} $RPM_BUILD_ROOT/etc/cron.d/%{name}-reminder
+cp -p %{SOURCE5} $RPM_BUILD_ROOT/etc/cron.d/%{name}-monitor
 
-cp -a %{SOURCE7} $RPM_BUILD_ROOT%{_webappdir}/irc_config.php
+cp -p %{SOURCE7} $RPM_BUILD_ROOT%{_webappdir}/irc_config.php
 
 install -p %{SOURCE8} $RPM_BUILD_ROOT/etc/rc.d/init.d/eventum-irc
-cp -a %{SOURCE9} $RPM_BUILD_ROOT/etc/sysconfig/eventum-irc
+cp -p %{SOURCE9} $RPM_BUILD_ROOT/etc/sysconfig/eventum-irc
 
-cp -a %{SOURCE14} $RPM_BUILD_ROOT/etc/logrotate.d/%{name}
+cp -p %{SOURCE14} $RPM_BUILD_ROOT/etc/logrotate.d/%{name}
 
 # postfix router
 install %{SOURCE13} $RPM_BUILD_ROOT%{_libdir}/router-postfix
+
+%{__rm} $RPM_BUILD_ROOT%{_datadir}/locale/ht
 
 %find_lang %{name}
 
