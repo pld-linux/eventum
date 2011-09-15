@@ -10,7 +10,7 @@
 %bcond_without	order	# with experimental order patch
 
 %define		php_min_version 5.1.2
-%define		subver	4409
+%define		subver	4413
 %define		rel		2.1
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
@@ -23,7 +23,7 @@ License:	GPL
 Group:		Applications/WWW
 #Source0:	http://launchpad.net/eventum/trunk/%{version}/+download/%{name}-%{version}.tar.gz
 Source0:	%{name}-%{version}-dev-r%{subver}.tar.gz
-# Source0-md5:	f0748322e09459428a853996d8547918
+# Source0-md5:	d5b7d65199ebf8b1432f3429532efd07
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -60,6 +60,7 @@ Requires:	php-filter
 Requires:	php-gd
 Requires:	php-iconv
 Requires:	php-imap
+Requires:	php-json
 Requires:	php-mbstring
 Requires:	php-mysql
 Requires:	php-pcre
@@ -92,7 +93,7 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define		_noautopear	pear(../init.php) pear(init.php) pear(/etc/webapps/.*) pear(%{_appdir}/.*) pear(jpgraph_dir.php) pear(.*Smarty.class.php) pear(Services/JSON.php) pear(class.date_helper.php)
 
 # exclude optional php dependencies
-%define		_noautophp	php-gnupg php-hash php-pecl-http php-json php-tk
+%define		_noautophp	php-gnupg php-hash php-pecl-http php-tk
 
 %define		_noautoreq	%{_noautophp} %{_noautopear}
 
