@@ -70,13 +70,12 @@
 +        }
 +    }
 +}
---- eventum-2.2/htdocs/css/style.css~	2009-10-12 22:27:13.000000000 +0300
-+++ eventum-2.2/htdocs/css/style.css	2009-10-12 22:28:31.402712101 +0300
-@@ -176,3 +176,22 @@
- .custom_field {
+--- eventum-2.3.1/htdocs/css/style.css~	2011-09-15 09:36:55.000000000 +0300
++++ eventum-2.3.1/htdocs/css/style.css	2011-09-15 09:38:23.668223576 +0300
+@@ -177,6 +177,24 @@
      cursor: pointer;
  }
-+
+ 
 +.tDnD_whileDrag td {
 +    background-color: #ffffdd;
 +}
@@ -94,6 +93,16 @@
 +	background-image: url(../images/updown2.gif);
 +    background-repeat: no-repeat;
 +    background-position: center center;
++}
+ 
+ ul.excerpts {
+     list-style: none;
+@@ -187,4 +205,4 @@
+ ul.excerpts ul {
+     list-style-type: none;
+     padding-left: 1em;
+-}
+\ No newline at end of file
 +}
 --- eventum-2.2/htdocs/js/jquery/jquery.tablednd.js	1970-01-01 02:00:00.000000000 +0200
 +++ eventum-2.2-order/htdocs/js/jquery/jquery.tablednd.js	2009-10-12 22:10:36.435851675 +0300
@@ -534,23 +543,23 @@
              )
          );
          return $columns[$page];
---- eventum-2.2/lib/eventum/class.issue.php	2009-09-14 18:07:55.000000000 +0300
-+++ eventum-2.2-order/lib/eventum/class.issue.php	2009-10-12 22:10:36.445851670 +0300
-@@ -1333,6 +1333,7 @@
-             Error_Handler::logError(array($res->getMessage(), $res->getDebugInfo()), __FILE__, __LINE__);
+--- eventum-2.3.1/lib/eventum/class.issue.php~	2011-09-15 09:36:55.000000000 +0300
++++ eventum-2.3.1/lib/eventum/class.issue.php	2011-09-15 09:42:02.844032474 +0300
+@@ -1374,6 +1374,7 @@
              return -1;
-         } else {
-+            self::moveOrderForAllUsers($issue_id, 1000);
-             $prj_id = self::getProjectID($issue_id);
+         }
  
-             // record the change
++        self::moveOrderForAllUsers($issue_id, 1000);
+         $prj_id = self::getProjectID($issue_id);
+ 
+         // record the change
 @@ -1800,16 +1801,33 @@
      {
          $issue_id = Misc::escapeInteger($issue_id);
          $assignee_usr_id = Misc::escapeInteger($assignee_usr_id);
 +        $order = 1;
 +        // move all orders down to free "order space" for this new association
-+        $stmt = "UPDATE 
++        $stmt = "UPDATE
 +                    " . APP_DEFAULT_DB . "." . APP_TABLE_PREFIX . "issue_user
 +                 SET
 +                    isu_order = isu_order + 1
@@ -675,14 +684,14 @@
          $stmt = "DELETE FROM
                      " . APP_DEFAULT_DB . "." . APP_TABLE_PREFIX . "issue_user
                   WHERE
-@@ -1883,6 +1975,7 @@
-                 History::add($issue_id, Auth::getUserID(), History::getTypeID('user_unassociated'),
-                     User::getFullName($usr_id) . ' removed from issue by ' . User::getFullName(Auth::getUserID()));
-             }
-+            self::rearrangeDeleteUserAssociationOrderList($delete_order_list);
-             return 1;
+@@ -2020,6 +2021,7 @@
+             History::add($issue_id, Auth::getUserID(), History::getTypeID('user_unassociated'),
+                 User::getFullName($usr_id) . ' removed from issue by ' . User::getFullName(Auth::getUserID()));
          }
++        self::rearrangeDeleteUserAssociationOrderList($delete_order_list);
+         return 1;
      }
+ 
 @@ -3253,6 +3352,8 @@
          $ids = implode(", ", $ids);
          $stmt = "SELECT
@@ -871,16 +880,16 @@
          );
  
          foreach ($custom_fields as $fld_id => $fld_name) {
---- eventum-2.3/templates/header.tpl.html~	2010-09-27 18:12:42.000000000 +0300
-+++ eventum-2.3/templates/header.tpl.html	2010-09-27 18:13:08.884494665 +0300
+--- eventum-2.3.1/templates/header.tpl.html~	2011-09-15 09:36:55.000000000 +0300
++++ eventum-2.3.1/templates/header.tpl.html	2011-09-15 09:43:49.318473817 +0300
 @@ -18,6 +18,7 @@
  <script type="text/javascript" src="{$rel_url}js/jquery/form.js?c=9984"></script>
  <script type="text/javascript" src="{$rel_url}js/jquery/blockui.js?c=eb13"></script>
  <script type="text/javascript" src="{$rel_url}js/jquery/ui.datepicker.js?c=a911"></script>
 +<script type="text/javascript" src="{$rel_url}js/jquery/jquery.tablednd.js"></script>
- <script type="text/javascript" src="{$rel_url}js/validation.js?c=9775"></script>
+ <script type="text/javascript" src="{$rel_url}js/validation.js?c=ad33"></script>
  <script type="text/javascript" src="{$rel_url}js/browserSniffer.js?c=c046"></script>
- <script type="text/javascript" src="{$rel_url}js/global.js?c=5297"></script>
+ <script type="text/javascript" src="{$rel_url}js/global.js?c=50d6"></script>
 --- eventum-2.2/templates/list.tpl.html	2009-09-14 18:07:55.000000000 +0300
 +++ eventum-2.2-order/templates/list.tpl.html	2009-10-12 22:10:36.439185157 +0300
 @@ -92,6 +92,28 @@

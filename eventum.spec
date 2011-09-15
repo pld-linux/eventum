@@ -10,8 +10,8 @@
 %bcond_without	order	# with experimental order patch
 
 %define		php_min_version 5.1.2
-%define		subver	4371
-%define		rel		1
+%define		subver	4409
+%define		rel		2.1
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl.UTF-8):	Eventum - system śledzenia spraw/błędów
@@ -23,7 +23,7 @@ License:	GPL
 Group:		Applications/WWW
 #Source0:	http://launchpad.net/eventum/trunk/%{version}/+download/%{name}-%{version}.tar.gz
 Source0:	%{name}-%{version}-dev-r%{subver}.tar.gz
-# Source0-md5:	2462dc71b438a4fc4fd1369c69f8fba1
+# Source0-md5:	f0748322e09459428a853996d8547918
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -491,6 +491,7 @@ touch $RPM_BUILD_ROOT%{_webappdir}/htpasswd
 cp -p %{SOURCE1} $RPM_BUILD_ROOT%{_webappdir}/apache.conf
 cp -p %{SOURCE1} $RPM_BUILD_ROOT%{_webappdir}/httpd.conf
 cp -p %{SOURCE15} $RPM_BUILD_ROOT%{_webappdir}/lighttpd.conf
+cp -p config/sphinx.conf.php $RPM_BUILD_ROOT%{_webappdir}
 
 cp -p %{SOURCE2} $RPM_BUILD_ROOT/etc/cron.d/%{name}-mail-queue
 cp -p %{SOURCE3} $RPM_BUILD_ROOT/etc/cron.d/%{name}-mail-download
@@ -505,14 +506,14 @@ cp -p %{SOURCE9} $RPM_BUILD_ROOT/etc/sysconfig/eventum-irc
 cp -p %{SOURCE14} $RPM_BUILD_ROOT/etc/logrotate.d/%{name}
 
 # postfix router
-install %{SOURCE13} $RPM_BUILD_ROOT%{_libdir}/router-postfix
+install -p %{SOURCE13} $RPM_BUILD_ROOT%{_libdir}/router-postfix
 
-%{__rm} $RPM_BUILD_ROOT%{_datadir}/locale/ht
+%{__rm} -r $RPM_BUILD_ROOT%{_datadir}/locale/ht
 
 %find_lang %{name}
 
 # scm
-install %{SOURCE6} $RPM_BUILD_ROOT%{_sysconfdir}/scm.php
+install -p %{SOURCE6} $RPM_BUILD_ROOT%{_sysconfdir}/scm.php
 
 # old compat
 ln -s %{_sbindir}/eventum-cvs-hook $RPM_BUILD_ROOT%{_libdir}/process_cvs_commits
@@ -632,6 +633,7 @@ done
 %attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/private_key.php
 %attr(660,root,http) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/setup.php
 %attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/htpasswd
+%{_webappdir}/sphinx.conf.php
 
 %dir %attr(731,root,http) /var/log/%{name}
 %attr(620,root,http) %ghost /var/log/%{name}/*

@@ -32,7 +32,7 @@
  
  // include local site config. may override any default
  require_once APP_CONFIG_PATH . '/config.php';
-@@ -61,19 +61,15 @@
+@@ -64,23 +64,15 @@
  }
  
  if (!defined('APP_TPL_COMPILE_PATH')) {
@@ -46,6 +46,10 @@
  
 -if (!defined('APP_PEAR_PATH')) {
 -    define('APP_PEAR_PATH', APP_PATH . '/lib/pear');
+-}
+-
+-if (!defined('APP_SPHINXAPI_PATH')) {
+-    define('APP_SPHINXAPI_PATH', APP_PATH . '/lib/sphinxapi');
 -}
 -
  if (!defined('APP_SMARTY_PATH')) {
@@ -151,3 +155,12 @@
          'check_permission' => true,
          'permission'       => 660,
          'check_filesize'   => true,
+--- eventum-2.3.1/config/sphinx.conf.php~	2011-09-15 09:35:00.000000000 +0300
++++ eventum-2.3.1/config/sphinx.conf.php	2011-09-15 10:05:10.051918895 +0300
+@@ -1,5 +1,5 @@
+ <?php
+-require_once dirname(__FILE__) . "/../init.php";
++require_once '/usr/share/eventum/init.php';
+ 
+ if (!defined('SPHINX_LOG_PATH')) {
+     define('SPHINX_LOG_PATH', '/var/log/sphinx/');
