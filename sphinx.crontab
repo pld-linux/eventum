@@ -1,0 +1,9 @@
+MAILTO=root
+
+# Run nightly.
+12   03  *  *  * sphinx indexer --config /etc/sphinx/eventum.conf --all --rotate --quiet
+
+# Run every 5m.
+*/5   *  *  *  * sphinx indexer --config /etc/sphinx/eventum.conf {issue,email,note,phonesupport}_recent{,_stemmed} --rotate --quiet
+
+# vim:ts=3:sw=3:et

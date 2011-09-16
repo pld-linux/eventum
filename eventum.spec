@@ -10,8 +10,8 @@
 %bcond_without	order	# with experimental order patch
 
 %define		php_min_version 5.1.2
-%define		subver	4413
-%define		rel		2.1
+%define		subver	4428
+%define		rel		2.2
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl.UTF-8):	Eventum - system śledzenia spraw/błędów
@@ -23,7 +23,7 @@ License:	GPL
 Group:		Applications/WWW
 #Source0:	http://launchpad.net/eventum/trunk/%{version}/+download/%{name}-%{version}.tar.gz
 Source0:	%{name}-%{version}-dev-r%{subver}.tar.gz
-# Source0-md5:	d5b7d65199ebf8b1432f3429532efd07
+# Source0-md5:	cfcf44e6aa430ce524c306b607bb60c2
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -33,6 +33,7 @@ Source6:	%{name}-cvs.php
 Source7:	%{name}-irc.php
 Source8:	%{name}-irc.init
 Source9:	%{name}-irc.sysconfig
+Source10:	sphinx.crontab
 Source13:	%{name}-router-postfix.sh
 Source14:	%{name}.logrotate
 Source15:	%{name}-lighttpd.conf
@@ -90,7 +91,7 @@ Conflicts:	logrotate < 3.7-4
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
-%define		_noautopear	pear(../init.php) pear(init.php) pear(/etc/webapps/.*) pear(%{_appdir}/.*) pear(jpgraph_dir.php) pear(.*Smarty.class.php) pear(Services/JSON.php) pear(class.date_helper.php)
+%define		_noautopear	pear(../init.php) pear(init.php) pear(/usr/share/eventum/init.php) pear(/etc/webapps/.*) pear(%{_appdir}/.*) pear(jpgraph_dir.php) pear(.*Smarty.class.php) pear(Services/JSON.php) pear(class.date_helper.php)
 
 # exclude optional php dependencies
 %define		_noautophp	php-gnupg php-hash php-pecl-http php-tk
@@ -231,7 +232,7 @@ Summary(pl.UTF-8):	Monitor życia dla Eventum
 Group:		Applications/WWW
 Requires:	%{name} = %{version}-%{release}
 Requires:	crondaemon
-Requires:	php(posix)
+Requires:	php-posix
 
 %description monitor
 The heartbeat monitor is a feature designed for the administrator that
@@ -361,7 +362,7 @@ Summary(pl.UTF-8):	IRC-owy bot powiadamiający dla Eventum
 Group:		Applications/WWW
 Requires(post,preun):	/sbin/chkconfig
 Requires:	%{name} = %{version}-%{release}
-Requires:	php(sockets)
+Requires:	php-sockets
 Requires:	php-pear-Net_SmartIRC
 Requires:	rc-scripts >= 0.4.0.18
 
@@ -436,6 +437,18 @@ prawie każdym systemem SCM, jak np. CVS.
 Szczegóły na temat instalacji można przeczytać pod
 </eventum/help.php?topic=scm_integration_installation>.
 
+%package sphinx
+Summary:	Eventum Sphinx Search
+Group:		Applications/WWW
+Requires:	%{name} = %{version}-%{release}
+Requires:	crondaemon
+Requires:	sphinx
+
+%description sphinx
+Sphinx search integration for Eventum.
+
+This package contains the cron job.
+
 %prep
 %setup -q
 
@@ -455,6 +468,21 @@ rm -r upgrade/{*/,}index.html # not needed in PLD Linux
 cp -p %{SOURCE16} htdocs/images
 
 #%patch200 -p1
+
+# produce default sphinx config
+# must be run before paths.patch
+cat <<'EOF' > config/config.php
+<?php
+define('APP_SQL_DBTYPE', 'mysql');
+define('APP_SQL_DBHOST', 'localhost:/var/lib/mysql/mysql.sock');
+define('APP_SQL_DBPORT', 3306);
+define('APP_SQL_DBNAME', 'eventum');
+define('APP_SQL_DBUSER', 'mysql');
+define('APP_SQL_DBPASS', '');
+define('APP_TABLE_PREFIX', 'eventum_');
+EOF
+php config/sphinx.conf.php > config/sphinx.conf
+rm -f config/config.php
 
 # packaging
 %patch100 -p1
@@ -492,12 +520,16 @@ touch $RPM_BUILD_ROOT%{_webappdir}/htpasswd
 cp -p %{SOURCE1} $RPM_BUILD_ROOT%{_webappdir}/apache.conf
 cp -p %{SOURCE1} $RPM_BUILD_ROOT%{_webappdir}/httpd.conf
 cp -p %{SOURCE15} $RPM_BUILD_ROOT%{_webappdir}/lighttpd.conf
+
+install -d $RPM_BUILD_ROOT/etc/sphinx
+cp -p config/sphinx.conf $RPM_BUILD_ROOT/etc/sphinx/%{name}.conf
 cp -p config/sphinx.conf.php $RPM_BUILD_ROOT%{_webappdir}
 
 cp -p %{SOURCE2} $RPM_BUILD_ROOT/etc/cron.d/%{name}-mail-queue
 cp -p %{SOURCE3} $RPM_BUILD_ROOT/etc/cron.d/%{name}-mail-download
 cp -p %{SOURCE4} $RPM_BUILD_ROOT/etc/cron.d/%{name}-reminder
 cp -p %{SOURCE5} $RPM_BUILD_ROOT/etc/cron.d/%{name}-monitor
+cp -p %{SOURCE10} $RPM_BUILD_ROOT/etc/cron.d/%{name}-sphinx
 
 cp -p %{SOURCE7} $RPM_BUILD_ROOT%{_webappdir}/irc_config.php
 
@@ -634,7 +666,6 @@ done
 %attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/private_key.php
 %attr(660,root,http) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/setup.php
 %attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/htpasswd
-%{_webappdir}/sphinx.conf.php
 
 %dir %attr(731,root,http) /var/log/%{name}
 %attr(620,root,http) %ghost /var/log/%{name}/*
@@ -746,3 +777,9 @@ done
 %attr(755,root,root) %{_libdir}/process_svn_commits
 %attr(755,root,root) %{_sbindir}/eventum-cvs-hook
 %attr(755,root,root) %{_sbindir}/eventum-svn-hook
+
+%files sphinx
+%defattr(644,root,root,755)
+%{_webappdir}/sphinx.conf.php
+%attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) /etc/sphinx/%{name}.conf
+%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/cron.d/%{name}-sphinx
