@@ -39,6 +39,7 @@ Source14:	%{name}.logrotate
 Source15:	%{name}-lighttpd.conf
 Source16:	http://www.isocra.com/images/updown2.gif
 # Source16-md5:	deb6eeb2552ba757d3a949ed10c4107d
+Source17:	%{name}.tmpfiles
 Patch0:		%{name}-lf.patch
 Patch2:		%{name}-order.patch
 Patch3:		group-users.patch
@@ -509,6 +510,7 @@ install -d \
 	$RPM_BUILD_ROOT/var/log/{archive/,}%{name} \
 	$RPM_BUILD_ROOT/var/lib/%{name}/routed_{emails,drafts,notes} \
 	$RPM_BUILD_ROOT%{_appdir}/{include,htdocs/misc,upgrade} \
+	$RPM_BUILD_ROOT/usr/lib/tmpfiles.d
 
 %{__make} install-eventum install-cli install-irc install-scm install-jpgraph install-localization \
 	sysconfdir=%{_webappdir} \
@@ -540,6 +542,8 @@ cp -p %{SOURCE14} $RPM_BUILD_ROOT/etc/logrotate.d/%{name}
 
 # postfix router
 install -p %{SOURCE13} $RPM_BUILD_ROOT%{_libdir}/router-postfix
+
+install %{SOURCE17} $RPM_BUILD_ROOT/usr/lib/tmpfiles.d/%{name}.conf
 
 %{__rm} -r $RPM_BUILD_ROOT%{_datadir}/locale/ht
 
@@ -701,7 +705,7 @@ done
 %{_appdir}/lib/eventum
 %{_appdir}/lib/jpgraph
 %exclude %{_appdir}/lib/eventum/class.monitor.php
-
+/usr/lib/tmpfiles.d/%{name}.conf
 %dir %attr(730,root,http) /var/run/%{name}
 %dir %attr(730,root,http) /var/cache/%{name}
 
