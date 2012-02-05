@@ -1,6 +1,7 @@
 /var/log/eventum/errors.log
 /var/log/eventum/irc_bot.log
 {
+	su root http
 	monthly
 	notifempty
 	rotate 52
