@@ -490,8 +490,8 @@
 +	}
 +);
 \ No newline at end of file
---- eventum-2.3.1/htdocs/list.php~	2011-04-20 17:37:25.000000000 +0300
-+++ eventum-2.3.1/htdocs/list.php	2011-04-20 17:40:51.675898467 +0300
+--- eventum-2.3.2/htdocs/list.php~	2012-03-09 18:19:56.000000000 +0200
++++ eventum-2.3.2/htdocs/list.php	2012-03-09 18:32:43.998284397 +0200
 @@ -67,6 +67,11 @@
      }
  }
@@ -501,9 +501,9 @@
 +@$reorder_neworder = $_REQUEST["reorder_neworder"];
 +Issue::reorderUserIssues($reorder_usr_id, $reorder_issue_id, $reorder_neworder);
 +
- $options = Search::saveSearchParams();
- $tpl->assign("options", $options);
- $tpl->assign("sorting", Search::getSortingInfo($options));
+ if (!empty($_REQUEST['nosave'])) {
+ 	$options = Search::saveSearchParams(false);
+ } else {
 @@ -92,6 +97,24 @@
  }
  $assign_options += $users;

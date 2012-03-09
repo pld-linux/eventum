@@ -10,8 +10,8 @@
 %bcond_without	order	# with experimental order patch
 
 %define		php_min_version 5.1.2
-%define		subver	4434
-%define		rel		2.3
+%define		subver	4470
+%define		rel		2.4
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl.UTF-8):	Eventum - system śledzenia spraw/błędów
@@ -23,7 +23,7 @@ License:	GPL
 Group:		Applications/WWW
 #Source0:	http://launchpad.net/eventum/trunk/%{version}/+download/%{name}-%{version}.tar.gz
 Source0:	%{name}-%{version}-dev-r%{subver}.tar.gz
-# Source0-md5:	356e710384618aea1e6f3426a41dbc23
+# Source0-md5:	41cdf607a180c5c94abc487a122893ea
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron

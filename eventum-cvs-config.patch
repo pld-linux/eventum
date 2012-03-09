@@ -1,7 +1,7 @@
---- eventum-2.2/scm/eventum-cvs-hook~	2009-11-05 17:05:43.000000000 +0200
-+++ eventum-2.2/scm/eventum-cvs-hook	2009-11-05 17:06:26.898467237 +0200
-@@ -27,14 +27,7 @@
- // | Authors: João Prado Maia <jpm@mysql.com>                             |
+--- eventum-2.3.2/scm/eventum-cvs-hook~	2012-02-09 11:27:05.000000000 +0200
++++ eventum-2.3.2/scm/eventum-cvs-hook	2012-02-09 11:29:22.671597765 +0200
+@@ -28,13 +28,7 @@
+ // |          Elan Ruusamäe <glen@delfi.ee>                               |
  // +----------------------------------------------------------------------+
  
 -// URL to your Eventum installation.
@@ -11,10 +11,9 @@
 -//
 -// DO NOT CHANGE ANYTHING AFTER THIS LINE
 -//
--
 +require_once '/etc/eventum/scm.php';
  
- // remove the first element which is the name of this script
+ // save name of this script
  $PROGRAM = basename(array_shift($argv));
 --- eventum-2.2/scm/eventum-svn-hook~	2009-11-10 13:31:10.000000000 +0200
 +++ eventum-2.2/scm/eventum-svn-hook	2009-11-10 13:31:37.571582772 +0200
