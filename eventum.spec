@@ -10,20 +10,22 @@
 %bcond_without	order	# with experimental order patch
 
 %define		php_min_version 5.1.2
-%define		subver	4470
-%define		rel		2.4
+%define		subver	RC3
+%define		rel		1
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl.UTF-8):	Eventum - system śledzenia spraw/błędów
 Name:		eventum
-Version:	2.3.1
-#Release:	%{rel}
-Release:	%{rel}.bzr%{subver}
+Version:	2.3.3
+Release:	%{rel}
+#Release:	%{rel}.bzr%{subver}
 License:	GPL
 Group:		Applications/WWW
 #Source0:	http://launchpad.net/eventum/trunk/%{version}/+download/%{name}-%{version}.tar.gz
-Source0:	%{name}-%{version}-dev-r%{subver}.tar.gz
-# Source0-md5:	41cdf607a180c5c94abc487a122893ea
+Source0:	https://launchpad.net/eventum/trunk/%{version}/+download/%{name}-%{version}RC3.tar.gz
+# Source0-md5:	e1a5097d191468061865065678665f0e
+#Source0:	%{name}-%{version}-dev-r%{subver}.tar.gz
+#Source0:	%{name}-%{version}%{subver}.tar.gz
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -88,11 +90,12 @@ Requires:	webserver(alias)
 Requires:	webserver(indexfile)
 Requires:	webserver(php) >= 4.2.0
 Suggests:	localedb
+Suggests:	php-pear-Net_LDAP2
 Conflicts:	logrotate < 3.8.0
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
-%define		_noautopear	pear(../init.php) pear(init.php) pear(/usr/share/eventum/init.php) pear(/etc/webapps/.*) pear(%{_appdir}/.*) pear(jpgraph_dir.php) pear(.*Smarty.class.php) pear(Services/JSON.php) pear(class.date_helper.php) pear(sphinxapi.php)
+%define		_noautopear	pear(../init.php) pear(init.php) pear(/usr/share/eventum/init.php) pear(/etc/webapps/.*) pear(%{_appdir}/.*) pear(jpgraph_dir.php) pear(.*Smarty.class.php) pear(Services/JSON.php) pear(class.date_helper.php) pear(sphinxapi.php) pear(Net/LDAP2.php)
 
 # exclude optional php dependencies
 %define		_noautophp	php-gnupg php-hash php-pecl-http php-tk
@@ -363,8 +366,8 @@ Summary(pl.UTF-8):	IRC-owy bot powiadamiający dla Eventum
 Group:		Applications/WWW
 Requires(post,preun):	/sbin/chkconfig
 Requires:	%{name} = %{version}-%{release}
-Requires:	php-sockets
 Requires:	php-pear-Net_SmartIRC
+Requires:	php-sockets
 Requires:	rc-scripts >= 0.4.0.18
 
 %description irc
@@ -510,7 +513,7 @@ install -d \
 	$RPM_BUILD_ROOT/var/log/{archive/,}%{name} \
 	$RPM_BUILD_ROOT/var/lib/%{name}/routed_{emails,drafts,notes} \
 	$RPM_BUILD_ROOT%{_appdir}/{include,htdocs/misc,upgrade} \
-	$RPM_BUILD_ROOT/usr/lib/tmpfiles.d
+	$RPM_BUILD_ROOT%{systemdtmpfilesdir}
 
 %{__make} install-eventum install-cli install-irc install-scm install-jpgraph install-localization \
 	sysconfdir=%{_webappdir} \
@@ -543,9 +546,9 @@ cp -p %{SOURCE14} $RPM_BUILD_ROOT/etc/logrotate.d/%{name}
 # postfix router
 install -p %{SOURCE13} $RPM_BUILD_ROOT%{_libdir}/router-postfix
 
-install %{SOURCE17} $RPM_BUILD_ROOT/usr/lib/tmpfiles.d/%{name}.conf
+install %{SOURCE17} $RPM_BUILD_ROOT%{systemdtmpfilesdir}/%{name}.conf
 
-%{__rm} -r $RPM_BUILD_ROOT%{_datadir}/locale/ht
+%{__rm} -r $RPM_BUILD_ROOT%{_localedir}/ht
 
 %find_lang %{name}
 
@@ -697,6 +700,7 @@ done
 %dir %{_appdir}/upgrade
 %{_appdir}/upgrade/init.php
 %attr(755,root,root) %{_appdir}/upgrade/update-database.php
+%attr(755,root,root) %{_appdir}/upgrade/ldap_import.php
 %dir %{_appdir}/upgrade/v*
 %attr(755,root,root) %{_appdir}/upgrade/v*/*.php
 %{_appdir}/upgrade/patches
@@ -705,7 +709,7 @@ done
 %{_appdir}/lib/eventum
 %{_appdir}/lib/jpgraph
 %exclude %{_appdir}/lib/eventum/class.monitor.php
-/usr/lib/tmpfiles.d/%{name}.conf
+%{systemdtmpfilesdir}/%{name}.conf
 %dir %attr(730,root,http) /var/run/%{name}
 %dir %attr(730,root,http) /var/cache/%{name}
 

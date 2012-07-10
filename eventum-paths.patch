@@ -155,10 +155,12 @@
          'check_permission' => true,
          'permission'       => 660,
          'check_filesize'   => true,
---- eventum-2.3.1/config/sphinx.conf.php~	2011-09-15 09:35:00.000000000 +0300
-+++ eventum-2.3.1/config/sphinx.conf.php	2011-09-15 10:05:10.051918895 +0300
-@@ -1,5 +1,5 @@
- <?php
+--- eventum-2.3.3/config/sphinx.conf.php~	2012-06-27 14:59:39.000000000 +0300
++++ eventum-2.3.3/config/sphinx.conf.php	2012-06-27 15:04:52.928810689 +0300
+@@ -26,7 +26,7 @@
+ // | Authors: Bryan Alsdorf <bryan@mysql.com>                             |
+ // | Authors: Elan Ruusamäe <glen@delfi.ee>                               |
+ // +----------------------------------------------------------------------+
 -require_once dirname(__FILE__) . "/../init.php";
 +require_once '/usr/share/eventum/init.php';
  
