@@ -10,7 +10,7 @@
 %bcond_without	order	# with experimental order patch
 
 %define		php_min_version 5.1.2
-%define		subver	RC3
+#define		subver	RC3
 %define		rel		1
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
@@ -21,8 +21,7 @@ Release:	%{rel}
 #Release:	%{rel}.bzr%{subver}
 License:	GPL
 Group:		Applications/WWW
-#Source0:	http://launchpad.net/eventum/trunk/%{version}/+download/%{name}-%{version}.tar.gz
-Source0:	https://launchpad.net/eventum/trunk/%{version}/+download/%{name}-%{version}RC3.tar.gz
+Source0:	http://launchpad.net/eventum/trunk/%{version}/+download/%{name}-%{version}.tar.gz
 # Source0-md5:	e1a5097d191468061865065678665f0e
 #Source0:	%{name}-%{version}-dev-r%{subver}.tar.gz
 #Source0:	%{name}-%{version}%{subver}.tar.gz
