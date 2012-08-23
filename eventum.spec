@@ -11,7 +11,7 @@
 
 %define		php_min_version 5.1.2
 #define		subver	RC3
-%define		rel		1
+%define		rel		2
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl.UTF-8):	Eventum - system śledzenia spraw/błędów
@@ -58,7 +58,7 @@ BuildRequires:	rpmbuild(macros) >= 1.461
 BuildRequires:	sed >= 4.0
 Requires:	%{name}-base = %{version}-%{release}
 Requires:	Smarty >= 2.6.10-4
-Requires:	php-common >= 4:%{php_min_version}
+Requires:	php(core) >= %{php_min_version}
 Requires:	php-filter
 Requires:	php-gd
 Requires:	php-iconv
@@ -398,8 +398,8 @@ Summary:	Eventum command-line interface
 Summary(pl.UTF-8):	Interfejs linii poleceń dla Eventum
 Group:		Applications/WWW
 Requires:	%{name}-base = %{version}-%{release}
+Requires:	php(core) >= %{php_min_version}
 Requires:	php-cli
-Requires:	php-common >= 4:%{php_min_version}
 Requires:	php-pear-XML_RPC
 
 %description cli
@@ -415,8 +415,8 @@ Summary:	Eventum SCM integration
 Summary(pl.UTF-8):	Integracja SCM dla Eventum
 Group:		Applications/WWW
 Requires:	%{name}-base = %{version}-%{release}
+Requires:	php(core) >= %{php_min_version}
 Requires:	php-cli
-Requires:	php-common >= 4:%{php_min_version}
 Requires:	php-pcre
 
 %description scm
