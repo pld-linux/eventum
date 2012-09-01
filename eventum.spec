@@ -10,20 +10,20 @@
 %bcond_without	order	# with experimental order patch
 
 %define		php_min_version 5.1.2
-#define		subver	RC3
-%define		rel		2
+%define		subver	4549
+%define		rel		2.3
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl.UTF-8):	Eventum - system śledzenia spraw/błędów
 Name:		eventum
 Version:	2.3.3
-Release:	%{rel}
-#Release:	%{rel}.bzr%{subver}
+#Release:	%{rel}
+Release:	%{rel}.bzr%{subver}
 License:	GPL
 Group:		Applications/WWW
-Source0:	http://launchpad.net/eventum/trunk/%{version}/+download/%{name}-%{version}.tar.gz
-# Source0-md5:	e1a5097d191468061865065678665f0e
-#Source0:	%{name}-%{version}-dev-r%{subver}.tar.gz
+#Source0:	http://launchpad.net/eventum/trunk/%{version}/+download/%{name}-%{version}.tar.gz
+Source0:	%{name}-%{version}-dev-r%{subver}.tar.gz
+# Source0-md5:	342032b71ee268710520bfb1f8c0d6da
 #Source0:	%{name}-%{version}%{subver}.tar.gz
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
