@@ -19,7 +19,7 @@ Name:		eventum
 Version:	2.3.3
 Release:	%{rel}
 #Release:	%{rel}.bzr%{subver}
-License:	GPL
+License:	GPL v2
 Group:		Applications/WWW
 Source0:	http://launchpad.net/eventum/trunk/%{version}/+download/%{name}-%{version}.tar.gz
 # Source0-md5:	e1a5097d191468061865065678665f0e
