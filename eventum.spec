@@ -576,7 +576,8 @@ for a in cli.log errors.log irc_bot.log login_attempts.log; do
 	fi
 done
 
-# database update
+# run database update if configured
+test -s %{_webappdir}/config.php && \
 %{_appdir}/upgrade/update-database.php || :
 
 # nuke Smarty templates cache after upgrade
