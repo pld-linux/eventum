@@ -54,7 +54,7 @@ Patch200:	%{name}-fixed-nav.patch
 URL:		http://eventum.mysql.org/
 BuildRequires:	gettext-devel
 BuildRequires:	rpm-php-pearprov >= 4.0.2-98
-BuildRequires:	rpmbuild(macros) >= 1.461
+BuildRequires:	rpmbuild(macros) >= 1.654
 BuildRequires:	sed >= 4.0
 Requires:	%{name}-base = %{version}-%{release}
 Requires:	Smarty >= 2.6.10-4
@@ -94,12 +94,12 @@ Conflicts:	logrotate < 3.8.0
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
-%define		_noautopear	pear(../init.php) pear(init.php) pear(/usr/share/eventum/init.php) pear(/etc/webapps/.*) pear(%{_appdir}/.*) pear(jpgraph_dir.php) pear(.*Smarty.class.php) pear(Services/JSON.php) pear(class.date_helper.php) pear(sphinxapi.php) pear(Net/LDAP2.php)
+%define		_noautoreq_pear	../init.php init.php /usr/share/eventum/init.php /etc/webapps/.* %{_appdir}/.* jpgraph_dir.php .*Smarty.class.php Services/JSON.php class.date_helper.php sphinxapi.php Net/LDAP2.php
 
 # exclude optional php dependencies
 %define		_noautophp	php-gnupg php-hash php-pecl-http php-tk
 
-%define		_noautoreq	%{_noautophp} %{_noautopear}
+%define		_noautoreq	%{_noautophp}
 
 %define		_libdir		%{_prefix}/lib/%{name}
 %define		_appdir		%{_datadir}/%{name}
