@@ -608,7 +608,7 @@ chmod 660 %{_webappdir}/{config,private_key}.php
 chown root:http %{_webappdir}/{config,private_key}.php
 
 %postun setup
-if [ "$1" = "0" ]; then
+if [ "$1" = "0" ] && [ -f %{_webappdir}/config.php ]; then
 	chmod 640 %{_webappdir}/{config,private_key}.php
 	chown root:http %{_webappdir}/{config,private_key}.php
 fi
