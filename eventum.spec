@@ -59,14 +59,15 @@ BuildRequires:	sed >= 4.0
 Requires:	%{name}-base = %{version}-%{release}
 Requires:	Smarty >= 2.6.10-4
 Requires:	php(core) >= %{php_min_version}
-Requires:	php-filter
-Requires:	php-gd
-Requires:	php-iconv
-Requires:	php-imap
-Requires:	php-json
-Requires:	php-mbstring
-Requires:	php-mysql
-Requires:	php-pcre
+Requires:	php(filter)
+Requires:	php(gd)
+Requires:	php(iconv)
+Requires:	php(imap)
+Requires:	php(json)
+Requires:	php(mbstring)
+Requires:	php(mysql)
+Requires:	php(pcre)
+Requires:	php(session)
 Requires:	php-pear-DB
 Requires:	php-pear-Date
 Requires:	php-pear-Mail
@@ -81,7 +82,6 @@ Requires:	php-pear-Net_UserAgent_Detect
 Requires:	php-pear-PEAR-core
 Requires:	php-pear-Text_Diff
 Requires:	php-pear-XML_RPC
-Requires:	php-session
 Requires:	smarty-gettext
 Requires:	webapps
 Requires:	webserver(access)
@@ -235,7 +235,7 @@ Summary(pl.UTF-8):	Monitor życia dla Eventum
 Group:		Applications/WWW
 Requires:	%{name} = %{version}-%{release}
 Requires:	crondaemon
-Requires:	php-posix
+Requires:	php(posix)
 
 %description monitor
 The heartbeat monitor is a feature designed for the administrator that
@@ -365,8 +365,8 @@ Summary(pl.UTF-8):	IRC-owy bot powiadamiający dla Eventum
 Group:		Applications/WWW
 Requires(post,preun):	/sbin/chkconfig
 Requires:	%{name} = %{version}-%{release}
+Requires:	php(sockets)
 Requires:	php-pear-Net_SmartIRC
-Requires:	php-sockets
 Requires:	rc-scripts >= 0.4.0.18
 
 %description irc
@@ -416,8 +416,8 @@ Summary(pl.UTF-8):	Integracja SCM dla Eventum
 Group:		Applications/WWW
 Requires:	%{name}-base = %{version}-%{release}
 Requires:	php(core) >= %{php_min_version}
+Requires:	php(pcre)
 Requires:	php-cli
-Requires:	php-pcre
 
 %description scm
 This feature allows your software development teams to integrate your
