@@ -10,8 +10,8 @@
 %bcond_without	order	# with experimental order patch
 
 %define		php_min_version 5.1.2
-%define		subver	4549
-%define		rel		2.3
+%define		subver	4569
+%define		rel		2.5
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl.UTF-8):	Eventum - system śledzenia spraw/błędów
@@ -23,7 +23,7 @@ License:	GPL
 Group:		Applications/WWW
 #Source0:	http://launchpad.net/eventum/trunk/%{version}/+download/%{name}-%{version}.tar.gz
 Source0:	%{name}-%{version}-dev-r%{subver}.tar.gz
-# Source0-md5:	342032b71ee268710520bfb1f8c0d6da
+# Source0-md5:	3a6854eb3bcf8202cea33962ef1aecde
 #Source0:	%{name}-%{version}%{subver}.tar.gz
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
@@ -788,5 +788,5 @@ done
 %files sphinx
 %defattr(644,root,root,755)
 %{_webappdir}/sphinx.conf.php
-%attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) /etc/sphinx/%{name}.conf
+%attr(750,root,http) %config(noreplace) %verify(not md5 mtime size) /etc/sphinx/%{name}.conf
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/cron.d/%{name}-sphinx

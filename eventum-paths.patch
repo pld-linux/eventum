@@ -12,8 +12,8 @@
  
  if (defined('APP_PEAR_PATH')) {
      set_include_path(APP_PEAR_PATH . PATH_SEPARATOR . get_include_path());
---- eventum-2.2/init.php~	2009-10-12 22:40:04.000000000 +0300
-+++ eventum-2.2/init.php	2009-10-12 22:40:41.619219457 +0300
+--- eventum-2.3.3/init.php~	2012-12-17 13:49:09.000000000 +0200
++++ eventum-2.3.3/init.php	2012-12-17 13:49:41.676803793 +0200
 @@ -27,7 +27,7 @@
  // | Authors: Elan Ruusamäe <glen@delfi.ee>                               |
  // +----------------------------------------------------------------------+
@@ -23,15 +23,15 @@
      Header('Location: setup/');
      exit(0);
  }
-@@ -46,7 +46,7 @@
- 
+@@ -47,7 +47,7 @@
  // define base path
  define('APP_PATH', realpath(dirname(__FILE__)));
--define('APP_CONFIG_PATH', APP_PATH . '/config');
-+define('APP_CONFIG_PATH', '/etc/webapps/eventum');
+ if (!defined('APP_CONFIG_PATH')) {
+-    define('APP_CONFIG_PATH', APP_PATH . '/config');
++    define('APP_CONFIG_PATH', '/etc/webapps/eventum');
+ }
  
  // include local site config. may override any default
- require_once APP_CONFIG_PATH . '/config.php';
 @@ -64,23 +64,15 @@
  }
  
