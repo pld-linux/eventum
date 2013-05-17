@@ -11,7 +11,7 @@
 
 %define		php_min_version 5.1.2
 #define		subver	RC3
-%define		rel		3
+%define		rel		4
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl.UTF-8):	Eventum - system śledzenia spraw/błędów
@@ -54,6 +54,7 @@ Patch107:	%{name}-gettext.patch
 Patch200:	%{name}-fixed-nav.patch
 URL:		http://eventum.mysql.org/
 BuildRequires:	gettext-devel
+BuildRequires:	php-program
 BuildRequires:	rpm-php-pearprov >= 4.0.2-98
 BuildRequires:	rpmbuild(macros) >= 1.654
 BuildRequires:	sed >= 4.0
