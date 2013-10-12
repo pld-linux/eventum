@@ -10,8 +10,8 @@
 %bcond_without	order	# with experimental order patch
 
 %define		php_min_version 5.1.2
-%define		subver	4569
-%define		rel		2.5
+%define		subver	4591
+%define		rel		2.11
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl.UTF-8):	Eventum - system śledzenia spraw/błędów
@@ -23,7 +23,7 @@ License:	GPL
 Group:		Applications/WWW
 #Source0:	http://launchpad.net/eventum/trunk/%{version}/+download/%{name}-%{version}.tar.gz
 Source0:	%{name}-%{version}-dev-r%{subver}.tar.gz
-# Source0-md5:	3a6854eb3bcf8202cea33962ef1aecde
+# Source0-md5:	a98dd5ba8dfdb654b3a39314d13eef85
 #Source0:	%{name}-%{version}%{subver}.tar.gz
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
@@ -44,6 +44,12 @@ Source17:	%{name}.tmpfiles
 Patch0:		%{name}-lf.patch
 Patch2:		%{name}-order.patch
 Patch3:		group-users.patch
+Patch4:		https://github.com/glensc/eventum/compare/cf_escape.patch
+# Patch4-md5:	d3d7865b785ebe3b05b18e2005cf843c
+Patch5:		https://github.com/glensc/eventum/compare/ttc_project.patch
+# Patch5-md5:	83e1bead35a2b6778e912d17fdafba20
+Patch6:		https://github.com/glensc/eventum/compare/master...deprecation.patch
+# Patch6-md5:	8595e27df27a8f254ad3761c59930b26
 # packaging patches that probably never go upstream
 Patch100:	%{name}-paths.patch
 Patch101:	%{name}-cvs-config.patch
@@ -467,6 +473,9 @@ rm -r upgrade/{*/,}index.html # not needed in PLD Linux
 %patch0 -p1
 %{?with_order:%patch2 -p1}
 %patch3 -p0
+%patch4 -p1
+%patch5 -p1
+%patch6 -p1
 
 cp -p %{SOURCE16} htdocs/images
 
