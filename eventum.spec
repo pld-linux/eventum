@@ -10,21 +10,21 @@
 %bcond_without	order	# with experimental order patch
 
 %define		php_min_version 5.1.2
-%define		subver	4591
-%define		rel		2.11
+%define		subver	126
+%define		githash	42a2050
+%define		rel		4.1
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl.UTF-8):	Eventum - system śledzenia spraw/błędów
 Name:		eventum
 Version:	2.3.3
 #Release:	%{rel}
-Release:	%{rel}.bzr%{subver}
+Release:	%{rel}.%{subver}.g%{githash}
 License:	GPL
 Group:		Applications/WWW
 #Source0:	http://launchpad.net/eventum/trunk/%{version}/+download/%{name}-%{version}.tar.gz
-Source0:	%{name}-%{version}-dev-r%{subver}.tar.gz
-# Source0-md5:	a98dd5ba8dfdb654b3a39314d13eef85
-#Source0:	%{name}-%{version}%{subver}.tar.gz
+Source0:	%{name}-%{version}-%{subver}-g%{githash}.tar.gz
+# Source0-md5:	166b934b2eccd6d70caa2202f44185b0
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -46,10 +46,6 @@ Patch2:		%{name}-order.patch
 Patch3:		group-users.patch
 Patch4:		https://github.com/glensc/eventum/compare/cf_escape.patch
 # Patch4-md5:	d3d7865b785ebe3b05b18e2005cf843c
-Patch5:		https://github.com/glensc/eventum/compare/ttc_project.patch
-# Patch5-md5:	83e1bead35a2b6778e912d17fdafba20
-Patch6:		https://github.com/glensc/eventum/compare/master...deprecation.patch
-# Patch6-md5:	8595e27df27a8f254ad3761c59930b26
 # packaging patches that probably never go upstream
 Patch100:	%{name}-paths.patch
 Patch101:	%{name}-cvs-config.patch
@@ -459,7 +455,7 @@ Sphinx search integration for Eventum.
 This package contains the cron job.
 
 %prep
-%setup -q
+%setup -q -n %{name}-%{version}-%{subver}-g%{githash}
 
 # GPL v2
 rm docs/COPYING
@@ -474,8 +470,6 @@ rm -r upgrade/{*/,}index.html # not needed in PLD Linux
 %{?with_order:%patch2 -p1}
 %patch3 -p0
 %patch4 -p1
-%patch5 -p1
-%patch6 -p1
 
 cp -p %{SOURCE16} htdocs/images
 
