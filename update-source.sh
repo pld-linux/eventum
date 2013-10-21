@@ -9,22 +9,27 @@ cd "$dir"
 
 if [ -f "$1" ]; then
 	rev=$1
-	rev=${rev#eventum-*-r}
+	rev=${rev#eventum-*-}
 	rev=${rev%.tar.gz}
-	echo "Using $rev..."
-
 elif [ "$1" ]; then
 	rev=$1
-	echo "Using $rev..."
 fi
 
-oldrev=$(awk '/^%define[	 ]+subver[	 ]+/{print $NF}' $specfile)
-if [ "$oldrev" != "$rev" ]; then
-	echo "Updating $specfile for $rev"
-	sed -i -e "
-		s/^\(%define[ \t]\+subver[ \t]\+\)[0-9]\+\$/\1$rev/
-	" $specfile
-	../builder -ncs -5 $specfile
-else
+subver=${rev%-*}
+githash=${rev#*-g}
+
+echo "Using $rev (subver: $subver, githash: $githash)..."
+
+oldsubver=$(awk '/^%define[\t ]+subver[\t ]+/{print $NF}' $specfile)
+oldgithash=$(awk '/^%define[\t ]+githash[\t ]+/{print $NF}' $specfile)
+if [ "$oldsubver" = "$subver" -a "$oldgithash" = "$githash" ]; then
 	echo "Already up to date"
+	exit 0
 fi
+
+echo "Updating $specfile for $rev (subver: $subver, githash: $githash)..."
+sed -i -e "
+	s/^\(%define[ \t]\+subver[ \t]\+\)[0-9]\+\$/\1$subver/
+	s/^\(%define[ \t]\+githash[ \t]\+\)[0-9a-fg]\+\$/\1$githash/
+" $specfile
+../builder -ncs -5 $specfile
