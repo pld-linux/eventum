@@ -36,7 +36,6 @@ Source15:	%{name}-lighttpd.conf
 Source16:	http://www.isocra.com/images/updown2.gif
 # Source16-md5:	deb6eeb2552ba757d3a949ed10c4107d
 Source17:	%{name}.tmpfiles
-Source18:	%{name}-httpd.conf
 Patch0:		%{name}-lf.patch
 Patch2:		%{name}-order.patch
 Patch3:		group-users.patch
@@ -89,7 +88,6 @@ Requires:	webserver(indexfile)
 Requires:	webserver(php) >= 4.2.0
 Suggests:	localedb
 Suggests:	php-pear-Net_LDAP2
-Conflicts:	apache-base < 2.4.0-1
 Conflicts:	logrotate < 3.8.0
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -523,7 +521,7 @@ install -d \
 
 touch $RPM_BUILD_ROOT%{_webappdir}/htpasswd
 cp -p %{SOURCE1} $RPM_BUILD_ROOT%{_webappdir}/apache.conf
-cp -p %{SOURCE18} $RPM_BUILD_ROOT%{_webappdir}/httpd.conf
+cp -p %{SOURCE1} $RPM_BUILD_ROOT%{_webappdir}/httpd.conf
 cp -p %{SOURCE15} $RPM_BUILD_ROOT%{_webappdir}/lighttpd.conf
 
 install -d $RPM_BUILD_ROOT/etc/sphinx
@@ -630,10 +628,10 @@ fi
 %triggerun -- apache1 < 1.3.37-3, apache1-base
 %webapp_unregister apache %{_webapp}
 
-%triggerin -- apache-base
+%triggerin -- apache < 2.2.0, apache-base
 %webapp_register httpd %{_webapp}
 
-%triggerun -- apache-base
+%triggerun -- apache < 2.2.0, apache-base
 %webapp_unregister httpd %{_webapp}
 
 %triggerin -- lighttpd
