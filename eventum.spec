@@ -40,7 +40,7 @@ Patch0:		%{name}-lf.patch
 Patch2:		%{name}-order.patch
 Patch3:		group-users.patch
 Patch4:		https://github.com/glensc/eventum/compare/cf_escape.patch
-# Patch4-md5:	d3d7865b785ebe3b05b18e2005cf843c
+# Patch4-md5:	17688773ec035fb162b6a8ad2c7cfa76
 # packaging patches that probably never go upstream
 Patch100:	%{name}-paths.patch
 Patch101:	%{name}-cvs-config.patch
