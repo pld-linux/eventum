@@ -10,21 +10,16 @@
 %bcond_without	order	# with experimental order patch
 
 %define		php_min_version 5.1.2
-#define		subver	RC3
-%define		rel		4
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl.UTF-8):	Eventum - system śledzenia spraw/błędów
 Name:		eventum
-Version:	2.3.3
-Release:	%{rel}
-#Release:	%{rel}.bzr%{subver}
+Version:	2.3.4
+Release:	1
 License:	GPL v2
 Group:		Applications/WWW
-Source0:	http://launchpad.net/eventum/trunk/%{version}/+download/%{name}-%{version}.tar.gz
-# Source0-md5:	e1a5097d191468061865065678665f0e
-#Source0:	%{name}-%{version}-dev-r%{subver}.tar.gz
-#Source0:	%{name}-%{version}%{subver}.tar.gz
+Source0:	https://launchpad.net/eventum/trunk/%{version}/+download/%{name}-%{version}.tar.gz
+# Source0-md5:	f64a6cd054356513f6ff701be765600e
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -45,6 +40,8 @@ Source18:	%{name}-httpd.conf
 Patch0:		%{name}-lf.patch
 Patch2:		%{name}-order.patch
 Patch3:		group-users.patch
+Patch4:		https://github.com/glensc/eventum/compare/cf_escape.patch
+# Patch4-md5:	d3d7865b785ebe3b05b18e2005cf843c
 # packaging patches that probably never go upstream
 Patch100:	%{name}-paths.patch
 Patch101:	%{name}-cvs-config.patch
@@ -456,7 +453,7 @@ Sphinx search integration for Eventum.
 This package contains the cron job.
 
 %prep
-%setup -q
+%setup -q -n %{name}-%{version}-%{subver}-g%{githash}
 
 # GPL v2
 rm docs/COPYING
@@ -470,6 +467,7 @@ rm -r upgrade/{*/,}index.html # not needed in PLD Linux
 %patch0 -p1
 %{?with_order:%patch2 -p1}
 %patch3 -p0
+%patch4 -p1
 
 cp -p %{SOURCE16} htdocs/images
 
@@ -792,5 +790,5 @@ done
 %files sphinx
 %defattr(644,root,root,755)
 %{_webappdir}/sphinx.conf.php
-%attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) /etc/sphinx/%{name}.conf
+%attr(750,root,http) %config(noreplace) %verify(not md5 mtime size) /etc/sphinx/%{name}.conf
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/cron.d/%{name}-sphinx

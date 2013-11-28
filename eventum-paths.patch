@@ -1,5 +1,5 @@
---- ./cli/eventum	2009-06-27 19:46:44.401524716 +0300
-+++ ./cli/eventum	2009-06-27 19:45:22.781438493 +0300
+--- ./cli/eventum.php	2009-06-27 19:46:44.401524716 +0300
++++ ./cli/eventum.php	2009-06-27 19:45:22.781438493 +0300
 @@ -12,9 +12,8 @@
  // @(#) $Id$
  
@@ -12,8 +12,8 @@
  
  if (defined('APP_PEAR_PATH')) {
      set_include_path(APP_PEAR_PATH . PATH_SEPARATOR . get_include_path());
---- eventum-2.2/init.php~	2009-10-12 22:40:04.000000000 +0300
-+++ eventum-2.2/init.php	2009-10-12 22:40:41.619219457 +0300
+--- eventum-2.3.3/init.php~	2012-12-17 13:49:09.000000000 +0200
++++ eventum-2.3.3/init.php	2012-12-17 13:49:41.676803793 +0200
 @@ -27,7 +27,7 @@
  // | Authors: Elan Ruusamäe <glen@delfi.ee>                               |
  // +----------------------------------------------------------------------+
@@ -23,15 +23,15 @@
      Header('Location: setup/');
      exit(0);
  }
-@@ -46,7 +46,7 @@
- 
+@@ -47,7 +47,7 @@
  // define base path
  define('APP_PATH', realpath(dirname(__FILE__)));
--define('APP_CONFIG_PATH', APP_PATH . '/config');
-+define('APP_CONFIG_PATH', '/etc/webapps/eventum');
+ if (!defined('APP_CONFIG_PATH')) {
+-    define('APP_CONFIG_PATH', APP_PATH . '/config');
++    define('APP_CONFIG_PATH', '/etc/webapps/eventum');
+ }
  
  // include local site config. may override any default
- require_once APP_CONFIG_PATH . '/config.php';
 @@ -64,23 +64,15 @@
  }
  
@@ -120,8 +120,8 @@
      // need to create a random private key variable
      $private_key = '<?php
  $private_key = "' . md5(microtime()) . '";
---- eventum-2.2/irc/eventum-irc-bot~	2009-07-23 14:03:41.422211655 +0300
-+++ eventum-2.2/irc/eventum-irc-bot	2009-07-23 13:54:22.000000000 +0300
+--- eventum-2.2/irc/eventum-irc-bot.php~	2009-07-23 14:03:41.422211655 +0300
++++ eventum-2.2/irc/eventum-irc-bot.php	2009-07-23 13:54:22.000000000 +0300
 @@ -32,7 +32,7 @@
  
  ini_set('memory_limit', '1024M');
