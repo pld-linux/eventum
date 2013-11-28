@@ -453,7 +453,7 @@ Sphinx search integration for Eventum.
 This package contains the cron job.
 
 %prep
-%setup -q -n %{name}-%{version}-%{subver}-g%{githash}
+%setup -q
 
 # GPL v2
 rm docs/COPYING
