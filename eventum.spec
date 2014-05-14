@@ -544,7 +544,7 @@ cp -p %{SOURCE14} $RPM_BUILD_ROOT/etc/logrotate.d/%{name}
 # postfix router
 install -p %{SOURCE13} $RPM_BUILD_ROOT%{_libdir}/router-postfix
 
-install %{SOURCE17} $RPM_BUILD_ROOT%{systemdtmpfilesdir}/%{name}.conf
+cp -p %{SOURCE17} $RPM_BUILD_ROOT%{systemdtmpfilesdir}/%{name}.conf
 
 %{__rm} -r $RPM_BUILD_ROOT%{_localedir}/ht
 
