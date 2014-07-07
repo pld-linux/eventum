@@ -15,7 +15,7 @@ Summary:	Eventum Issue / Bug tracking system
 Summary(pl.UTF-8):	Eventum - system śledzenia spraw/błędów
 Name:		eventum
 Version:	2.3.4
-Release:	1
+Release:	2
 License:	GPL v2
 Group:		Applications/WWW
 Source0:	https://launchpad.net/eventum/trunk/%{version}/+download/%{name}-%{version}.tar.gz
@@ -397,7 +397,6 @@ Summary(pl.UTF-8):	Interfejs linii poleceń dla Eventum
 Group:		Applications/WWW
 Requires:	%{name}-base = %{version}-%{release}
 Requires:	php(core) >= %{php_min_version}
-Requires:	php-cli
 Requires:	php-pear-XML_RPC
 
 %description cli
@@ -415,7 +414,6 @@ Group:		Applications/WWW
 Requires:	%{name}-base = %{version}-%{release}
 Requires:	php(core) >= %{php_min_version}
 Requires:	php(pcre)
-Requires:	php-cli
 
 %description scm
 This feature allows your software development teams to integrate your
