@@ -56,6 +56,7 @@ BuildRequires:	rpmbuild(macros) >= 1.654
 BuildRequires:	sed >= 4.0
 Requires:	%{name}-base = %{version}-%{release}
 Requires:	Smarty >= 2.6.10-4
+Requires:	Smarty-plugin-gettext
 Requires:	php(core) >= %{php_min_version}
 Requires:	php(filter)
 Requires:	php(gd)
@@ -80,7 +81,6 @@ Requires:	php-pear-Net_UserAgent_Detect
 Requires:	php-pear-PEAR-core
 Requires:	php-pear-Text_Diff
 Requires:	php-pear-XML_RPC
-Requires:	smarty-gettext
 Requires:	webapps
 Requires:	webserver(access)
 Requires:	webserver(alias)
