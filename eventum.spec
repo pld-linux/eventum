@@ -14,12 +14,12 @@
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl.UTF-8):	Eventum - system śledzenia spraw/błędów
 Name:		eventum
-Version:	2.3.4
-Release:	2
+Version:	2.3.6
+Release:	1
 License:	GPL v2
 Group:		Applications/WWW
 Source0:	https://launchpad.net/eventum/trunk/%{version}/+download/%{name}-%{version}.tar.gz
-# Source0-md5:	f64a6cd054356513f6ff701be765600e
+# Source0-md5:	bd210e87117db334e58ee679f156646d
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
