@@ -50,7 +50,7 @@ Patch107:	%{name}-gettext.patch
 Patch200:	%{name}-fixed-nav.patch
 URL:		http://eventum.mysql.org/
 BuildRequires:	/usr/bin/php
-BuildRequires:	gettext-devel
+BuildRequires:	gettext-tools
 BuildRequires:	rpm-php-pearprov >= 4.0.2-98
 BuildRequires:	rpmbuild(macros) >= 1.654
 BuildRequires:	sed >= 4.0
