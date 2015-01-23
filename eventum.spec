@@ -7,7 +7,7 @@
 #  - A few other small javascript libraries
 #
 # Conditional build:
-%bcond_without	order	# with experimental order patch
+%bcond_with	order	# with experimental order patch
 
 %define		php_min_version 5.1.2
 %include	/usr/lib/rpm/macros.php
@@ -681,17 +681,15 @@ done
 %dir %{_appdir}/htdocs
 %{_appdir}/htdocs/*.php
 %{_appdir}/htdocs/*.ico
+%{_appdir}/htdocs/ajax
 %{_appdir}/htdocs/css
 %{_appdir}/htdocs/customer
 %{_appdir}/htdocs/images
 %{_appdir}/htdocs/js
 %{_appdir}/htdocs/manage
+%{_appdir}/htdocs/misc
 %{_appdir}/htdocs/reports
 %{_appdir}/htdocs/rpc
-%{_appdir}/htdocs/misc
-%if %{with order}
-%{_appdir}/htdocs/ajax
-%endif
 %{_appdir}/templates
 
 %dir %{_appdir}/upgrade
