@@ -15,11 +15,11 @@ Summary:	Eventum Issue / Bug tracking system
 Summary(pl.UTF-8):	Eventum - system śledzenia spraw/błędów
 Name:		eventum
 Version:	3.0.0
-Release:	0.2
+Release:	0.5
 License:	GPL v2
 Group:		Applications/WWW
-Source0:	%{name}-2.4.0-pre1-474-g45f7853.tar.gz
-# Source0-md5:	acfe413a3a9b530b301cf37e0bb43064
+Source0:	eventum-2.4.0-pre1-477-g0fbf3fc.tar.gz
+# Source0-md5:	58c862cfff33b7ae858a4d721f2a2696
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -516,6 +516,8 @@ install -d \
 
 %{?with_order:cp -a htdocs/ajax $RPM_BUILD_ROOT%{_appdir}/htdocs}
 
+cp -a vendor $RPM_BUILD_ROOT%{_appdir}
+
 touch $RPM_BUILD_ROOT%{_webappdir}/htpasswd
 cp -p %{SOURCE1} $RPM_BUILD_ROOT%{_webappdir}/apache.conf
 cp -p %{SOURCE1} $RPM_BUILD_ROOT%{_webappdir}/httpd.conf
@@ -691,6 +693,9 @@ done
 %{_appdir}/lib/eventum
 %{_appdir}/lib/jpgraph
 %exclude %{_appdir}/lib/eventum/class.monitor.php
+
+%{_appdir}/vendor
+
 %{systemdtmpfilesdir}/%{name}.conf
 %dir %attr(730,root,http) /var/run/%{name}
 %dir %attr(730,root,http) /var/cache/%{name}
