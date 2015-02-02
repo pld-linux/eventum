@@ -397,6 +397,7 @@ Summary(pl.UTF-8):	Interfejs linii poleceń dla Eventum
 Group:		Applications/WWW
 Requires:	%{name}-base = %{version}-%{release}
 Requires:	php(core) >= %{php_min_version}
+Requires:	php(phar)
 Requires:	php-pear-XML_RPC
 
 %description cli
@@ -509,7 +510,7 @@ install -d \
 	$RPM_BUILD_ROOT%{_appdir}/{include,htdocs/misc,upgrade} \
 	$RPM_BUILD_ROOT%{systemdtmpfilesdir}
 
-%{__make} install-eventum install-irc install-scm install-jpgraph install-localization \
+%{__make} install-eventum install-cli install-irc install-scm install-jpgraph install-localization \
 	sysconfdir=%{_webappdir} \
 	localedir=%{_localedir} \
 	DESTDIR=$RPM_BUILD_ROOT
@@ -549,10 +550,6 @@ cp -p %{SOURCE17} $RPM_BUILD_ROOT%{systemdtmpfilesdir}/%{name}.conf
 
 # scm
 cp -p %{SOURCE6} $RPM_BUILD_ROOT%{_sysconfdir}/scm.php
-
-# skip pear for cli
-#rm -r $RPM_BUILD_ROOT%{_datadir}/%{name}/cli
-#cp -a cli/lib/eventum $RPM_BUILD_ROOT%{_datadir}/%{name}/cli
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -762,8 +759,7 @@ done
 %files cli
 %defattr(644,root,root,755)
 %doc cli/eventumrc
-#%attr(755,root,root) %{_bindir}/%{name}
-#%{_appdir}/cli
+%attr(755,root,root) %{_bindir}/%{name}
 
 %files scm
 %defattr(644,root,root,755)
