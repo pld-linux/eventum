@@ -92,7 +92,7 @@ Conflicts:	logrotate < 3.8.0
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
-%define		_noautoreq_pear	../init.php init.php /usr/share/eventum/init.php /etc/webapps/.* %{_appdir}/.* jpgraph_dir.php .*Smarty.class.php Services/JSON.php class.date_helper.php sphinxapi.php Net/LDAP2.php
+%define		_noautoreq_pear	../init.php ../../init.php init.php /usr/share/eventum/init.php /etc/webapps/.* %{_appdir}/.* jpgraph_dir.php .*Smarty.class.php Services/JSON.php class.date_helper.php sphinxapi.php Net/LDAP2.php
 
 # exclude optional php dependencies
 %define		_noautophp	php-gnupg php-hash php-pecl-http php-tk
