@@ -9,17 +9,17 @@
 # Conditional build:
 %bcond_with	order	# with experimental order patch
 
-%define		php_min_version 5.1.2
+%define		php_min_version 5.3.3
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl.UTF-8):	Eventum - system śledzenia spraw/błędów
 Name:		eventum
-Version:	2.3.6
-Release:	1
+Version:	3.0.0
+Release:	0.1
 License:	GPL v2
 Group:		Applications/WWW
-Source0:	https://launchpad.net/eventum/trunk/%{version}/+download/%{name}-%{version}.tar.gz
-# Source0-md5:	bd210e87117db334e58ee679f156646d
+Source0:	%{name}-2.4.0-pre1-474-g45f7853.tar.gz
+# Source0-md5:	acfe413a3a9b530b301cf37e0bb43064
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -36,11 +36,10 @@ Source15:	%{name}-lighttpd.conf
 Source16:	http://www.isocra.com/images/updown2.gif
 # Source16-md5:	deb6eeb2552ba757d3a949ed10c4107d
 Source17:	%{name}.tmpfiles
-Patch0:		%{name}-lf.patch
+#Patch0:		%{name}-lf.patch
 Patch2:		%{name}-order.patch
-Patch3:		group-users.patch
-Patch4:		https://github.com/glensc/eventum/compare/cf_escape.patch
-# Patch4-md5:	17688773ec035fb162b6a8ad2c7cfa76
+#Patch3:		group-users.patch
+#Patch4:		https://github.com/glensc/eventum/compare/cf_escape.patch
 # packaging patches that probably never go upstream
 Patch100:	%{name}-paths.patch
 Patch101:	%{name}-cvs-config.patch
@@ -51,6 +50,7 @@ Patch200:	%{name}-fixed-nav.patch
 URL:		http://eventum.mysql.org/
 BuildRequires:	/usr/bin/php
 BuildRequires:	gettext-tools
+BuildRequires:	php(core) >= %{php_min_version}
 BuildRequires:	rpm-php-pearprov >= 4.0.2-98
 BuildRequires:	rpmbuild(macros) >= 1.654
 BuildRequires:	sed >= 4.0
@@ -449,28 +449,25 @@ Sphinx search integration for Eventum.
 This package contains the cron job.
 
 %prep
-%setup -q
+%setup -qc
+mv eventum-*/* .
 
 # GPL v2
 rm docs/COPYING
 
-rm -r upgrade/*v1.[123]* # too old to support in PLD Linux
-rm -r upgrade/v{1.,2.0,2.1_}* # no longer supported in PLD Linux
-rm upgrade/flush_compiled_templates.php
-rm -r upgrade/{*/,}index.html # not needed in PLD Linux
-
 # bug fixes / features
-%patch0 -p1
+#%patch0 -p1
 %{?with_order:%patch2 -p1}
-%patch3 -p0
-%patch4 -p1
+#%patch3 -p0
+#%patch4 -p1
 
-cp -p %{SOURCE16} htdocs/images
+%{?with_order:cp -p %{SOURCE16} htdocs/images}
 
 #%patch200 -p1
 
 # produce default sphinx config
 # must be run before paths.patch
+%if 0
 cat <<'EOF' > config/config.php
 <?php
 define('APP_SQL_DBTYPE', 'mysql');
@@ -483,10 +480,11 @@ define('APP_TABLE_PREFIX', 'eventum_');
 EOF
 php config/sphinx.conf.php > config/sphinx.conf
 rm -f config/config.php
+%endif
 
 # packaging
 %patch100 -p1
-%patch101 -p1
+#%patch101 -p1
 %patch105 -p1
 %patch107 -p1
 
@@ -511,8 +509,9 @@ install -d \
 	$RPM_BUILD_ROOT%{_appdir}/{include,htdocs/misc,upgrade} \
 	$RPM_BUILD_ROOT%{systemdtmpfilesdir}
 
-%{__make} install-eventum install-cli install-irc install-scm install-jpgraph install-localization \
+%{__make} install-eventum install-irc install-scm install-jpgraph install-localization \
 	sysconfdir=%{_webappdir} \
+	localedir=%{_localedir} \
 	DESTDIR=$RPM_BUILD_ROOT
 
 %{?with_order:cp -a htdocs/ajax $RPM_BUILD_ROOT%{_appdir}/htdocs}
@@ -523,7 +522,7 @@ cp -p %{SOURCE1} $RPM_BUILD_ROOT%{_webappdir}/httpd.conf
 cp -p %{SOURCE15} $RPM_BUILD_ROOT%{_webappdir}/lighttpd.conf
 
 install -d $RPM_BUILD_ROOT/etc/sphinx
-cp -p config/sphinx.conf $RPM_BUILD_ROOT/etc/sphinx/%{name}.conf
+#cp -p config/sphinx.conf $RPM_BUILD_ROOT/etc/sphinx/%{name}.conf
 cp -p config/sphinx.conf.php $RPM_BUILD_ROOT%{_webappdir}
 
 cp -p %{SOURCE2} $RPM_BUILD_ROOT/etc/cron.d/%{name}-mail-queue
@@ -544,20 +543,18 @@ install -p %{SOURCE13} $RPM_BUILD_ROOT%{_libdir}/router-postfix
 
 cp -p %{SOURCE17} $RPM_BUILD_ROOT%{systemdtmpfilesdir}/%{name}.conf
 
-%{__rm} -r $RPM_BUILD_ROOT%{_localedir}/ht
-
 %find_lang %{name}
 
 # scm
-install -p %{SOURCE6} $RPM_BUILD_ROOT%{_sysconfdir}/scm.php
+cp -p %{SOURCE6} $RPM_BUILD_ROOT%{_sysconfdir}/scm.php
 
 # old compat
-ln -s %{_sbindir}/eventum-cvs-hook $RPM_BUILD_ROOT%{_libdir}/process_cvs_commits
-ln -s %{_sbindir}/eventum-svn-hook $RPM_BUILD_ROOT%{_libdir}/process_svn_commits
+#ln -s %{_sbindir}/eventum-cvs-hook $RPM_BUILD_ROOT%{_libdir}/process_cvs_commits
+#ln -s %{_sbindir}/eventum-svn-hook $RPM_BUILD_ROOT%{_libdir}/process_svn_commits
 
 # skip pear for cli
-rm -rf $RPM_BUILD_ROOT%{_datadir}/%{name}/cli
-cp -a cli/lib/eventum $RPM_BUILD_ROOT%{_datadir}/%{name}/cli
+#rm -r $RPM_BUILD_ROOT%{_datadir}/%{name}/cli
+#cp -a cli/lib/eventum $RPM_BUILD_ROOT%{_datadir}/%{name}/cli
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -661,7 +658,7 @@ done
 
 %files -f %{name}.lang
 %defattr(644,root,root,755)
-%doc docs/* htdocs/setup/schema.sql
+%doc docs/*
 %attr(751,root,root) %dir %{_webappdir}
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/apache.conf
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/httpd.conf
@@ -676,7 +673,10 @@ done
 %dir %attr(750,root,root) /var/log/archive/%{name}
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/logrotate.d/%{name}
 
-%dir %{_appdir}/crons
+%dir %{_appdir}/bin
+%attr(755,root,root) %{_appdir}/bin/download_emails.php
+%attr(755,root,root) %{_appdir}/bin/process_all_emails.php
+
 %{_appdir}/init.php
 %dir %{_appdir}/htdocs
 %{_appdir}/htdocs/*.php
@@ -690,14 +690,16 @@ done
 %{_appdir}/htdocs/misc
 %{_appdir}/htdocs/reports
 %{_appdir}/htdocs/rpc
+%{_appdir}/htdocs/components
 %{_appdir}/templates
 
 %dir %{_appdir}/upgrade
-%{_appdir}/upgrade/init.php
+%{_appdir}/upgrade/flush_compiled_templates.php
+%{_appdir}/upgrade/*.sql
 %attr(755,root,root) %{_appdir}/upgrade/update-database.php
 %attr(755,root,root) %{_appdir}/upgrade/ldap_import.php
-%dir %{_appdir}/upgrade/v*
-%attr(755,root,root) %{_appdir}/upgrade/v*/*.php
+%attr(755,root,root) %{_appdir}/upgrade/ldap_update_users.php
+%attr(755,root,root) %{_appdir}/upgrade/scm_trac_import.php
 %{_appdir}/upgrade/patches
 
 %dir %{_appdir}/lib
@@ -725,36 +727,36 @@ done
 
 %files mail-queue
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_appdir}/crons/process_mail_queue.php
+%attr(755,root,root) %{_appdir}/bin/process_mail_queue.php
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/cron.d/%{name}-mail-queue
 
 %files mail-download
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_appdir}/crons/download_emails.php
+%attr(755,root,root) %{_appdir}/bin/download_emails.php
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/cron.d/%{name}-mail-download
 
 %files reminder
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_appdir}/crons/check_reminders.php
+%attr(755,root,root) %{_appdir}/bin/check_reminders.php
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/cron.d/%{name}-reminder
 
 %files monitor
 %defattr(644,root,root,755)
 %{_appdir}/lib/eventum/class.monitor.php
-%attr(755,root,root) %{_appdir}/crons/monitor.php
+%attr(755,root,root) %{_appdir}/bin/monitor.php
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/cron.d/%{name}-monitor
 
 %files route-drafts
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_appdir}/route_drafts.php
+%attr(755,root,root) %{_appdir}/bin/route_drafts.php
 
 %files route-emails
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_appdir}/route_emails.php
+%attr(755,root,root) %{_appdir}/bin/route_emails.php
 
 %files route-notes
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_appdir}/route_notes.php
+%attr(755,root,root) %{_appdir}/bin/route_notes.php
 
 %files router-postfix
 %defattr(644,root,root,755)
@@ -770,19 +772,19 @@ done
 %files cli
 %defattr(644,root,root,755)
 %doc cli/eventumrc
-%attr(755,root,root) %{_bindir}/%{name}
-%{_appdir}/cli
+#%attr(755,root,root) %{_bindir}/%{name}
+#%{_appdir}/cli
 
 %files scm
 %defattr(644,root,root,755)
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/scm.php
-%attr(755,root,root) %{_libdir}/process_cvs_commits
-%attr(755,root,root) %{_libdir}/process_svn_commits
+#%attr(755,root,root) %{_libdir}/process_cvs_commits
+#%attr(755,root,root) %{_libdir}/process_svn_commits
 %attr(755,root,root) %{_sbindir}/eventum-cvs-hook
 %attr(755,root,root) %{_sbindir}/eventum-svn-hook
 
 %files sphinx
 %defattr(644,root,root,755)
 %{_webappdir}/sphinx.conf.php
-%attr(750,root,http) %config(noreplace) %verify(not md5 mtime size) /etc/sphinx/%{name}.conf
+#%attr(750,root,http) %config(noreplace) %verify(not md5 mtime size) /etc/sphinx/%{name}.conf
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/cron.d/%{name}-sphinx
