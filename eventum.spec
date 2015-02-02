@@ -660,7 +660,6 @@ done
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/logrotate.d/%{name}
 
 %dir %{_appdir}/bin
-%attr(755,root,root) %{_appdir}/bin/download_emails.php
 %attr(755,root,root) %{_appdir}/bin/process_all_emails.php
 
 %{_appdir}/init.php
