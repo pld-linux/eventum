@@ -15,7 +15,7 @@ Summary:	Eventum Issue / Bug tracking system
 Summary(pl.UTF-8):	Eventum - system śledzenia spraw/błędów
 Name:		eventum
 Version:	3.0.0
-Release:	0.1
+Release:	0.2
 License:	GPL v2
 Group:		Applications/WWW
 Source0:	%{name}-2.4.0-pre1-474-g45f7853.tar.gz
@@ -631,25 +631,15 @@ fi
 %triggerun -- lighttpd
 %webapp_unregister lighttpd %{_webapp}
 
-%triggerpostun -- %{name} < 2.2-2.57
-# switching eventum->http user
-chgrp http %{_webappdir}/config.php
-chgrp http %{_webappdir}/private_key.php
-chgrp http %{_webappdir}/setup.php
-chgrp http /var/log/%{name}/*
-# update crontab user
-for a in /etc/cron.d/eventum-*; do
-	[ -f "$a" ] || continue
-	awk '!/#/ && NR > 6 && $6 =="eventum" {sub("eventum", "http", $6)}{print}'  $a > $a.rpmtmp && cat $a.rpmtmp > $a
-	rm -f $a.rpmtmp
-
-	# crontabs moved to crons subdir
+%triggerpostun -- %{name} < 3.0.0-0.2
+for f in /etc/cron.d/eventum-*; do
+	# crontabs moved to bin
 	%{__sed} -i -e '
-		s,/usr/share/eventum/process_mail_queue.php,/usr/share/eventum/crons/process_mail_queue.php,
-		s,/usr/share/eventum/download_emails.php,/usr/share/eventum/crons/download_emails.php,
-		s,/usr/share/eventum/check_reminders.php,/usr/share/eventum/crons/check_reminders.php,
-		s,/usr/share/eventum/monitor.php,/usr/share/eventum/crons/monitor.php,
-	' $a
+		s,/usr/share/eventum/crons/process_mail_queue.php,%{_appdir}/bin/process_mail_queue.php,
+		s,/usr/share/eventum/crons/download_emails.php,%{_appdir}/bin/download_emails.php,
+		s,/usr/share/eventum/crons/check_reminders.php,%{_appdir}/bin/check_reminders.php,
+		s,/usr/share/eventum/crons/monitor.php,%{_appdir}/bin/monitor.php,
+	' $f
 done
 
 %files -f %{name}.lang
