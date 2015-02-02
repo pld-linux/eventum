@@ -548,10 +548,6 @@ cp -p %{SOURCE17} $RPM_BUILD_ROOT%{systemdtmpfilesdir}/%{name}.conf
 # scm
 cp -p %{SOURCE6} $RPM_BUILD_ROOT%{_sysconfdir}/scm.php
 
-# old compat
-#ln -s %{_sbindir}/eventum-cvs-hook $RPM_BUILD_ROOT%{_libdir}/process_cvs_commits
-#ln -s %{_sbindir}/eventum-svn-hook $RPM_BUILD_ROOT%{_libdir}/process_svn_commits
-
 # skip pear for cli
 #rm -r $RPM_BUILD_ROOT%{_datadir}/%{name}/cli
 #cp -a cli/lib/eventum $RPM_BUILD_ROOT%{_datadir}/%{name}/cli
@@ -778,8 +774,6 @@ done
 %files scm
 %defattr(644,root,root,755)
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/scm.php
-#%attr(755,root,root) %{_libdir}/process_cvs_commits
-#%attr(755,root,root) %{_libdir}/process_svn_commits
 %attr(755,root,root) %{_sbindir}/eventum-cvs-hook
 %attr(755,root,root) %{_sbindir}/eventum-svn-hook
 
