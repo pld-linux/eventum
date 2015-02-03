@@ -10,7 +10,7 @@
 %bcond_with	order	# with experimental order patch
 
 %define		subver	pre1
-%define		rel		0.5
+%define		rel		0.6
 %define		php_min_version 5.3.3
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
@@ -454,6 +454,8 @@ This package contains the cron job.
 %prep
 %setup -qn %{name}-%{version}%{?subver:-%{subver}}
 
+mv docs/examples .
+
 # GPL v2
 rm docs/COPYING
 
@@ -515,6 +517,9 @@ install -d \
 	sysconfdir=%{_webappdir} \
 	localedir=%{_localedir} \
 	DESTDIR=$RPM_BUILD_ROOT
+
+install -d $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
+cp -a examples/* $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
 
 %{?with_order:cp -a htdocs/ajax $RPM_BUILD_ROOT%{_appdir}/htdocs}
 
@@ -693,6 +698,8 @@ done
 %exclude %{_appdir}/lib/eventum/class.monitor.php
 
 %{_appdir}/vendor
+
+%{_examplesdir}/%{name}-%{version}
 
 %{systemdtmpfilesdir}/%{name}.conf
 %dir %attr(730,root,http) /var/run/%{name}
