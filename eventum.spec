@@ -9,17 +9,19 @@
 # Conditional build:
 %bcond_with	order	# with experimental order patch
 
+%define		subver	pre1
+%define		rel		0.5
 %define		php_min_version 5.3.3
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl.UTF-8):	Eventum - system śledzenia spraw/błędów
 Name:		eventum
 Version:	3.0.0
-Release:	0.5
+Release:	0.%{subver}.%{rel}
 License:	GPL v2
 Group:		Applications/WWW
-Source0:	eventum-2.4.0-pre1-477-g0fbf3fc.tar.gz
-# Source0-md5:	58c862cfff33b7ae858a4d721f2a2696
+Source0:	https://github.com/eventum/eventum/releases/download/v%{version}-pre1/%{name}-%{version}-pre1.tar.gz
+# Source0-md5:	786930171e278f03baa7b174f52e43d0
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -450,8 +452,7 @@ Sphinx search integration for Eventum.
 This package contains the cron job.
 
 %prep
-%setup -qc
-mv eventum-*/* .
+%setup -qn %{name}-%{version}%{?subver:-%{subver}}
 
 # GPL v2
 rm docs/COPYING
