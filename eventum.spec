@@ -20,7 +20,7 @@ Version:	3.0.0
 Release:	0.%{subver}.%{rel}
 License:	GPL v2
 Group:		Applications/WWW
-Source0:	https://github.com/eventum/eventum/releases/download/v%{version}-pre1/%{name}-%{version}-pre1.tar.gz
+Source0:	https://github.com/eventum/eventum/releases/download/v%{version}-pre1/%{name}-%{version}-%{subver}.tar.gz
 # Source0-md5:	786930171e278f03baa7b174f52e43d0
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
@@ -57,8 +57,6 @@ BuildRequires:	rpm-php-pearprov >= 4.0.2-98
 BuildRequires:	rpmbuild(macros) >= 1.654
 BuildRequires:	sed >= 4.0
 Requires:	%{name}-base = %{version}-%{release}
-Requires:	Smarty >= 2.6.10-4
-Requires:	Smarty-plugin-gettext
 Requires:	php(core) >= %{php_min_version}
 Requires:	php(filter)
 Requires:	php(gd)
@@ -69,6 +67,8 @@ Requires:	php(mbstring)
 Requires:	php(mysql)
 Requires:	php(pcre)
 Requires:	php(session)
+Requires:	php-Smarty >= 3.1
+Requires:	php-Smarty-plugin-gettext
 Requires:	php-pear-DB
 Requires:	php-pear-Date
 Requires:	php-pear-Mail
