@@ -11,4 +11,4 @@ MAILTO=root
 #
 # Administration >>> Manage Email Accounts
 
-#0 * * * * http exec /usr/share/eventum/crons/download_emails.php username_here mail.domain.com INBOX
+#0 * * * * http exec /usr/share/eventum/bin/download_emails.php username_here mail.domain.com INBOX
