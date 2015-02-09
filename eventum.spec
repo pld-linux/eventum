@@ -10,7 +10,7 @@
 %bcond_with	order	# with experimental order patch
 
 %define		subver	pre1
-%define		rel		0.6
+%define		rel		0.11
 %define		php_min_version 5.3.3
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
@@ -414,9 +414,9 @@ funkcji interfejsu WWW prosto z linii poleceń powłoki.
 Summary:	Eventum SCM integration
 Summary(pl.UTF-8):	Integracja SCM dla Eventum
 Group:		Applications/WWW
-Requires:	%{name}-base = %{version}-%{release}
 Requires:	php(core) >= %{php_min_version}
 Requires:	php(pcre)
+Suggests:	php(openssl)
 
 %description scm
 This feature allows your software development teams to integrate your
@@ -488,7 +488,7 @@ rm -f config/config.php
 
 # packaging
 %patch100 -p1
-#%patch101 -p1
+%patch101 -p1
 %patch105 -p1
 %patch107 -p1
 
@@ -517,6 +517,8 @@ install -d \
 	sysconfdir=%{_webappdir} \
 	localedir=%{_localedir} \
 	DESTDIR=$RPM_BUILD_ROOT
+
+cp -p scm/helpers.php $RPM_BUILD_ROOT%{_sbindir}
 
 install -d $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
 cp -a examples/* $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
@@ -771,9 +773,11 @@ done
 
 %files scm
 %defattr(644,root,root,755)
+%attr(751,root,root) %dir %{_sysconfdir}
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/scm.php
 %attr(755,root,root) %{_sbindir}/eventum-cvs-hook
 %attr(755,root,root) %{_sbindir}/eventum-svn-hook
+%attr(755,root,root) %{_sbindir}/helpers.php
 
 %files sphinx
 %defattr(644,root,root,755)
