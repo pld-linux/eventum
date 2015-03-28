@@ -1,16 +1,12 @@
 # TODO
 # - discard bundled packages (from INSTALL):
 #  - JpGraph 1.5.3 (last GPL version)
-#  - dTree 2.0.5 (http://www.destroydrop.com/javascript/tree/)
-#  - dynCalendar.js (http://www.phpguru.org/dyncalendar.html)
-#  - overLIB 3.5.1 (http://www.bosrup.com/web/overlib/)
-#  - A few other small javascript libraries
 #
 # Conditional build:
 %bcond_with	order	# with experimental order patch
 
 %define		subver	pre1
-%define		rel		0.11
+%define		rel		0.12
 %define		php_min_version 5.3.3
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
@@ -20,7 +16,7 @@ Version:	3.0.0
 Release:	0.%{subver}.%{rel}
 License:	GPL v2
 Group:		Applications/WWW
-Source0:	https://github.com/eventum/eventum/releases/download/v%{version}-pre1/%{name}-%{version}-%{subver}.tar.gz
+Source0:	https://github.com/eventum/eventum/releases/download/v%{version}-%{subver}/%{name}-%{version}-%{subver}.tar.gz
 # Source0-md5:	786930171e278f03baa7b174f52e43d0
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
