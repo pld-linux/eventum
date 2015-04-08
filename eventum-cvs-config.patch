@@ -24,3 +24,16 @@
  
  // save name of this script
  $PROGRAM = basename(realpath(array_shift($argv)), '.php');
+--- eventum-3.0.0-pre1/scm/eventum-git-hook.php~	2014-11-30 13:48:18.000000000 +0200
++++ eventum-3.0.0-pre1/scm/eventum-git-hook.php	2015-04-08 16:37:51.434314140 +0300
+@@ -34,9 +34,7 @@
+ // TODO: use $GL_REPO
+ $scm_name = 'git';
+ 
+-//
+-// DO NOT CHANGE ANYTHING AFTER THIS LINE
+-//
++require_once '/etc/eventum/scm.php';
+ 
+ // save name of this script
+ $PROGRAM = basename(realpath(array_shift($argv)), '.php');

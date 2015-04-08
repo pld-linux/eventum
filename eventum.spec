@@ -6,7 +6,7 @@
 %bcond_with	order	# with experimental order patch
 
 %define		subver	pre1
-%define		rel		0.12
+%define		rel		0.14
 %define		php_min_version 5.3.3
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
@@ -412,7 +412,11 @@ Summary(pl.UTF-8):	Integracja SCM dla Eventum
 Group:		Applications/WWW
 Requires:	php(core) >= %{php_min_version}
 Requires:	php(pcre)
+Requires:	php(spl)
+Suggests:	cvs
+Suggests:	git-core
 Suggests:	php(openssl)
+Suggests:	subversion
 
 %description scm
 This feature allows your software development teams to integrate your
@@ -515,6 +519,7 @@ install -d \
 	DESTDIR=$RPM_BUILD_ROOT
 
 cp -p scm/helpers.php $RPM_BUILD_ROOT%{_sbindir}
+install -p scm/eventum-git-hook.php  $RPM_BUILD_ROOT%{_sbindir}/eventum-git-hook
 
 install -d $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
 cp -a examples/* $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
@@ -772,6 +777,7 @@ done
 %attr(751,root,root) %dir %{_sysconfdir}
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/scm.php
 %attr(755,root,root) %{_sbindir}/eventum-cvs-hook
+%attr(755,root,root) %{_sbindir}/eventum-git-hook
 %attr(755,root,root) %{_sbindir}/eventum-svn-hook
 %attr(755,root,root) %{_sbindir}/helpers.php
 
