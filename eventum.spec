@@ -411,6 +411,7 @@ Summary:	Eventum SCM integration
 Summary(pl.UTF-8):	Integracja SCM dla Eventum
 Group:		Applications/WWW
 Requires:	php(core) >= %{php_min_version}
+Requires:	php(json)
 Requires:	php(pcre)
 Requires:	php(spl)
 Suggests:	cvs
