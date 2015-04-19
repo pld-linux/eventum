@@ -1,23 +1,22 @@
-# TODO
-# - discard bundled packages (from INSTALL):
-#  - JpGraph 1.5.3 (last GPL version)
 #
 # Conditional build:
 %bcond_with	order	# with experimental order patch
 
-%define		subver	pre1
-%define		rel		0.14
+%define		rel		0.16
+%define		subver  262
+%define		githash 4b3453d
 %define		php_min_version 5.3.3
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl.UTF-8):	Eventum - system śledzenia spraw/błędów
 Name:		eventum
 Version:	3.0.0
-Release:	0.%{subver}.%{rel}
+Release:	1.%{subver}.%{rel}
 License:	GPL v2
 Group:		Applications/WWW
-Source0:	https://github.com/eventum/eventum/releases/download/v%{version}-%{subver}/%{name}-%{version}-%{subver}.tar.gz
-# Source0-md5:	786930171e278f03baa7b174f52e43d0
+#Source0:	https://github.com/eventum/eventum/releases/download/v%{version}-%{subver}/%{name}-%{version}-%{subver}.tar.gz
+Source0:	%{name}-%{version}-%{subver}-g%{githash}.tar.gz
+# Source0-md5:	d571072508b7254ed26dd21e5878ed6c
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -47,7 +46,7 @@ Patch107:	%{name}-gettext.patch
 Patch200:	%{name}-fixed-nav.patch
 URL:		http://eventum.mysql.org/
 BuildRequires:	/usr/bin/php
-BuildRequires:	gettext-tools
+BuildRequires:	gettext-devel
 BuildRequires:	php(core) >= %{php_min_version}
 BuildRequires:	rpm-php-pearprov >= 4.0.2-98
 BuildRequires:	rpmbuild(macros) >= 1.654
@@ -90,7 +89,7 @@ Conflicts:	logrotate < 3.8.0
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
-%define		_noautoreq_pear	../init.php ../../init.php init.php /usr/share/eventum/init.php /etc/webapps/.* %{_appdir}/.* jpgraph_dir.php .*Smarty.class.php Services/JSON.php class.date_helper.php sphinxapi.php Net/LDAP2.* Auth/SASL.* Util.php smarty_internal.*
+%define		_noautoreq_pear	../init.php ../../init.php init.php /usr/share/eventum/init.php /etc/webapps/.* %{_appdir}/.* .*Smarty.class.php Services/JSON.php class.date_helper.php sphinxapi.php Net/LDAP2.* Auth/SASL.* Util.php smarty_internal.*
 
 # exclude optional php dependencies
 %define		_noautophp	php-gnupg php-hash php-pecl-http php-tk
@@ -453,7 +452,7 @@ Sphinx search integration for Eventum.
 This package contains the cron job.
 
 %prep
-%setup -qn %{name}-%{version}%{?subver:-%{subver}}
+%setup -q -n %{name}-%{version}%{?githash:-%{subver}-g%{githash}}
 
 mv docs/examples .
 
@@ -514,13 +513,10 @@ install -d \
 	$RPM_BUILD_ROOT%{_appdir}/{include,htdocs/misc,upgrade} \
 	$RPM_BUILD_ROOT%{systemdtmpfilesdir}
 
-%{__make} install-eventum install-cli install-irc install-scm install-jpgraph install-localization \
+%{__make} install-eventum install-cli install-irc install-scm install-localization \
 	sysconfdir=%{_webappdir} \
 	localedir=%{_localedir} \
 	DESTDIR=$RPM_BUILD_ROOT
-
-cp -p scm/helpers.php $RPM_BUILD_ROOT%{_sbindir}
-install -p scm/eventum-git-hook.php  $RPM_BUILD_ROOT%{_sbindir}/eventum-git-hook
 
 install -d $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
 cp -a examples/* $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
@@ -671,6 +667,7 @@ done
 %dir %{_appdir}/bin
 %attr(755,root,root) %{_appdir}/bin/process_all_emails.php
 
+%{_appdir}/autoload.php
 %{_appdir}/init.php
 %dir %{_appdir}/htdocs
 %{_appdir}/htdocs/*.php
@@ -698,7 +695,6 @@ done
 
 %dir %{_appdir}/lib
 %{_appdir}/lib/eventum
-%{_appdir}/lib/jpgraph
 %exclude %{_appdir}/lib/eventum/class.monitor.php
 
 %{_appdir}/vendor

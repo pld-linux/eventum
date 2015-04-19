@@ -120,28 +120,28 @@
  
  if (!defined('SPHINX_LOG_PATH')) {
      define('SPHINX_LOG_PATH', '/var/log/sphinx/');
---- eventum-3.0.0/vendor/autoload-dist.php	2014-11-12 18:47:36.000000000 +0200
-+++ eventum-3.0.0/vendor/autoload-dist.php	2015-03-28 20:29:06.247165544 +0200
-@@ -50,11 +50,11 @@
- define('APP_USE_COMPONENTS', false);
+--- eventum-3.0.0-pre1-258-g90ba413/autoload.php~	2015-04-12 21:59:45.000000000 +0300
++++ eventum-3.0.0-pre1-258-g90ba413/autoload.php	2015-04-19 14:20:30.900010382 +0300
+@@ -54,11 +54,11 @@
+  */
  
  if (!defined('APP_PEAR_PATH')) {
--    define('APP_PEAR_PATH', APP_PATH . '/lib/pear');
+-    define('APP_PEAR_PATH', '');
 +    define('APP_PEAR_PATH', '/usr/share/pear');
  }
  
  if (!defined('APP_SPHINXAPI_PATH')) {
--    define('APP_SPHINXAPI_PATH', APP_PATH . '/lib/sphinxapi');
+-    define('APP_SPHINXAPI_PATH', '');
 +    define('APP_SPHINXAPI_PATH', '/usr/share/php');
  }
  
  if (!defined('APP_PHP_GETTEXT_PATH')) {
-@@ -62,7 +62,7 @@
+@@ -66,7 +66,7 @@
  }
  
  if (!defined('APP_SMARTY_PATH')) {
--    define('APP_SMARTY_PATH', APP_PATH . '/lib/Smarty');
+-    define('APP_SMARTY_PATH', '');
 +    define('APP_SMARTY_PATH', '/usr/share/php/Smarty3');
  }
  
- if (!defined('APP_JPGRAPH_PATH')) {
+ // add PEAR to the include path, required by PEAR classes
