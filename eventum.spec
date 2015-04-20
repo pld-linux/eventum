@@ -3,8 +3,8 @@
 %bcond_with	order	# with experimental order patch
 
 %define		rel		0.16
-%define		subver  262
-%define		githash 4b3453d
+%define		subver  285
+%define		githash 72865b8
 %define		php_min_version 5.3.3
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
@@ -16,7 +16,7 @@ License:	GPL v2
 Group:		Applications/WWW
 #Source0:	https://github.com/eventum/eventum/releases/download/v%{version}-%{subver}/%{name}-%{version}-%{subver}.tar.gz
 Source0:	%{name}-%{version}-%{subver}-g%{githash}.tar.gz
-# Source0-md5:	d571072508b7254ed26dd21e5878ed6c
+# Source0-md5:	77d3f6ef97c3f4567717f7ba0aefd7de
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -52,9 +52,9 @@ BuildRequires:	rpm-php-pearprov >= 4.0.2-98
 BuildRequires:	rpmbuild(macros) >= 1.654
 BuildRequires:	sed >= 4.0
 Requires:	%{name}-base = %{version}-%{release}
+Requires:	fonts-TTF-RedHat-liberation
 Requires:	php(core) >= %{php_min_version}
 Requires:	php(filter)
-Requires:	php(gd)
 Requires:	php(iconv)
 Requires:	php(imap)
 Requires:	php(json)
@@ -78,6 +78,7 @@ Requires:	php-pear-Net_UserAgent_Detect
 Requires:	php-pear-PEAR-core
 Requires:	php-pear-Text_Diff
 Requires:	php-pear-XML_RPC
+Requires:	phplot >= 5.8.0
 Requires:	webapps
 Requires:	webserver(access)
 Requires:	webserver(alias)
@@ -523,8 +524,6 @@ cp -a examples/* $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
 
 %{?with_order:cp -a htdocs/ajax $RPM_BUILD_ROOT%{_appdir}/htdocs}
 
-cp -a vendor $RPM_BUILD_ROOT%{_appdir}
-
 touch $RPM_BUILD_ROOT%{_webappdir}/htpasswd
 cp -p %{SOURCE1} $RPM_BUILD_ROOT%{_webappdir}/apache.conf
 cp -p %{SOURCE1} $RPM_BUILD_ROOT%{_webappdir}/httpd.conf
@@ -696,8 +695,6 @@ done
 %dir %{_appdir}/lib
 %{_appdir}/lib/eventum
 %exclude %{_appdir}/lib/eventum/class.monitor.php
-
-%{_appdir}/vendor
 
 %{_examplesdir}/%{name}-%{version}
 
