@@ -59,7 +59,7 @@ Requires:	php(iconv)
 Requires:	php(imap)
 Requires:	php(json)
 Requires:	php(mbstring)
-Requires:	php(mysql)
+Requires:	php(mysqli)
 Requires:	php(pcre)
 Requires:	php(session)
 Requires:	php-Smarty >= 3.1
