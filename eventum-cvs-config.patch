@@ -1,28 +1,39 @@
---- eventum-2.3.2/scm/eventum-cvs-hook.php~	2012-02-09 11:27:05.000000000 +0200
-+++ eventum-2.3.2/scm/eventum-cvs-hook.php	2012-02-09 11:29:22.671597765 +0200
-@@ -28,13 +28,7 @@
- // |          Elan Ruusamäe <glen@delfi.ee>                               |
- // +----------------------------------------------------------------------+
+--- eventum-3.0.0-pre1/scm/eventum-cvs-hook.php~	2014-11-30 13:48:18.000000000 +0200
++++ eventum-3.0.0-pre1/scm/eventum-cvs-hook.php	2015-02-09 14:39:22.881991719 +0200
+@@ -52,9 +52,7 @@
+ // SCM repository name. Needed if multiple repositories configured
+ $scm_name = 'cvs';
  
--// URL to your Eventum installation.
--// https is supported transparently by PHP 5 if you have openssl module enabled.
--$eventum_url = 'http://eventum.example.com/';
--
 -//
 -// DO NOT CHANGE ANYTHING AFTER THIS LINE
 -//
 +require_once '/etc/eventum/scm.php';
  
  // save name of this script
- $PROGRAM = basename(array_shift($argv));
---- eventum-2.2/scm/eventum-svn-hook.php~	2009-11-10 13:31:10.000000000 +0200
-+++ eventum-2.2/scm/eventum-svn-hook.php	2009-11-10 13:31:37.571582772 +0200
-@@ -36,7 +36,7 @@
+ $PROGRAM = basename(realpath(array_shift($argv)), '.php');
+--- eventum-3.0.0-pre1/scm/eventum-svn-hook.php~	2014-11-30 13:48:18.000000000 +0200
++++ eventum-3.0.0-pre1/scm/eventum-svn-hook.php	2015-02-09 14:40:05.184671966 +0200
+@@ -48,9 +48,7 @@
+ // SCM repository name. Needed if multiple repositories configured
+ $scm_name = 'svn';
  
- // URL to your Eventum installation.
- // https is supported transparently by PHP 5 if you have openssl module enabled.
--$eventum_url = 'http://eventum.example.com/';
+-//
+-// DO NOT CHANGE ANYTHING AFTER THIS LINE
+-//
 +require_once '/etc/eventum/scm.php';
  
- //
- // DO NOT CHANGE ANYTHING AFTER THIS LINE
+ // save name of this script
+ $PROGRAM = basename(realpath(array_shift($argv)), '.php');
+--- eventum-3.0.0-pre1/scm/eventum-git-hook.php~	2014-11-30 13:48:18.000000000 +0200
++++ eventum-3.0.0-pre1/scm/eventum-git-hook.php	2015-04-08 16:37:51.434314140 +0300
+@@ -34,9 +34,7 @@
+ // TODO: use $GL_REPO
+ $scm_name = 'git';
+ 
+-//
+-// DO NOT CHANGE ANYTHING AFTER THIS LINE
+-//
++require_once '/etc/eventum/scm.php';
+ 
+ // save name of this script
+ $PROGRAM = basename(realpath(array_shift($argv)), '.php');

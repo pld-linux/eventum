@@ -1,6 +1,6 @@
---- eventum-2.2/lib/eventum/class.language.php~	2009-06-27 20:21:10.000000000 +0300
-+++ eventum-2.2/lib/eventum/class.language.php	2009-06-27 20:25:56.411199906 +0300
-@@ -227,6 +227,5 @@
+--- eventum-3.0.0/lib/eventum/gettext.php~	2014-11-12 18:47:36.000000000 +0200
++++ eventum-3.0.0/lib/eventum/gettext.php	2015-02-02 20:08:38.869227761 +0200
+@@ -95,6 +95,5 @@
  }
  
  // this won't change over the request. so set it once and permanently

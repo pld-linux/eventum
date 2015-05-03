@@ -11,42 +11,6 @@ minor look & feel fixes
                <p><i>{t}Last updated{/t}: {$faq.faq_updated_date}</i></p>
                {$faq.message}
              </td>
---- ./templates/view_form.tpl.html~	2005-02-27 17:59:14.000000000 +0200
-+++ ./templates/view_form.tpl.html	2005-03-17 12:38:03.000000000 +0200
-@@ -5,13 +5,13 @@
- {literal}
- function openHistory(issue_id)
- {
--    var features = 'width=520,height=400,top=30,left=30,resizable=yes,scrollbars=yes,toolbar=no,location=no,menubar=no,status=no';
-+    var features = 'width=890,height=500,top=30,left=30,resizable=yes,scrollbars=yes,toolbar=no,location=no,menubar=no,status=no';
-     var popupWin = window.open('history.php?iss_id=' + issue_id, '_impact', features);
-     popupWin.focus();
- }
- function openNotification(issue_id)
- {
--    var features = 'width=440,height=400,top=30,left=30,resizable=yes,scrollbars=yes,toolbar=no,location=no,menubar=no,status=no';
-+    var features = 'width=540,height=400,top=30,left=30,resizable=yes,scrollbars=yes,toolbar=no,location=no,menubar=no,status=no';
-     var popupWin = window.open('notification.php?iss_id=' + issue_id, '_notification', features);
-     popupWin.focus();
- }
---- ./templates/update_form.tpl.html~	2005-03-16 19:03:57.000000000 +0200
-+++ ./templates/update_form.tpl.html	2005-03-17 12:59:17.000000000 +0200
-@@ -31,13 +31,13 @@
- <!--
- function openHistory(issue_id)
- {
--    var features = 'width=420,height=400,top=30,left=30,resizable=yes,scrollbars=yes,toolbar=no,location=no,menubar=no,status=no';
-+    var features = 'width=890,height=500,top=30,left=30,resizable=yes,scrollbars=yes,toolbar=no,location=no,menubar=no,status=no';
-     var popupWin = window.open('history.php?iss_id=' + issue_id, '_impact', features);
-     popupWin.focus();
- }
- function openNotification(issue_id)
- {
--    var features = 'width=440,height=400,top=30,left=30,resizable=yes,scrollbars=yes,toolbar=no,location=no,menubar=no,status=no';
-+    var features = 'width=540,height=400,top=30,left=30,resizable=yes,scrollbars=yes,toolbar=no,location=no,menubar=no,status=no';
-     var popupWin = window.open('notification.php?iss_id=' + issue_id, '_notification', features);
-     popupWin.focus();
- }
 --- eventum-20051130/templates/file_upload.tpl.html~	2005-11-30 17:54:07.000000000 +0200
 +++ eventum-20051130/templates/file_upload.tpl.html	2005-11-30 17:55:45.000000000 +0200
 @@ -79,13 +79,13 @@

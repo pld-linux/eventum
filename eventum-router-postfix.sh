@@ -1,5 +1,4 @@
 #!/bin/sh
-# $Id$
 
 case "$1" in
 emails|emails\ *)
@@ -15,4 +14,4 @@ drafts|notes)
 esac
 
 
-exec /usr/share/eventum/route_$TYPE.php $ARG
+exec /usr/share/eventum/bin/route_$TYPE.php "$ARG"
