@@ -3,8 +3,8 @@
 %bcond_with	order	# with experimental order patch
 
 %define		rel		0.2
-%define		subver  48
-%define		githash f2ba987
+%define		subver  97
+%define		githash 35ea6f2
 %define		php_min_version 5.3.3
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
@@ -16,7 +16,7 @@ License:	GPL v2
 Group:		Applications/WWW
 #Source0:	https://github.com/eventum/eventum/releases/download/v%{version}/%{name}-%{version}.tar.gz
 Source0:	%{name}-%{version}-%{subver}-g%{githash}.tar.gz
-# Source0-md5:	89ba8639e4948220175eca375888e9b2
+# Source0-md5:	cf47e2f74ce82af5c77f9b69f4b74225
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
