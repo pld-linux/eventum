@@ -3,8 +3,8 @@
 %bcond_with	order	# with experimental order patch
 
 %define		rel		1
-%define		subver  99
-%define		githash 2b146d4
+%define		subver  129
+%define		githash 03f584d
 %define		php_min_version 5.3.3
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
@@ -16,7 +16,7 @@ License:	GPL v2
 Group:		Applications/WWW
 #Source0:	https://github.com/eventum/eventum/releases/download/v%{version}/%{name}-%{version}.tar.gz
 Source0:	%{name}-%{version}-%{subver}-g%{githash}.tar.gz
-# Source0-md5:	ae7474b37a93f2fcebebc292112f20f1
+# Source0-md5:	b84e793469ed4d6aef9b596373a646f0
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -65,7 +65,6 @@ Requires:	php(session)
 Requires:	php-Smarty >= 3.1
 Requires:	php-Smarty-plugin-gettext
 Requires:	php-pear-DB
-Requires:	php-pear-Date
 Requires:	php-pear-Mail
 Requires:	php-pear-Mail_Mime
 Requires:	php-pear-Mail_mimeDecode
