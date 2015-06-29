@@ -2,9 +2,9 @@
 # Conditional build:
 %bcond_with	order	# with experimental order patch
 
-%define		rel		1
-%define		subver  129
-%define		githash 03f584d
+%define		rel		0.1
+%define		subver  207
+%define		githash 0ce2ec6
 %define		php_min_version 5.3.3
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
@@ -505,7 +505,7 @@ find '(' -name '*~' -o -name '*.orig' ')' | xargs -r rm -v
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d \
-	$RPM_BUILD_ROOT{%{_webappdir},%{_sysconfdir},%{_bindir},%{_sbindir},%{_libdir}} \
+	$RPM_BUILD_ROOT{%{_webappdir}/{custom_field,templates,workflow},%{_sysconfdir},%{_bindir},%{_sbindir},%{_libdir}} \
 	$RPM_BUILD_ROOT/etc/{rc.d/init.d,cron.d,logrotate.d,sysconfig} \
 	$RPM_BUILD_ROOT/var/{run,cache,lib}/%{name} \
 	$RPM_BUILD_ROOT/var/log/{archive/,}%{name} \
@@ -652,6 +652,9 @@ done
 %defattr(644,root,root,755)
 %doc docs/*
 %attr(751,root,root) %dir %{_webappdir}
+%attr(751,root,root) %dir %{_webappdir}/custom_field
+%attr(751,root,root) %dir %{_webappdir}/templates
+%attr(751,root,root) %dir %{_webappdir}/workflow
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/apache.conf
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/httpd.conf
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/lighttpd.conf
