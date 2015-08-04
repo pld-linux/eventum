@@ -3,19 +3,19 @@
 %bcond_with	order	# with experimental order patch
 
 %define		rel		1
-#define		subver  285
-#define		githash 72865b8
+#define		subver  207
+#define		githash 0ce2ec6
 %define		php_min_version 5.3.3
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl.UTF-8):	Eventum - system śledzenia spraw/błędów
 Name:		eventum
-Version:	3.0.1
-Release:	%{?subver:0.%{subver}.}%{rel}
+Version:	3.0.2
+Release:	%{?subver:1.%{subver}.%{?githash:g%{githash}.}}%{rel}
 License:	GPL v2
 Group:		Applications/WWW
 Source0:	https://github.com/eventum/eventum/releases/download/v%{version}/%{name}-%{version}.tar.gz
-# Source0-md5:	8c9d1554923d6b59a29deb333792745d
+# Source0-md5:	c6a5236ddfb1ae47cb09b08babbc37df
 #Source0:	%{name}-%{version}-%{subver}-g%{githash}.tar.gz
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
@@ -65,7 +65,6 @@ Requires:	php(session)
 Requires:	php-Smarty >= 3.1
 Requires:	php-Smarty-plugin-gettext
 Requires:	php-pear-DB
-Requires:	php-pear-Date
 Requires:	php-pear-Mail
 Requires:	php-pear-Mail_Mime
 Requires:	php-pear-Mail_mimeDecode
@@ -506,7 +505,7 @@ find '(' -name '*~' -o -name '*.orig' ')' | xargs -r rm -v
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d \
-	$RPM_BUILD_ROOT{%{_webappdir},%{_sysconfdir},%{_bindir},%{_sbindir},%{_libdir}} \
+	$RPM_BUILD_ROOT{%{_webappdir}/{custom_field,templates,workflow},%{_sysconfdir},%{_bindir},%{_sbindir},%{_libdir}} \
 	$RPM_BUILD_ROOT/etc/{rc.d/init.d,cron.d,logrotate.d,sysconfig} \
 	$RPM_BUILD_ROOT/var/{run,cache,lib}/%{name} \
 	$RPM_BUILD_ROOT/var/log/{archive/,}%{name} \
@@ -653,6 +652,9 @@ done
 %defattr(644,root,root,755)
 %doc docs/*
 %attr(751,root,root) %dir %{_webappdir}
+%attr(751,root,root) %dir %{_webappdir}/custom_field
+%attr(751,root,root) %dir %{_webappdir}/templates
+%attr(751,root,root) %dir %{_webappdir}/workflow
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/apache.conf
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/httpd.conf
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/lighttpd.conf
