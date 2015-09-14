@@ -154,3 +154,14 @@
  }
  
  // add PEAR to the include path, required by PEAR classes
+--- ./init.php	2015-08-04 21:55:51.000000000 +0300
++++ ./init.php	2015-07-02 22:16:40.638270324 +0300
+@@ -197,6 +197,8 @@
+ }
+ 
+ require_once APP_PATH . '/autoload.php';
++# hack
++require_once '/usr/share/php/Smarty3/plugins/block.t.php';
+ 
+ // fix magic_quote_gpc'ed values
+ if (get_magic_quotes_gpc()) {
