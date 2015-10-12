@@ -2,9 +2,9 @@
 # Conditional build:
 %bcond_with	order	# with experimental order patch
 
-%define		rel		1
-%define		subver  28
-%define		githash 0d12f69
+%define		rel		1.4
+%define		subver  101
+%define		githash e275162
 %define		php_min_version 5.3.3
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
@@ -16,7 +16,7 @@ License:	GPL v2
 Group:		Applications/WWW
 #Source0:	https://github.com/eventum/eventum/releases/download/v%{version}/%{name}-%{version}.tar.gz
 Source0:	%{name}-%{version}-%{subver}-g%{githash}.tar.gz
-# Source0-md5:	9a6b3cd1c8deaceacf674d33784953d0
+# Source0-md5:	57aa4927f9b93e807848ffdaa3acc2a5
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -42,6 +42,7 @@ Patch100:	%{name}-paths.patch
 Patch101:	%{name}-cvs-config.patch
 Patch105:	%{name}-bot-reconnect.patch
 Patch107:	%{name}-gettext.patch
+Patch108:	autoload.patch
 # some tests
 Patch200:	%{name}-fixed-nav.patch
 URL:		http://eventum.mysql.org/
@@ -491,6 +492,7 @@ rm -f config/config.php
 %patch101 -p1
 %patch105 -p1
 %patch107 -p1
+%patch108 -p1
 
 %{__sed} -i -e "
 s;define('CONFIG_PATH'.*');define('CONFIG_PATH', '%{_webappdir}');
@@ -517,6 +519,9 @@ install -d \
 	sysconfdir=%{_webappdir} \
 	localedir=%{_localedir} \
 	DESTDIR=$RPM_BUILD_ROOT
+
+install -d $RPM_BUILD_ROOT%{_appdir}/vendor
+cp -a vendor/autoload.php vendor/composer $RPM_BUILD_ROOT%{_appdir}/vendor
 
 # unsupported locale
 %{__rm} -r $RPM_BUILD_ROOT%{_localedir}/ht
@@ -696,6 +701,13 @@ done
 %attr(755,root,root) %{_appdir}/upgrade/ldap_update_users.php
 %attr(755,root,root) %{_appdir}/upgrade/scm_trac_import.php
 %{_appdir}/upgrade/patches
+
+%dir %{_appdir}/vendor
+%dir %{_appdir}/vendor/composer
+%{_appdir}/vendor/autoload.php
+%{_appdir}/vendor/composer/ClassLoader.php
+%{_appdir}/vendor/composer/autoload_*.php
+%{_appdir}/vendor/composer/include_paths.php
 
 %dir %{_appdir}/lib
 %{_appdir}/lib/eventum
