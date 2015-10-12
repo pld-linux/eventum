@@ -1,15 +1,14 @@
 --- eventum-3.0.2-101-ge275162/vendor/composer/autoload_classmap.php	2015-10-12 22:14:26.698664318 +0300
 +++ eventum-3.0.2-101-ge275162/vendor/composer/autoload_classmap.php	2015-10-12 23:10:35.845683103 +0300
-@@ -4,6 +4,8 @@
+@@ -4,6 +4,7 @@
  
  $vendorDir = dirname(dirname(__FILE__));
  $baseDir = dirname($vendorDir);
-+$pearDir = PEAR_INSTALL_DIR;
 +$phpDir = PHP_DATADIR . '/php';
  
  return array(
      'Abstract_Fulltext_Search' => $baseDir . '/lib/eventum/search/class.abstract_fulltext_search.php',
-@@ -19,7 +21,6 @@
+@@ -19,7 +20,6 @@
      'CLI_Misc' => $baseDir . '/lib/eventum/class.cli_misc.php',
      'CRM' => $baseDir . '/lib/eventum/class.crm.php',
      'CRMException' => $baseDir . '/lib/eventum/class.crmexception.php',
@@ -17,7 +16,7 @@
      'Category' => $baseDir . '/lib/eventum/class.category.php',
      'Command_Line' => $baseDir . '/lib/eventum/class.command_line.php',
      'Contact' => $baseDir . '/lib/eventum/crm/class.contact.php',
-@@ -44,12 +45,7 @@
+@@ -44,12 +44,7 @@
      'Email_Response' => $baseDir . '/lib/eventum/class.email_response.php',
      'Error_Handler' => $baseDir . '/lib/eventum/class.error_handler.php',
      'Eventum_Autoload' => $baseDir . '/lib/eventum/autoload.php',
@@ -30,7 +29,7 @@
      'Filter' => $baseDir . '/lib/eventum/class.filter.php',
      'Group' => $baseDir . '/lib/eventum/class.group.php',
      'Help' => $baseDir . '/lib/eventum/class.help.php',
-@@ -64,44 +60,14 @@
+@@ -64,44 +59,14 @@
      'Lock' => $baseDir . '/lib/eventum/class.lock.php',
      'Mail_Helper' => $baseDir . '/lib/eventum/class.mail_helper.php',
      'Mail_Queue' => $baseDir . '/lib/eventum/class.mail_queue.php',
@@ -75,7 +74,7 @@
      'Pager' => $baseDir . '/lib/eventum/class.pager.php',
      'Partner' => $baseDir . '/lib/eventum/class.partner.php',
      'Phone_Support' => $baseDir . '/lib/eventum/class.phone_support.php',
-@@ -131,159 +97,22 @@
+@@ -131,159 +96,19 @@
      'Severity' => $baseDir . '/lib/eventum/class.severity.php',
 -    'Smarty' => $vendorDir . '/smarty/smarty/libs/Smarty.class.php',
 -    'SmartyBC' => $vendorDir . '/smarty/smarty/libs/SmartyBC.class.php',
@@ -239,9 +238,6 @@
 +    'PHPlot' => $phpDir .'/phplot/phplot.php',
 +    'Smarty' => $phpDir. '/Smarty3/Smarty.class.php',
 +    'SphinxClient' => $phpDir . '/sphinxapi.php',
-+    'Text_Diff' => $pearDir . '/Text/Diff.php',
-+    'Text_Diff_Renderer' => $pearDir . '/Text/Diff/Renderer.php',
-+    'Text_Diff_Renderer_unified' => $pearDir . '/Text/Diff/Renderer/unified.php',
  );
 --- eventum-3.0.2-101-ge275162/vendor/composer/autoload_files.php	2015-10-12 22:06:43.978822341 +0300
 +++ eventum-3.0.2-101-ge275162/vendor/composer/autoload_files.php	2015-10-12 22:06:43.978822341 +0300
@@ -256,7 +252,7 @@
  );
 --- eventum-3.0.2-101-ge275162/vendor/composer/autoload_namespaces.php	2015-10-12 22:08:53.596910822 +0300
 +++ eventum-3.0.2-101-ge275162/vendor/composer/autoload_namespaces.php	2015-10-12 23:10:35.849016388 +0300
-@@ -4,12 +4,12 @@
+@@ -4,12 +4,13 @@
  
 -$vendorDir = dirname(dirname(__FILE__));
 -$baseDir = dirname($vendorDir);
@@ -276,6 +272,7 @@
 +    'DB' => array($pearDir),
 +    'Auth' => array($pearDir),
 +    'XML' => array($pearDir),
++    'Text' => array($pearDir),
  );
 --- eventum-3.0.2-101-ge275162/vendor/composer/include_paths.php	2015-10-12 21:33:13.000000000 +0300
 +++ eventum-3.0.2-101-ge275162/vendor/composer/include_paths.php	2015-10-12 22:01:47.979854575 +0300
