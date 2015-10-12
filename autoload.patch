@@ -1,5 +1,5 @@
---- eventum-3.0.2-101-ge275162/vendor/composer/autoload_classmap.php	2015-10-12 22:14:26.698664318 +0300
-+++ eventum-3.0.2-101-ge275162/vendor/composer/autoload_classmap.php	2015-10-12 23:10:35.845683103 +0300
+--- eventum-3.0.2-105-g9c49ee5/vendor/composer/autoload_classmap.php~	2015-10-12 23:36:43.802757372 +0300
++++ eventum-3.0.2-105-g9c49ee5/vendor/composer/autoload_classmap.php	2015-10-12 23:37:17.072271366 +0300
 @@ -4,6 +4,7 @@
  
  $vendorDir = dirname(dirname(__FILE__));
@@ -16,16 +16,14 @@
      'Category' => $baseDir . '/lib/eventum/class.category.php',
      'Command_Line' => $baseDir . '/lib/eventum/class.command_line.php',
      'Contact' => $baseDir . '/lib/eventum/crm/class.contact.php',
-@@ -44,12 +44,7 @@
+@@ -44,10 +44,7 @@
      'Email_Response' => $baseDir . '/lib/eventum/class.email_response.php',
      'Error_Handler' => $baseDir . '/lib/eventum/class.error_handler.php',
      'Eventum_Autoload' => $baseDir . '/lib/eventum/autoload.php',
 -    'Eventum_RPC' => $vendorDir . '/eventum/rpc/class.Eventum_RPC.php',
 -    'Eventum_RPC_Exception' => $vendorDir . '/eventum/rpc/class.Eventum_RPC.php',
      'FAQ' => $baseDir . '/lib/eventum/class.faq.php',
--    'File' => $vendorDir . '/pear-pear.php.net/File/File.php',
 -    'FileReader' => $vendorDir . '/php-gettext/php-gettext/streams.php',
--    'File_Util' => $vendorDir . '/pear-pear.php.net/File_Util/File/Util.php',
      'Filter' => $baseDir . '/lib/eventum/class.filter.php',
      'Group' => $baseDir . '/lib/eventum/class.group.php',
      'Help' => $baseDir . '/lib/eventum/class.help.php',
@@ -273,31 +271,6 @@
 +    'Auth' => array($pearDir),
 +    'XML' => array($pearDir),
 +    'Text' => array($pearDir),
- );
---- eventum-3.0.2-101-ge275162/vendor/composer/include_paths.php	2015-10-12 21:33:13.000000000 +0300
-+++ eventum-3.0.2-101-ge275162/vendor/composer/include_paths.php	2015-10-12 22:01:47.979854575 +0300
-@@ -6,22 +6,4 @@
- $baseDir = dirname($vendorDir);
- 
- return array(
--    $vendorDir . '/pear/pear_exception',
--    $vendorDir . '/pear/auth_sasl',
--    $vendorDir . '/pear/pear-core-minimal/src',
--    $vendorDir . '/pear/db',
--    $vendorDir . '/pear-pear.php.net/XML_RPC',
--    $vendorDir . '/pear-pear.php.net/File',
--    $vendorDir . '/pear-pear.php.net/File_Util',
--    $vendorDir . '/pear-pear.php.net/Mail_Mime',
--    $vendorDir . '/pear-pear.php.net/Mail_mimeDecode',
--    $vendorDir . '/pear-pear.php.net/Math_Stats',
--    $vendorDir . '/pear-pear.php.net/Net_LDAP2',
--    $vendorDir . '/pear-pear.php.net/Net_Socket',
--    $vendorDir . '/pear-pear.php.net/Net_POP3',
--    $vendorDir . '/pear-pear.php.net/Net_SmartIRC',
--    $vendorDir . '/pear-pear.php.net/Net_URL',
--    $vendorDir . '/pear-pear.php.net/Text_Diff',
--    $vendorDir . '/pear/mail',
--    $vendorDir . '/pear/net_smtp',
  );
 --- eventum-3.0.2-101-ge275162/autoload.php	2015-10-12 22:42:04.697464456 +0300
 +++ eventum-3.0.2-101-ge275162/autoload.php	2015-10-12 22:46:12.383826829 +0300

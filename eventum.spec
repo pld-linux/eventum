@@ -3,8 +3,8 @@
 %bcond_with	order	# with experimental order patch
 
 %define		rel		1.11
-%define		subver  101
-%define		githash e275162
+%define		subver  105
+%define		githash 9c49ee5
 %define		php_min_version 5.3.3
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
@@ -529,6 +529,8 @@ install -d \
 
 install -d $RPM_BUILD_ROOT%{_appdir}/vendor
 cp -a vendor/autoload.php vendor/composer $RPM_BUILD_ROOT%{_appdir}/vendor
+rm $RPM_BUILD_ROOT%{_appdir}/vendor/composer/include_paths.php
+rm $RPM_BUILD_ROOT%{_appdir}/vendor/composer/autoload_psr4.php
 
 # unsupported locale
 %{__rm} -r $RPM_BUILD_ROOT%{_localedir}/ht
@@ -713,7 +715,6 @@ done
 %{_appdir}/vendor/autoload.php
 %{_appdir}/vendor/composer/ClassLoader.php
 %{_appdir}/vendor/composer/autoload_*.php
-%{_appdir}/vendor/composer/include_paths.php
 
 %dir %{_appdir}/lib
 %{_appdir}/lib/eventum
