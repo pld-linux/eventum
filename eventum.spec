@@ -2,7 +2,7 @@
 # Conditional build:
 %bcond_with	order	# with experimental order patch
 
-%define		rel		1.10
+%define		rel		1.11
 %define		subver  101
 %define		githash e275162
 %define		php_min_version 5.3.3
@@ -154,6 +154,13 @@ insecure to keep the setup files in place.
 Ten pakiet należy zainstalować w celu wstępnej konfiguracji Eventum po
 pierwszej instalacji. Potem należy go odinstalować, jako że
 pozostawienie plików instalacyjnych mogłoby być niebezpieczne.
+
+%package doc
+Summary:	Eventum documentation and Wiki
+Group:		Documentation
+
+%description doc
+Eventum documentation and copy of Wiki.
 
 %package mail-queue
 Summary:	Eventum mail queue process
@@ -655,7 +662,6 @@ done
 
 %files -f %{name}.lang
 %defattr(644,root,root,755)
-%doc docs/*
 %attr(751,root,root) %dir %{_webappdir}
 %attr(751,root,root) %dir %{_webappdir}/custom_field
 %attr(751,root,root) %dir %{_webappdir}/templates
@@ -713,8 +719,6 @@ done
 %{_appdir}/lib/eventum
 %exclude %{_appdir}/lib/eventum/class.monitor.php
 
-%{_examplesdir}/%{name}-%{version}
-
 %{systemdtmpfilesdir}/%{name}.conf
 %dir %attr(730,root,http) /var/run/%{name}
 %dir %attr(730,root,http) /var/cache/%{name}
@@ -733,6 +737,10 @@ done
 %files setup
 %defattr(644,root,root,755)
 %{_appdir}/htdocs/setup
+
+%files doc
+%doc docs/*
+%{_examplesdir}/%{name}-%{version}
 
 %files mail-queue
 %defattr(644,root,root,755)
