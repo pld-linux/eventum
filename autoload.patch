@@ -1,5 +1,5 @@
 --- eventum-3.0.2-101-ge275162/vendor/composer/autoload_classmap.php	2015-10-12 22:14:26.698664318 +0300
-+++ eventum-3.0.2-101-ge275162/vendor/composer/autoload_classmap.php	2015-10-12 22:14:26.698664318 +0300
++++ eventum-3.0.2-101-ge275162/vendor/composer/autoload_classmap.php	2015-10-12 23:10:35.845683103 +0300
 @@ -4,6 +4,8 @@
  
  $vendorDir = dirname(dirname(__FILE__));
@@ -75,7 +75,7 @@
      'Pager' => $baseDir . '/lib/eventum/class.pager.php',
      'Partner' => $baseDir . '/lib/eventum/class.partner.php',
      'Phone_Support' => $baseDir . '/lib/eventum/class.phone_support.php',
-@@ -131,159 +97,18 @@
+@@ -131,159 +97,22 @@
      'Severity' => $baseDir . '/lib/eventum/class.severity.php',
 -    'Smarty' => $vendorDir . '/smarty/smarty/libs/Smarty.class.php',
 -    'SmartyBC' => $vendorDir . '/smarty/smarty/libs/SmartyBC.class.php',
@@ -238,6 +238,10 @@
 +    // external deps
 +    'PHPlot' => $phpDir .'/phplot/phplot.php',
 +    'Smarty' => $phpDir. '/Smarty3/Smarty.class.php',
++    'SphinxClient' => $phpDir . '/sphinxapi.php',
++    'Text_Diff' => $pearDir . '/Text/Diff.php',
++    'Text_Diff_Renderer' => $pearDir . '/Text/Diff/Renderer.php',
++    'Text_Diff_Renderer_unified' => $pearDir . '/Text/Diff/Renderer/unified.php',
  );
 --- eventum-3.0.2-101-ge275162/vendor/composer/autoload_files.php	2015-10-12 22:06:43.978822341 +0300
 +++ eventum-3.0.2-101-ge275162/vendor/composer/autoload_files.php	2015-10-12 22:06:43.978822341 +0300
@@ -251,8 +255,8 @@
 +    $phpDir. '/Smarty3/plugins/block.t.php',
  );
 --- eventum-3.0.2-101-ge275162/vendor/composer/autoload_namespaces.php	2015-10-12 22:08:53.596910822 +0300
-+++ eventum-3.0.2-101-ge275162/vendor/composer/autoload_namespaces.php	2015-10-12 22:08:53.596910822 +0300
-@@ -4,12 +4,11 @@
++++ eventum-3.0.2-101-ge275162/vendor/composer/autoload_namespaces.php	2015-10-12 23:10:35.849016388 +0300
+@@ -4,12 +4,12 @@
  
 -$vendorDir = dirname(dirname(__FILE__));
 -$baseDir = dirname($vendorDir);
@@ -271,6 +275,7 @@
 +    'Mail' => array($pearDir),
 +    'DB' => array($pearDir),
 +    'Auth' => array($pearDir),
++    'XML' => array($pearDir),
  );
 --- eventum-3.0.2-101-ge275162/vendor/composer/include_paths.php	2015-10-12 21:33:13.000000000 +0300
 +++ eventum-3.0.2-101-ge275162/vendor/composer/include_paths.php	2015-10-12 22:01:47.979854575 +0300
