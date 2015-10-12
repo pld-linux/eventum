@@ -239,15 +239,16 @@
 +    'PHPlot' => $phpDir .'/phplot/phplot.php',
 +    'Smarty' => $phpDir. '/Smarty3/Smarty.class.php',
  );
---- eventum-3.0.2-101-ge275162/vendor/composer/autoload_files.php	2015-10-12 21:33:13.000000000 +0300
+--- eventum-3.0.2-101-ge275162/vendor/composer/autoload_files.php	2015-10-12 22:06:43.978822341 +0300
 +++ eventum-3.0.2-101-ge275162/vendor/composer/autoload_files.php	2015-10-12 22:06:43.978822341 +0300
-@@ -6,6 +6,5 @@
+@@ -6,6 +6,6 @@
  $baseDir = dirname($vendorDir);
++$phpDir = PHP_DATADIR . '/php';
  
  return array(
 -    $vendorDir . '/smarty-gettext/smarty-gettext/block.t.php',
 -    $vendorDir . '/smarty-gettext/smarty-gettext/function.locale.php',
-+	'/usr/share/php/Smarty3/plugins/block.t.php',
++    $phpDir. '/Smarty3/plugins/block.t.php',
  );
 --- eventum-3.0.2-101-ge275162/vendor/composer/autoload_namespaces.php	2015-10-12 22:08:53.596910822 +0300
 +++ eventum-3.0.2-101-ge275162/vendor/composer/autoload_namespaces.php	2015-10-12 22:08:53.596910822 +0300
