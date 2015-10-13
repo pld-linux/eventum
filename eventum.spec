@@ -33,7 +33,6 @@ Source15:	%{name}-lighttpd.conf
 Source16:	http://www.isocra.com/images/updown2.gif
 # Source16-md5:	deb6eeb2552ba757d3a949ed10c4107d
 Source17:	%{name}.tmpfiles
-#Patch0:		%{name}-lf.patch
 Patch2:		%{name}-order.patch
 #Patch3:		group-users.patch
 #Patch4:		https://github.com/glensc/eventum/compare/cf_escape.patch
@@ -468,7 +467,6 @@ mv docs/examples .
 rm docs/COPYING
 
 # bug fixes / features
-#%patch0 -p1
 %{?with_order:%patch2 -p1}
 #%patch3 -p0
 #%patch4 -p1
