@@ -3,19 +3,19 @@
 %bcond_with	order	# with experimental order patch
 
 %define		rel		1
-#define		subver  207
-#define		githash 0ce2ec6
+#define		subver  105
+#define		githash 9c49ee5
 %define		php_min_version 5.3.3
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl.UTF-8):	Eventum - system śledzenia spraw/błędów
 Name:		eventum
-Version:	3.0.2
+Version:	3.0.3
 Release:	%{?subver:1.%{subver}.%{?githash:g%{githash}.}}%{rel}
 License:	GPL v2
 Group:		Applications/WWW
 Source0:	https://github.com/eventum/eventum/releases/download/v%{version}/%{name}-%{version}.tar.gz
-# Source0-md5:	c6a5236ddfb1ae47cb09b08babbc37df
+# Source0-md5:	0ecee925e49d96cc827e99089848f55a
 #Source0:	%{name}-%{version}-%{subver}-g%{githash}.tar.gz
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
@@ -33,7 +33,6 @@ Source15:	%{name}-lighttpd.conf
 Source16:	http://www.isocra.com/images/updown2.gif
 # Source16-md5:	deb6eeb2552ba757d3a949ed10c4107d
 Source17:	%{name}.tmpfiles
-#Patch0:		%{name}-lf.patch
 Patch2:		%{name}-order.patch
 #Patch3:		group-users.patch
 #Patch4:		https://github.com/glensc/eventum/compare/cf_escape.patch
@@ -42,6 +41,7 @@ Patch100:	%{name}-paths.patch
 Patch101:	%{name}-cvs-config.patch
 Patch105:	%{name}-bot-reconnect.patch
 Patch107:	%{name}-gettext.patch
+Patch108:	autoload.patch
 # some tests
 Patch200:	%{name}-fixed-nav.patch
 URL:		http://eventum.mysql.org/
@@ -153,6 +153,13 @@ insecure to keep the setup files in place.
 Ten pakiet należy zainstalować w celu wstępnej konfiguracji Eventum po
 pierwszej instalacji. Potem należy go odinstalować, jako że
 pozostawienie plików instalacyjnych mogłoby być niebezpieczne.
+
+%package doc
+Summary:	Eventum documentation and Wiki
+Group:		Documentation
+
+%description doc
+Eventum documentation and copy of Wiki.
 
 %package mail-queue
 Summary:	Eventum mail queue process
@@ -460,7 +467,6 @@ mv docs/examples .
 rm docs/COPYING
 
 # bug fixes / features
-#%patch0 -p1
 %{?with_order:%patch2 -p1}
 #%patch3 -p0
 #%patch4 -p1
@@ -491,6 +497,7 @@ rm -f config/config.php
 %patch101 -p1
 %patch105 -p1
 %patch107 -p1
+%patch108 -p1
 
 %{__sed} -i -e "
 s;define('CONFIG_PATH'.*');define('CONFIG_PATH', '%{_webappdir}');
@@ -517,6 +524,11 @@ install -d \
 	sysconfdir=%{_webappdir} \
 	localedir=%{_localedir} \
 	DESTDIR=$RPM_BUILD_ROOT
+
+install -d $RPM_BUILD_ROOT%{_appdir}/vendor
+cp -a vendor/autoload.php vendor/composer $RPM_BUILD_ROOT%{_appdir}/vendor
+rm $RPM_BUILD_ROOT%{_appdir}/vendor/composer/include_paths.php
+rm $RPM_BUILD_ROOT%{_appdir}/vendor/composer/autoload_psr4.php
 
 # unsupported locale
 %{__rm} -r $RPM_BUILD_ROOT%{_localedir}/ht
@@ -650,7 +662,6 @@ done
 
 %files -f %{name}.lang
 %defattr(644,root,root,755)
-%doc docs/*
 %attr(751,root,root) %dir %{_webappdir}
 %attr(751,root,root) %dir %{_webappdir}/custom_field
 %attr(751,root,root) %dir %{_webappdir}/templates
@@ -697,11 +708,15 @@ done
 %attr(755,root,root) %{_appdir}/upgrade/scm_trac_import.php
 %{_appdir}/upgrade/patches
 
+%dir %{_appdir}/vendor
+%dir %{_appdir}/vendor/composer
+%{_appdir}/vendor/autoload.php
+%{_appdir}/vendor/composer/ClassLoader.php
+%{_appdir}/vendor/composer/autoload_*.php
+
 %dir %{_appdir}/lib
 %{_appdir}/lib/eventum
 %exclude %{_appdir}/lib/eventum/class.monitor.php
-
-%{_examplesdir}/%{name}-%{version}
 
 %{systemdtmpfilesdir}/%{name}.conf
 %dir %attr(730,root,http) /var/run/%{name}
@@ -722,9 +737,14 @@ done
 %defattr(644,root,root,755)
 %{_appdir}/htdocs/setup
 
+%files doc
+%doc docs/*
+%{_examplesdir}/%{name}-%{version}
+
 %files mail-queue
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_appdir}/bin/process_mail_queue.php
+%attr(755,root,root) %{_appdir}/bin/truncate_mail_queue.php
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/cron.d/%{name}-mail-queue
 
 %files mail-download

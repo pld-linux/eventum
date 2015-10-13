@@ -1,0 +1,308 @@
+--- eventum-3.0.2-105-g9c49ee5/vendor/composer/autoload_classmap.php~	2015-10-12 23:36:43.802757372 +0300
++++ eventum-3.0.2-105-g9c49ee5/vendor/composer/autoload_classmap.php	2015-10-12 23:37:17.072271366 +0300
+@@ -4,6 +4,7 @@
+ 
+ $vendorDir = dirname(dirname(__FILE__));
+ $baseDir = dirname($vendorDir);
++$phpDir = PHP_DATADIR . '/php';
+ 
+ return array(
+     'Abstract_Fulltext_Search' => $baseDir . '/lib/eventum/search/class.abstract_fulltext_search.php',
+@@ -19,7 +20,6 @@
+     'CLI_Misc' => $baseDir . '/lib/eventum/class.cli_misc.php',
+     'CRM' => $baseDir . '/lib/eventum/class.crm.php',
+     'CRMException' => $baseDir . '/lib/eventum/class.crmexception.php',
+-    'CachedFileReader' => $vendorDir . '/php-gettext/php-gettext/streams.php',
+     'Category' => $baseDir . '/lib/eventum/class.category.php',
+     'Command_Line' => $baseDir . '/lib/eventum/class.command_line.php',
+     'Contact' => $baseDir . '/lib/eventum/crm/class.contact.php',
+@@ -44,10 +44,7 @@
+     'Email_Response' => $baseDir . '/lib/eventum/class.email_response.php',
+     'Error_Handler' => $baseDir . '/lib/eventum/class.error_handler.php',
+     'Eventum_Autoload' => $baseDir . '/lib/eventum/autoload.php',
+-    'Eventum_RPC' => $vendorDir . '/eventum/rpc/class.Eventum_RPC.php',
+-    'Eventum_RPC_Exception' => $vendorDir . '/eventum/rpc/class.Eventum_RPC.php',
+     'FAQ' => $baseDir . '/lib/eventum/class.faq.php',
+-    'FileReader' => $vendorDir . '/php-gettext/php-gettext/streams.php',
+     'Filter' => $baseDir . '/lib/eventum/class.filter.php',
+     'Group' => $baseDir . '/lib/eventum/class.group.php',
+     'Help' => $baseDir . '/lib/eventum/class.help.php',
+@@ -64,44 +59,14 @@
+     'Lock' => $baseDir . '/lib/eventum/class.lock.php',
+     'Mail_Helper' => $baseDir . '/lib/eventum/class.mail_helper.php',
+     'Mail_Queue' => $baseDir . '/lib/eventum/class.mail_queue.php',
+-    'Mail_mime' => $vendorDir . '/pear-pear.php.net/Mail_Mime/Mail/mime.php',
+-    'Mail_mimeDecode' => $vendorDir . '/pear-pear.php.net/Mail_mimeDecode/Mail/mimeDecode.php',
+-    'Mail_mimePart' => $vendorDir . '/pear-pear.php.net/Mail_Mime/Mail/mimePart.php',
+-    'Math_Stats' => $vendorDir . '/pear-pear.php.net/Math_Stats/Math/Stats.php',
+     'Mime_Helper' => $baseDir . '/lib/eventum/class.mime_helper.php',
+     'Misc' => $baseDir . '/lib/eventum/class.misc.php',
+     'Monitor' => $baseDir . '/lib/eventum/class.monitor.php',
+     'MySQL_Fulltext_Search' => $baseDir . '/lib/eventum/search/class.mysql_fulltext_search.php',
+     'Mysql_Auth_Backend' => $baseDir . '/lib/eventum/auth/class.mysql_auth_backend.php',
+-    'Net_LDAP2' => $vendorDir . '/pear-pear.php.net/Net_LDAP2/Net/LDAP2.php',
+-    'Net_LDAP2_Entry' => $vendorDir . '/pear-pear.php.net/Net_LDAP2/Net/LDAP2/Entry.php',
+-    'Net_LDAP2_Error' => $vendorDir . '/pear-pear.php.net/Net_LDAP2/Net/LDAP2.php',
+-    'Net_LDAP2_Filter' => $vendorDir . '/pear-pear.php.net/Net_LDAP2/Net/LDAP2/Filter.php',
+-    'Net_LDAP2_LDIF' => $vendorDir . '/pear-pear.php.net/Net_LDAP2/Net/LDAP2/LDIF.php',
+-    'Net_LDAP2_RootDSE' => $vendorDir . '/pear-pear.php.net/Net_LDAP2/Net/LDAP2/RootDSE.php',
+-    'Net_LDAP2_Schema' => $vendorDir . '/pear-pear.php.net/Net_LDAP2/Net/LDAP2/Schema.php',
+-    'Net_LDAP2_SchemaCache' => $vendorDir . '/pear-pear.php.net/Net_LDAP2/Net/LDAP2/SchemaCache.interface.php',
+-    'Net_LDAP2_Search' => $vendorDir . '/pear-pear.php.net/Net_LDAP2/Net/LDAP2/Search.php',
+-    'Net_LDAP2_SimpleFileSchemaCache' => $vendorDir . '/pear-pear.php.net/Net_LDAP2/Net/LDAP2/SimpleFileSchemaCache.php',
+-    'Net_LDAP2_Util' => $vendorDir . '/pear-pear.php.net/Net_LDAP2/Net/LDAP2/Util.php',
+-    'Net_POP3' => $vendorDir . '/pear-pear.php.net/Net_POP3/Net/POP3.php',
+-    'Net_SmartIRC' => $vendorDir . '/pear-pear.php.net/Net_SmartIRC/Net/SmartIRC.php',
+-    'Net_SmartIRC_Error' => $vendorDir . '/pear-pear.php.net/Net_SmartIRC/Net/SmartIRC.php',
+-    'Net_SmartIRC_channel' => $vendorDir . '/pear-pear.php.net/Net_SmartIRC/Net/SmartIRC.php',
+-    'Net_SmartIRC_channeluser' => $vendorDir . '/pear-pear.php.net/Net_SmartIRC/Net/SmartIRC.php',
+-    'Net_SmartIRC_data' => $vendorDir . '/pear-pear.php.net/Net_SmartIRC/Net/SmartIRC.php',
+-    'Net_SmartIRC_irccommands' => $vendorDir . '/pear-pear.php.net/Net_SmartIRC/Net/SmartIRC/irccommands.php',
+-    'Net_SmartIRC_ircuser' => $vendorDir . '/pear-pear.php.net/Net_SmartIRC/Net/SmartIRC.php',
+-    'Net_SmartIRC_listenfor' => $vendorDir . '/pear-pear.php.net/Net_SmartIRC/Net/SmartIRC.php',
+-    'Net_SmartIRC_messagehandler' => $vendorDir . '/pear-pear.php.net/Net_SmartIRC/Net/SmartIRC/messagehandler.php',
+-    'Net_SmartIRC_user' => $vendorDir . '/pear-pear.php.net/Net_SmartIRC/Net/SmartIRC.php',
+-    'Net_Socket' => $vendorDir . '/pear-pear.php.net/Net_Socket/Net/Socket.php',
+-    'Net_URL' => $vendorDir . '/pear-pear.php.net/Net_URL/Net/URL.php',
+     'News' => $baseDir . '/lib/eventum/class.news.php',
+     'Note' => $baseDir . '/lib/eventum/class.note.php',
+     'Notification' => $baseDir . '/lib/eventum/class.notification.php',
+-    'PHPlot' => $vendorDir . '/phplot/phplot/phplot.php',
+-    'PHPlot_truecolor' => $vendorDir . '/phplot/phplot/phplot.php',
+     'Pager' => $baseDir . '/lib/eventum/class.pager.php',
+     'Partner' => $baseDir . '/lib/eventum/class.partner.php',
+     'Phone_Support' => $baseDir . '/lib/eventum/class.phone_support.php',
+@@ -131,159 +96,19 @@
+     'Severity' => $baseDir . '/lib/eventum/class.severity.php',
+-    'Smarty' => $vendorDir . '/smarty/smarty/libs/Smarty.class.php',
+-    'SmartyBC' => $vendorDir . '/smarty/smarty/libs/SmartyBC.class.php',
+-    'SmartyCompilerException' => $vendorDir . '/smarty/smarty/libs/sysplugins/smartycompilerexception.php',
+-    'SmartyException' => $vendorDir . '/smarty/smarty/libs/sysplugins/smartyexception.php',
+-    'Smarty_CacheResource' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_cacheresource.php',
+-    'Smarty_CacheResource_Custom' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_cacheresource_custom.php',
+-    'Smarty_CacheResource_KeyValueStore' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_cacheresource_keyvaluestore.php',
+-    'Smarty_Data' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_data.php',
+-    'Smarty_Internal_CacheResource_File' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_cacheresource_file.php',
+-    'Smarty_Internal_CompileBase' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_compilebase.php',
+-    'Smarty_Internal_Compile_Append' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_compile_append.php',
+-    'Smarty_Internal_Compile_Assign' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_compile_assign.php',
+-    'Smarty_Internal_Compile_Block' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_compile_block.php',
+-    'Smarty_Internal_Compile_Blockclose' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_compile_block.php',
+-    'Smarty_Internal_Compile_Break' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_compile_break.php',
+-    'Smarty_Internal_Compile_Call' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_compile_call.php',
+-    'Smarty_Internal_Compile_Capture' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_compile_capture.php',
+-    'Smarty_Internal_Compile_CaptureClose' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_compile_capture.php',
+-    'Smarty_Internal_Compile_Config_Load' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_compile_config_load.php',
+-    'Smarty_Internal_Compile_Continue' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_compile_continue.php',
+-    'Smarty_Internal_Compile_Debug' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_compile_debug.php',
+-    'Smarty_Internal_Compile_Else' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_compile_if.php',
+-    'Smarty_Internal_Compile_Elseif' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_compile_if.php',
+-    'Smarty_Internal_Compile_Eval' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_compile_eval.php',
+-    'Smarty_Internal_Compile_Extends' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_compile_extends.php',
+-    'Smarty_Internal_Compile_For' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_compile_for.php',
+-    'Smarty_Internal_Compile_Forclose' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_compile_for.php',
+-    'Smarty_Internal_Compile_Foreach' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_compile_foreach.php',
+-    'Smarty_Internal_Compile_Foreachclose' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_compile_foreach.php',
+-    'Smarty_Internal_Compile_Foreachelse' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_compile_foreach.php',
+-    'Smarty_Internal_Compile_Forelse' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_compile_for.php',
+-    'Smarty_Internal_Compile_Function' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_compile_function.php',
+-    'Smarty_Internal_Compile_Functionclose' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_compile_function.php',
+-    'Smarty_Internal_Compile_If' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_compile_if.php',
+-    'Smarty_Internal_Compile_Ifclose' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_compile_if.php',
+-    'Smarty_Internal_Compile_Include' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_compile_include.php',
+-    'Smarty_Internal_Compile_Include_Php' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_compile_include_php.php',
+-    'Smarty_Internal_Compile_Insert' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_compile_insert.php',
+-    'Smarty_Internal_Compile_Ldelim' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_compile_ldelim.php',
+-    'Smarty_Internal_Compile_Nocache' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_compile_nocache.php',
+-    'Smarty_Internal_Compile_Nocacheclose' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_compile_nocache.php',
+-    'Smarty_Internal_Compile_Private_Block_Plugin' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_compile_private_block_plugin.php',
+-    'Smarty_Internal_Compile_Private_Child_Block' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_compile_block.php',
+-    'Smarty_Internal_Compile_Private_Child_Blockclose' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_compile_block.php',
+-    'Smarty_Internal_Compile_Private_Function_Plugin' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_compile_private_function_plugin.php',
+-    'Smarty_Internal_Compile_Private_Modifier' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_compile_private_modifier.php',
+-    'Smarty_Internal_Compile_Private_Object_Block_Function' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_compile_private_object_block_function.php',
+-    'Smarty_Internal_Compile_Private_Object_Function' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_compile_private_object_function.php',
+-    'Smarty_Internal_Compile_Private_Php' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_compile_private_php.php',
+-    'Smarty_Internal_Compile_Private_Print_Expression' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_compile_private_print_expression.php',
+-    'Smarty_Internal_Compile_Private_Registered_Block' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_compile_private_registered_block.php',
+-    'Smarty_Internal_Compile_Private_Registered_Function' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_compile_private_registered_function.php',
+-    'Smarty_Internal_Compile_Private_Special_Variable' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_compile_private_special_variable.php',
+-    'Smarty_Internal_Compile_Rdelim' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_compile_rdelim.php',
+-    'Smarty_Internal_Compile_Section' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_compile_section.php',
+-    'Smarty_Internal_Compile_Sectionclose' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_compile_section.php',
+-    'Smarty_Internal_Compile_Sectionelse' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_compile_section.php',
+-    'Smarty_Internal_Compile_Setfilter' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_compile_setfilter.php',
+-    'Smarty_Internal_Compile_Setfilterclose' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_compile_setfilter.php',
+-    'Smarty_Internal_Compile_While' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_compile_while.php',
+-    'Smarty_Internal_Compile_Whileclose' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_compile_while.php',
+-    'Smarty_Internal_Config_File_Compiler' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_config_file_compiler.php',
+-    'Smarty_Internal_Configfilelexer' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_configfilelexer.php',
+-    'Smarty_Internal_Configfileparser' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_configfileparser.php',
+-    'Smarty_Internal_Data' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_data.php',
+-    'Smarty_Internal_Debug' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_debug.php',
+-    'Smarty_Internal_Extension_CodeFrame' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_extension_codeframe.php',
+-    'Smarty_Internal_Extension_Config' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_extension_config.php',
+-    'Smarty_Internal_Extension_DefaultTemplateHandler' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_extension_defaulttemplatehandler.php',
+-    'Smarty_Internal_Filter_Handler' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_filter_handler.php',
+-    'Smarty_Internal_Function_Call_Handler' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_function_call_handler.php',
+-    'Smarty_Internal_Get_Include_Path' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_get_include_path.php',
+-    'Smarty_Internal_Nocache_Insert' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_nocache_insert.php',
+-    'Smarty_Internal_ParseTree' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_parsetree.php',
+-    'Smarty_Internal_ParseTree_Code' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_parsetree_code.php',
+-    'Smarty_Internal_ParseTree_Dq' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_parsetree_dq.php',
+-    'Smarty_Internal_ParseTree_DqContent' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_parsetree_dqcontent.php',
+-    'Smarty_Internal_ParseTree_Tag' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_parsetree_tag.php',
+-    'Smarty_Internal_ParseTree_Template' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_parsetree_template.php',
+-    'Smarty_Internal_ParseTree_Text' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_parsetree_text.php',
+-    'Smarty_Internal_Resource_Eval' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_resource_eval.php',
+-    'Smarty_Internal_Resource_Extends' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_resource_extends.php',
+-    'Smarty_Internal_Resource_File' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_resource_file.php',
+-    'Smarty_Internal_Resource_Php' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_resource_php.php',
+-    'Smarty_Internal_Resource_Registered' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_resource_registered.php',
+-    'Smarty_Internal_Resource_Stream' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_resource_stream.php',
+-    'Smarty_Internal_Resource_String' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_resource_string.php',
+-    'Smarty_Internal_SmartyTemplateCompiler' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_smartytemplatecompiler.php',
+-    'Smarty_Internal_Template' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_template.php',
+-    'Smarty_Internal_TemplateBase' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_templatebase.php',
+-    'Smarty_Internal_TemplateCompilerBase' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_templatecompilerbase.php',
+-    'Smarty_Internal_Templatelexer' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_templatelexer.php',
+-    'Smarty_Internal_Templateparser' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_templateparser.php',
+-    'Smarty_Internal_TestInstall' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_testinstall.php',
+-    'Smarty_Internal_Utility' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_utility.php',
+-    'Smarty_Internal_Write_File' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_write_file.php',
+-    'Smarty_Resource' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_resource.php',
+-    'Smarty_Resource_Custom' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_resource_custom.php',
+-    'Smarty_Resource_Recompiled' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_resource_recompiled.php',
+-    'Smarty_Resource_Uncompiled' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_resource_uncompiled.php',
+-    'Smarty_Security' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_security.php',
+-    'Smarty_Template_Cached' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_template_cached.php',
+-    'Smarty_Template_Compiled' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_template_compiled.php',
+-    'Smarty_Template_Config' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_template_config.php',
+-    'Smarty_Template_Source' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_template_source.php',
+-    'Smarty_Undefined_Variable' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_undefined_variable.php',
+-    'Smarty_Variable' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_variable.php',
+-    'SphinxClient' => $vendorDir . '/sphinx/php-sphinxapi/sphinxapi.php',
+     'Sphinx_Fulltext_Search' => $baseDir . '/lib/eventum/search/class.sphinx_fulltext_search.php',
+     'Stats' => $baseDir . '/lib/eventum/class.stats.php',
+     'Status' => $baseDir . '/lib/eventum/class.status.php',
+-    'StreamReader' => $vendorDir . '/php-gettext/php-gettext/streams.php',
+-    'StringReader' => $vendorDir . '/php-gettext/php-gettext/streams.php',
+     'Support' => $baseDir . '/lib/eventum/class.support.php',
+     'SupportLevelNotFoundException' => $baseDir . '/lib/eventum/crm/class.support_level.php',
+     'Support_Level' => $baseDir . '/lib/eventum/crm/class.support_level.php',
+-    'TPC_yyStackEntry' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_configfileparser.php',
+-    'TPC_yyToken' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_configfileparser.php',
+-    'TP_yyStackEntry' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_templateparser.php',
+-    'TP_yyToken' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_templateparser.php',
+     'Template_Helper' => $baseDir . '/lib/eventum/class.template_helper.php',
+-    'Text_Diff' => $vendorDir . '/pear-pear.php.net/Text_Diff/Text/Diff.php',
+-    'Text_Diff3' => $vendorDir . '/pear-pear.php.net/Text_Diff/Text/Diff3.php',
+-    'Text_Diff3_BlockBuilder' => $vendorDir . '/pear-pear.php.net/Text_Diff/Text/Diff3.php',
+-    'Text_Diff3_Op' => $vendorDir . '/pear-pear.php.net/Text_Diff/Text/Diff3.php',
+-    'Text_Diff3_Op_copy' => $vendorDir . '/pear-pear.php.net/Text_Diff/Text/Diff3.php',
+-    'Text_Diff_Engine_native' => $vendorDir . '/pear-pear.php.net/Text_Diff/Text/Diff/Engine/native.php',
+-    'Text_Diff_Engine_shell' => $vendorDir . '/pear-pear.php.net/Text_Diff/Text/Diff/Engine/shell.php',
+-    'Text_Diff_Engine_string' => $vendorDir . '/pear-pear.php.net/Text_Diff/Text/Diff/Engine/string.php',
+-    'Text_Diff_Engine_xdiff' => $vendorDir . '/pear-pear.php.net/Text_Diff/Text/Diff/Engine/xdiff.php',
+-    'Text_Diff_Mapped' => $vendorDir . '/pear-pear.php.net/Text_Diff/Text/Diff/Mapped.php',
+-    'Text_Diff_Op' => $vendorDir . '/pear-pear.php.net/Text_Diff/Text/Diff.php',
+-    'Text_Diff_Op_add' => $vendorDir . '/pear-pear.php.net/Text_Diff/Text/Diff.php',
+-    'Text_Diff_Op_change' => $vendorDir . '/pear-pear.php.net/Text_Diff/Text/Diff.php',
+-    'Text_Diff_Op_copy' => $vendorDir . '/pear-pear.php.net/Text_Diff/Text/Diff.php',
+-    'Text_Diff_Op_delete' => $vendorDir . '/pear-pear.php.net/Text_Diff/Text/Diff.php',
+-    'Text_Diff_Renderer' => $vendorDir . '/pear-pear.php.net/Text_Diff/Text/Diff/Renderer.php',
+-    'Text_Diff_Renderer_context' => $vendorDir . '/pear-pear.php.net/Text_Diff/Text/Diff/Renderer/context.php',
+-    'Text_Diff_Renderer_inline' => $vendorDir . '/pear-pear.php.net/Text_Diff/Text/Diff/Renderer/inline.php',
+-    'Text_Diff_Renderer_unified' => $vendorDir . '/pear-pear.php.net/Text_Diff/Text/Diff/Renderer/unified.php',
+-    'Text_Diff_ThreeWay' => $vendorDir . '/pear-pear.php.net/Text_Diff/Text/Diff/ThreeWay.php',
+-    'Text_Diff_ThreeWay_BlockBuilder' => $vendorDir . '/pear-pear.php.net/Text_Diff/Text/Diff/ThreeWay.php',
+-    'Text_Diff_ThreeWay_Op' => $vendorDir . '/pear-pear.php.net/Text_Diff/Text/Diff/ThreeWay.php',
+-    'Text_Diff_ThreeWay_Op_copy' => $vendorDir . '/pear-pear.php.net/Text_Diff/Text/Diff/ThreeWay.php',
+-    'Text_MappedDiff' => $vendorDir . '/pear-pear.php.net/Text_Diff/Text/Diff.php',
+     'Time_Tracking' => $baseDir . '/lib/eventum/class.time_tracking.php',
+     'User' => $baseDir . '/lib/eventum/class.user.php',
+     'Validation' => $baseDir . '/lib/eventum/class.validation.php',
+     'Workflow' => $baseDir . '/lib/eventum/class.workflow.php',
+-    'XML_RPC_Base' => $vendorDir . '/pear-pear.php.net/XML_RPC/XML/RPC.php',
+-    'XML_RPC_Client' => $vendorDir . '/pear-pear.php.net/XML_RPC/XML/RPC.php',
+-    'XML_RPC_Message' => $vendorDir . '/pear-pear.php.net/XML_RPC/XML/RPC.php',
+-    'XML_RPC_Response' => $vendorDir . '/pear-pear.php.net/XML_RPC/XML/RPC.php',
+-    'XML_RPC_Server' => $vendorDir . '/pear-pear.php.net/XML_RPC/XML/RPC/Server.php',
+-    'XML_RPC_Value' => $vendorDir . '/pear-pear.php.net/XML_RPC/XML/RPC.php',
+     'XmlRpcServer' => $baseDir . '/lib/eventum/rpc/XmlRpcServer.php',
+-    'gettext_reader' => $vendorDir . '/php-gettext/php-gettext/gettext.php',
++
++    // external deps
++    'PHPlot' => $phpDir .'/phplot/phplot.php',
++    'Smarty' => $phpDir. '/Smarty3/Smarty.class.php',
++    'SphinxClient' => $phpDir . '/sphinxapi.php',
+ );
+--- eventum-3.0.2-101-ge275162/vendor/composer/autoload_files.php	2015-10-12 22:06:43.978822341 +0300
++++ eventum-3.0.2-101-ge275162/vendor/composer/autoload_files.php	2015-10-12 22:06:43.978822341 +0300
+@@ -6,6 +6,6 @@
+ $baseDir = dirname($vendorDir);
++$phpDir = PHP_DATADIR . '/php';
+ 
+ return array(
+-    $vendorDir . '/smarty-gettext/smarty-gettext/block.t.php',
+-    $vendorDir . '/smarty-gettext/smarty-gettext/function.locale.php',
++    $phpDir. '/Smarty3/plugins/block.t.php',
+ );
+--- eventum-3.0.2-101-ge275162/vendor/composer/autoload_namespaces.php	2015-10-12 22:08:53.596910822 +0300
++++ eventum-3.0.2-101-ge275162/vendor/composer/autoload_namespaces.php	2015-10-12 23:10:35.849016388 +0300
+@@ -4,12 +4,13 @@
+ 
+-$vendorDir = dirname(dirname(__FILE__));
+-$baseDir = dirname($vendorDir);
++$pearDir = PEAR_INSTALL_DIR . '/';
++$phpDir = PHP_DATADIR . '/php';
+ 
+ return array(
+-    'PEAR' => array($vendorDir . '/pear/pear_exception'),
+-    'Net' => array($vendorDir . '/pear/net_smtp'),
+-    'Mail' => array($vendorDir . '/pear/mail'),
+-    'DB' => array($vendorDir . '/pear/db'),
+-    'Auth' => array($vendorDir . '/pear/auth_sasl'),
+-    '' => array($vendorDir . '/pear/pear-core-minimal/src'),
++    'PEAR' => array($pearDir),
++    'Net' => array($pearDir),
++    'Mail' => array($pearDir),
++    'DB' => array($pearDir),
++    'Auth' => array($pearDir),
++    'XML' => array($pearDir),
++    'Text' => array($pearDir),
+ );
+--- eventum-3.0.2-101-ge275162/autoload.php	2015-10-12 22:42:04.697464456 +0300
++++ eventum-3.0.2-101-ge275162/autoload.php	2015-10-12 22:46:12.383826829 +0300
+@@ -39,7 +39,7 @@
+     define('APP_PHP_GETTEXT_PATH', APP_PATH . '/vendor/php-gettext/php-gettext');
+ 
+     // fonts directory for phplot
+-    define('APP_FONTS_PATH', APP_PATH . '/vendor/fonts/liberation');
++    define('APP_FONTS_PATH', '/usr/share/fonts/TTF');
+ 
+     return;
+ }
+--- eventum-3.0.2-101-ge275162/vendor/composer/autoload_real.php~	2015-10-12 21:33:13.000000000 +0300
++++ eventum-3.0.2-101-ge275162/vendor/composer/autoload_real.php	2015-10-12 23:14:26.708974755 +0300
+@@ -23,20 +23,11 @@
+         self::$loader = $loader = new \Composer\Autoload\ClassLoader();
+         spl_autoload_unregister(array('ComposerAutoloaderInitEventumCore', 'loadClassLoader'));
+ 
+-        $includePaths = require __DIR__ . '/include_paths.php';
+-        array_push($includePaths, get_include_path());
+-        set_include_path(join(PATH_SEPARATOR, $includePaths));
+-
+         $map = require __DIR__ . '/autoload_namespaces.php';
+         foreach ($map as $namespace => $path) {
+             $loader->set($namespace, $path);
+         }
+ 
+-        $map = require __DIR__ . '/autoload_psr4.php';
+-        foreach ($map as $namespace => $path) {
+-            $loader->setPsr4($namespace, $path);
+-        }
+-
+         $classMap = require __DIR__ . '/autoload_classmap.php';
+         if ($classMap) {
+             $loader->addClassMap($classMap);
