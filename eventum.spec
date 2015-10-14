@@ -2,9 +2,9 @@
 # Conditional build:
 %bcond_with	order	# with experimental order patch
 
-%define		rel		1
-#define		subver  105
-#define		githash 9c49ee5
+%define		rel		1.2
+%define		subver  20
+%define		githash 10ba91f
 %define		php_min_version 5.3.3
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
@@ -14,9 +14,9 @@ Version:	3.0.3
 Release:	%{?subver:1.%{subver}.%{?githash:g%{githash}.}}%{rel}
 License:	GPL v2
 Group:		Applications/WWW
-Source0:	https://github.com/eventum/eventum/releases/download/v%{version}/%{name}-%{version}.tar.gz
-# Source0-md5:	0ecee925e49d96cc827e99089848f55a
-#Source0:	%{name}-%{version}-%{subver}-g%{githash}.tar.gz
+#Source0:	https://github.com/eventum/eventum/releases/download/v%{version}/%{name}-%{version}.tar.gz
+Source0:	%{name}-%{version}-%{subver}-g%{githash}.tar.gz
+# Source0-md5:	cb47e604e10272c9b73e70a1464b4806
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -525,6 +525,8 @@ install -d \
 	localedir=%{_localedir} \
 	DESTDIR=$RPM_BUILD_ROOT
 
+ln -s %{_sysconfdir} $RPM_BUILD_ROOT%{_appdir}/config
+
 install -d $RPM_BUILD_ROOT%{_appdir}/vendor
 cp -a vendor/autoload.php vendor/composer $RPM_BUILD_ROOT%{_appdir}/vendor
 rm $RPM_BUILD_ROOT%{_appdir}/vendor/composer/include_paths.php
@@ -678,6 +680,8 @@ done
 %attr(620,root,http) %ghost /var/log/%{name}/*
 %dir %attr(750,root,root) /var/log/archive/%{name}
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/logrotate.d/%{name}
+
+%{_appdir}/config
 
 %dir %{_appdir}/bin
 %attr(755,root,root) %{_appdir}/bin/process_all_emails.php
