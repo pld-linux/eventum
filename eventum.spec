@@ -2,7 +2,7 @@
 # Conditional build:
 %bcond_with	order	# with experimental order patch
 
-%define		rel		1.2
+%define		rel		1.3
 %define		subver  20
 %define		githash 10ba91f
 %define		php_min_version 5.3.3
@@ -525,7 +525,7 @@ install -d \
 	localedir=%{_localedir} \
 	DESTDIR=$RPM_BUILD_ROOT
 
-ln -s %{_sysconfdir} $RPM_BUILD_ROOT%{_appdir}/config
+ln -s %{_webappdir} $RPM_BUILD_ROOT%{_appdir}/config
 
 install -d $RPM_BUILD_ROOT%{_appdir}/vendor
 cp -a vendor/autoload.php vendor/composer $RPM_BUILD_ROOT%{_appdir}/vendor
