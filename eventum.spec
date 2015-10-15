@@ -85,6 +85,7 @@ Requires:	webserver(indexfile)
 Requires:	webserver(php) >= 4.2.0
 Suggests:	localedb
 Suggests:	php-pear-Net_LDAP2
+Suggests:	webserver(setenv)
 Conflicts:	logrotate < 3.8.0
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -738,6 +739,7 @@ done
 %{_appdir}/htdocs/setup
 
 %files doc
+%defattr(644,root,root,755)
 %doc docs/*
 %{_examplesdir}/%{name}-%{version}
 
