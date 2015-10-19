@@ -237,16 +237,20 @@
 +    'Smarty' => $phpDir. '/Smarty3/Smarty.class.php',
 +    'SphinxClient' => $phpDir . '/sphinxapi.php',
  );
---- eventum-3.0.2-101-ge275162/vendor/composer/autoload_files.php	2015-10-12 22:06:43.978822341 +0300
-+++ eventum-3.0.2-101-ge275162/vendor/composer/autoload_files.php	2015-10-12 22:06:43.978822341 +0300
-@@ -6,6 +6,6 @@
+--- eventum-3.0.3-118-g751b8cc/vendor/composer/autoload_files.php~	2015-10-19 22:57:36.000000000 +0300
++++ eventum-3.0.3-118-g751b8cc/vendor/composer/autoload_files.php	2015-10-19 23:01:26.239594821 +0300
+@@ -4,10 +4,10 @@
+ 
+ $vendorDir = dirname(dirname(__FILE__));
  $baseDir = dirname($vendorDir);
 +$phpDir = PHP_DATADIR . '/php';
  
  return array(
+     $vendorDir . '/ircmaxell/password-compat/lib/password.php',
 -    $vendorDir . '/smarty-gettext/smarty-gettext/block.t.php',
 -    $vendorDir . '/smarty-gettext/smarty-gettext/function.locale.php',
 +    $phpDir. '/Smarty3/plugins/block.t.php',
+     $baseDir . '/lib/eventum/gettext.php',
  );
 --- eventum-3.0.3-13-gfefa325/vendor/composer/autoload_namespaces.php.old	2015-10-13 22:57:18.000000000 +0300
 +++ eventum-3.0.3-13-gfefa325/vendor/composer/autoload_namespaces.php	2015-10-13 23:38:11.988033704 +0300

@@ -3,8 +3,8 @@
 %bcond_with	order	# with experimental order patch
 
 %define		rel		1.3
-%define		subver  20
-%define		githash 10ba91f
+%define		subver  120
+%define		githash 0b3339c
 %define		php_min_version 5.3.3
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
@@ -16,7 +16,7 @@ License:	GPL v2
 Group:		Applications/WWW
 #Source0:	https://github.com/eventum/eventum/releases/download/v%{version}/%{name}-%{version}.tar.gz
 Source0:	%{name}-%{version}-%{subver}-g%{githash}.tar.gz
-# Source0-md5:	cb47e604e10272c9b73e70a1464b4806
+# Source0-md5:	dced95de62683ee778f51862cf4dde38
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -527,10 +527,11 @@ install -d \
 
 ln -s %{_webappdir} $RPM_BUILD_ROOT%{_appdir}/config
 
-install -d $RPM_BUILD_ROOT%{_appdir}/vendor
+install -d $RPM_BUILD_ROOT%{_appdir}/vendor/ircmaxell
 cp -a vendor/autoload.php vendor/composer $RPM_BUILD_ROOT%{_appdir}/vendor
 rm $RPM_BUILD_ROOT%{_appdir}/vendor/composer/include_paths.php
 rm $RPM_BUILD_ROOT%{_appdir}/vendor/composer/autoload_psr4.php
+cp -a vendor/ircmaxell/{password-compat,random-lib,security-lib} $RPM_BUILD_ROOT%{_appdir}/vendor/ircmaxell
 
 # unsupported locale
 %{__rm} -r $RPM_BUILD_ROOT%{_localedir}/ht
@@ -717,6 +718,11 @@ done
 %{_appdir}/vendor/autoload.php
 %{_appdir}/vendor/composer/ClassLoader.php
 %{_appdir}/vendor/composer/autoload_*.php
+
+%dir %{_appdir}/vendor/ircmaxell
+%{_appdir}/vendor/ircmaxell/password-compat
+%{_appdir}/vendor/ircmaxell/random-lib
+%{_appdir}/vendor/ircmaxell/security-lib
 
 %dir %{_appdir}/lib
 %{_appdir}/lib/eventum
