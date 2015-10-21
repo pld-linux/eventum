@@ -288,7 +288,7 @@
 +define('APP_FONTS_PATH', '/usr/share/fonts/TTF');
 --- eventum-3.0.2-101-ge275162/vendor/composer/autoload_real.php~	2015-10-12 21:33:13.000000000 +0300
 +++ eventum-3.0.2-101-ge275162/vendor/composer/autoload_real.php	2015-10-12 23:14:26.708974755 +0300
-@@ -23,20 +23,11 @@
+@@ -23,10 +23,6 @@
          self::$loader = $loader = new \Composer\Autoload\ClassLoader();
          spl_autoload_unregister(array('ComposerAutoloaderInitEventumCore', 'loadClassLoader'));
  
@@ -299,13 +299,3 @@
          $map = require __DIR__ . '/autoload_namespaces.php';
          foreach ($map as $namespace => $path) {
              $loader->set($namespace, $path);
-         }
- 
--        $map = require __DIR__ . '/autoload_psr4.php';
--        foreach ($map as $namespace => $path) {
--            $loader->setPsr4($namespace, $path);
--        }
--
-         $classMap = require __DIR__ . '/autoload_classmap.php';
-         if ($classMap) {
-             $loader->addClassMap($classMap);
