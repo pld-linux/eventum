@@ -2,7 +2,7 @@
 # Conditional build:
 %bcond_with	order	# with experimental order patch
 
-%define		rel		1.6
+%define		rel		1.8
 %define		subver  144
 %define		githash 9fcce7c
 %define		php_min_version 5.3.3
@@ -498,10 +498,6 @@ rm -f config/config.php
 %patch105 -p1
 %patch107 -p1
 %patch108 -p1
-
-%{__sed} -i -e "
-s;define('CONFIG_PATH'.*');define('CONFIG_PATH', '%{_webappdir}');
-" upgrade/{*/,}*.php
 
 # cleanup vendor. keep only needed libraries.
 # (the rest are packaged with system packages)
