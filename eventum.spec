@@ -2,9 +2,9 @@
 # Conditional build:
 %bcond_with	order	# with experimental order patch
 
-%define		rel		1.9
-%define		subver  287
-%define		githash e48a790
+%define		rel		1.10
+%define		subver  296
+%define		githash b988181
 %define		php_min_version 5.3.3
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
@@ -16,14 +16,13 @@ License:	GPL v2
 Group:		Applications/WWW
 #Source0:	https://github.com/eventum/eventum/releases/download/v%{version}/%{name}-%{version}.tar.gz
 Source0:	%{name}-%{version}-%{subver}-g%{githash}.tar.gz
-# Source0-md5:	6ff7e2166e64377ae03684341bbc0ac3
+# Source0-md5:	78e9b382584b8d8928dca55be7992e59
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
 Source4:	%{name}-reminder.cron
 Source5:	%{name}-monitor.cron
 Source6:	%{name}-cvs.php
-Source7:	%{name}-irc.php
 Source8:	%{name}-irc.init
 Source9:	%{name}-irc.sysconfig
 Source10:	sphinx.crontab
@@ -563,7 +562,7 @@ cp -p %{SOURCE4} $RPM_BUILD_ROOT/etc/cron.d/%{name}-reminder
 cp -p %{SOURCE5} $RPM_BUILD_ROOT/etc/cron.d/%{name}-monitor
 cp -p %{SOURCE10} $RPM_BUILD_ROOT/etc/cron.d/%{name}-sphinx
 
-cp -p %{SOURCE7} $RPM_BUILD_ROOT%{_webappdir}/irc_config.php
+cp -p config/irc_config.dist.php $RPM_BUILD_ROOT%{_webappdir}/irc_config.php
 
 install -p %{SOURCE8} $RPM_BUILD_ROOT/etc/rc.d/init.d/eventum-irc
 cp -p %{SOURCE9} $RPM_BUILD_ROOT/etc/sysconfig/eventum-irc
