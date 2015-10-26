@@ -1,31 +1,30 @@
---- eventum-3.0.3-118-g751b8cc/init.php~	2015-10-19 22:56:35.000000000 +0300
-+++ eventum-3.0.3-118-g751b8cc/init.php	2015-10-19 23:00:17.390607216 +0300
-@@ -72,10 +72,10 @@
- // define other paths
+--- eventum-3.0.3-287-ge48a790/init.php~	2015-10-26 21:42:14.000000000 +0200
++++ eventum-3.0.3-287-ge48a790/init.php	2015-10-26 21:46:47.983157509 +0200
+@@ -76,9 +76,9 @@
  $define('APP_SETUP_FILE', APP_CONFIG_PATH . '/setup.php');
- $define('APP_TPL_PATH', APP_PATH . '/templates');
--$define('APP_TPL_COMPILE_PATH', APP_PATH . '/templates_c');
-+$define('APP_TPL_COMPILE_PATH', '/var/cache/eventum');
  $define('APP_INC_PATH', APP_PATH . '/lib/eventum');
--$define('APP_LOCKS_PATH', APP_PATH . '/locks');
--$define('APP_LOG_PATH', APP_PATH . '/logs');
+ $define('APP_TPL_PATH', APP_PATH . '/templates');
+-$define('APP_TPL_COMPILE_PATH', APP_VAR_PATH . '/cache');
+-$define('APP_LOCKS_PATH', APP_VAR_PATH . '/lock');
+-$define('APP_LOG_PATH', APP_VAR_PATH . '/log');
++$define('APP_TPL_COMPILE_PATH', '/var/cache/eventum');
 +$define('APP_LOCKS_PATH', '/var/run/eventum');
 +$define('APP_LOG_PATH', '/var/log/eventum');
  $define('APP_ERROR_LOG', APP_LOG_PATH . '/errors.log');
  $define('APP_CLI_LOG', APP_LOG_PATH . '/cli.log');
  $define('APP_IRC_LOG', APP_LOG_PATH . '/irc_bot.log');
---- eventum-3.0.0/htdocs/setup/index.php~	2015-02-02 20:03:49.507010317 +0200
-+++ eventum-3.0.0/htdocs/setup/index.php	2015-02-02 20:05:00.139257552 +0200
-@@ -44,10 +44,10 @@
+--- eventum-3.0.3-287-ge48a790/htdocs/setup/index.php~	2015-10-26 21:45:35.367554219 +0200
++++ eventum-3.0.3-287-ge48a790/htdocs/setup/index.php	2015-10-26 21:47:31.775849576 +0200
+@@ -47,10 +47,10 @@
  define('APP_CONFIG_PATH', APP_PATH . '/config');
  define('APP_SETUP_FILE', APP_CONFIG_PATH . '/setup.php');
  define('APP_TPL_PATH', APP_PATH . '/templates');
--define('APP_TPL_COMPILE_PATH', APP_PATH . '/templates_c');
--define('APP_LOG_PATH', APP_PATH . '/logs');
+-define('APP_TPL_COMPILE_PATH', APP_VAR_PATH . '/cache');
+-define('APP_LOG_PATH', APP_VAR_PATH . '/log');
 +define('APP_TPL_COMPILE_PATH', '/var/cache/eventum');
 +define('APP_LOG_PATH', '/var/log/eventum');
  define('APP_ERROR_LOG', APP_LOG_PATH . '/errors.log');
--define('APP_LOCKS_PATH', APP_PATH . '/locks');
+-define('APP_LOCKS_PATH', APP_VAR_PATH . '/lock');
 +define('APP_LOCKS_PATH', '/var/run/eventum');
  define('APP_LOCAL_PATH', APP_CONFIG_PATH);
  
