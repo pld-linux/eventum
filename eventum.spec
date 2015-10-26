@@ -367,7 +367,7 @@ Group:		Applications/WWW
 Requires(post,preun):	/sbin/chkconfig
 Requires:	%{name} = %{version}-%{release}
 Requires:	php(sockets)
-Requires:	php-pear-Net_SmartIRC
+Requires:	php-pear-Net_SmartIRC >= 1.1
 Requires:	rc-scripts >= 0.4.0.18
 
 %description irc
