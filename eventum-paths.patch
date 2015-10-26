@@ -9,7 +9,7 @@
  $define('APP_INC_PATH', APP_PATH . '/lib/eventum');
 -$define('APP_LOCKS_PATH', APP_PATH . '/locks');
 -$define('APP_LOG_PATH', APP_PATH . '/logs');
-+$define('APP_LOCKS_PATH', APP_PATH . '/var/run/eventum');
++$define('APP_LOCKS_PATH', '/var/run/eventum');
 +$define('APP_LOG_PATH', '/var/log/eventum');
  $define('APP_ERROR_LOG', APP_LOG_PATH . '/errors.log');
  $define('APP_CLI_LOG', APP_LOG_PATH . '/cli.log');
