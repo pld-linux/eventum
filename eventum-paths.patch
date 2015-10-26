@@ -41,17 +41,6 @@
      $error = checkPermissions(APP_SETUP_FILE, "File '" . APP_SETUP_FILE. "'");
      if (!empty($error)) {
          $errors[] = $error;
---- eventum-3.0.3-13-gfefa325/irc/eventum-irc-bot.php~	2015-10-13 20:00:48.000000000 +0300
-+++ eventum-3.0.3-13-gfefa325/irc/eventum-irc-bot.php	2015-10-13 23:33:33.408818382 +0300
-@@ -31,7 +31,7 @@
- 
- ini_set('memory_limit', '1024M');
- 
--require_once __DIR__ . '/../init.php';
-+require_once '/usr/share/eventum/init.php';
- 
- if (!file_exists(APP_CONFIG_PATH . '/irc_config.php')) {
-     fwrite(STDERR, "ERROR: No config specified. Please see setup/irc_config.php for config information.\n\n");
 --- eventum/bin/monitor.php	2010-11-24 17:24:23.000000000 +0200
 +++ eventum/bin/monitor.php	2010-11-24 18:23:09.664934996 +0200
 @@ -37,17 +37,17 @@

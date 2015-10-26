@@ -32,7 +32,7 @@ start() {
 
 	msg_starting "Eventum IRC Bot"
 	start-stop-daemon --start \
-		--exec /usr/sbin/eventum-irc-bot \
+		--exec /usr/share/eventum/bin/irc-bot.php \
 		--pidfile $PIDFILE \
 		--chuid http \
 		--background

@@ -1,5 +1,5 @@
---- eventum-3.0.3-13-gfefa325/vendor/composer/autoload_classmap.php~	2015-10-13 23:35:34.243698812 +0300
-+++ eventum-3.0.3-13-gfefa325/vendor/composer/autoload_classmap.php	2015-10-13 23:36:06.729885261 +0300
+--- eventum-3.0.3-275-g696281e/vendor/composer/autoload_classmap.php~	2015-10-26 20:37:03.877806879 +0200
++++ eventum-3.0.3-275-g696281e/vendor/composer/autoload_classmap.php	2015-10-26 20:37:31.494068933 +0200
 @@ -4,6 +4,7 @@
  
  $vendorDir = dirname(dirname(__FILE__));
@@ -16,10 +16,10 @@
      'Category' => $baseDir . '/lib/eventum/class.category.php',
      'Command_Line' => $baseDir . '/lib/eventum/class.command_line.php',
      'Contact' => $baseDir . '/lib/eventum/crm/class.contact.php',
-@@ -43,10 +43,7 @@
-     'Email_Account' => $baseDir . '/lib/eventum/class.email_account.php',
+@@ -49,10 +49,7 @@
      'Email_Response' => $baseDir . '/lib/eventum/class.email_response.php',
      'Error_Handler' => $baseDir . '/lib/eventum/class.error_handler.php',
+     'Eventum_Bot' => $baseDir . '/lib/eventum/irc/Eventum_Bot.php',
 -    'Eventum_RPC' => $vendorDir . '/eventum/rpc/class.Eventum_RPC.php',
 -    'Eventum_RPC_Exception' => $vendorDir . '/eventum/rpc/class.Eventum_RPC.php',
      'FAQ' => $baseDir . '/lib/eventum/class.faq.php',

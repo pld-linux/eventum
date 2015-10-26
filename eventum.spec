@@ -3,8 +3,8 @@
 %bcond_with	order	# with experimental order patch
 
 %define		rel		1.8
-%define		subver  144
-%define		githash 9fcce7c
+%define		subver  276
+%define		githash a7233c3
 %define		php_min_version 5.3.3
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
@@ -16,7 +16,7 @@ License:	GPL v2
 Group:		Applications/WWW
 #Source0:	https://github.com/eventum/eventum/releases/download/v%{version}/%{name}-%{version}.tar.gz
 Source0:	%{name}-%{version}-%{subver}-g%{githash}.tar.gz
-# Source0-md5:	f488e72825c21ddb8adb0d9180848a52
+# Source0-md5:	e97361f1429ba03bbd917719b6daec2b
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -39,7 +39,6 @@ Patch2:		%{name}-order.patch
 # packaging patches that probably never go upstream
 Patch100:	%{name}-paths.patch
 Patch101:	%{name}-cvs-config.patch
-Patch105:	%{name}-bot-reconnect.patch
 Patch107:	%{name}-gettext.patch
 Patch108:	autoload.patch
 # some tests
@@ -495,7 +494,6 @@ rm -f config/config.php
 # packaging
 %patch100 -p1
 %patch101 -p1
-%patch105 -p1
 %patch107 -p1
 %patch108 -p1
 
@@ -533,7 +531,7 @@ install -d \
 	$RPM_BUILD_ROOT%{_appdir}/{include,htdocs/misc,upgrade} \
 	$RPM_BUILD_ROOT%{systemdtmpfilesdir}
 
-%{__make} install-eventum install-cli install-irc install-scm install-localization \
+%{__make} install-eventum install-cli install-scm install-localization \
 	sysconfdir=%{_webappdir} \
 	localedir=%{_localedir} \
 	DESTDIR=$RPM_BUILD_ROOT
@@ -793,7 +791,7 @@ done
 %defattr(644,root,root,755)
 %attr(640,root,eventum) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/irc_config.php
 %attr(640,root,eventum) %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/eventum-irc
-%attr(755,root,root) %{_sbindir}/%{name}-irc-bot
+%attr(755,root,root) %{_appdir}/bin/irc-bot.php
 %attr(754,root,root) /etc/rc.d/init.d/%{name}-irc
 
 %files cli
