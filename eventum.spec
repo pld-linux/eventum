@@ -2,7 +2,7 @@
 # Conditional build:
 %bcond_with	order	# with experimental order patch
 
-%define		rel		1.13
+%define		rel		1.15
 %define		subver  305
 %define		githash b67258d
 %define		php_min_version 5.3.3
@@ -49,7 +49,12 @@ BuildRequires:	php(core) >= %{php_min_version}
 BuildRequires:	rpm-php-pearprov >= 4.0.2-98
 BuildRequires:	rpmbuild(macros) >= 1.654
 BuildRequires:	sed >= 4.0
-Requires:	%{name}-base = %{version}-%{release}
+Requires(postun):	/usr/sbin/groupdel
+Requires(postun):	/usr/sbin/userdel
+Requires(pre):	/bin/id
+Requires(pre):	/usr/bin/getgid
+Requires(pre):	/usr/sbin/groupadd
+Requires(pre):	/usr/sbin/useradd
 Requires:	fonts-TTF-RedHat-liberation
 Requires:	php(core) >= %{php_min_version}
 Requires:	php(filter)
@@ -83,6 +88,9 @@ Requires:	webserver(indexfile)
 Requires:	webserver(php) >= 4.2.0
 Suggests:	localedb
 Suggests:	php-pear-Net_LDAP2
+Provides:	group(eventum)
+Provides:	user(eventum)
+Obsoletes:	eventum-base < 3.0.3-1.305
 Conflicts:	logrotate < 3.8.0
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -116,25 +124,6 @@ obsługi technicznej albo przez zespół tworzący oprogramowanie do
 szybkiej organizacji zadań i błędów. Eventum jest używany przez zespół
 Technical Support MySQL AB i umożliwił im znacząco poprawić czasy
 reakcji.
-
-%package base
-Summary:	Eventum base package
-Summary(pl.UTF-8):	Podstawowy pakiet Eventum
-Group:		Applications/WWW
-Requires(postun):	/usr/sbin/groupdel
-Requires(postun):	/usr/sbin/userdel
-Requires(pre):	/bin/id
-Requires(pre):	/usr/bin/getgid
-Requires(pre):	/usr/sbin/groupadd
-Requires(pre):	/usr/sbin/useradd
-Provides:	group(eventum)
-Provides:	user(eventum)
-
-%description base
-This package contains base directory structure for Eventum.
-
-%description base -l pl.UTF-8
-Ten pakiet zawiera podstawową strukturę katalogów dla Eventum.
 
 %package setup
 Summary:	Eventum setup package
@@ -398,7 +387,6 @@ kanał używany przez bota, trzeba ręcznie zmodyfikować skrypt bot.php .
 Summary:	Eventum command-line interface
 Summary(pl.UTF-8):	Interfejs linii poleceń dla Eventum
 Group:		Applications/WWW
-Requires:	%{name}-base = %{version}-%{release}
 Requires:	php(core) >= %{php_min_version}
 Requires:	php(phar)
 Requires:	php-pear-XML_RPC
@@ -584,6 +572,8 @@ cp -p %{SOURCE6} $RPM_BUILD_ROOT%{_sysconfdir}/scm.php
 rm -rf $RPM_BUILD_ROOT
 
 %pre
+%groupadd -g 146 %{name}
+%useradd -u 146 -d /var/lib/%{name} -g %{name} -c "Eventum User" %{name}
 %addusertogroup http %{name}
 
 %post
@@ -615,11 +605,7 @@ if [ "$1" = "0" ]; then
 	rm -f /var/cache/eventum/*.php 2>/dev/null || :
 fi
 
-%pre base
-%groupadd -P %{name}-base -g 146 %{name}
-%useradd -P %{name}-base -u 146 -d /var/lib/%{name} -g %{name} -c "Eventum User" %{name}
-
-%postun base
+%postun
 if [ "$1" = "0" ]; then
 	%userremove %{name}
 	%groupremove %{name}
@@ -693,6 +679,7 @@ done
 %dir %attr(750,root,root) /var/log/archive/%{name}
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/logrotate.d/%{name}
 
+%dir %{_appdir}
 %{_appdir}/config
 
 %dir %{_appdir}/bin
@@ -730,16 +717,14 @@ done
 %{_appdir}/lib/eventum
 %exclude %{_appdir}/lib/eventum/class.monitor.php
 
+%dir %{_libdir}
+
 %{systemdtmpfilesdir}/%{name}.conf
+
+%dir /var/lib/%{name}
 %dir %attr(730,root,http) /var/run/%{name}
 %dir %attr(730,root,http) /var/cache/%{name}
 
-%files base
-%defattr(644,root,root,755)
-%attr(751,root,root) %dir %{_sysconfdir}
-%dir %{_libdir}
-%dir %{_appdir}
-%dir /var/lib/%{name}
 # saved mail copies
 %attr(770,root,http) %dir /var/lib/%{name}/routed_emails
 %attr(770,root,http) %dir /var/lib/%{name}/routed_drafts
