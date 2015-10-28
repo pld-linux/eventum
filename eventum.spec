@@ -3,8 +3,8 @@
 %bcond_with	order	# with experimental order patch
 
 %define		rel		1.10
-%define		subver  296
-%define		githash b988181
+%define		subver  305
+%define		githash b67258d
 %define		php_min_version 5.3.3
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
@@ -16,7 +16,7 @@ License:	GPL v2
 Group:		Applications/WWW
 #Source0:	https://github.com/eventum/eventum/releases/download/v%{version}/%{name}-%{version}.tar.gz
 Source0:	%{name}-%{version}-%{subver}-g%{githash}.tar.gz
-# Source0-md5:	78e9b382584b8d8928dca55be7992e59
+# Source0-md5:	5937959683a82b3f083f092a8408d037
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -365,6 +365,7 @@ Summary(pl.UTF-8):	IRC-owy bot powiadamiający dla Eventum
 Group:		Applications/WWW
 Requires(post,preun):	/sbin/chkconfig
 Requires:	%{name} = %{version}-%{release}
+Requires:	php(pcntl)
 Requires:	php(sockets)
 Requires:	php-pear-Net_SmartIRC >= 1.1
 Requires:	rc-scripts >= 0.4.0.18
@@ -745,6 +746,7 @@ done
 %{_appdir}/htdocs/setup
 
 %files doc
+%defattr(644,root,root,755)
 %doc docs/*
 %{_examplesdir}/%{name}-%{version}
 
