@@ -2,7 +2,7 @@
 # Conditional build:
 %bcond_with	order	# with experimental order patch
 
-%define		rel		1.10
+%define		rel		1.13
 %define		subver  305
 %define		githash b67258d
 %define		php_min_version 5.3.3
@@ -587,11 +587,15 @@ rm -rf $RPM_BUILD_ROOT
 %addusertogroup http %{name}
 
 %post
-# greate empty ghost files
-for a in cli.log errors.log irc_bot.log login_attempts.log; do
-	if [ ! -f /var/log/%{name}/$a ]; then
-		install -m 0620 -o root -g eventum /dev/null /var/log/%{name}/$a
-	fi
+# create empty ghost files
+# these permissions ensure the logs are write only
+for a in \
+	errors.log login_attempts.log \
+	cli.log \
+	irc_bot_error.log irc_bot_smartirc.log \
+; do
+	test -f /var/log/%{name}/$a && continue
+	install -m 0620 -o root -g http /dev/null /var/log/%{name}/$a
 done
 
 # run database update if configured
@@ -684,7 +688,7 @@ done
 %attr(660,root,http) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/setup.php
 %attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/htpasswd
 
-%dir %attr(731,root,http) /var/log/%{name}
+%dir %attr(711,root,http) /var/log/%{name}
 %attr(620,root,http) %ghost /var/log/%{name}/*
 %dir %attr(750,root,root) /var/log/archive/%{name}
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/logrotate.d/%{name}
