@@ -1,10 +1,11 @@
 /var/log/eventum/errors.log
-/var/log/eventum/irc_bot.log
+/var/log/eventum/irc_bot_error.log
+/var/log/eventum/irc_bot_smartirc.log
 {
 	su root http
 	monthly
 	notifempty
 	rotate 52
-	create 620 root eventum
+	create 620 root http
 	olddir /var/log/archive/eventum
 }

@@ -5,17 +5,17 @@
 %define		rel		1
 #define		subver  105
 #define		githash 9c49ee5
-%define		php_min_version 5.3.3
+%define		php_min_version 5.3.7
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl.UTF-8):	Eventum - system śledzenia spraw/błędów
 Name:		eventum
-Version:	3.0.3
+Version:	3.0.4
 Release:	%{?subver:1.%{subver}.%{?githash:g%{githash}.}}%{rel}
 License:	GPL v2
 Group:		Applications/WWW
 Source0:	https://github.com/eventum/eventum/releases/download/v%{version}/%{name}-%{version}.tar.gz
-# Source0-md5:	0ecee925e49d96cc827e99089848f55a
+# Source0-md5:	7c036b6c815a8e63f0b0b900f440c901
 #Source0:	%{name}-%{version}-%{subver}-g%{githash}.tar.gz
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
@@ -23,7 +23,6 @@ Source3:	%{name}-mail-download.cron
 Source4:	%{name}-reminder.cron
 Source5:	%{name}-monitor.cron
 Source6:	%{name}-cvs.php
-Source7:	%{name}-irc.php
 Source8:	%{name}-irc.init
 Source9:	%{name}-irc.sysconfig
 Source10:	sphinx.crontab
@@ -39,7 +38,6 @@ Patch2:		%{name}-order.patch
 # packaging patches that probably never go upstream
 Patch100:	%{name}-paths.patch
 Patch101:	%{name}-cvs-config.patch
-Patch105:	%{name}-bot-reconnect.patch
 Patch107:	%{name}-gettext.patch
 Patch108:	autoload.patch
 # some tests
@@ -51,7 +49,12 @@ BuildRequires:	php(core) >= %{php_min_version}
 BuildRequires:	rpm-php-pearprov >= 4.0.2-98
 BuildRequires:	rpmbuild(macros) >= 1.654
 BuildRequires:	sed >= 4.0
-Requires:	%{name}-base = %{version}-%{release}
+Requires(postun):	/usr/sbin/groupdel
+Requires(postun):	/usr/sbin/userdel
+Requires(pre):	/bin/id
+Requires(pre):	/usr/bin/getgid
+Requires(pre):	/usr/sbin/groupadd
+Requires(pre):	/usr/sbin/useradd
 Requires:	fonts-TTF-RedHat-liberation
 Requires:	php(core) >= %{php_min_version}
 Requires:	php(filter)
@@ -64,6 +67,7 @@ Requires:	php(pcre)
 Requires:	php(session)
 Requires:	php-Smarty >= 3.1
 Requires:	php-Smarty-plugin-gettext
+Requires:	php-ZendFramework-Config >= 2.4
 Requires:	php-pear-DB
 Requires:	php-pear-Mail
 Requires:	php-pear-Mail_Mime
@@ -86,6 +90,9 @@ Requires:	webserver(php) >= 4.2.0
 Suggests:	localedb
 Suggests:	php-pear-Net_LDAP2
 Suggests:	webserver(setenv)
+Provides:	group(eventum)
+Provides:	user(eventum)
+Obsoletes:	eventum-base < 3.0.3-1.305
 Conflicts:	logrotate < 3.8.0
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -119,25 +126,6 @@ obsługi technicznej albo przez zespół tworzący oprogramowanie do
 szybkiej organizacji zadań i błędów. Eventum jest używany przez zespół
 Technical Support MySQL AB i umożliwił im znacząco poprawić czasy
 reakcji.
-
-%package base
-Summary:	Eventum base package
-Summary(pl.UTF-8):	Podstawowy pakiet Eventum
-Group:		Applications/WWW
-Requires(postun):	/usr/sbin/groupdel
-Requires(postun):	/usr/sbin/userdel
-Requires(pre):	/bin/id
-Requires(pre):	/usr/bin/getgid
-Requires(pre):	/usr/sbin/groupadd
-Requires(pre):	/usr/sbin/useradd
-Provides:	group(eventum)
-Provides:	user(eventum)
-
-%description base
-This package contains base directory structure for Eventum.
-
-%description base -l pl.UTF-8
-Ten pakiet zawiera podstawową strukturę katalogów dla Eventum.
 
 %package setup
 Summary:	Eventum setup package
@@ -368,8 +356,9 @@ Summary(pl.UTF-8):	IRC-owy bot powiadamiający dla Eventum
 Group:		Applications/WWW
 Requires(post,preun):	/sbin/chkconfig
 Requires:	%{name} = %{version}-%{release}
+Requires:	php(pcntl)
 Requires:	php(sockets)
-Requires:	php-pear-Net_SmartIRC
+Requires:	php-pear-Net_SmartIRC >= 1.1
 Requires:	rc-scripts >= 0.4.0.18
 
 %description irc
@@ -400,7 +389,6 @@ kanał używany przez bota, trzeba ręcznie zmodyfikować skrypt bot.php .
 Summary:	Eventum command-line interface
 Summary(pl.UTF-8):	Interfejs linii poleceń dla Eventum
 Group:		Applications/WWW
-Requires:	%{name}-base = %{version}-%{release}
 Requires:	php(core) >= %{php_min_version}
 Requires:	php(phar)
 Requires:	php-pear-XML_RPC
@@ -464,9 +452,6 @@ This package contains the cron job.
 
 mv docs/examples .
 
-# GPL v2
-rm docs/COPYING
-
 # bug fixes / features
 %{?with_order:%patch2 -p1}
 #%patch3 -p0
@@ -496,13 +481,24 @@ rm -f config/config.php
 # packaging
 %patch100 -p1
 %patch101 -p1
-%patch105 -p1
 %patch107 -p1
 %patch108 -p1
 
-%{__sed} -i -e "
-s;define('CONFIG_PATH'.*');define('CONFIG_PATH', '%{_webappdir}');
-" upgrade/{*/,}*.php
+# cleanup vendor. keep only needed libraries.
+# (the rest are packaged with system packages)
+mv vendor vendor.dist
+vendor() {
+	local path dir
+	for path; do
+		dir=$(dirname $path)
+		test -d vendor/$dir || mkdir -p vendor/$dir
+		mv vendor.dist/$path vendor/$path
+	done
+}
+vendor autoload.php
+vendor composer/autoload_{classmap,files,namespaces,real,psr4}.php
+vendor composer/ClassLoader.php
+vendor ircmaxell/{password-compat,random-lib,security-lib}
 
 # remove backups from patching as we use globs to package files to buildroot
 find '(' -name '*~' -o -name '*.orig' ')' | xargs -r rm -v
@@ -521,15 +517,14 @@ install -d \
 	$RPM_BUILD_ROOT%{_appdir}/{include,htdocs/misc,upgrade} \
 	$RPM_BUILD_ROOT%{systemdtmpfilesdir}
 
-%{__make} install-eventum install-cli install-irc install-scm install-localization \
+%{__make} install-eventum install-cli install-scm install-localization \
 	sysconfdir=%{_webappdir} \
 	localedir=%{_localedir} \
 	DESTDIR=$RPM_BUILD_ROOT
 
-install -d $RPM_BUILD_ROOT%{_appdir}/vendor
-cp -a vendor/autoload.php vendor/composer $RPM_BUILD_ROOT%{_appdir}/vendor
-rm $RPM_BUILD_ROOT%{_appdir}/vendor/composer/include_paths.php
-rm $RPM_BUILD_ROOT%{_appdir}/vendor/composer/autoload_psr4.php
+ln -s %{_webappdir} $RPM_BUILD_ROOT%{_appdir}/config
+
+cp -a vendor $RPM_BUILD_ROOT%{_appdir}
 
 # unsupported locale
 %{__rm} -r $RPM_BUILD_ROOT%{_localedir}/ht
@@ -554,7 +549,7 @@ cp -p %{SOURCE4} $RPM_BUILD_ROOT/etc/cron.d/%{name}-reminder
 cp -p %{SOURCE5} $RPM_BUILD_ROOT/etc/cron.d/%{name}-monitor
 cp -p %{SOURCE10} $RPM_BUILD_ROOT/etc/cron.d/%{name}-sphinx
 
-cp -p %{SOURCE7} $RPM_BUILD_ROOT%{_webappdir}/irc_config.php
+cp -p config/irc_config.dist.php $RPM_BUILD_ROOT%{_webappdir}/irc_config.php
 
 install -p %{SOURCE8} $RPM_BUILD_ROOT/etc/rc.d/init.d/eventum-irc
 cp -p %{SOURCE9} $RPM_BUILD_ROOT/etc/sysconfig/eventum-irc
@@ -575,14 +570,20 @@ cp -p %{SOURCE6} $RPM_BUILD_ROOT%{_sysconfdir}/scm.php
 rm -rf $RPM_BUILD_ROOT
 
 %pre
+%groupadd -g 146 %{name}
+%useradd -u 146 -d /var/lib/%{name} -g %{name} -c "Eventum User" %{name}
 %addusertogroup http %{name}
 
 %post
-# greate empty ghost files
-for a in cli.log errors.log irc_bot.log login_attempts.log; do
-	if [ ! -f /var/log/%{name}/$a ]; then
-		install -m 0620 -o root -g eventum /dev/null /var/log/%{name}/$a
-	fi
+# create empty ghost files
+# these permissions ensure the logs are write only
+for a in \
+	errors.log login_attempts.log \
+	cli.log \
+	irc_bot_error.log irc_bot_smartirc.log \
+; do
+	test -f /var/log/%{name}/$a && continue
+	install -m 0620 -o root -g http /dev/null /var/log/%{name}/$a
 done
 
 # run database update if configured
@@ -602,11 +603,7 @@ if [ "$1" = "0" ]; then
 	rm -f /var/cache/eventum/*.php 2>/dev/null || :
 fi
 
-%pre base
-%groupadd -P %{name}-base -g 146 %{name}
-%useradd -P %{name}-base -u 146 -d /var/lib/%{name} -g %{name} -c "Eventum User" %{name}
-
-%postun base
+%postun
 if [ "$1" = "0" ]; then
 	%userremove %{name}
 	%groupremove %{name}
@@ -675,10 +672,13 @@ done
 %attr(660,root,http) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/setup.php
 %attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/htpasswd
 
-%dir %attr(731,root,http) /var/log/%{name}
+%dir %attr(711,root,http) /var/log/%{name}
 %attr(620,root,http) %ghost /var/log/%{name}/*
 %dir %attr(750,root,root) /var/log/archive/%{name}
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/logrotate.d/%{name}
+
+%dir %{_appdir}
+%{_appdir}/config
 
 %dir %{_appdir}/bin
 %attr(755,root,root) %{_appdir}/bin/process_all_emails.php
@@ -709,26 +709,20 @@ done
 %attr(755,root,root) %{_appdir}/upgrade/scm_trac_import.php
 %{_appdir}/upgrade/patches
 
-%dir %{_appdir}/vendor
-%dir %{_appdir}/vendor/composer
-%{_appdir}/vendor/autoload.php
-%{_appdir}/vendor/composer/ClassLoader.php
-%{_appdir}/vendor/composer/autoload_*.php
+%{_appdir}/vendor
 
 %dir %{_appdir}/lib
 %{_appdir}/lib/eventum
 %exclude %{_appdir}/lib/eventum/class.monitor.php
 
+%dir %{_libdir}
+
 %{systemdtmpfilesdir}/%{name}.conf
+
+%dir /var/lib/%{name}
 %dir %attr(730,root,http) /var/run/%{name}
 %dir %attr(730,root,http) /var/cache/%{name}
 
-%files base
-%defattr(644,root,root,755)
-%attr(751,root,root) %dir %{_sysconfdir}
-%dir %{_libdir}
-%dir %{_appdir}
-%dir /var/lib/%{name}
 # saved mail copies
 %attr(770,root,http) %dir /var/lib/%{name}/routed_emails
 %attr(770,root,http) %dir /var/lib/%{name}/routed_drafts
@@ -785,7 +779,7 @@ done
 %defattr(644,root,root,755)
 %attr(640,root,eventum) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/irc_config.php
 %attr(640,root,eventum) %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/eventum-irc
-%attr(755,root,root) %{_sbindir}/%{name}-irc-bot
+%attr(755,root,root) %{_appdir}/bin/irc-bot.php
 %attr(754,root,root) /etc/rc.d/init.d/%{name}-irc
 
 %files cli
