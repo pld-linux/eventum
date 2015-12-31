@@ -309,10 +309,11 @@
  );
 --- eventum-3.0.6-327-g34e5417/vendor/composer/autoload_namespaces.php	2015-12-31 19:33:54.323742468 +0200
 +++ eventum-3.0.6-327-g34e5417/vendor/composer/autoload_namespaces.php	2015-12-31 19:46:27.515826070 +0200
-@@ -5,14 +5,15 @@
+@@ -5,14 +5,16 @@
  $vendorDir = dirname(dirname(__FILE__));
 -$baseDir = dirname($vendorDir);
 +$pearDir = PEAR_INSTALL_DIR . '/';
++$phpDir = PHP_DATADIR . '/php';
  
  return array(
      'SecurityLib' => array($vendorDir . '/ircmaxell/security-lib/lib'),
