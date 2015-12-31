@@ -3,8 +3,8 @@
 %bcond_with	order	# with experimental order patch
 
 %define		rel		1.4
-%define		subver  329
-%define		githash c0f6819
+%define		subver  330
+%define		githash e32a8ea
 %define		php_min_version 5.3.7
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
@@ -16,7 +16,7 @@ License:	GPL v2
 Group:		Applications/WWW
 #Source0:	https://github.com/eventum/eventum/releases/download/v%{version}/%{name}-%{version}.tar.gz
 Source0:	%{name}-%{version}-%{subver}-g%{githash}.tar.gz
-# Source0-md5:	34cd716ef4c94d6d10cec3cc4d7ccdf0
+# Source0-md5:	6e8d40b211f5bbb169495757409a4848
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -583,6 +583,7 @@ rm -rf $RPM_BUILD_ROOT
 # these permissions ensure the logs are write only
 for a in \
 	errors.log login_attempts.log \
+	eventum.log \
 	cli.log \
 	irc_bot_error.log irc_bot_smartirc.log \
 ; do
