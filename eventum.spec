@@ -2,7 +2,7 @@
 # Conditional build:
 %bcond_with	order	# with experimental order patch
 
-%define		rel		1.1
+%define		rel		1.2
 %define		subver  327
 %define		githash 34e5417
 %define		php_min_version 5.3.7
@@ -81,6 +81,7 @@ Requires:	php-pear-Net_UserAgent_Detect
 Requires:	php-pear-PEAR-core
 Requires:	php-pear-Text_Diff
 Requires:	php-pear-XML_RPC
+Requires:	php-psr-Log >= 1.0.0
 Requires:	phplot >= 5.8.0
 Requires:	webapps
 Requires:	webserver(access)
