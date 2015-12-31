@@ -10,12 +10,12 @@
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl.UTF-8):	Eventum - system śledzenia spraw/błędów
 Name:		eventum
-Version:	3.0.6
+Version:	3.0.7
 Release:	%{?subver:1.%{subver}.%{?githash:g%{githash}.}}%{rel}
 License:	GPL v2
 Group:		Applications/WWW
 Source0:	https://github.com/eventum/eventum/releases/download/v%{version}/%{name}-%{version}.tar.gz
-# Source0-md5:	0c97640424cd91f366ba711e8dec01c6
+# Source0-md5:	28569e78cf78f11a69e359e3431cb958
 #Source0:	%{name}-%{version}-%{subver}-g%{githash}.tar.gz
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
@@ -68,6 +68,7 @@ Requires:	php(session)
 Requires:	php-Smarty >= 3.1
 Requires:	php-Smarty-plugin-gettext
 Requires:	php-ZendFramework-Config >= 2.4
+Requires:	php-monolog >= 1.17.2
 Requires:	php-pear-DB
 Requires:	php-pear-Mail
 Requires:	php-pear-Mail_Mime
@@ -81,6 +82,8 @@ Requires:	php-pear-Net_UserAgent_Detect
 Requires:	php-pear-PEAR-core
 Requires:	php-pear-Text_Diff
 Requires:	php-pear-XML_RPC
+Requires:	php-psr-Log >= 1.0.0-2
+Requires:	php-symfony2-HttpFoundation >= 2.7.7
 Requires:	phplot >= 5.8.0
 Requires:	webapps
 Requires:	webserver(access)
@@ -475,7 +478,7 @@ define('APP_SQL_DBPASS', '');
 define('APP_TABLE_PREFIX', 'eventum_');
 EOF
 php config/sphinx.conf.php > config/sphinx.conf
-rm -f config/config.php
+rm config/config.php
 %endif
 
 # packaging
@@ -483,6 +486,8 @@ rm -f config/config.php
 %patch101 -p1
 %patch107 -p1
 %patch108 -p1
+
+rm htdocs/.htaccess.dist
 
 # cleanup vendor. keep only needed libraries.
 # (the rest are packaged with system packages)
@@ -514,7 +519,6 @@ install -d \
 	$RPM_BUILD_ROOT/var/{run,cache,lib}/%{name} \
 	$RPM_BUILD_ROOT/var/log/{archive/,}%{name} \
 	$RPM_BUILD_ROOT/var/lib/%{name}/routed_{emails,drafts,notes} \
-	$RPM_BUILD_ROOT%{_appdir}/{include,htdocs/misc,upgrade} \
 	$RPM_BUILD_ROOT%{systemdtmpfilesdir}
 
 %{__make} install-eventum install-cli install-scm install-localization \
@@ -579,6 +583,7 @@ rm -rf $RPM_BUILD_ROOT
 # these permissions ensure the logs are write only
 for a in \
 	errors.log login_attempts.log \
+	eventum.log \
 	cli.log \
 	irc_bot_error.log irc_bot_smartirc.log \
 ; do
@@ -588,7 +593,7 @@ done
 
 # run database update if configured
 test -s %{_webappdir}/config.php && \
-%{_appdir}/upgrade/update-database.php || :
+%{_appdir}/bin/upgrade.php || :
 
 # nuke Smarty templates cache after upgrade
 rm -f /var/cache/eventum/*.php
@@ -682,6 +687,7 @@ done
 
 %dir %{_appdir}/bin
 %attr(755,root,root) %{_appdir}/bin/process_all_emails.php
+%attr(755,root,root) %{_appdir}/bin/upgrade.php
 
 %{_appdir}/autoload.php
 %{_appdir}/init.php
@@ -694,7 +700,6 @@ done
 %{_appdir}/htdocs/images
 %{_appdir}/htdocs/js
 %{_appdir}/htdocs/manage
-%{_appdir}/htdocs/misc
 %{_appdir}/htdocs/reports
 %{_appdir}/htdocs/rpc
 %{_appdir}/htdocs/components
@@ -703,14 +708,13 @@ done
 %dir %{_appdir}/upgrade
 %{_appdir}/upgrade/flush_compiled_templates.php
 %{_appdir}/upgrade/*.sql
-%attr(755,root,root) %{_appdir}/upgrade/update-database.php
 %attr(755,root,root) %{_appdir}/upgrade/ldap_import.php
 %attr(755,root,root) %{_appdir}/upgrade/ldap_update_users.php
 %attr(755,root,root) %{_appdir}/upgrade/scm_trac_import.php
 %{_appdir}/upgrade/patches
 
 %{_appdir}/vendor
-
+%{_appdir}/src
 %dir %{_appdir}/lib
 %{_appdir}/lib/eventum
 %exclude %{_appdir}/lib/eventum/class.monitor.php
