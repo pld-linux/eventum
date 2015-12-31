@@ -475,7 +475,7 @@ define('APP_SQL_DBPASS', '');
 define('APP_TABLE_PREFIX', 'eventum_');
 EOF
 php config/sphinx.conf.php > config/sphinx.conf
-rm -f config/config.php
+rm config/config.php
 %endif
 
 # packaging
@@ -483,6 +483,8 @@ rm -f config/config.php
 %patch101 -p1
 %patch107 -p1
 %patch108 -p1
+
+rm htdocs/.htaccess.dist
 
 # cleanup vendor. keep only needed libraries.
 # (the rest are packaged with system packages)
