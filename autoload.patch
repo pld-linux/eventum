@@ -1,5 +1,5 @@
---- eventum-3.0.6-327-g34e5417/vendor/composer/autoload_classmap.php~	2015-12-31 19:29:17.321219115 +0200
-+++ eventum-3.0.6-327-g34e5417/vendor/composer/autoload_classmap.php	2015-12-31 19:31:11.592843288 +0200
+--- eventum-3.0.6-327-g34e5417/vendor/composer/autoload_classmap.php	2015-12-31 19:31:11.592843288 +0200
++++ eventum-3.0.6-327-g34e5417/vendor/composer/autoload_classmap.php	2015-12-31 19:44:32.584207985 +0200
 @@ -4,6 +4,7 @@
  
  $vendorDir = dirname(dirname(__FILE__));
@@ -27,7 +27,7 @@
      'Filter' => $baseDir . '/lib/eventum/class.filter.php',
      'Group' => $baseDir . '/lib/eventum/class.group.php',
      'Help' => $baseDir . '/lib/eventum/class.help.php',
-@@ -64,44 +59,14 @@
+@@ -62,44 +59,14 @@
      'Lock' => $baseDir . '/lib/eventum/class.lock.php',
      'Mail_Helper' => $baseDir . '/lib/eventum/class.mail_helper.php',
      'Mail_Queue' => $baseDir . '/lib/eventum/class.mail_queue.php',
@@ -72,10 +72,9 @@
      'Pager' => $baseDir . '/lib/eventum/class.pager.php',
      'Partner' => $baseDir . '/lib/eventum/class.partner.php',
      'Phone_Support' => $baseDir . '/lib/eventum/class.phone_support.php',
-@@ -165,215 +165,22 @@
-     'Setup' => $baseDir . '/lib/eventum/class.setup.php',
+@@ -199,214 +166,19 @@
      'Severity' => $baseDir . '/lib/eventum/class.severity.php',
-     'Smarty' => $vendorDir . '/smarty/smarty/libs/Smarty.class.php',
+-    'Smarty' => $vendorDir . '/smarty/smarty/libs/Smarty.class.php',
 -    'SmartyBC' => $vendorDir . '/smarty/smarty/libs/SmartyBC.class.php',
 -    'SmartyCompilerException' => $vendorDir . '/smarty/smarty/libs/sysplugins/smartycompilerexception.php',
 -    'SmartyException' => $vendorDir . '/smarty/smarty/libs/sysplugins/smartyexception.php',
@@ -237,7 +236,7 @@
 -    'Smarty_Template_Source' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_template_source.php',
 -    'Smarty_Undefined_Variable' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_undefined_variable.php',
 -    'Smarty_Variable' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_variable.php',
-     'SphinxClient' => $vendorDir . '/sphinx/php-sphinxapi/sphinxapi.php',
+-    'SphinxClient' => $vendorDir . '/sphinx/php-sphinxapi/sphinxapi.php',
      'Sphinx_Fulltext_Search' => $baseDir . '/lib/eventum/search/class.sphinx_fulltext_search.php',
      'Stats' => $baseDir . '/lib/eventum/class.stats.php',
      'Status' => $baseDir . '/lib/eventum/class.status.php',
