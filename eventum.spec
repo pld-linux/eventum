@@ -514,7 +514,6 @@ install -d \
 	$RPM_BUILD_ROOT/var/{run,cache,lib}/%{name} \
 	$RPM_BUILD_ROOT/var/log/{archive/,}%{name} \
 	$RPM_BUILD_ROOT/var/lib/%{name}/routed_{emails,drafts,notes} \
-	$RPM_BUILD_ROOT%{_appdir}/{include,htdocs/misc,upgrade} \
 	$RPM_BUILD_ROOT%{systemdtmpfilesdir}
 
 %{__make} install-eventum install-cli install-scm install-localization \
@@ -588,7 +587,7 @@ done
 
 # run database update if configured
 test -s %{_webappdir}/config.php && \
-%{_appdir}/upgrade/update-database.php || :
+%{_appdir}/bin/upgrade.php || :
 
 # nuke Smarty templates cache after upgrade
 rm -f /var/cache/eventum/*.php
@@ -682,6 +681,7 @@ done
 
 %dir %{_appdir}/bin
 %attr(755,root,root) %{_appdir}/bin/process_all_emails.php
+%attr(755,root,root) %{_appdir}/bin/upgrade.php
 
 %{_appdir}/autoload.php
 %{_appdir}/init.php
@@ -694,7 +694,6 @@ done
 %{_appdir}/htdocs/images
 %{_appdir}/htdocs/js
 %{_appdir}/htdocs/manage
-%{_appdir}/htdocs/misc
 %{_appdir}/htdocs/reports
 %{_appdir}/htdocs/rpc
 %{_appdir}/htdocs/components
@@ -703,7 +702,6 @@ done
 %dir %{_appdir}/upgrade
 %{_appdir}/upgrade/flush_compiled_templates.php
 %{_appdir}/upgrade/*.sql
-%attr(755,root,root) %{_appdir}/upgrade/update-database.php
 %attr(755,root,root) %{_appdir}/upgrade/ldap_import.php
 %attr(755,root,root) %{_appdir}/upgrade/ldap_update_users.php
 %attr(755,root,root) %{_appdir}/upgrade/scm_trac_import.php
