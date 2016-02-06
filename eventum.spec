@@ -2,9 +2,9 @@
 # Conditional build:
 %bcond_with	order	# with experimental order patch
 
-%define		rel		1.3
-%define		subver  102
-%define		githash dd731ad
+%define		rel		1.4
+%define		subver  187
+%define		githash acd7038
 %define		php_min_version 5.3.7
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
@@ -16,7 +16,7 @@ License:	GPL v2+
 Group:		Applications/WWW
 #Source0:	https://github.com/eventum/eventum/releases/download/v%{version}/%{name}-%{version}.tar.gz
 Source0:	%{name}-%{version}-%{subver}-g%{githash}.tar.gz
-# Source0-md5:	7c783515cb746faa4c8b009f2af2c4d4
+# Source0-md5:	ae49292484aa2271c82dea1262aead96
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -436,6 +436,7 @@ vendor autoload.php
 vendor composer/autoload_{classmap,files,namespaces,real,psr4}.php
 vendor composer/ClassLoader.php
 vendor ircmaxell/{password-compat,random-lib,security-lib}
+vendor defuse/php-encryption
 
 # remove backups from patching as we use globs to package files to buildroot
 find '(' -name '*~' -o -name '*.orig' ')' | xargs -r rm -v
@@ -640,6 +641,7 @@ done
 %dir %{_appdir}/upgrade
 %{_appdir}/upgrade/flush_compiled_templates.php
 %{_appdir}/upgrade/*.sql
+%attr(755,root,root) %{_appdir}/upgrade/change_usr_id.php
 %attr(755,root,root) %{_appdir}/upgrade/ldap_import.php
 %attr(755,root,root) %{_appdir}/upgrade/ldap_update_users.php
 %attr(755,root,root) %{_appdir}/upgrade/scm_trac_import.php
