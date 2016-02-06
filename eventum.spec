@@ -3,19 +3,19 @@
 %bcond_with	order	# with experimental order patch
 
 %define		rel		1
-#define		subver  105
-#define		githash 9c49ee5
+#define		subver  187
+#define		githash acd7038
 %define		php_min_version 5.3.7
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl.UTF-8):	Eventum - system śledzenia spraw/błędów
 Name:		eventum
-Version:	3.0.8
+Version:	3.0.9
 Release:	%{?subver:1.%{subver}.%{?githash:g%{githash}.}}%{rel}
 License:	GPL v2+
 Group:		Applications/WWW
 Source0:	https://github.com/eventum/eventum/releases/download/v%{version}/%{name}-%{version}.tar.gz
-# Source0-md5:	a54caff26049f6224ccb74de711eb436
+# Source0-md5:	15cacb3d072cef120bb082cb7ca8916e
 #Source0:	%{name}-%{version}-%{subver}-g%{githash}.tar.gz
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
@@ -96,6 +96,9 @@ Suggests:	webserver(setenv)
 Provides:	group(eventum)
 Provides:	user(eventum)
 Obsoletes:	eventum-base < 3.0.3-1.305
+Obsoletes:	eventum-route-drafts < 3.0.8-1.1
+Obsoletes:	eventum-route-emails < 3.0.8-1.1
+Obsoletes:	eventum-route-notes < 3.0.8-1.1
 Conflicts:	logrotate < 3.8.0
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -257,79 +260,6 @@ testów uprawnień i plików w Monitor::checkConfiguration().
 
 Ten pakiet zawiera zadanie dla crona.
 
-%package route-drafts
-Summary:	Eventum Draft Routing
-Summary(pl.UTF-8):	Przekazywanie szkiców dla Eventum
-Group:		Applications/WWW
-Requires:	%{name} = %{version}-%{release}
-Requires:	eventum(router)
-
-%description route-drafts
-The draft routing feature is used to automatically associate a thread
-of drafts into an Eventum issue. By setting up Postfix to deliver
-emails sent to a specific address (usually draft-<number>@<domain>) to
-the above script, users are able to send drafts written in their mail
-client to be stored in Eventum. These drafts will NOT broadcasted to
-the notification list.
-
-%description route-drafts -l pl.UTF-8
-Przekazywanie szkiców służy do automatycznego wiązania wątku szkiców z
-problemem w Eventum. Ustawiając Postfiksa, aby dostarczał pocztę
-wysłaną na podany adres (zwykle draft-<liczba>@<domena>) do tego
-skryptu umożliwia się użytkownikom wysyłanie szkiców napisanych w ich
-kliencie pocztowym do zapisania w Eventum. Szkice te NIE będą wysyłane
-na listę powiadomień.
-
-%package route-emails
-Summary:	Eventum Email Routing
-Summary(pl.UTF-8):	Przekazywanie poczty dla Eventum
-Group:		Applications/WWW
-Requires:	%{name} = %{version}-%{release}
-Requires:	eventum(router)
-
-%description route-emails
-The email routing feature is used to automatically associate a thread
-of emails into an Eventum issue. By setting up Postfix to deliver
-emails sent to a specific address (usually issue-<number>@<domain>) to
-the above script, users are able to use their email clients to reply
-to emails coming from Eventum, and those replies will be automatically
-associated with the issue and broadcasted to the entire notification
-list.
-
-%description route-emails -l pl.UTF-8
-Funkcjonalność przekazywania poczty służy do automatycznego wiązania
-wątku listów ze sprawą w Eventum. Po ustawieniu czy nawet Postfiksa,
-aby dostarczał listy wysyłane na pewien adres (zwykle
-issue-<numer>@<domena>) na powyższy skrypt, użytkownicy będą mogli
-używać klientów pocztowych do odpowiadania na listy przychodzące z
-Eventum, a odpowiedzi te będą automatycznie wiązane ze sprawą i
-rozprowadzane do całej listy ogłoszeniowej.
-
-%package route-notes
-Summary:	Eventum Note Routing
-Summary(pl.UTF-8):	Przekazywanie notatek dla Eventum
-Group:		Applications/WWW
-Requires:	%{name} = %{version}-%{release}
-Requires:	eventum(router)
-
-%description route-notes
-The note routing feature is used to automatically associate a thread
-of notes into an Eventum issue. By setting up Postfix to deliver
-emails sent to a specific address (usually note-<number>@<domain>) to
-the above script, users are able to use their email clients to reply
-to internal notes coming from Eventum, and those replies will be
-automatically associated with the issue and broadcasted to the
-notification list staff members.
-
-%description route-notes -l pl.UTF-8
-Funkcjonalność przekazywania notatek służy do automatycznego wiązania
-wątku notatek ze sprawą w Eventum. Po ustawieniu Postfiksa, aby
-dostarczał listy wysyłane na pewien adres (zwykle
-note-<numer>@<domena>) na powyższy skrypt, użytkownicy będą mogli
-używać klientów pocztowych do odpowiadania na wewnętrzne notatki
-pochodzące od Eventu, a odpowiedzi te będą automatycznie wiązane ze
-sprawą i rozprowadzane do członków personelu listy ogłoszeniowej.
-
 %package router-postfix
 Summary:	Eventum Mail Routing - Postfix
 Summary(pl.UTF-8):	Przekazywanie poczty Eventum - Postfix
@@ -488,6 +418,8 @@ rm config/config.php
 %patch108 -p1
 
 rm htdocs/.htaccess.dist
+# deprecated in favour of process_all_emails.php
+rm bin/route_*.php
 
 # cleanup vendor. keep only needed libraries.
 # (the rest are packaged with system packages)
@@ -504,6 +436,7 @@ vendor autoload.php
 vendor composer/autoload_{classmap,files,namespaces,real,psr4}.php
 vendor composer/ClassLoader.php
 vendor ircmaxell/{password-compat,random-lib,security-lib}
+vendor defuse/php-encryption
 
 # remove backups from patching as we use globs to package files to buildroot
 find '(' -name '*~' -o -name '*.orig' ')' | xargs -r rm -v
@@ -708,6 +641,7 @@ done
 %dir %{_appdir}/upgrade
 %{_appdir}/upgrade/flush_compiled_templates.php
 %{_appdir}/upgrade/*.sql
+%attr(755,root,root) %{_appdir}/upgrade/change_usr_id.php
 %attr(755,root,root) %{_appdir}/upgrade/ldap_import.php
 %attr(755,root,root) %{_appdir}/upgrade/ldap_update_users.php
 %attr(755,root,root) %{_appdir}/upgrade/scm_trac_import.php
@@ -762,18 +696,6 @@ done
 %{_appdir}/lib/eventum/class.monitor.php
 %attr(755,root,root) %{_appdir}/bin/monitor.php
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/cron.d/%{name}-monitor
-
-%files route-drafts
-%defattr(644,root,root,755)
-%attr(755,root,root) %{_appdir}/bin/route_drafts.php
-
-%files route-emails
-%defattr(644,root,root,755)
-%attr(755,root,root) %{_appdir}/bin/route_emails.php
-
-%files route-notes
-%defattr(644,root,root,755)
-%attr(755,root,root) %{_appdir}/bin/route_notes.php
 
 %files router-postfix
 %defattr(644,root,root,755)
