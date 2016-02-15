@@ -91,6 +91,8 @@ Requires:	webserver(alias)
 Requires:	webserver(indexfile)
 Requires:	webserver(php) >= 4.2.0
 Suggests:	localedb
+Suggests:	php(mcrypt)
+Suggests:	php(openssl)
 Suggests:	php-pear-Net_LDAP2
 Suggests:	webserver(setenv)
 Provides:	group(eventum)
