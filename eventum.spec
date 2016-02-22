@@ -2,7 +2,7 @@
 # Conditional build:
 %bcond_with	order	# with experimental order patch
 
-%define		rel		1.4
+%define		rel		1.5
 %define		subver  73
 %define		githash 0d6904c
 %define		php_min_version 5.3.7
@@ -439,6 +439,7 @@ vendor composer/autoload_{classmap,files,namespaces,real,psr4}.php
 vendor composer/ClassLoader.php
 vendor ircmaxell/{password-compat,random-lib,security-lib}
 vendor defuse/php-encryption
+vendor ramsey/array_column
 
 # remove backups from patching as we use globs to package files to buildroot
 find '(' -name '*~' -o -name '*.orig' ')' | xargs -r rm -v
