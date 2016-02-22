@@ -641,12 +641,7 @@ done
 %{_appdir}/templates
 
 %dir %{_appdir}/upgrade
-%{_appdir}/upgrade/flush_compiled_templates.php
 %{_appdir}/upgrade/*.sql
-%attr(755,root,root) %{_appdir}/upgrade/change_usr_id.php
-%attr(755,root,root) %{_appdir}/upgrade/ldap_import.php
-%attr(755,root,root) %{_appdir}/upgrade/ldap_update_users.php
-%attr(755,root,root) %{_appdir}/upgrade/scm_trac_import.php
 %{_appdir}/upgrade/patches
 
 %{_appdir}/vendor
