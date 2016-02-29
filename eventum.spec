@@ -10,12 +10,12 @@
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl.UTF-8):	Eventum - system śledzenia spraw/błędów
 Name:		eventum
-Version:	3.0.9
+Version:	3.0.10
 Release:	%{?subver:1.%{subver}.%{?githash:g%{githash}.}}%{rel}
 License:	GPL v2+
 Group:		Applications/WWW
 Source0:	https://github.com/eventum/eventum/releases/download/v%{version}/%{name}-%{version}.tar.gz
-# Source0-md5:	15cacb3d072cef120bb082cb7ca8916e
+# Source0-md5:	a82c8e741892b09679722fc72a9f25bd
 #Source0:	%{name}-%{version}-%{subver}-g%{githash}.tar.gz
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
@@ -91,6 +91,8 @@ Requires:	webserver(alias)
 Requires:	webserver(indexfile)
 Requires:	webserver(php) >= 4.2.0
 Suggests:	localedb
+Suggests:	php(mcrypt)
+Suggests:	php(openssl)
 Suggests:	php-pear-Net_LDAP2
 Suggests:	webserver(setenv)
 Provides:	group(eventum)
@@ -437,6 +439,8 @@ vendor composer/autoload_{classmap,files,namespaces,real,psr4}.php
 vendor composer/ClassLoader.php
 vendor ircmaxell/{password-compat,random-lib,security-lib}
 vendor defuse/php-encryption
+vendor ramsey/array_column
+vendor willdurand/email-reply-parser
 
 # remove backups from patching as we use globs to package files to buildroot
 find '(' -name '*~' -o -name '*.orig' ')' | xargs -r rm -v
@@ -639,12 +643,7 @@ done
 %{_appdir}/templates
 
 %dir %{_appdir}/upgrade
-%{_appdir}/upgrade/flush_compiled_templates.php
 %{_appdir}/upgrade/*.sql
-%attr(755,root,root) %{_appdir}/upgrade/change_usr_id.php
-%attr(755,root,root) %{_appdir}/upgrade/ldap_import.php
-%attr(755,root,root) %{_appdir}/upgrade/ldap_update_users.php
-%attr(755,root,root) %{_appdir}/upgrade/scm_trac_import.php
 %{_appdir}/upgrade/patches
 
 %{_appdir}/vendor
