@@ -74,11 +74,9 @@ Requires:	php-pear-Mail
 Requires:	php-pear-Mail_Mime
 Requires:	php-pear-Mail_mimeDecode
 Requires:	php-pear-Math_Stats
-Requires:	php-pear-Net_DIME
 Requires:	php-pear-Net_SMTP
 Requires:	php-pear-Net_Socket
 Requires:	php-pear-Net_URL
-Requires:	php-pear-Net_UserAgent_Detect
 Requires:	php-pear-PEAR-core
 Requires:	php-pear-Text_Diff
 Requires:	php-pear-XML_RPC
@@ -94,6 +92,7 @@ Suggests:	localedb
 Suggests:	php(mcrypt)
 Suggests:	php(openssl)
 Suggests:	php-pear-Net_LDAP2
+Suggests:	php-pear-Net_POP3
 Suggests:	webserver(setenv)
 Provides:	group(eventum)
 Provides:	user(eventum)
