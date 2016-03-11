@@ -292,18 +292,19 @@
 +    'Smarty' => $phpDir. '/Smarty3/Smarty.class.php',
 +    'SphinxClient' => $phpDir . '/sphinxapi.php',
  );
---- eventum-3.0.9-73-g0d6904c/vendor/composer/autoload_files.php~	2016-02-22 22:30:29.000000000 +0200
-+++ eventum-3.0.9-73-g0d6904c/vendor/composer/autoload_files.php	2016-02-22 23:16:39.646899108 +0200
-@@ -4,12 +4,12 @@
+--- eventum-3.0.10-60-g788184f/vendor/composer/autoload_files.php~	2016-03-11 09:43:28.000000000 +0200
++++ eventum-3.0.10-60-g788184f/vendor/composer/autoload_files.php	2016-03-11 10:01:49.058692552 +0200
+@@ -4,13 +4,13 @@
  
  $vendorDir = dirname(dirname(__FILE__));
  $baseDir = dirname($vendorDir);
 +$phpDir = PHP_DATADIR . '/php';
  
  return array(
+     $vendorDir . '/ircmaxell/password-compat/lib/password.php',
+     $vendorDir . '/symfony/polyfill-php55/bootstrap.php',
      $vendorDir . '/defuse/php-encryption/Crypto.php',
      $vendorDir . '/ramsey/array_column/src/array_column.php',
-     $vendorDir . '/ircmaxell/password-compat/lib/password.php',
 -    $vendorDir . '/smarty-gettext/smarty-gettext/block.t.php',
 -    $vendorDir . '/smarty-gettext/smarty-gettext/function.locale.php',
      $baseDir . '/lib/eventum/gettext.php',
@@ -336,20 +337,34 @@
 +    'Text' => array($pearDir),
 +    'XML' => array($pearDir),
  );
---- eventum-3.0.6-327-g34e5417/vendor/composer/autoload_psr4.php	2015-12-31 19:35:06.415997365 +0200
-+++ eventum-3.0.6-327-g34e5417/vendor/composer/autoload_psr4.php	2015-12-31 19:50:20.312351155 +0200
-@@ -6,7 +6,8 @@
+--- eventum-3.0.10-60-g788184f/vendor/composer/autoload_psr4.php~	2016-03-11 10:18:46.856708564 +0200
++++ eventum-3.0.10-60-g788184f/vendor/composer/autoload_psr4.php	2016-03-11 10:18:50.023327584 +0200
+@@ -4,21 +4,22 @@
+ 
+ $vendorDir = dirname(dirname(__FILE__));
  $baseDir = dirname($vendorDir);
 +$phpDir = PHP_DATADIR . '/php';
  
  return array(
+     'Zend\\Validator\\' => array($vendorDir . '/zendframework/zend-validator/src'),
+     'Zend\\Mime\\' => array($vendorDir . '/zendframework/zend-mime/src'),
+     'Zend\\Mail\\' => array($vendorDir . '/zendframework/zend-mail/src'),
+     'Zend\\Loader\\' => array($vendorDir . '/zendframework/zend-loader/src'),
 -    'Zend\\Config\\' => array($vendorDir . '/zendframework/zend-config/src'),
--    'Symfony\\Component\\HttpFoundation\\' => array($vendorDir . '/symfony/http-foundation'),
--    'Monolog\\' => array($vendorDir . '/monolog/monolog/src/Monolog'),
 +    'Zend\\Config\\' => array($phpDir . '/Zend/Config'),
+     'Symfony\\Polyfill\\Php55\\' => array($vendorDir . '/symfony/polyfill-php55'),
+     'Symfony\\Component\\Yaml\\' => array($vendorDir . '/symfony/yaml'),
+     'Symfony\\Component\\Serializer\\' => array($vendorDir . '/symfony/serializer'),
+     'Symfony\\Component\\OptionsResolver\\' => array($vendorDir . '/symfony/options-resolver'),
+-    'Symfony\\Component\\HttpFoundation\\' => array($vendorDir . '/symfony/http-foundation'),
 +    'Symfony\\Component\\HttpFoundation\\' => array($phpDir . '/Symfony/Component/HttpFoundation'),
+     'Symfony\\Component\\Filesystem\\' => array($vendorDir . '/symfony/filesystem'),
+     'Symfony\\Component\\Config\\' => array($vendorDir . '/symfony/config'),
+-    'Monolog\\' => array($vendorDir . '/monolog/monolog/src/Monolog'),
 +    'Monolog\\' => array($phpDir . '/Monolog'),
- );
+     'Eventum\\' => array($baseDir . '/src'),
+     'EmailReplyParser\\' => array($vendorDir . '/willdurand/email-reply-parser/src/EmailReplyParser'),
+     'Cascade\\' => array($vendorDir . '/theorchard/monolog-cascade/src'),
 --- eventum-3.0.3-13-gfefa325/autoload.php~	2015-10-13 21:36:40.000000000 +0300
 +++ eventum-3.0.3-13-gfefa325/autoload.php	2015-10-13 23:39:26.450266254 +0300
 @@ -48,4 +48,4 @@

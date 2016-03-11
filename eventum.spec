@@ -2,9 +2,9 @@
 # Conditional build:
 %bcond_with	order	# with experimental order patch
 
-%define		rel		1
-#define		subver  187
-#define		githash acd7038
+%define		rel		1.1
+%define		subver  60
+%define		githash 788184f
 %define		php_min_version 5.3.7
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
@@ -14,9 +14,9 @@ Version:	3.0.10
 Release:	%{?subver:1.%{subver}.%{?githash:g%{githash}.}}%{rel}
 License:	GPL v2+
 Group:		Applications/WWW
-Source0:	https://github.com/eventum/eventum/releases/download/v%{version}/%{name}-%{version}.tar.gz
-# Source0-md5:	a82c8e741892b09679722fc72a9f25bd
-#Source0:	%{name}-%{version}-%{subver}-g%{githash}.tar.gz
+#Source0:	https://github.com/eventum/eventum/releases/download/v%{version}/%{name}-%{version}.tar.gz
+Source0:	%{name}-%{version}-%{subver}-g%{githash}.tar.gz
+# Source0-md5:	23a1fc1e680a859fb872fbe6e521a5ab
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -44,7 +44,7 @@ Patch108:	autoload.patch
 Patch200:	%{name}-fixed-nav.patch
 URL:		http://eventum.mysql.org/
 BuildRequires:	/usr/bin/php
-BuildRequires:	gettext-devel
+BuildRequires:	gettext-tools
 BuildRequires:	php(core) >= %{php_min_version}
 BuildRequires:	rpm-php-pearprov >= 4.0.2-98
 BuildRequires:	rpmbuild(macros) >= 1.654
@@ -440,6 +440,7 @@ vendor ircmaxell/{password-compat,random-lib,security-lib}
 vendor defuse/php-encryption
 vendor ramsey/array_column
 vendor willdurand/email-reply-parser
+vendor symfony/polyfill-php55
 
 # remove backups from patching as we use globs to package files to buildroot
 find '(' -name '*~' -o -name '*.orig' ')' | xargs -r rm -v
