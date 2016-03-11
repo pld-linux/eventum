@@ -337,9 +337,9 @@
 +    'Text' => array($pearDir),
 +    'XML' => array($pearDir),
  );
---- eventum-3.0.10-60-g788184f/vendor/composer/autoload_psr4.php~	2016-03-11 10:18:46.856708564 +0200
-+++ eventum-3.0.10-60-g788184f/vendor/composer/autoload_psr4.php	2016-03-11 10:18:50.023327584 +0200
-@@ -4,20 +4,21 @@
+--- eventum-3.0.10-60-g788184f/vendor/composer/autoload_psr4.php	2016-03-11 10:18:50.023327584 +0200
++++ eventum-3.0.10-60-g788184f/vendor/composer/autoload_psr4.php	2016-03-11 10:45:47.269003688 +0200
+@@ -4,21 +4,22 @@
  
  $vendorDir = dirname(dirname(__FILE__));
  $baseDir = dirname($vendorDir);
@@ -363,15 +363,17 @@
 -    'Symfony\\Component\\HttpFoundation\\' => array($vendorDir . '/symfony/http-foundation'),
 -    'Symfony\\Component\\Filesystem\\' => array($vendorDir . '/symfony/filesystem'),
 -    'Symfony\\Component\\Config\\' => array($vendorDir . '/symfony/config'),
+-    'Monolog\\' => array($vendorDir . '/monolog/monolog/src/Monolog'),
 +    'Symfony\\Component\\Yaml\\' => array($phpDir . '/Symfony/Component/Yaml'),
 +    'Symfony\\Component\\Serializer\\' => array($phpDir . '/Symfony/Component/Serializer'),
 +    'Symfony\\Component\\OptionsResolver\\' =>  array($phpDir . '/Symfony/Component/OptionsResolver'),
 +    'Symfony\\Component\\HttpFoundation\\' => array($phpDir . '/Symfony/Component/HttpFoundation'),
 +    'Symfony\\Component\\Filesystem\\' => array($phpDir . '/Symfony/Component/Filesystem'),
 +    'Symfony\\Component\\Config\\' =>  array($phpDir . '/Symfony/Component/Config'),
-     'Monolog\\' => array($vendorDir . '/monolog/monolog/src/Monolog'),
++    'Monolog\\' => array($phpDir . '/Monolog'),
      'Eventum\\' => array($baseDir . '/src'),
      'EmailReplyParser\\' => array($vendorDir . '/willdurand/email-reply-parser/src/EmailReplyParser'),
+     'Cascade\\' => array($vendorDir . '/theorchard/monolog-cascade/src'),
 --- eventum-3.0.3-13-gfefa325/autoload.php~	2015-10-13 21:36:40.000000000 +0300
 +++ eventum-3.0.3-13-gfefa325/autoload.php	2015-10-13 23:39:26.450266254 +0300
 @@ -48,4 +48,4 @@
