@@ -2,7 +2,7 @@
 # Conditional build:
 %bcond_with	order	# with experimental order patch
 
-%define		rel		1.2
+%define		rel		1.3
 %define		subver  60
 %define		githash 788184f
 %define		php_min_version 5.3.7
@@ -68,6 +68,10 @@ Requires:	php(session)
 Requires:	php-Smarty >= 3.1
 Requires:	php-Smarty-plugin-gettext
 Requires:	php-ZendFramework-Config >= 2.4
+Requires:	php-ZendFramework-Loader >= 2.4
+Requires:	php-ZendFramework-Mail >= 2.4.9-2
+Requires:	php-ZendFramework-Mime >= 2.4
+Requires:	php-ZendFramework-Validator >= 2.4
 Requires:	php-monolog >= 1.17.2
 Requires:	php-pear-DB
 Requires:	php-pear-Mail
@@ -81,7 +85,12 @@ Requires:	php-pear-PEAR-core
 Requires:	php-pear-Text_Diff
 Requires:	php-pear-XML_RPC
 Requires:	php-psr-Log >= 1.0.0-2
+Requires:	php-symfony2-Config >= 2.7.7
+Requires:	php-symfony2-Filesystem >= 2.7.7
 Requires:	php-symfony2-HttpFoundation >= 2.7.7
+Requires:	php-symfony2-OptionsResolver >= 2.7.7
+Requires:	php-symfony2-Serializer >= 2.7.7
+Requires:	php-symfony2-Yaml >= 2.7.7
 Requires:	phplot >= 5.8.0
 Requires:	webapps
 Requires:	webserver(access)
