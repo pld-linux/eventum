@@ -2,9 +2,9 @@
 # Conditional build:
 %bcond_with	order	# with experimental order patch
 
-%define		rel		1.6
-%define		subver  60
-%define		githash 788184f
+%define		rel		1.7
+%define		subver  61
+%define		githash df8822b
 %define		php_min_version 5.3.7
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
@@ -16,7 +16,7 @@ License:	GPL v2+
 Group:		Applications/WWW
 #Source0:	https://github.com/eventum/eventum/releases/download/v%{version}/%{name}-%{version}.tar.gz
 Source0:	%{name}-%{version}-%{subver}-g%{githash}.tar.gz
-# Source0-md5:	23a1fc1e680a859fb872fbe6e521a5ab
+# Source0-md5:	9634f62174aa161534f43f9f5e2d0b1c
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -656,8 +656,9 @@ done
 %{_appdir}/upgrade/*.sql
 %{_appdir}/upgrade/patches
 
-%{_appdir}/vendor
+%{_appdir}/res
 %{_appdir}/src
+%{_appdir}/vendor
 %dir %{_appdir}/lib
 %{_appdir}/lib/eventum
 %exclude %{_appdir}/lib/eventum/class.monitor.php
