@@ -337,9 +337,9 @@
 +    'Text' => array($pearDir),
 +    'XML' => array($pearDir),
  );
---- eventum-3.0.10-60-g788184f/vendor/composer/autoload_psr4.php	2016-03-11 10:18:50.023327584 +0200
-+++ eventum-3.0.10-60-g788184f/vendor/composer/autoload_psr4.php	2016-03-11 10:45:47.269003688 +0200
-@@ -4,21 +4,22 @@
+--- eventum-3.0.10-69-g9cf04f5/vendor/composer/autoload_psr4.php~	2016-03-22 23:06:48.000000000 +0200
++++ eventum-3.0.10-69-g9cf04f5/vendor/composer/autoload_psr4.php	2016-03-22 23:17:24.690856445 +0200
+@@ -4,22 +4,23 @@
  
  $vendorDir = dirname(dirname(__FILE__));
  $baseDir = dirname($vendorDir);
@@ -347,11 +347,13 @@
  
  return array(
 -    'Zend\\Validator\\' => array($vendorDir . '/zendframework/zend-validator/src'),
+-    'Zend\\Stdlib\\' => array($vendorDir . '/zendframework/zend-stdlib/src'),
 -    'Zend\\Mime\\' => array($vendorDir . '/zendframework/zend-mime/src'),
 -    'Zend\\Mail\\' => array($vendorDir . '/zendframework/zend-mail/src'),
 -    'Zend\\Loader\\' => array($vendorDir . '/zendframework/zend-loader/src'),
 -    'Zend\\Config\\' => array($vendorDir . '/zendframework/zend-config/src'),
 +    'Zend\\Validator\\' =>  array($phpDir . '/Zend/Validator'),
++    'Zend\\Stdlib\\' => array($phpDir . '/Zend/Stdlib'),
 +    'Zend\\Mime\\' => array($phpDir . '/Zend/Mime'),
 +    'Zend\\Mail\\' => array($phpDir . '/Zend/Mail'),
 +    'Zend\\Loader\\' => array($phpDir . '/Zend/Loader'),
