@@ -3,19 +3,19 @@
 %bcond_with	order	# with experimental order patch
 
 %define		rel		1
-#define		subver  187
-#define		githash acd7038
+#define		subver  88
+#define		githash 58096f4
 %define		php_min_version 5.3.7
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl.UTF-8):	Eventum - system śledzenia spraw/błędów
 Name:		eventum
-Version:	3.0.10
+Version:	3.0.11
 Release:	%{?subver:1.%{subver}.%{?githash:g%{githash}.}}%{rel}
 License:	GPL v2+
 Group:		Applications/WWW
 Source0:	https://github.com/eventum/eventum/releases/download/v%{version}/%{name}-%{version}.tar.gz
-# Source0-md5:	a82c8e741892b09679722fc72a9f25bd
+# Source0-md5:	00026ee81a77ea04b4c2e3cd517a8b21
 #Source0:	%{name}-%{version}-%{subver}-g%{githash}.tar.gz
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
@@ -44,7 +44,7 @@ Patch108:	autoload.patch
 Patch200:	%{name}-fixed-nav.patch
 URL:		http://eventum.mysql.org/
 BuildRequires:	/usr/bin/php
-BuildRequires:	gettext-devel
+BuildRequires:	gettext-tools
 BuildRequires:	php(core) >= %{php_min_version}
 BuildRequires:	rpm-php-pearprov >= 4.0.2-98
 BuildRequires:	rpmbuild(macros) >= 1.654
@@ -68,6 +68,10 @@ Requires:	php(session)
 Requires:	php-Smarty >= 3.1
 Requires:	php-Smarty-plugin-gettext
 Requires:	php-ZendFramework-Config >= 2.4
+Requires:	php-ZendFramework-Loader >= 2.4
+Requires:	php-ZendFramework-Mail >= 2.4.9-2
+Requires:	php-ZendFramework-Mime >= 2.4
+Requires:	php-ZendFramework-Validator >= 2.4
 Requires:	php-monolog >= 1.17.2
 Requires:	php-pear-DB
 Requires:	php-pear-Mail
@@ -81,7 +85,12 @@ Requires:	php-pear-PEAR-core
 Requires:	php-pear-Text_Diff
 Requires:	php-pear-XML_RPC
 Requires:	php-psr-Log >= 1.0.0-2
+Requires:	php-symfony2-Config >= 2.7.7
+Requires:	php-symfony2-Filesystem >= 2.7.7
 Requires:	php-symfony2-HttpFoundation >= 2.7.7
+Requires:	php-symfony2-OptionsResolver >= 2.7.7
+Requires:	php-symfony2-Serializer >= 2.7.7
+Requires:	php-symfony2-Yaml >= 2.7.7
 Requires:	phplot >= 5.8.0
 Requires:	webapps
 Requires:	webserver(access)
@@ -440,6 +449,9 @@ vendor ircmaxell/{password-compat,random-lib,security-lib}
 vendor defuse/php-encryption
 vendor ramsey/array_column
 vendor willdurand/email-reply-parser
+vendor theorchard/monolog-cascade
+vendor symfony/polyfill-php55
+vendor symfony/polyfill-mbstring
 
 # remove backups from patching as we use globs to package files to buildroot
 find '(' -name '*~' -o -name '*.orig' ')' | xargs -r rm -v
@@ -645,8 +657,9 @@ done
 %{_appdir}/upgrade/*.sql
 %{_appdir}/upgrade/patches
 
-%{_appdir}/vendor
+%{_appdir}/res
 %{_appdir}/src
+%{_appdir}/vendor
 %dir %{_appdir}/lib
 %{_appdir}/lib/eventum
 %exclude %{_appdir}/lib/eventum/class.monitor.php
