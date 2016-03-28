@@ -2,9 +2,9 @@
 # Conditional build:
 %bcond_with	order	# with experimental order patch
 
-%define		rel		1.8
-%define		subver  69
-%define		githash 9cf04f5
+%define		rel		1.9
+%define		subver  88
+%define		githash 58096f4
 %define		php_min_version 5.3.7
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
@@ -16,7 +16,7 @@ License:	GPL v2+
 Group:		Applications/WWW
 #Source0:	https://github.com/eventum/eventum/releases/download/v%{version}/%{name}-%{version}.tar.gz
 Source0:	%{name}-%{version}-%{subver}-g%{githash}.tar.gz
-# Source0-md5:	a849ee92409155c89dd2972e5fdba18a
+# Source0-md5:	91e4512fe3509b950cf9c7ee01376afc
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -449,8 +449,9 @@ vendor ircmaxell/{password-compat,random-lib,security-lib}
 vendor defuse/php-encryption
 vendor ramsey/array_column
 vendor willdurand/email-reply-parser
-vendor symfony/polyfill-php55
 vendor theorchard/monolog-cascade
+vendor symfony/polyfill-php55
+vendor symfony/polyfill-mbstring
 
 # remove backups from patching as we use globs to package files to buildroot
 find '(' -name '*~' -o -name '*.orig' ')' | xargs -r rm -v

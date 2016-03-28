@@ -292,9 +292,9 @@
 +    'Smarty' => $phpDir. '/Smarty3/Smarty.class.php',
 +    'SphinxClient' => $phpDir . '/sphinxapi.php',
  );
---- eventum-3.0.10-60-g788184f/vendor/composer/autoload_files.php~	2016-03-11 09:43:28.000000000 +0200
-+++ eventum-3.0.10-60-g788184f/vendor/composer/autoload_files.php	2016-03-11 10:01:49.058692552 +0200
-@@ -4,13 +4,13 @@
+--- eventum-3.0.10-88-g58096f4/vendor/composer/autoload_files.php~	2016-03-28 18:51:44.000000000 +0300
++++ eventum-3.0.10-88-g58096f4/vendor/composer/autoload_files.php	2016-03-28 18:54:46.229802427 +0300
+@@ -4,6 +4,7 @@
  
  $vendorDir = dirname(dirname(__FILE__));
  $baseDir = dirname($vendorDir);
@@ -302,7 +302,8 @@
  
  return array(
      $vendorDir . '/ircmaxell/password-compat/lib/password.php',
-     $vendorDir . '/symfony/polyfill-php55/bootstrap.php',
+@@ -11,7 +12,6 @@
+     $vendorDir . '/symfony/polyfill-mbstring/bootstrap.php',
      $vendorDir . '/defuse/php-encryption/Crypto.php',
      $vendorDir . '/ramsey/array_column/src/array_column.php',
 -    $vendorDir . '/smarty-gettext/smarty-gettext/block.t.php',
@@ -337,9 +338,9 @@
 +    'Text' => array($pearDir),
 +    'XML' => array($pearDir),
  );
---- eventum-3.0.10-69-g9cf04f5/vendor/composer/autoload_psr4.php~	2016-03-22 23:06:48.000000000 +0200
-+++ eventum-3.0.10-69-g9cf04f5/vendor/composer/autoload_psr4.php	2016-03-22 23:17:24.690856445 +0200
-@@ -4,22 +4,23 @@
+--- eventum-3.0.10-88-g58096f4/vendor/composer/autoload_psr4.php~	2016-03-28 18:51:44.000000000 +0300
++++ eventum-3.0.10-88-g58096f4/vendor/composer/autoload_psr4.php	2016-03-28 18:56:37.231490194 +0300
+@@ -4,23 +4,24 @@
  
  $vendorDir = dirname(dirname(__FILE__));
  $baseDir = dirname($vendorDir);
@@ -359,6 +360,7 @@
 +    'Zend\\Loader\\' => array($phpDir . '/Zend/Loader'),
 +    'Zend\\Config\\' => array($phpDir . '/Zend/Config'),
      'Symfony\\Polyfill\\Php55\\' => array($vendorDir . '/symfony/polyfill-php55'),
+     'Symfony\\Polyfill\\Mbstring\\' => array($vendorDir . '/symfony/polyfill-mbstring'),
 -    'Symfony\\Component\\Yaml\\' => array($vendorDir . '/symfony/yaml'),
 -    'Symfony\\Component\\Serializer\\' => array($vendorDir . '/symfony/serializer'),
 -    'Symfony\\Component\\OptionsResolver\\' => array($vendorDir . '/symfony/options-resolver'),
