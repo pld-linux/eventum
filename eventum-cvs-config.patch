@@ -7,7 +7,7 @@
 -//
 -// DO NOT CHANGE ANYTHING AFTER THIS LINE
 -//
-+require_once '/etc/eventum/scm.php';
++require '/etc/eventum/scm.php';
  
  // save name of this script
  $PROGRAM = basename(realpath(array_shift($argv)), '.php');
@@ -20,7 +20,7 @@
 -//
 -// DO NOT CHANGE ANYTHING AFTER THIS LINE
 -//
-+require_once '/etc/eventum/scm.php';
++require '/etc/eventum/scm.php';
  
  // save name of this script
  $PROGRAM = basename(realpath(array_shift($argv)), '.php');
@@ -33,7 +33,7 @@
 -//
 -// DO NOT CHANGE ANYTHING AFTER THIS LINE
 -//
-+require_once '/etc/eventum/scm.php';
++require '/etc/eventum/scm.php';
  
  // save name of this script
  $PROGRAM = basename(realpath(array_shift($argv)), '.php');
