@@ -22,7 +22,6 @@ Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
 Source4:	%{name}-reminder.cron
 Source5:	%{name}-monitor.cron
-Source6:	%{name}-cvs.php
 Source8:	%{name}-irc.init
 Source9:	%{name}-irc.sysconfig
 Source10:	sphinx.crontab
@@ -37,7 +36,6 @@ Patch2:		%{name}-order.patch
 #Patch4:		https://github.com/glensc/eventum/compare/cf_escape.patch
 # packaging patches that probably never go upstream
 Patch100:	%{name}-paths.patch
-Patch101:	%{name}-cvs-config.patch
 Patch107:	%{name}-gettext.patch
 Patch108:	autoload.patch
 # some tests
@@ -344,40 +342,6 @@ features of the web interface straight from your command shell.
 Interfejs linii poleceń Eventum pozwala na dostęp do większości
 funkcji interfejsu WWW prosto z linii poleceń powłoki.
 
-%package scm
-Summary:	Eventum SCM integration
-Summary(pl.UTF-8):	Integracja SCM dla Eventum
-Group:		Applications/WWW
-Requires:	php(core) >= %{php_min_version}
-Requires:	php(json)
-Requires:	php(pcre)
-Requires:	php(spl)
-Suggests:	cvs
-Suggests:	git-core
-Suggests:	php(openssl)
-Suggests:	subversion
-
-%description scm
-This feature allows your software development teams to integrate your
-Source Control Management system with your Issue Tracking System.
-
-The integration is implemented in such a way that it will be forward
-compatible with pretty much any SCM system, such as CVS.
-
-For installation see
-</eventum/help.php?topic=scm_integration_installation>.
-
-%description scm -l pl.UTF-8
-Ten pakiet pozwala zespołom programistów na integrację systemu
-zarządzania źródłami (SCM - Source Control Management) z systemem
-śledzenia spraw.
-
-Integracja jest zaimplementowana tak, aby być kompatybilna w przód z
-prawie każdym systemem SCM, jak np. CVS.
-
-Szczegóły na temat instalacji można przeczytać pod
-</eventum/help.php?topic=scm_integration_installation>.
-
 %package sphinx
 Summary:	Eventum Sphinx Search
 Group:		Applications/WWW
@@ -423,7 +387,6 @@ rm config/config.php
 
 # packaging
 %patch100 -p1
-%patch101 -p1
 %patch107 -p1
 %patch108 -p1
 
@@ -469,7 +432,7 @@ install -d \
 	$RPM_BUILD_ROOT/var/lib/%{name}/routed_{emails,drafts,notes} \
 	$RPM_BUILD_ROOT%{systemdtmpfilesdir}
 
-%{__make} install-eventum install-cli install-scm install-localization \
+%{__make} install-eventum install-cli install-localization \
 	sysconfdir=%{_webappdir} \
 	localedir=%{_localedir} \
 	DESTDIR=$RPM_BUILD_ROOT
@@ -514,9 +477,6 @@ install -p %{SOURCE13} $RPM_BUILD_ROOT%{_libdir}/router-postfix
 cp -p %{SOURCE17} $RPM_BUILD_ROOT%{systemdtmpfilesdir}/%{name}.conf
 
 %find_lang %{name}
-
-# scm
-cp -p %{SOURCE6} $RPM_BUILD_ROOT%{_sysconfdir}/scm.php
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -723,15 +683,6 @@ done
 %defattr(644,root,root,755)
 %doc cli/eventumrc
 %attr(755,root,root) %{_bindir}/%{name}
-
-%files scm
-%defattr(644,root,root,755)
-%attr(751,root,root) %dir %{_sysconfdir}
-%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/scm.php
-%attr(755,root,root) %{_sbindir}/eventum-cvs-hook
-%attr(755,root,root) %{_sbindir}/eventum-git-hook
-%attr(755,root,root) %{_sbindir}/eventum-svn-hook
-%attr(755,root,root) %{_sbindir}/helpers.php
 
 %files sphinx
 %defattr(644,root,root,755)
