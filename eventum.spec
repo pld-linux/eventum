@@ -3,19 +3,19 @@
 %bcond_with	order	# with experimental order patch
 
 %define		rel		1
-#define		subver  88
-#define		githash 58096f4
-%define		php_min_version 5.3.7
+#define		subver  134
+#define		githash fd60b15
+%define		php_min_version 5.5.0
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl.UTF-8):	Eventum - system śledzenia spraw/błędów
 Name:		eventum
-Version:	3.0.12
+Version:	3.1.0
 Release:	%{?subver:1.%{subver}.%{?githash:g%{githash}.}}%{rel}
 License:	GPL v2+
 Group:		Applications/WWW
 Source0:	https://github.com/eventum/eventum/releases/download/v%{version}/%{name}-%{version}.tar.gz
-# Source0-md5:	203a772c63be1e3209eb1022e350967a
+# Source0-md5:	3e918ac947a883e2e6c83a32f3bb0779
 #Source0:	%{name}-%{version}-%{subver}-g%{githash}.tar.gz
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
@@ -391,8 +391,9 @@ rm config/config.php
 %patch108 -p1
 
 rm htdocs/.htaccess.dist
-# deprecated in favour of process_all_emails.php
-rm bin/route_*.php
+
+mv config/irc_config{.dist.php,.php}
+rm config/config.dist.php
 
 # cleanup vendor. keep only needed libraries.
 # (the rest are packaged with system packages)
@@ -464,8 +465,6 @@ cp -p %{SOURCE4} $RPM_BUILD_ROOT/etc/cron.d/%{name}-reminder
 cp -p %{SOURCE5} $RPM_BUILD_ROOT/etc/cron.d/%{name}-monitor
 cp -p %{SOURCE10} $RPM_BUILD_ROOT/etc/cron.d/%{name}-sphinx
 
-cp -p config/irc_config.dist.php $RPM_BUILD_ROOT%{_webappdir}/irc_config.php
-
 install -p %{SOURCE8} $RPM_BUILD_ROOT/etc/rc.d/init.d/eventum-irc
 cp -p %{SOURCE9} $RPM_BUILD_ROOT/etc/sysconfig/eventum-irc
 
@@ -523,13 +522,13 @@ if [ "$1" = "0" ]; then
 fi
 
 %post setup
-chmod 660 %{_webappdir}/{config,private_key}.php
-chown root:http %{_webappdir}/{config,private_key}.php
+chmod 660 %{_webappdir}/{config,private_key,secret_key}.php
+chown root:http %{_webappdir}/{config,private_key,secret_key}.php
 
 %postun setup
 if [ "$1" = "0" ] && [ -f %{_webappdir}/config.php ]; then
-	chmod 640 %{_webappdir}/{config,private_key}.php
-	chown root:http %{_webappdir}/{config,private_key}.php
+	chmod 640 %{_webappdir}/{config,private_key,secret_key}.php
+	chown root:http %{_webappdir}/{config,private_key,secret_key}.php
 fi
 
 %post irc
@@ -582,6 +581,7 @@ done
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/lighttpd.conf
 %attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/config.php
 %attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/private_key.php
+%attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/secret_key.php
 %attr(660,root,http) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/setup.php
 %attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/htpasswd
 
