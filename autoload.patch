@@ -292,8 +292,8 @@
 +    'Smarty' => $phpDir. '/Smarty3/Smarty.class.php',
 +    'SphinxClient' => $phpDir . '/sphinxapi.php',
  );
---- eventum-3.0.10-88-g58096f4/vendor/composer/autoload_files.php~	2016-03-28 18:51:44.000000000 +0300
-+++ eventum-3.0.10-88-g58096f4/vendor/composer/autoload_files.php	2016-03-28 18:54:46.229802427 +0300
+--- eventum-3.1.0-51-g61de085/vendor/composer/autoload_files.php~	2016-05-13 10:29:50.063813186 +0300
++++ eventum-3.1.0-51-g61de085/vendor/composer/autoload_files.php	2016-05-13 10:30:10.463509567 +0300
 @@ -4,6 +4,7 @@
  
  $vendorDir = dirname(dirname(__FILE__));
@@ -302,10 +302,10 @@
  
  return array(
      $vendorDir . '/ircmaxell/password-compat/lib/password.php',
-@@ -11,7 +12,6 @@
-     $vendorDir . '/symfony/polyfill-mbstring/bootstrap.php',
+@@ -8,7 +8,6 @@
+ 
+ return array(
      $vendorDir . '/defuse/php-encryption/Crypto.php',
-     $vendorDir . '/ramsey/array_column/src/array_column.php',
 -    $vendorDir . '/smarty-gettext/smarty-gettext/block.t.php',
 -    $vendorDir . '/smarty-gettext/smarty-gettext/function.locale.php',
      $baseDir . '/lib/eventum/gettext.php',
@@ -338,9 +338,9 @@
 +    'Text' => array($pearDir),
 +    'XML' => array($pearDir),
  );
---- eventum-3.0.10-88-g58096f4/vendor/composer/autoload_psr4.php~	2016-03-28 18:51:44.000000000 +0300
-+++ eventum-3.0.10-88-g58096f4/vendor/composer/autoload_psr4.php	2016-03-28 18:56:37.231490194 +0300
-@@ -4,23 +4,24 @@
+--- eventum-3.1.0-51-g61de085/vendor/composer/autoload_psr4.php~	2016-05-13 10:27:32.000000000 +0300
++++ eventum-3.1.0-51-g61de085/vendor/composer/autoload_psr4.php	2016-05-13 10:32:20.194912026 +0300
+@@ -4,21 +4,22 @@
  
  $vendorDir = dirname(dirname(__FILE__));
  $baseDir = dirname($vendorDir);
@@ -353,14 +353,6 @@
 -    'Zend\\Mail\\' => array($vendorDir . '/zendframework/zend-mail/src'),
 -    'Zend\\Loader\\' => array($vendorDir . '/zendframework/zend-loader/src'),
 -    'Zend\\Config\\' => array($vendorDir . '/zendframework/zend-config/src'),
-+    'Zend\\Validator\\' =>  array($phpDir . '/Zend/Validator'),
-+    'Zend\\Stdlib\\' => array($phpDir . '/Zend/Stdlib'),
-+    'Zend\\Mime\\' => array($phpDir . '/Zend/Mime'),
-+    'Zend\\Mail\\' => array($phpDir . '/Zend/Mail'),
-+    'Zend\\Loader\\' => array($phpDir . '/Zend/Loader'),
-+    'Zend\\Config\\' => array($phpDir . '/Zend/Config'),
-     'Symfony\\Polyfill\\Php55\\' => array($vendorDir . '/symfony/polyfill-php55'),
-     'Symfony\\Polyfill\\Mbstring\\' => array($vendorDir . '/symfony/polyfill-mbstring'),
 -    'Symfony\\Component\\Yaml\\' => array($vendorDir . '/symfony/yaml'),
 -    'Symfony\\Component\\Serializer\\' => array($vendorDir . '/symfony/serializer'),
 -    'Symfony\\Component\\OptionsResolver\\' => array($vendorDir . '/symfony/options-resolver'),
@@ -368,6 +360,12 @@
 -    'Symfony\\Component\\Filesystem\\' => array($vendorDir . '/symfony/filesystem'),
 -    'Symfony\\Component\\Config\\' => array($vendorDir . '/symfony/config'),
 -    'Monolog\\' => array($vendorDir . '/monolog/monolog/src/Monolog'),
++    'Zend\\Validator\\' =>  array($phpDir . '/Zend/Validator'),
++    'Zend\\Stdlib\\' => array($phpDir . '/Zend/Stdlib'),
++    'Zend\\Mime\\' => array($phpDir . '/Zend/Mime'),
++    'Zend\\Mail\\' => array($phpDir . '/Zend/Mail'),
++    'Zend\\Loader\\' => array($phpDir . '/Zend/Loader'),
++    'Zend\\Config\\' => array($phpDir . '/Zend/Config'),
 +    'Symfony\\Component\\Yaml\\' => array($phpDir . '/Symfony/Component/Yaml'),
 +    'Symfony\\Component\\Serializer\\' => array($phpDir . '/Symfony/Component/Serializer'),
 +    'Symfony\\Component\\OptionsResolver\\' =>  array($phpDir . '/Symfony/Component/OptionsResolver'),
