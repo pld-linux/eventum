@@ -44,7 +44,7 @@
 +++ eventum-3.0.8-100-g3543f89/src/Command/MonitorCommand.php	2016-02-01 00:16:28.751423105 +0200
 @@ -31,17 +31,17 @@
          $required_files = array(
-             APP_CONFIG_PATH . '/config.php' => array(
+             APP_CONFIG_PATH . '/config.php' => [
                  'check_owner' => true,
 -                'owner' => 'apache',
 +                'owner' => 'root',
@@ -53,8 +53,8 @@
 +                'group' => 'http',
                  'check_permission' => true,
                  'permission' => 640,
-             ),
-             APP_CONFIG_PATH . '/setup.php' => array(
+             ],
+             APP_CONFIG_PATH . '/setup.php' => [
                  'check_owner' => true,
 -                'owner' => 'apache',
 +                'owner' => 'root',
