@@ -488,7 +488,7 @@ rm -rf $RPM_BUILD_ROOT
 for a in \
 	errors.log login_attempts.log \
 	eventum.log \
-	cli.log \
+	auth.log cli.log \
 	irc_bot_error.log irc_bot_smartirc.log \
 ; do
 	test -f /var/log/%{name}/$a && continue
