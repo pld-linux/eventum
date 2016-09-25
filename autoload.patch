@@ -1,5 +1,5 @@
---- eventum-3.0.6-327-g34e5417/vendor/composer/autoload_classmap.php	2015-12-31 19:31:11.592843288 +0200
-+++ eventum-3.0.6-327-g34e5417/vendor/composer/autoload_classmap.php	2015-12-31 19:44:32.584207985 +0200
+--- eventum-3.1.3/vendor/composer/autoload_classmap.php~	2016-09-25 21:34:02.651093984 +0300
++++ eventum-3.1.3/vendor/composer/autoload_classmap.php	2016-09-25 21:41:59.707416000 +0300
 @@ -4,6 +4,7 @@
  
  $vendorDir = dirname(dirname(__FILE__));
@@ -7,8 +7,8 @@
 +$phpDir = PHP_DATADIR . '/php';
  
  return array(
-     'Abstract_Fulltext_Search' => $baseDir . '/lib/eventum/search/class.abstract_fulltext_search.php',
-@@ -19,7 +20,6 @@
+     'APIAuthToken' => $baseDir . '/lib/eventum/auth/APIAuthToken.php',
+@@ -24,7 +25,6 @@
      'CLI_Misc' => $baseDir . '/lib/eventum/class.cli_misc.php',
      'CRM' => $baseDir . '/lib/eventum/class.crm.php',
      'CRMException' => $baseDir . '/lib/eventum/class.crmexception.php',
@@ -16,9 +16,9 @@
      'Category' => $baseDir . '/lib/eventum/class.category.php',
      'Command_Line' => $baseDir . '/lib/eventum/class.command_line.php',
      'Contact' => $baseDir . '/lib/eventum/crm/class.contact.php',
-@@ -49,10 +49,7 @@
+@@ -44,10 +44,7 @@
+     'Email_Account' => $baseDir . '/lib/eventum/class.email_account.php',
      'Email_Response' => $baseDir . '/lib/eventum/class.email_response.php',
-     'Error_Handler' => $baseDir . '/lib/eventum/class.error_handler.php',
      'Eventum_Bot' => $baseDir . '/lib/eventum/irc/Eventum_Bot.php',
 -    'Eventum_RPC' => $vendorDir . '/eventum/rpc/class.Eventum_RPC.php',
 -    'Eventum_RPC_Exception' => $vendorDir . '/eventum/rpc/class.Eventum_RPC.php',
@@ -72,7 +72,9 @@
      'Pager' => $baseDir . '/lib/eventum/class.pager.php',
      'Partner' => $baseDir . '/lib/eventum/class.partner.php',
      'Phone_Support' => $baseDir . '/lib/eventum/class.phone_support.php',
-@@ -199,214 +166,19 @@
+@@ -125,217 +92,21 @@
+     'SessionHandlerInterface' => $vendorDir . '/symfony/http-foundation/Resources/stubs/SessionHandlerInterface.php',
+     'Setup' => $baseDir . '/lib/eventum/class.setup.php',
      'Severity' => $baseDir . '/lib/eventum/class.severity.php',
 -    'Smarty' => $vendorDir . '/smarty/smarty/libs/Smarty.class.php',
 -    'SmartyBC' => $vendorDir . '/smarty/smarty/libs/SmartyBC.class.php',
@@ -82,6 +84,7 @@
 -    'Smarty_CacheResource_Custom' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_cacheresource_custom.php',
 -    'Smarty_CacheResource_KeyValueStore' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_cacheresource_keyvaluestore.php',
 -    'Smarty_Data' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_data.php',
+-    'Smarty_Internal_Block' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_block.php',
 -    'Smarty_Internal_CacheResource_File' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_cacheresource_file.php',
 -    'Smarty_Internal_CompileBase' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_compilebase.php',
 -    'Smarty_Internal_Compile_Append' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_compile_append.php',
@@ -113,6 +116,7 @@
 -    'Smarty_Internal_Compile_Include_Php' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_compile_include_php.php',
 -    'Smarty_Internal_Compile_Insert' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_compile_insert.php',
 -    'Smarty_Internal_Compile_Ldelim' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_compile_ldelim.php',
+-    'Smarty_Internal_Compile_Make_Nocache' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_compile_make_nocache.php',
 -    'Smarty_Internal_Compile_Nocache' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_compile_nocache.php',
 -    'Smarty_Internal_Compile_Nocacheclose' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_compile_nocache.php',
 -    'Smarty_Internal_Compile_Private_Block_Plugin' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_compile_private_block_plugin.php',
@@ -162,6 +166,7 @@
 -    'Smarty_Internal_Method_GetConfigVars' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_method_getconfigvars.php',
 -    'Smarty_Internal_Method_GetDebugTemplate' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_method_getdebugtemplate.php',
 -    'Smarty_Internal_Method_GetDefaultModifiers' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_method_getdefaultmodifiers.php',
+-    'Smarty_Internal_Method_GetGlobal' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_method_getglobal.php',
 -    'Smarty_Internal_Method_GetRegisteredObject' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_method_getregisteredobject.php',
 -    'Smarty_Internal_Method_GetStreamVariable' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_method_getstreamvariable.php',
 -    'Smarty_Internal_Method_GetTags' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_method_gettags.php',
@@ -203,18 +208,16 @@
 -    'Smarty_Internal_Resource_Stream' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_resource_stream.php',
 -    'Smarty_Internal_Resource_String' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_resource_string.php',
 -    'Smarty_Internal_Runtime_CacheModify' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_runtime_cachemodify.php',
+-    'Smarty_Internal_Runtime_Capture' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_runtime_capture.php',
 -    'Smarty_Internal_Runtime_CodeFrame' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_runtime_codeframe.php',
 -    'Smarty_Internal_Runtime_FilterHandler' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_runtime_filterhandler.php',
 -    'Smarty_Internal_Runtime_Foreach' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_runtime_foreach.php',
 -    'Smarty_Internal_Runtime_GetIncludePath' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_runtime_getincludepath.php',
--    'Smarty_Internal_Runtime_Hhvm' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_runtime_hhvm.php',
 -    'Smarty_Internal_Runtime_Inheritance' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_runtime_inheritance.php',
--    'Smarty_Internal_Runtime_SubTemplate' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_runtime_subtemplate.php',
+-    'Smarty_Internal_Runtime_Make_Nocache' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_runtime_make_nocache.php',
 -    'Smarty_Internal_Runtime_TplFunction' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_runtime_tplfunction.php',
 -    'Smarty_Internal_Runtime_UpdateCache' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_runtime_updatecache.php',
 -    'Smarty_Internal_Runtime_UpdateScope' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_runtime_updatescope.php',
--    'Smarty_Internal_Runtime_ValidateCompiled' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_runtime_validatecompiled.php',
--    'Smarty_Internal_Runtime_Var' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_runtime_var.php',
 -    'Smarty_Internal_Runtime_WriteFile' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_runtime_writefile.php',
 -    'Smarty_Internal_SmartyTemplateCompiler' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_smartytemplatecompiler.php',
 -    'Smarty_Internal_Template' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_internal_template.php',
@@ -294,26 +297,24 @@
  );
 --- eventum-3.1.0-51-g61de085/vendor/composer/autoload_files.php~	2016-05-13 10:29:50.063813186 +0300
 +++ eventum-3.1.0-51-g61de085/vendor/composer/autoload_files.php	2016-05-13 10:30:10.463509567 +0300
-@@ -4,6 +4,7 @@
+@@ -4,10 +4,10 @@
  
  $vendorDir = dirname(dirname(__FILE__));
  $baseDir = dirname($vendorDir);
 +$phpDir = PHP_DATADIR . '/php';
  
  return array(
-     $vendorDir . '/ircmaxell/password-compat/lib/password.php',
-@@ -8,7 +8,6 @@
- 
- return array(
-     $vendorDir . '/defuse/php-encryption/Crypto.php',
--    $vendorDir . '/smarty-gettext/smarty-gettext/block.t.php',
--    $vendorDir . '/smarty-gettext/smarty-gettext/function.locale.php',
-     $baseDir . '/lib/eventum/gettext.php',
-+    $phpDir. '/Smarty3/plugins/block.t.php',
+     '8170285c807a9f24f165f37b15bc9a36' => $vendorDir . '/defuse/php-encryption/Crypto.php',
+-    'b2b3f01361f3aaeab67fde08ae76446f' => $vendorDir . '/smarty-gettext/smarty-gettext/block.t.php',
+-    'd3114450b53a83020e2822546c24e1ad' => $vendorDir . '/smarty-gettext/smarty-gettext/function.locale.php',
+     'd12685060d57775f2bc3adf90c7d62bd' => $baseDir . '/lib/eventum/gettext.php',
++    'b2b3f01361f3aaeab67fde08ae76446f' => $phpDir. '/Smarty3/plugins/block.t.php',
  );
---- eventum-3.0.6-327-g34e5417/vendor/composer/autoload_namespaces.php	2015-12-31 19:33:54.323742468 +0200
-+++ eventum-3.0.6-327-g34e5417/vendor/composer/autoload_namespaces.php	2015-12-31 19:46:27.515826070 +0200
-@@ -5,14 +5,16 @@
+--- eventum-3.1.3/vendor/composer/autoload_namespaces.php~	2016-09-25 21:27:02.000000000 +0300
++++ eventum-3.1.3/vendor/composer/autoload_namespaces.php	2016-09-25 21:51:42.028861261 +0300
+@@ -3,15 +3,17 @@
+ // autoload_namespaces.php @generated by Composer
+ 
  $vendorDir = dirname(dirname(__FILE__));
 -$baseDir = dirname($vendorDir);
 +$pearDir = PEAR_INSTALL_DIR . '/';
@@ -322,14 +323,13 @@
  return array(
      'SecurityLib' => array($vendorDir . '/ircmaxell/security-lib/lib'),
      'RandomLib' => array($vendorDir . '/ircmaxell/random-lib/lib'),
--    'Psr\\Log\\' => array($vendorDir . '/psr/log'),
 -    'PEAR' => array($vendorDir . '/pear/pear_exception'),
 -    'Net' => array($vendorDir . '/pear/net_smtp'),
 -    'Mail' => array($vendorDir . '/pear/mail'),
 -    'DB' => array($vendorDir . '/pear/db'),
 -    'Auth' => array($vendorDir . '/pear/auth_sasl'),
 -    '' => array($vendorDir . '/pear/pear-core-minimal/src'),
-+    'Psr\\Log\\' => array($phpDir),
+-);
 +    'Auth' => array($pearDir),
 +    'DB' => array($pearDir),
 +    'Mail' => array($pearDir),
@@ -337,10 +337,10 @@
 +    'PEAR' => array($pearDir),
 +    'Text' => array($pearDir),
 +    'XML' => array($pearDir),
- );
---- eventum-3.1.0-51-g61de085/vendor/composer/autoload_psr4.php~	2016-05-13 10:27:32.000000000 +0300
-+++ eventum-3.1.0-51-g61de085/vendor/composer/autoload_psr4.php	2016-05-13 10:32:20.194912026 +0300
-@@ -4,21 +4,22 @@
++);
+--- eventum-3.1.3/vendor/composer/autoload_psr4.php~	2016-09-25 21:27:02.000000000 +0300
++++ eventum-3.1.3/vendor/composer/autoload_psr4.php	2016-09-25 21:54:10.153351072 +0300
+@@ -4,22 +4,23 @@
  
  $vendorDir = dirname(dirname(__FILE__));
  $baseDir = dirname($vendorDir);
@@ -359,6 +359,7 @@
 -    'Symfony\\Component\\HttpFoundation\\' => array($vendorDir . '/symfony/http-foundation'),
 -    'Symfony\\Component\\Filesystem\\' => array($vendorDir . '/symfony/filesystem'),
 -    'Symfony\\Component\\Config\\' => array($vendorDir . '/symfony/config'),
+-    'Psr\\Log\\' => array($vendorDir . '/psr/log/Psr/Log'),
 -    'Monolog\\' => array($vendorDir . '/monolog/monolog/src/Monolog'),
 +    'Zend\\Validator\\' =>  array($phpDir . '/Zend/Validator'),
 +    'Zend\\Stdlib\\' => array($phpDir . '/Zend/Stdlib'),
@@ -373,6 +374,7 @@
 +    'Symfony\\Component\\Filesystem\\' => array($phpDir . '/Symfony/Component/Filesystem'),
 +    'Symfony\\Component\\Config\\' =>  array($phpDir . '/Symfony/Component/Config'),
 +    'Monolog\\' => array($phpDir . '/Monolog'),
++    'Psr\\Log\\' => array($phpDir. '/Psr/Log'),
      'Eventum\\' => array($baseDir . '/src'),
      'EmailReplyParser\\' => array($vendorDir . '/willdurand/email-reply-parser/src/EmailReplyParser'),
      'Cascade\\' => array($vendorDir . '/theorchard/monolog-cascade/src'),
@@ -384,9 +386,9 @@
  // fonts directory for phplot
 -define('APP_FONTS_PATH', APP_PATH . '/vendor/fonts/liberation');
 +define('APP_FONTS_PATH', '/usr/share/fonts/TTF');
---- eventum-3.0.2-101-ge275162/vendor/composer/autoload_real.php~	2015-10-12 21:33:13.000000000 +0300
-+++ eventum-3.0.2-101-ge275162/vendor/composer/autoload_real.php	2015-10-12 23:14:26.708974755 +0300
-@@ -23,10 +23,6 @@
+--- eventum-3.1.3/vendor/composer/autoload_real.php~	2016-09-25 21:27:02.000000000 +0300
++++ eventum-3.1.3/vendor/composer/autoload_real.php	2016-09-25 21:55:26.295565465 +0300
+@@ -23,11 +23,7 @@
          self::$loader = $loader = new \Composer\Autoload\ClassLoader();
          spl_autoload_unregister(array('ComposerAutoloaderInitEventumCore', 'loadClassLoader'));
  
@@ -394,6 +396,7 @@
 -        array_push($includePaths, get_include_path());
 -        set_include_path(join(PATH_SEPARATOR, $includePaths));
 -
-         $map = require __DIR__ . '/autoload_namespaces.php';
-         foreach ($map as $namespace => $path) {
-             $loader->set($namespace, $path);
+-        $useStaticLoader = PHP_VERSION_ID >= 50600 && !defined('HHVM_VERSION');
++        $useStaticLoader = false; // TODO: patch autoload_static.php as well
+         if ($useStaticLoader) {
+             require_once __DIR__ . '/autoload_static.php';
