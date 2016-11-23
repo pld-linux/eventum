@@ -64,13 +64,13 @@
                  'check_permission' => true,
                  'permission' => 660,
                  'check_filesize' => true,
---- eventum-3.0.3-314-gedea8e4/config/sphinx.conf.php~	2015-10-27 18:02:36.000000000 +0200
-+++ eventum-3.0.3-314-gedea8e4/config/sphinx.conf.php	2015-10-29 11:53:26.068169385 +0200
+--- eventum-3.1.5/config/sphinx.conf.php~	2016-11-13 12:05:37.000000000 +0200
++++ eventum-3.1.5/config/sphinx.conf.php	2016-11-23 03:10:05.855040510 +0200
 @@ -1,7 +1,7 @@
  #!/usr/bin/php
  <?php
  
--require_once __DIR__ . "/../init.php";
+-require_once __DIR__ . '/../init.php';
 +require_once '/usr/share/eventum/init.php';
  
  if (!defined('SPHINX_LOG_PATH')) {
