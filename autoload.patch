@@ -1,5 +1,5 @@
---- eventum-3.1.7/vendor/composer/autoload_classmap.php~	2016-12-28 18:45:59.299156669 +0200
-+++ eventum-3.1.7/vendor/composer/autoload_classmap.php	2016-12-28 18:47:18.984639485 +0200
+--- eventum-3.1.7/vendor/composer/autoload_classmap.php	2016-12-28 18:47:18.984639485 +0200
++++ eventum-3.1.7/vendor/composer/autoload_classmap.php	2016-12-28 19:04:12.362916559 +0200
 @@ -4,6 +4,7 @@
  
  $vendorDir = dirname(dirname(__FILE__));
@@ -16,7 +16,7 @@
      'Category' => $baseDir . '/lib/eventum/class.category.php',
      'Command_Line' => $baseDir . '/lib/eventum/class.command_line.php',
      'Contact' => $baseDir . '/lib/eventum/crm/class.contact.php',
-@@ -45,8 +45,7 @@
+@@ -45,7 +45,6 @@
      'Email_Response' => $baseDir . '/lib/eventum/class.email_response.php',
      'Eventum_Bot' => $baseDir . '/lib/eventum/irc/Eventum_Bot.php',
      'FAQ' => $baseDir . '/lib/eventum/class.faq.php',
@@ -24,7 +24,6 @@
      'Filter' => $baseDir . '/lib/eventum/class.filter.php',
      'Group' => $baseDir . '/lib/eventum/class.group.php',
      'Help' => $baseDir . '/lib/eventum/class.help.php',
-     'History' => $baseDir . '/lib/eventum/class.history.php',
 @@ -59,44 +58,14 @@
      'Lock' => $baseDir . '/lib/eventum/class.lock.php',
      'Mail_Helper' => $baseDir . '/lib/eventum/class.mail_helper.php',
@@ -79,8 +78,9 @@
      'Report' => $baseDir . '/lib/eventum/class.report.php',
      'Reporter_List_Custom_Field_Backend' => $baseDir . '/lib/eventum/custom_field/class.reporter_list.php',
      'Resolution' => $baseDir . '/lib/eventum/class.resolution.php',
-@@ -120,43 +91,21 @@
-     'SessionHandlerInterface' => $vendorDir . '/symfony/http-foundation/Resources/stubs/SessionHandlerInterface.php',
+@@ -119,44 +90,21 @@
+     'Search_Profile' => $baseDir . '/lib/eventum/class.search_profile.php',
+-    'SessionHandlerInterface' => $vendorDir . '/symfony/http-foundation/Resources/stubs/SessionHandlerInterface.php',
      'Setup' => $baseDir . '/lib/eventum/class.setup.php',
      'Severity' => $baseDir . '/lib/eventum/class.severity.php',
 -    'SphinxClient' => $vendorDir . '/sphinx/php-sphinxapi/sphinxapi.php',
