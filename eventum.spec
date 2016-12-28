@@ -10,12 +10,12 @@
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl.UTF-8):	Eventum - system śledzenia spraw/błędów
 Name:		eventum
-Version:	3.1.6
+Version:	3.1.7
 Release:	%{?subver:1.%{subver}.%{?githash:g%{githash}.}}%{rel}
 License:	GPL v2+
 Group:		Applications/WWW
 Source0:	https://github.com/eventum/eventum/releases/download/v%{version}/%{name}-%{version}.tar.gz
-# Source0-md5:	c2310abed5bba088a227063d75c7a1f4
+# Source0-md5:	4d1360473e9c473fa56242c4fd101cba
 #Source0:	%{name}-%{version}-%{subver}-g%{githash}.tar.gz
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
@@ -414,6 +414,7 @@ vendor defuse/php-encryption
 vendor willdurand/email-reply-parser
 vendor theorchard/monolog-cascade
 vendor malkusch/lock
+vendor phpxmlrpc/phpxmlrpc
 
 # remove backups from patching as we use globs to package files to buildroot
 find '(' -name '*~' -o -name '*.orig' ')' | xargs -r rm -v
