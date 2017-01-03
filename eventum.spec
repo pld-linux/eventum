@@ -60,8 +60,8 @@ Requires:	php(iconv)
 Requires:	php(imap)
 Requires:	php(json)
 Requires:	php(mbstring)
-Requires:	php(mysqli)
 Requires:	php(pcre)
+Requires:	php(pdo_mysql)
 Requires:	php(session)
 Requires:	php-Smarty >= 3.1
 Requires:	php-Smarty-plugin-gettext
