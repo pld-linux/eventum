@@ -40,7 +40,7 @@ Patch107:	%{name}-gettext.patch
 Patch108:	autoload.patch
 # some tests
 Patch200:	%{name}-fixed-nav.patch
-URL:		http://eventum.mysql.org/
+URL:		https://wiki.github.com/eventum/eventum/
 BuildRequires:	/usr/bin/php
 BuildRequires:	gettext-tools
 BuildRequires:	php(core) >= %{php_min_version}
@@ -130,16 +130,13 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 Eventum is a user-friendly and flexible issue tracking system that can
 be used by a support department to track incoming technical support
 requests, or by a software development team to quickly organize tasks
-and bugs. Eventum is used by the MySQL AB Technical Support team, and
-has allowed us to dramatically improve our response times.
+and bugs.
 
 %description -l pl.UTF-8
 Eventum to przyjazny dla użytkownika system śledzenia spraw, który
 może być używany przez dział obsługi do śledzenia przychodzących żądań
 obsługi technicznej albo przez zespół tworzący oprogramowanie do
-szybkiej organizacji zadań i błędów. Eventum jest używany przez zespół
-Technical Support MySQL AB i umożliwił im znacząco poprawić czasy
-reakcji.
+szybkiej organizacji zadań i błędów.
 
 %package setup
 Summary:	Eventum setup package
@@ -282,14 +279,14 @@ This package provides way of routing notes and emails back to Eventum
 via Postfix.
 
 The Postfix configuration instructions you can find from
-<http://eventum.mysql.org/wiki/index.php/Setting_up_email_routing_with_postfix>.
+<https://github.com/eventum/eventum/wiki/System-Admin:-Setting-up-email-routing-with-postfix>
 
 %description router-postfix -l pl.UTF-8
 Ten pakiet udostępnia metodę przekazywania notatek i listów do Eventum
 przez Postfiksa.
 
 Opis konfiguracji Postfiksa można znaleźć pod adresem
-<http://eventum.mysql.org/wiki/index.php/Setting_up_email_routing_with_postfix>.
+<https://github.com/eventum/eventum/wiki/System-Admin:-Setting-up-email-routing-with-postfix>
 
 %package irc
 Summary:	Eventum IRC Notification Bot
