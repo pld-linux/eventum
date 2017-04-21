@@ -41,9 +41,7 @@ Patch108:	autoload.patch
 # some tests
 Patch200:	%{name}-fixed-nav.patch
 URL:		https://wiki.github.com/eventum/eventum/
-BuildRequires:	/usr/bin/php
 BuildRequires:	gettext-tools
-BuildRequires:	php(core) >= %{php_min_version}
 BuildRequires:	rpm-php-pearprov >= 4.0.2-98
 BuildRequires:	rpmbuild(macros) >= 1.654
 BuildRequires:	sed >= 4.0
