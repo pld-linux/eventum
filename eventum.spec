@@ -79,7 +79,6 @@ Requires:	php-pear-Net_Socket
 Requires:	php-pear-Net_URL
 Requires:	php-pear-PEAR-core
 Requires:	php-pear-Text_Diff
-Requires:	php-pear-XML_RPC
 Requires:	php-psr-Log >= 1.0.0-2
 Requires:	php-symfony2-Config >= 2.7.7
 Requires:	php-symfony2-Filesystem >= 2.7.7
@@ -327,7 +326,6 @@ Summary(pl.UTF-8):	Interfejs linii poleceń dla Eventum
 Group:		Applications/WWW
 Requires:	php(core) >= %{php_min_version}
 Requires:	php(phar)
-Requires:	php-pear-XML_RPC
 
 %description cli
 The Eventum command-line interface allows you to access most of the
