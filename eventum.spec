@@ -2,7 +2,7 @@
 # Conditional build:
 %bcond_with	order	# with experimental order patch
 
-%define		rel		0.2
+%define		rel		0.3
 %define		subver  344
 %define		githash 7f34327f
 %define		php_min_version 5.5.0
@@ -581,7 +581,7 @@ done
 %attr(660,root,http) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/setup.php
 %attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/htpasswd
 
-%dir %attr(711,root,http) /var/log/%{name}
+%dir %attr(731,root,http) /var/log/%{name}
 %attr(620,root,http) %ghost /var/log/%{name}/*
 %dir %attr(750,root,root) /var/log/archive/%{name}
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/logrotate.d/%{name}
