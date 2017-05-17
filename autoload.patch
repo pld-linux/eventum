@@ -158,8 +158,8 @@
 +    'PEAR' => array($pearDir),
 +    'Text' => array($pearDir),
  );
---- eventum-3.1.10-340-gfc2f2394/vendor/composer/autoload_psr4.php~	2017-05-16 18:19:02.000000000 +0300
-+++ eventum-3.1.10-340-gfc2f2394/vendor/composer/autoload_psr4.php	2017-05-17 19:58:51.303058671 +0300
+--- eventum-3.1.10-344-g7f34327f/./vendor/composer/autoload_psr4.php~	2017-05-17 20:20:58.000000000 +0300
++++ eventum-3.1.10-344-g7f34327f/./vendor/composer/autoload_psr4.php	2017-05-17 20:24:43.533459636 +0300
 @@ -7,27 +7,25 @@
  
  return array(
@@ -183,7 +183,7 @@
      'PhpXmlRpc\\' => array($vendorDir . '/phpxmlrpc/phpxmlrpc/src'),
      'Phinx\\' => array($vendorDir . '/robmorgan/phinx/src/Phinx'),
 -    'Monolog\\' => array($vendorDir . '/monolog/monolog/src/Monolog'),
--    'Eventum\\Test\\' => array($baseDir . '/tests'),
+-    'Eventum\\Test\\' => array($baseDir . '/tests', $baseDir . '/tests/src'),
      'Eventum\\' => array($baseDir . '/src'),
      'EmailReplyParser\\' => array($vendorDir . '/willdurand/email-reply-parser/src/EmailReplyParser'),
      'Cascade\\' => array($vendorDir . '/theorchard/monolog-cascade/src'),

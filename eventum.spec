@@ -2,9 +2,9 @@
 # Conditional build:
 %bcond_with	order	# with experimental order patch
 
-%define		rel		1
-%define		subver  340
-%define		githash fc2f2394
+%define		rel		0.2
+%define		subver  344
+%define		githash 7f34327f
 %define		php_min_version 5.5.0
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
@@ -16,7 +16,7 @@ License:	GPL v2+
 Group:		Applications/WWW
 #Source0:	https://github.com/eventum/eventum/releases/download/v%{version}/%{name}-%{version}.tar.gz
 Source0:	https://github.com/eventum/eventum/releases/download/snapshot/%{name}-%{version}-%{subver}-g%{githash}.tar.gz
-# Source0-md5:	89a78328f88d8b27aab1756ebc824b46
+# Source0-md5:	d7001291388fedcb55f3d3ad4da947db
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -409,6 +409,7 @@ vendor willdurand/email-reply-parser
 vendor theorchard/monolog-cascade
 vendor malkusch/lock
 vendor phpxmlrpc/phpxmlrpc
+vendor robmorgan/phinx
 
 # remove backups from patching as we use globs to package files to buildroot
 find '(' -name '*~' -o -name '*.orig' ')' | xargs -r rm -v
@@ -611,6 +612,9 @@ done
 %dir %{_appdir}/upgrade
 %{_appdir}/upgrade/*.sql
 %{_appdir}/upgrade/patches
+%dir %{_appdir}/db
+%dir %{_appdir}/db/migrations
+%{_appdir}/db/migrations/*.php
 
 %{_appdir}/res
 %{_appdir}/src
