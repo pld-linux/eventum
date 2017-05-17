@@ -567,7 +567,9 @@ done
 %files -f %{name}.lang
 %defattr(644,root,root,755)
 %attr(751,root,root) %dir %{_webappdir}
+%attr(751,root,http) %dir %{_webappdir}/crm
 %attr(751,root,http) %dir %{_webappdir}/custom_field
+%attr(751,root,http) %dir %{_webappdir}/partner
 %attr(751,root,http) %dir %{_webappdir}/templates
 %attr(751,root,http) %dir %{_webappdir}/workflow
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/apache.conf
