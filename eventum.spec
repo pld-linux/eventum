@@ -70,7 +70,6 @@ Requires:	php-ZendFramework-Mime >= 2.4
 Requires:	php-ZendFramework-ServiceManager >= 2.4
 Requires:	php-ZendFramework-Validator >= 2.4
 Requires:	php-monolog >= 1.17.2
-Requires:	php-pear-Mail
 Requires:	php-pear-Mail_Mime
 Requires:	php-pear-Mail_mimeDecode
 Requires:	php-pear-Math_Stats
