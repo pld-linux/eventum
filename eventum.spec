@@ -3,8 +3,8 @@
 %bcond_with	order	# with experimental order patch
 
 %define		rel		1
-#define		subver  51
-#define		githash 61de085
+%define		subver  340
+%define		githash fc2f2394
 %define		php_min_version 5.5.0
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
@@ -14,9 +14,9 @@ Version:	3.1.10
 Release:	%{?subver:1.%{subver}.%{?githash:g%{githash}.}}%{rel}
 License:	GPL v2+
 Group:		Applications/WWW
-Source0:	https://github.com/eventum/eventum/releases/download/v%{version}/%{name}-%{version}.tar.gz
-# Source0-md5:	f8dc7b47544e289dc09657000a7e4af6
-#Source0:	%{name}-%{version}-%{subver}-g%{githash}.tar.gz
+#Source0:	https://github.com/eventum/eventum/releases/download/v%{version}/%{name}-%{version}.tar.gz
+Source0:	https://github.com/eventum/eventum/releases/download/snapshot/%{name}-%{version}-%{subver}-g%{githash}.tar.gz
+# Source0-md5:	89a78328f88d8b27aab1756ebc824b46
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -67,9 +67,9 @@ Requires:	php-ZendFramework-Config >= 2.4
 Requires:	php-ZendFramework-Loader >= 2.4
 Requires:	php-ZendFramework-Mail >= 2.4.9-2
 Requires:	php-ZendFramework-Mime >= 2.4
+Requires:	php-ZendFramework-ServiceManager >= 2.4
 Requires:	php-ZendFramework-Validator >= 2.4
 Requires:	php-monolog >= 1.17.2
-Requires:	php-pear-DB
 Requires:	php-pear-Mail
 Requires:	php-pear-Mail_Mime
 Requires:	php-pear-Mail_mimeDecode
@@ -81,6 +81,7 @@ Requires:	php-pear-PEAR-core
 Requires:	php-pear-Text_Diff
 Requires:	php-psr-Log >= 1.0.0-2
 Requires:	php-symfony2-Config >= 2.7.7
+Requires:	php-symfony2-Console >= 2.7.7
 Requires:	php-symfony2-Filesystem >= 2.7.7
 Requires:	php-symfony2-HttpFoundation >= 2.7.7
 Requires:	php-symfony2-OptionsResolver >= 2.7.7
@@ -590,7 +591,9 @@ done
 %attr(755,root,root) %{_appdir}/bin/upgrade.php
 
 %{_appdir}/autoload.php
+%{_appdir}/globals.php
 %{_appdir}/init.php
+%{_appdir}/phinx.php
 %dir %{_appdir}/htdocs
 %{_appdir}/htdocs/*.php
 %{_appdir}/htdocs/*.ico
