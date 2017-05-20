@@ -3,20 +3,20 @@
 %bcond_with	order	# with experimental order patch
 
 %define		rel		1
-#define		subver  51
-#define		githash 61de085
+#define		subver  347
+#define		githash 3d9195fa
 %define		php_min_version 5.5.0
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl.UTF-8):	Eventum - system śledzenia spraw/błędów
 Name:		eventum
-Version:	3.1.10
+Version:	3.2.0
 Release:	%{?subver:1.%{subver}.%{?githash:g%{githash}.}}%{rel}
 License:	GPL v2+
 Group:		Applications/WWW
 Source0:	https://github.com/eventum/eventum/releases/download/v%{version}/%{name}-%{version}.tar.gz
-# Source0-md5:	f8dc7b47544e289dc09657000a7e4af6
-#Source0:	%{name}-%{version}-%{subver}-g%{githash}.tar.gz
+# Source0-md5:	c7d8a0653211ba6c17ad6d490197efb2
+#Source0:	https://github.com/eventum/eventum/releases/download/snapshot/%{name}-%{version}-%{subver}-g%{githash}.tar.gz
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -67,10 +67,9 @@ Requires:	php-ZendFramework-Config >= 2.4
 Requires:	php-ZendFramework-Loader >= 2.4
 Requires:	php-ZendFramework-Mail >= 2.4.9-2
 Requires:	php-ZendFramework-Mime >= 2.4
+Requires:	php-ZendFramework-ServiceManager >= 2.4
 Requires:	php-ZendFramework-Validator >= 2.4
 Requires:	php-monolog >= 1.17.2
-Requires:	php-pear-DB
-Requires:	php-pear-Mail
 Requires:	php-pear-Mail_Mime
 Requires:	php-pear-Mail_mimeDecode
 Requires:	php-pear-Math_Stats
@@ -81,6 +80,7 @@ Requires:	php-pear-PEAR-core
 Requires:	php-pear-Text_Diff
 Requires:	php-psr-Log >= 1.0.0-2
 Requires:	php-symfony2-Config >= 2.7.7
+Requires:	php-symfony2-Console >= 2.7.7
 Requires:	php-symfony2-Filesystem >= 2.7.7
 Requires:	php-symfony2-HttpFoundation >= 2.7.7
 Requires:	php-symfony2-OptionsResolver >= 2.7.7
@@ -408,6 +408,7 @@ vendor willdurand/email-reply-parser
 vendor theorchard/monolog-cascade
 vendor malkusch/lock
 vendor phpxmlrpc/phpxmlrpc
+vendor robmorgan/phinx
 
 # remove backups from patching as we use globs to package files to buildroot
 find '(' -name '*~' -o -name '*.orig' ')' | xargs -r rm -v
@@ -565,9 +566,11 @@ done
 %files -f %{name}.lang
 %defattr(644,root,root,755)
 %attr(751,root,root) %dir %{_webappdir}
-%attr(751,root,root) %dir %{_webappdir}/custom_field
-%attr(751,root,root) %dir %{_webappdir}/templates
-%attr(751,root,root) %dir %{_webappdir}/workflow
+%attr(751,root,http) %dir %{_webappdir}/crm
+%attr(751,root,http) %dir %{_webappdir}/custom_field
+%attr(751,root,http) %dir %{_webappdir}/partner
+%attr(751,root,http) %dir %{_webappdir}/templates
+%attr(751,root,http) %dir %{_webappdir}/workflow
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/apache.conf
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/httpd.conf
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/lighttpd.conf
@@ -577,7 +580,7 @@ done
 %attr(660,root,http) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/setup.php
 %attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/htpasswd
 
-%dir %attr(711,root,http) /var/log/%{name}
+%dir %attr(731,root,http) /var/log/%{name}
 %attr(620,root,http) %ghost /var/log/%{name}/*
 %dir %attr(750,root,root) /var/log/archive/%{name}
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/logrotate.d/%{name}
@@ -590,7 +593,9 @@ done
 %attr(755,root,root) %{_appdir}/bin/upgrade.php
 
 %{_appdir}/autoload.php
+%{_appdir}/globals.php
 %{_appdir}/init.php
+%{_appdir}/phinx.php
 %dir %{_appdir}/htdocs
 %{_appdir}/htdocs/*.php
 %{_appdir}/htdocs/*.ico
@@ -608,6 +613,9 @@ done
 %dir %{_appdir}/upgrade
 %{_appdir}/upgrade/*.sql
 %{_appdir}/upgrade/patches
+%dir %{_appdir}/db
+%dir %{_appdir}/db/migrations
+%{_appdir}/db/migrations/*.php
 
 %{_appdir}/res
 %{_appdir}/src
