@@ -11,22 +11,6 @@
 +define('APP_LOCKS_PATH', '/var/run/eventum');
 +define('APP_LOG_PATH', '/var/log/eventum');
  define('APP_ERROR_LOG', APP_LOG_PATH . '/errors.log');
---- eventum-3.0.3-287-ge48a790/htdocs/setup/index.php~	2015-10-26 21:45:35.367554219 +0200
-+++ eventum-3.0.3-287-ge48a790/htdocs/setup/index.php	2015-10-26 21:47:31.775849576 +0200
-@@ -47,10 +47,10 @@
- define('APP_CONFIG_PATH', APP_PATH . '/config');
- define('APP_SETUP_FILE', APP_CONFIG_PATH . '/setup.php');
- define('APP_TPL_PATH', APP_PATH . '/templates');
--define('APP_TPL_COMPILE_PATH', APP_VAR_PATH . '/cache');
--define('APP_LOG_PATH', APP_VAR_PATH . '/log');
-+define('APP_TPL_COMPILE_PATH', '/var/cache/eventum');
-+define('APP_LOG_PATH', '/var/log/eventum');
- define('APP_ERROR_LOG', APP_LOG_PATH . '/errors.log');
--define('APP_LOCKS_PATH', APP_VAR_PATH . '/lock');
-+define('APP_LOCKS_PATH', '/var/run/eventum');
- define('APP_LOCAL_PATH', APP_CONFIG_PATH);
- 
- header('Content-Type: text/html; charset=' . APP_CHARSET);
 --- eventum-3.1.10-340-gfc2f2394/src/Controller/Setup/SetupController.php~	2017-05-04 23:47:50.000000000 +0300
 +++ eventum-3.1.10-340-gfc2f2394/src/Controller/Setup/SetupController.php	2017-05-17 19:55:50.362400076 +0300
 @@ -201,10 +201,6 @@
