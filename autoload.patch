@@ -158,9 +158,9 @@
 +    'PEAR' => array($pearDir),
 +    'Text' => array($pearDir),
  );
---- eventum-3.1.10-344-g7f34327f/./vendor/composer/autoload_psr4.php~	2017-05-17 20:20:58.000000000 +0300
-+++ eventum-3.1.10-344-g7f34327f/./vendor/composer/autoload_psr4.php	2017-05-17 20:24:43.533459636 +0300
-@@ -7,27 +7,25 @@
+--- eventum-3.2.1/vendor/composer/autoload_psr4.php~	2017-06-09 00:18:27.000000000 +0300
++++ eventum-3.2.1/vendor/composer/autoload_psr4.php	2017-06-09 00:33:46.690182563 +0300
+@@ -7,28 +7,26 @@
  
  return array(
      'malkusch\\lock\\' => array($vendorDir . '/malkusch/lock/classes'),
@@ -176,6 +176,7 @@
 -    'Symfony\\Component\\OptionsResolver\\' => array($vendorDir . '/symfony/options-resolver'),
 -    'Symfony\\Component\\HttpFoundation\\' => array($vendorDir . '/symfony/http-foundation'),
 -    'Symfony\\Component\\Filesystem\\' => array($vendorDir . '/symfony/filesystem'),
+-    'Symfony\\Component\\EventDispatcher\\' => array($vendorDir . '/symfony/event-dispatcher'),
 -    'Symfony\\Component\\Debug\\' => array($vendorDir . '/symfony/debug'),
 -    'Symfony\\Component\\Console\\' => array($vendorDir . '/symfony/console'),
 -    'Symfony\\Component\\Config\\' => array($vendorDir . '/symfony/config'),
@@ -198,6 +199,7 @@
 +    'Symfony\\Component\\Serializer\\' => array($phpDir . '/Symfony/Component/Serializer'),
 +    'Symfony\\Component\\OptionsResolver\\' =>  array($phpDir . '/Symfony/Component/OptionsResolver'),
 +    'Symfony\\Component\\HttpFoundation\\' => array($phpDir . '/Symfony/Component/HttpFoundation'),
++    'Symfony\\Component\\EventDispatcher\\' => array($phpDir . '/Symfony/Component/EventDispatcher'),
 +    'Symfony\\Component\\Filesystem\\' => array($phpDir . '/Symfony/Component/Filesystem'),
 +    'Symfony\\Component\\Config\\' =>  array($phpDir . '/Symfony/Component/Config'),
 +    'Symfony\\Component\\Console\\' => array($phpDir . '/Symfony/Component/Console'),

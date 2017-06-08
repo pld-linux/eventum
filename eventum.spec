@@ -10,12 +10,12 @@
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl.UTF-8):	Eventum - system śledzenia spraw/błędów
 Name:		eventum
-Version:	3.2.0
+Version:	3.2.1
 Release:	%{?subver:1.%{subver}.%{?githash:g%{githash}.}}%{rel}
 License:	GPL v2+
 Group:		Applications/WWW
 Source0:	https://github.com/eventum/eventum/releases/download/v%{version}/%{name}-%{version}.tar.gz
-# Source0-md5:	c7d8a0653211ba6c17ad6d490197efb2
+# Source0-md5:	056b56b2cc5e2673ccbdc5cb65678798
 #Source0:	https://github.com/eventum/eventum/releases/download/snapshot/%{name}-%{version}-%{subver}-g%{githash}.tar.gz
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
@@ -81,6 +81,7 @@ Requires:	php-pear-Text_Diff
 Requires:	php-psr-Log >= 1.0.0-2
 Requires:	php-symfony2-Config >= 2.7.7
 Requires:	php-symfony2-Console >= 2.7.7
+Requires:	php-symfony2-EventDispatcher >= 2.7.7
 Requires:	php-symfony2-Filesystem >= 2.7.7
 Requires:	php-symfony2-HttpFoundation >= 2.7.7
 Requires:	php-symfony2-OptionsResolver >= 2.7.7
@@ -610,9 +611,6 @@ done
 %{_appdir}/htdocs/components
 %{_appdir}/templates
 
-%dir %{_appdir}/upgrade
-%{_appdir}/upgrade/*.sql
-%{_appdir}/upgrade/patches
 %dir %{_appdir}/db
 %dir %{_appdir}/db/migrations
 %{_appdir}/db/migrations/*.php
