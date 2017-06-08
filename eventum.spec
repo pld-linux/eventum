@@ -351,6 +351,10 @@ This package contains the cron job.
 %prep
 %setup -q -n %{name}-%{version}%{?githash:-%{subver}-g%{githash}}
 
+# hotfix
+# https://github.com/eventum/eventum/commit/e86bc0ccb5d1ea0b784a2a2e3c409fa00cb78ae2
+sed -i -e '/upgrade/d' Makefile
+
 mv docs/examples .
 
 # bug fixes / features
