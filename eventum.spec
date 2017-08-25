@@ -10,12 +10,12 @@
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl.UTF-8):	Eventum - system śledzenia spraw/błędów
 Name:		eventum
-Version:	3.2.1
+Version:	3.2.2
 Release:	%{?subver:1.%{subver}.%{?githash:g%{githash}.}}%{rel}
 License:	GPL v2+
 Group:		Applications/WWW
 Source0:	https://github.com/eventum/eventum/releases/download/v%{version}/%{name}-%{version}.tar.gz
-# Source0-md5:	056b56b2cc5e2673ccbdc5cb65678798
+# Source0-md5:	f620b55599b8b9f251608301f77a05e7
 #Source0:	https://github.com/eventum/eventum/releases/download/snapshot/%{name}-%{version}-%{subver}-g%{githash}.tar.gz
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
@@ -65,7 +65,7 @@ Requires:	php-Smarty >= 3.1
 Requires:	php-Smarty-plugin-gettext
 Requires:	php-ZendFramework-Config >= 2.4
 Requires:	php-ZendFramework-Loader >= 2.4
-Requires:	php-ZendFramework-Mail >= 2.4.9-2
+Requires:	php-ZendFramework-Mail >= 2.4.11-4
 Requires:	php-ZendFramework-Mime >= 2.4
 Requires:	php-ZendFramework-ServiceManager >= 2.4
 Requires:	php-ZendFramework-Validator >= 2.4
@@ -350,10 +350,6 @@ This package contains the cron job.
 
 %prep
 %setup -q -n %{name}-%{version}%{?githash:-%{subver}-g%{githash}}
-
-# hotfix
-# https://github.com/eventum/eventum/commit/e86bc0ccb5d1ea0b784a2a2e3c409fa00cb78ae2
-sed -i -e '/upgrade/d' Makefile
 
 mv docs/examples .
 
