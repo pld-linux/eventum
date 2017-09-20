@@ -590,6 +590,7 @@ done
 %{_appdir}/config
 
 %dir %{_appdir}/bin
+%attr(755,root,root) %{_appdir}/bin/extension.php
 %attr(755,root,root) %{_appdir}/bin/process_all_emails.php
 %attr(755,root,root) %{_appdir}/bin/upgrade.php
 
