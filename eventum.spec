@@ -2,7 +2,7 @@
 # Conditional build:
 %bcond_with	order	# with experimental order patch
 
-%define		rel		1
+%define		rel		1.1
 %define		subver  136
 %define		githash bd09ead2
 %define		php_min_version 5.6.0
@@ -410,6 +410,12 @@ vendor theorchard/monolog-cascade
 vendor malkusch/lock
 vendor phpxmlrpc/phpxmlrpc
 vendor robmorgan/phinx
+vendor mnapoli/silly
+vendor psr/container
+vendor phlib/flysystem-pdo
+vendor league/flysystem
+vendor php-di/invoker
+vendor container-interop/container-interop
 
 # remove backups from patching as we use globs to package files to buildroot
 find '(' -name '*~' -o -name '*.orig' ')' | xargs -r rm -v
