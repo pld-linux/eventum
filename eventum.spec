@@ -2,7 +2,7 @@
 # Conditional build:
 %bcond_with	order	# with experimental order patch
 
-%define		rel		1.1
+%define		rel		1.3
 %define		subver  136
 %define		githash bd09ead2
 %define		php_min_version 5.6.0
@@ -79,14 +79,6 @@ Requires:	php-pear-Net_URL
 Requires:	php-pear-PEAR-core
 Requires:	php-pear-Text_Diff
 Requires:	php-psr-Log >= 1.0.0-2
-Requires:	php-symfony2-Config >= 2.7.7
-Requires:	php-symfony2-Console >= 2.7.7
-Requires:	php-symfony2-EventDispatcher >= 2.7.7
-Requires:	php-symfony2-Filesystem >= 2.7.7
-Requires:	php-symfony2-HttpFoundation >= 2.7.7
-Requires:	php-symfony2-OptionsResolver >= 2.7.7
-Requires:	php-symfony2-Serializer >= 2.7.7
-Requires:	php-symfony2-Yaml >= 2.7.7
 Requires:	phplot >= 5.8.0
 Requires:	webapps
 Requires:	webserver(access)
@@ -416,6 +408,15 @@ vendor phlib/flysystem-pdo
 vendor league/flysystem
 vendor php-di/invoker
 vendor container-interop/container-interop
+vendor symfony/config
+vendor symfony/console
+vendor symfony/debug
+vendor symfony/event-dispatcher
+vendor symfony/filesystem
+vendor symfony/http-foundation
+vendor symfony/options-resolver
+vendor symfony/serializer
+vendor symfony/yaml
 
 # remove backups from patching as we use globs to package files to buildroot
 find '(' -name '*~' -o -name '*.orig' ')' | xargs -r rm -v

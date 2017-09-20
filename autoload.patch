@@ -157,9 +157,9 @@
 +    'PEAR' => array($pearDir),
 +    'Text' => array($pearDir),
  );
---- eventum-3.2.3-136-gbd09ead2/vendor/composer/autoload_psr4.php~	2017-09-20 19:58:12.000000000 +0300
-+++ eventum-3.2.3-136-gbd09ead2/vendor/composer/autoload_psr4.php	2017-09-20 20:12:31.188141500 +0300
-@@ -7,34 +7,32 @@
+--- eventum-3.2.3-136-gbd09ead2/vendor/composer/autoload_psr4.php	2017-09-20 20:12:31.188141500 +0300
++++ eventum-3.2.3-136-gbd09ead2/vendor/composer/autoload_psr4.php	2017-09-20 20:33:35.633314968 +0300
+@@ -7,13 +7,6 @@
  
  return array(
      'malkusch\\lock\\' => array($vendorDir . '/malkusch/lock/classes'),
@@ -170,15 +170,10 @@
 -    'Zend\\Mail\\' => array($vendorDir . '/zendframework/zend-mail/src'),
 -    'Zend\\Loader\\' => array($vendorDir . '/zendframework/zend-loader/src'),
 -    'Zend\\Config\\' => array($vendorDir . '/zendframework/zend-config/src'),
--    'Symfony\\Component\\Yaml\\' => array($vendorDir . '/symfony/yaml'),
--    'Symfony\\Component\\Serializer\\' => array($vendorDir . '/symfony/serializer'),
--    'Symfony\\Component\\OptionsResolver\\' => array($vendorDir . '/symfony/options-resolver'),
--    'Symfony\\Component\\HttpFoundation\\' => array($vendorDir . '/symfony/http-foundation'),
--    'Symfony\\Component\\Filesystem\\' => array($vendorDir . '/symfony/filesystem'),
--    'Symfony\\Component\\EventDispatcher\\' => array($vendorDir . '/symfony/event-dispatcher'),
--    'Symfony\\Component\\Debug\\' => array($vendorDir . '/symfony/debug'),
--    'Symfony\\Component\\Console\\' => array($vendorDir . '/symfony/console'),
--    'Symfony\\Component\\Config\\' => array($vendorDir . '/symfony/config'),
+     'Symfony\\Component\\Yaml\\' => array($vendorDir . '/symfony/yaml'),
+     'Symfony\\Component\\Serializer\\' => array($vendorDir . '/symfony/serializer'),
+     'Symfony\\Component\\OptionsResolver\\' => array($vendorDir . '/symfony/options-resolver'),
+@@ -26,15 +19,21 @@
      'Silly\\' => array($vendorDir . '/mnapoli/silly/src'),
 -    'Psr\\Log\\' => array($vendorDir . '/psr/log/Psr/Log'),
 -    'Psr\\Container\\' => array($vendorDir . '/psr/container/src'),
@@ -201,14 +196,6 @@
 +    'Zend\\Mail\\' => array($phpDir . '/Zend/Mail'),
 +    'Zend\\Loader\\' => array($phpDir . '/Zend/Loader'),
 +    'Zend\\Config\\' => array($phpDir . '/Zend/Config'),
-+    'Symfony\\Component\\Yaml\\' => array($phpDir . '/Symfony/Component/Yaml'),
-+    'Symfony\\Component\\Serializer\\' => array($phpDir . '/Symfony/Component/Serializer'),
-+    'Symfony\\Component\\OptionsResolver\\' =>  array($phpDir . '/Symfony/Component/OptionsResolver'),
-+    'Symfony\\Component\\HttpFoundation\\' => array($phpDir . '/Symfony/Component/HttpFoundation'),
-+    'Symfony\\Component\\EventDispatcher\\' => array($phpDir . '/Symfony/Component/EventDispatcher'),
-+    'Symfony\\Component\\Filesystem\\' => array($phpDir . '/Symfony/Component/Filesystem'),
-+    'Symfony\\Component\\Config\\' =>  array($phpDir . '/Symfony/Component/Config'),
-+    'Symfony\\Component\\Console\\' => array($phpDir . '/Symfony/Component/Console'),
 +    'Monolog\\' => array($phpDir . '/Monolog'),
 +    'Psr\\Log\\' => array($phpDir. '/Psr/Log'),
  );
