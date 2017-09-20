@@ -5,7 +5,7 @@
 %define		rel		1
 %define		subver  136
 %define		githash bd09ead2
-%define		php_min_version 5.5.0
+%define		php_min_version 5.6.0
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl.UTF-8):	Eventum - system śledzenia spraw/błędów
