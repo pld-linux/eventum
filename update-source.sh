@@ -1,6 +1,7 @@
 #!/bin/sh
 set -e
 dropin=
+repo_url=https://github.com/eventum/eventum
 specfile=eventum.spec
 
 # Work in package dir
@@ -13,6 +14,14 @@ if [ -f "$1" ]; then
 	rev=${rev%.tar.gz}
 elif [ "$1" ]; then
 	rev=$1
+else
+	# use tarball from "snapshot" build
+	git fetch "$repo_url" refs/tags/snapshot
+	out=$(git show FETCH_HEAD -s)
+	tarball=$(echo "$out" | grep -o 'eventum-.*\.tar.gz')
+	url="$repo_url/releases/download/snapshot/$tarball"
+	test -f "$tarball" || wget -c $url
+	exec "$0" "$tarball"
 fi
 
 subver=${rev%-*}
@@ -28,8 +37,8 @@ if [ "$oldsubver" = "$subver" -a "$oldgithash" = "$githash" ]; then
 fi
 
 echo "Updating $specfile for $rev (subver: $subver, githash: $githash)..."
-sed -i -e "
-	s/^\(%define[ \t]\+subver[ \t]\+\)[0-9]\+\$/\1$subver/
-	s/^\(%define[ \t]\+githash[ \t]\+\)[0-9a-fg]\+\$/\1$githash/
+sed -i -re "
+	s/^[#%](define[ \t]+subver[ \t]+)[0-9]+\$/%\1$subver/
+	s/^[#%](define[ \t]+githash[ \t]+)[0-9a-fg]+\$/%\1$githash/
 " $specfile
 ../builder -ncs -5 $specfile
