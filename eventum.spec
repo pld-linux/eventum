@@ -620,7 +620,7 @@ done
 %{_appdir}/vendor
 %dir %{_appdir}/lib
 %{_appdir}/lib/eventum
-%exclude %{_appdir}/lib/eventum/class.monitor.php
+%exclude %{_appdir}/src/Command/MonitorCommand.php
 
 %dir %{_libdir}
 
@@ -662,7 +662,7 @@ done
 
 %files monitor
 %defattr(644,root,root,755)
-%{_appdir}/lib/eventum/class.monitor.php
+%{_appdir}/src/Command/MonitorCommand.php
 %attr(755,root,root) %{_appdir}/bin/monitor.php
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/cron.d/%{name}-monitor
 
