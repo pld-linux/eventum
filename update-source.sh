@@ -17,6 +17,8 @@ elif [ "$1" ]; then
 else
 	# use tarball from "snapshot" build
 	git fetch "$repo_url" refs/tags/snapshot
+	# save this under some local ref, so repeated calls don't have to fetch everything
+	git update-ref refs/keep-around/snapshot FETCH_HEAD
 	out=$(git show FETCH_HEAD -s)
 	tarball=$(echo "$out" | grep -o 'eventum-.*\.tar.gz')
 	url="$repo_url/releases/download/snapshot/$tarball"
