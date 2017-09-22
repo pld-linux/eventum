@@ -3,8 +3,8 @@
 %bcond_with	order	# with experimental order patch
 
 %define		rel		1.3
-%define		subver  136
-%define		githash bd09ead2
+%define		subver  156
+%define		githash 0bdd3801
 %define		php_min_version 5.6.0
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
@@ -16,7 +16,7 @@ License:	GPL v2+
 Group:		Applications/WWW
 #Source0:	https://github.com/eventum/eventum/releases/download/v%{version}/%{name}-%{version}.tar.gz
 Source0:	https://github.com/eventum/eventum/releases/download/snapshot/%{name}-%{version}-%{subver}-g%{githash}.tar.gz
-# Source0-md5:	a8edbaab9794b68e84eec719e3841a78
+# Source0-md5:	68a5af5092bf40032538e183d5f1982c
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -628,7 +628,11 @@ done
 %{_appdir}/vendor
 %dir %{_appdir}/lib
 %{_appdir}/lib/eventum
+%exclude %{_appdir}/src/Command/MailDownloadCommand.php
+%exclude %{_appdir}/src/Command/MailQueueProcessCommand.php
+%exclude %{_appdir}/src/Command/MailQueueTruncateCommand.php
 %exclude %{_appdir}/src/Command/MonitorCommand.php
+%exclude %{_appdir}/src/Command/ReminderCheckCommand.php
 
 %dir %{_libdir}
 
@@ -654,17 +658,21 @@ done
 
 %files mail-queue
 %defattr(644,root,root,755)
+%{_appdir}/src/Command/MailQueueProcessCommand.php
+%{_appdir}/src/Command/MailQueueTruncateCommand.php
 %attr(755,root,root) %{_appdir}/bin/process_mail_queue.php
 %attr(755,root,root) %{_appdir}/bin/truncate_mail_queue.php
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/cron.d/%{name}-mail-queue
 
 %files mail-download
 %defattr(644,root,root,755)
+%{_appdir}/src/Command/MailDownloadCommand.php
 %attr(755,root,root) %{_appdir}/bin/download_emails.php
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/cron.d/%{name}-mail-download
 
 %files reminder
 %defattr(644,root,root,755)
+%{_appdir}/src/Command/ReminderCheckCommand.php
 %attr(755,root,root) %{_appdir}/bin/check_reminders.php
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/cron.d/%{name}-reminder
 
