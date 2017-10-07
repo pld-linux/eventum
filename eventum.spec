@@ -2,20 +2,20 @@
 # Conditional build:
 %bcond_with	order	# with experimental order patch
 
-%define		rel		2
-#define		subver  347
-#define		githash 3d9195fa
-%define		php_min_version 5.5.0
+%define		rel		1
+#define		subver  189
+#define		githash 7b4eddae
+%define		php_min_version 5.6.0
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl.UTF-8):	Eventum - system śledzenia spraw/błędów
 Name:		eventum
-Version:	3.2.3
+Version:	3.3.0
 Release:	%{?subver:1.%{subver}.%{?githash:g%{githash}.}}%{rel}
 License:	GPL v2+
 Group:		Applications/WWW
 Source0:	https://github.com/eventum/eventum/releases/download/v%{version}/%{name}-%{version}.tar.gz
-# Source0-md5:	ad50831d3c73b8df781618eceefab135
+# Source0-md5:	20ad2c39360c60a047b088a588e36452
 #Source0:	https://github.com/eventum/eventum/releases/download/snapshot/%{name}-%{version}-%{subver}-g%{githash}.tar.gz
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
@@ -79,14 +79,6 @@ Requires:	php-pear-Net_URL
 Requires:	php-pear-PEAR-core
 Requires:	php-pear-Text_Diff
 Requires:	php-psr-Log >= 1.0.0-2
-Requires:	php-symfony2-Config >= 2.7.7
-Requires:	php-symfony2-Console >= 2.7.7
-Requires:	php-symfony2-EventDispatcher >= 2.7.7
-Requires:	php-symfony2-Filesystem >= 2.7.7
-Requires:	php-symfony2-HttpFoundation >= 2.7.7
-Requires:	php-symfony2-OptionsResolver >= 2.7.7
-Requires:	php-symfony2-Serializer >= 2.7.7
-Requires:	php-symfony2-Yaml >= 2.7.7
 Requires:	phplot >= 5.8.0
 Requires:	webapps
 Requires:	webserver(access)
@@ -410,6 +402,21 @@ vendor theorchard/monolog-cascade
 vendor malkusch/lock
 vendor phpxmlrpc/phpxmlrpc
 vendor robmorgan/phinx
+vendor mnapoli/silly
+vendor psr/container
+vendor phlib/flysystem-pdo
+vendor league/flysystem
+vendor php-di/invoker
+vendor container-interop/container-interop
+vendor symfony/config
+vendor symfony/console
+vendor symfony/debug
+vendor symfony/event-dispatcher
+vendor symfony/filesystem
+vendor symfony/http-foundation
+vendor symfony/options-resolver
+vendor symfony/serializer
+vendor symfony/yaml
 
 # remove backups from patching as we use globs to package files to buildroot
 find '(' -name '*~' -o -name '*.orig' ')' | xargs -r rm -v
@@ -590,6 +597,7 @@ done
 %{_appdir}/config
 
 %dir %{_appdir}/bin
+%attr(755,root,root) %{_appdir}/bin/extension.php
 %attr(755,root,root) %{_appdir}/bin/process_all_emails.php
 %attr(755,root,root) %{_appdir}/bin/upgrade.php
 
@@ -620,7 +628,11 @@ done
 %{_appdir}/vendor
 %dir %{_appdir}/lib
 %{_appdir}/lib/eventum
-%exclude %{_appdir}/lib/eventum/class.monitor.php
+%exclude %{_appdir}/src/Command/MailDownloadCommand.php
+%exclude %{_appdir}/src/Command/MailQueueProcessCommand.php
+%exclude %{_appdir}/src/Command/MailQueueTruncateCommand.php
+%exclude %{_appdir}/src/Command/MonitorCommand.php
+%exclude %{_appdir}/src/Command/ReminderCheckCommand.php
 
 %dir %{_libdir}
 
@@ -646,23 +658,27 @@ done
 
 %files mail-queue
 %defattr(644,root,root,755)
+%{_appdir}/src/Command/MailQueueProcessCommand.php
+%{_appdir}/src/Command/MailQueueTruncateCommand.php
 %attr(755,root,root) %{_appdir}/bin/process_mail_queue.php
 %attr(755,root,root) %{_appdir}/bin/truncate_mail_queue.php
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/cron.d/%{name}-mail-queue
 
 %files mail-download
 %defattr(644,root,root,755)
+%{_appdir}/src/Command/MailDownloadCommand.php
 %attr(755,root,root) %{_appdir}/bin/download_emails.php
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/cron.d/%{name}-mail-download
 
 %files reminder
 %defattr(644,root,root,755)
+%{_appdir}/src/Command/ReminderCheckCommand.php
 %attr(755,root,root) %{_appdir}/bin/check_reminders.php
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/cron.d/%{name}-reminder
 
 %files monitor
 %defattr(644,root,root,755)
-%{_appdir}/lib/eventum/class.monitor.php
+%{_appdir}/src/Command/MonitorCommand.php
 %attr(755,root,root) %{_appdir}/bin/monitor.php
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/cron.d/%{name}-monitor
 

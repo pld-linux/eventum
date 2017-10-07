@@ -1,5 +1,5 @@
---- eventum-3.1.10/vendor/composer/autoload_classmap.php~	2017-04-21 02:09:15.149402656 +0300
-+++ eventum-3.1.10/vendor/composer/autoload_classmap.php	2017-04-21 02:10:53.684609532 +0300
+--- eventum-3.2.3-136-gbd09ead2/vendor/composer/autoload_classmap.php~	2017-09-20 20:09:46.947166334 +0300
++++ eventum-3.2.3-136-gbd09ead2/vendor/composer/autoload_classmap.php	2017-09-20 20:10:31.279863165 +0300
 @@ -4,6 +4,7 @@
  
  $vendorDir = dirname(dirname(__FILE__));
@@ -24,8 +24,8 @@
      'Filter' => $baseDir . '/lib/eventum/class.filter.php',
      'Group' => $baseDir . '/lib/eventum/class.group.php',
      'Help' => $baseDir . '/lib/eventum/class.help.php',
-@@ -58,34 +58,14 @@
-     'Lock' => $baseDir . '/lib/eventum/class.lock.php',
+@@ -56,33 +56,13 @@
+     'Link_Filter' => $baseDir . '/lib/eventum/class.link_filter.php',
      'Mail_Helper' => $baseDir . '/lib/eventum/class.mail_helper.php',
      'Mail_Queue' => $baseDir . '/lib/eventum/class.mail_queue.php',
 -    'Mail_mime' => $vendorDir . '/pear-pear.php.net/Mail_Mime/Mail/mime.php',
@@ -34,7 +34,6 @@
 -    'Math_Stats' => $vendorDir . '/pear-pear.php.net/Math_Stats/Math/Stats.php',
      'Mime_Helper' => $baseDir . '/lib/eventum/class.mime_helper.php',
      'Misc' => $baseDir . '/lib/eventum/class.misc.php',
-     'Monitor' => $baseDir . '/lib/eventum/class.monitor.php',
      'MySQL_Fulltext_Search' => $baseDir . '/lib/eventum/search/class.mysql_fulltext_search.php',
      'Mysql_Auth_Backend' => $baseDir . '/lib/eventum/auth/class.mysql_auth_backend.php',
 -    'Net_LDAP2' => $vendorDir . '/pear-pear.php.net/Net_LDAP2/Net/LDAP2.php',
@@ -158,9 +157,9 @@
 +    'PEAR' => array($pearDir),
 +    'Text' => array($pearDir),
  );
---- eventum-3.2.1/vendor/composer/autoload_psr4.php~	2017-06-09 00:18:27.000000000 +0300
-+++ eventum-3.2.1/vendor/composer/autoload_psr4.php	2017-06-09 00:33:46.690182563 +0300
-@@ -7,28 +7,26 @@
+--- eventum-3.2.3-136-gbd09ead2/vendor/composer/autoload_psr4.php	2017-09-20 20:12:31.188141500 +0300
++++ eventum-3.2.3-136-gbd09ead2/vendor/composer/autoload_psr4.php	2017-09-20 20:33:35.633314968 +0300
+@@ -7,13 +7,6 @@
  
  return array(
      'malkusch\\lock\\' => array($vendorDir . '/malkusch/lock/classes'),
@@ -171,23 +170,25 @@
 -    'Zend\\Mail\\' => array($vendorDir . '/zendframework/zend-mail/src'),
 -    'Zend\\Loader\\' => array($vendorDir . '/zendframework/zend-loader/src'),
 -    'Zend\\Config\\' => array($vendorDir . '/zendframework/zend-config/src'),
--    'Symfony\\Component\\Yaml\\' => array($vendorDir . '/symfony/yaml'),
--    'Symfony\\Component\\Serializer\\' => array($vendorDir . '/symfony/serializer'),
--    'Symfony\\Component\\OptionsResolver\\' => array($vendorDir . '/symfony/options-resolver'),
--    'Symfony\\Component\\HttpFoundation\\' => array($vendorDir . '/symfony/http-foundation'),
--    'Symfony\\Component\\Filesystem\\' => array($vendorDir . '/symfony/filesystem'),
--    'Symfony\\Component\\EventDispatcher\\' => array($vendorDir . '/symfony/event-dispatcher'),
--    'Symfony\\Component\\Debug\\' => array($vendorDir . '/symfony/debug'),
--    'Symfony\\Component\\Console\\' => array($vendorDir . '/symfony/console'),
--    'Symfony\\Component\\Config\\' => array($vendorDir . '/symfony/config'),
+     'Symfony\\Component\\Yaml\\' => array($vendorDir . '/symfony/yaml'),
+     'Symfony\\Component\\Serializer\\' => array($vendorDir . '/symfony/serializer'),
+     'Symfony\\Component\\OptionsResolver\\' => array($vendorDir . '/symfony/options-resolver'),
+@@ -26,15 +19,21 @@
+     'Silly\\' => array($vendorDir . '/mnapoli/silly/src'),
 -    'Psr\\Log\\' => array($vendorDir . '/psr/log/Psr/Log'),
+-    'Psr\\Container\\' => array($vendorDir . '/psr/container/src'),
      'PhpXmlRpc\\' => array($vendorDir . '/phpxmlrpc/phpxmlrpc/src'),
+     'Phlib\\Flysystem\\Pdo\\' => array($vendorDir . '/phlib/flysystem-pdo/src'),
      'Phinx\\' => array($vendorDir . '/robmorgan/phinx/src/Phinx'),
 -    'Monolog\\' => array($vendorDir . '/monolog/monolog/src/Monolog'),
+     'League\\Flysystem\\' => array($vendorDir . '/league/flysystem/src'),
+     'Invoker\\' => array($vendorDir . '/php-di/invoker/src'),
+     'Interop\\Container\\' => array($vendorDir . '/container-interop/container-interop/src/Interop/Container'),
 -    'Eventum\\Test\\' => array($baseDir . '/tests', $baseDir . '/tests/src'),
      'Eventum\\' => array($baseDir . '/src'),
      'EmailReplyParser\\' => array($vendorDir . '/willdurand/email-reply-parser/src/EmailReplyParser'),
      'Cascade\\' => array($vendorDir . '/theorchard/monolog-cascade/src'),
++
 +    'Zend\\Validator\\' =>  array($phpDir . '/Zend/Validator'),
 +    'Zend\\ServiceManager\\' => array($phpDir . '/Zend/ServiceManager'),
 +    'Zend\\Stdlib\\' => array($phpDir . '/Zend/Stdlib'),
@@ -195,14 +196,6 @@
 +    'Zend\\Mail\\' => array($phpDir . '/Zend/Mail'),
 +    'Zend\\Loader\\' => array($phpDir . '/Zend/Loader'),
 +    'Zend\\Config\\' => array($phpDir . '/Zend/Config'),
-+    'Symfony\\Component\\Yaml\\' => array($phpDir . '/Symfony/Component/Yaml'),
-+    'Symfony\\Component\\Serializer\\' => array($phpDir . '/Symfony/Component/Serializer'),
-+    'Symfony\\Component\\OptionsResolver\\' =>  array($phpDir . '/Symfony/Component/OptionsResolver'),
-+    'Symfony\\Component\\HttpFoundation\\' => array($phpDir . '/Symfony/Component/HttpFoundation'),
-+    'Symfony\\Component\\EventDispatcher\\' => array($phpDir . '/Symfony/Component/EventDispatcher'),
-+    'Symfony\\Component\\Filesystem\\' => array($phpDir . '/Symfony/Component/Filesystem'),
-+    'Symfony\\Component\\Config\\' =>  array($phpDir . '/Symfony/Component/Config'),
-+    'Symfony\\Component\\Console\\' => array($phpDir . '/Symfony/Component/Console'),
 +    'Monolog\\' => array($phpDir . '/Monolog'),
 +    'Psr\\Log\\' => array($phpDir. '/Psr/Log'),
  );
