@@ -431,7 +431,7 @@ install -d \
 	$RPM_BUILD_ROOT/etc/{rc.d/init.d,cron.d,logrotate.d,sysconfig} \
 	$RPM_BUILD_ROOT/var/{run,cache,lib}/%{name} \
 	$RPM_BUILD_ROOT/var/log/{archive/,}%{name} \
-	$RPM_BUILD_ROOT/var/lib/%{name}/routed_{emails,drafts,notes} \
+	$RPM_BUILD_ROOT/var/lib/%{name}/{routed_{emails,drafts,notes},storage} \
 	$RPM_BUILD_ROOT%{systemdtmpfilesdir}
 
 %{__make} install-eventum install-cli install-localization \
@@ -646,6 +646,8 @@ done
 %attr(770,root,http) %dir /var/lib/%{name}/routed_emails
 %attr(770,root,http) %dir /var/lib/%{name}/routed_drafts
 %attr(770,root,http) %dir /var/lib/%{name}/routed_notes
+# attachment storage
+%attr(770,root,http) %dir /var/lib/%{name}/storage
 
 %files setup
 %defattr(644,root,root,755)
