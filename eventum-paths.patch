@@ -59,25 +59,14 @@
  
  if (!defined('SPHINX_LOG_PATH')) {
      define('SPHINX_LOG_PATH', '/var/log/sphinx/');
---- eventum-3.3.0/src/Attachment/StorageManager.php~	2017-07-19 23:14:28.000000000 +0300
-+++ eventum-3.3.0/src/Attachment/StorageManager.php	2017-10-08 15:47:26.170890911 +0300
-@@ -50,7 +50,7 @@
-         $mount_config = [
-             'pdo' => $this->getPdoAdapter(),
-             'legacy' => new Filesystem(new EventumLegacyAdapter()),
--            'local' => new Filesystem(new Local(APP_PATH . '/var/storage/')),
-+            'local' => new Filesystem(new Local('/var/lib/eventum/storage')),
-         ];
+--- eventum-3.3.1/src/Attachment/StorageManager.php~	2017-10-08 15:53:56.000000000 +0300
++++ eventum-3.3.1/src/Attachment/StorageManager.php	2017-10-09 23:22:00.162142738 +0300
+@@ -32,7 +32,7 @@
+      *
+      * @var string
+      */
+-    const STORAGE_PATH = APP_PATH . '/var/storage/';
++    const STORAGE_PATH = '/var/lib/eventum/storage/';
  
-         foreach ($setup['adapters'] as $adapter_name => $adapter_config) {
---- eventum-3.3.0/contrib/migrate_storage_adapter.php~	2017-10-05 04:42:47.000000000 +0300
-+++ eventum-3.3.0/contrib/migrate_storage_adapter.php	2017-10-08 15:50:45.151352787 +0300
-@@ -124,7 +124,7 @@
- 
-         if ($this->target_adapter === 'local') {
-             // try to set the timestamp on the filesystem to match what is stored in the database
--            $fs_path = str_replace('local://', APP_PATH . '/var/storage/', $new_path);
-+            $fs_path = str_replace('local://', '/var/lib/eventum/storage/', $new_path);
-             $created_date = strtotime($file['iat_created_date']);
-             touch($fs_path, $created_date);
-         }
+     /**
+      * @var MountManager
