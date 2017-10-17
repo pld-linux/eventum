@@ -10,12 +10,12 @@
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl.UTF-8):	Eventum - system śledzenia spraw/błędów
 Name:		eventum
-Version:	3.3.2
+Version:	3.3.3
 Release:	%{?subver:1.%{subver}.%{?githash:g%{githash}.}}%{rel}
 License:	GPL v2+
 Group:		Applications/WWW
 Source0:	https://github.com/eventum/eventum/releases/download/v%{version}/%{name}-%{version}.tar.gz
-# Source0-md5:	e6db7269d27280dcde36c4321f6c0cd0
+# Source0-md5:	7fde18feb868ad965aa186418eccd1c1
 #Source0:	https://github.com/eventum/eventum/releases/download/snapshot/%{name}-%{version}-%{subver}-g%{githash}.tar.gz
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
@@ -598,6 +598,7 @@ done
 
 %dir %{_appdir}/bin
 %attr(755,root,root) %{_appdir}/bin/extension.php
+%attr(755,root,root) %{_appdir}/bin/ldapsync.php
 %attr(755,root,root) %{_appdir}/bin/process_all_emails.php
 %attr(755,root,root) %{_appdir}/bin/upgrade.php
 
