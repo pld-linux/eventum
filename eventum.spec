@@ -88,7 +88,6 @@ Requires:	webserver(php) >= 4.2.0
 Suggests:	localedb
 Suggests:	php(mcrypt)
 Suggests:	php(openssl)
-Suggests:	php-pear-Net_LDAP2
 Suggests:	php-pear-Net_POP3
 Suggests:	webserver(setenv)
 Provides:	group(eventum)
@@ -101,7 +100,7 @@ Conflicts:	logrotate < 3.8.0
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
-%define		_noautoreq_pear	../init.php ../../init.php init.php /usr/share/eventum/init.php /etc/webapps/.* %{_appdir}/.* .*Smarty.class.php Services/JSON.php class.date_helper.php sphinxapi.php Net/LDAP2.* Auth/SASL.* Util.php smarty_internal.*
+%define		_noautoreq_pear	../init.php ../../init.php init.php /usr/share/eventum/init.php /etc/webapps/.* %{_appdir}/.* .*Smarty.class.php Services/JSON.php class.date_helper.php sphinxapi.php Auth/SASL.* Util.php smarty_internal.*
 
 # exclude optional php dependencies
 %define		_noautophp	php-gnupg php-hash php-pecl-http php-tk
@@ -417,6 +416,7 @@ vendor symfony/http-foundation
 vendor symfony/options-resolver
 vendor symfony/serializer
 vendor symfony/yaml
+vendor symfony/ldap
 
 # remove backups from patching as we use globs to package files to buildroot
 find '(' -name '*~' -o -name '*.orig' ')' | xargs -r rm -v
