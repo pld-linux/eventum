@@ -1,5 +1,5 @@
---- eventum-3.2.3-136-gbd09ead2/vendor/composer/autoload_classmap.php~	2017-09-20 20:09:46.947166334 +0300
-+++ eventum-3.2.3-136-gbd09ead2/vendor/composer/autoload_classmap.php	2017-09-20 20:10:31.279863165 +0300
+--- eventum-3.3.4/vendor/composer/autoload_classmap.php~	2017-11-25 21:38:55.815488470 +0200
++++ eventum-3.3.4/vendor/composer/autoload_classmap.php	2017-11-25 21:41:08.406871403 +0200
 @@ -4,6 +4,7 @@
  
  $vendorDir = dirname(dirname(__FILE__));
@@ -24,7 +24,7 @@
      'Filter' => $baseDir . '/lib/eventum/class.filter.php',
      'Group' => $baseDir . '/lib/eventum/class.group.php',
      'Help' => $baseDir . '/lib/eventum/class.help.php',
-@@ -56,33 +56,13 @@
+@@ -56,22 +56,13 @@
      'Link_Filter' => $baseDir . '/lib/eventum/class.link_filter.php',
      'Mail_Helper' => $baseDir . '/lib/eventum/class.mail_helper.php',
      'Mail_Queue' => $baseDir . '/lib/eventum/class.mail_queue.php',
@@ -36,17 +36,6 @@
      'Misc' => $baseDir . '/lib/eventum/class.misc.php',
      'MySQL_Fulltext_Search' => $baseDir . '/lib/eventum/search/class.mysql_fulltext_search.php',
      'Mysql_Auth_Backend' => $baseDir . '/lib/eventum/auth/class.mysql_auth_backend.php',
--    'Net_LDAP2' => $vendorDir . '/pear-pear.php.net/Net_LDAP2/Net/LDAP2.php',
--    'Net_LDAP2_Entry' => $vendorDir . '/pear-pear.php.net/Net_LDAP2/Net/LDAP2/Entry.php',
--    'Net_LDAP2_Error' => $vendorDir . '/pear-pear.php.net/Net_LDAP2/Net/LDAP2.php',
--    'Net_LDAP2_Filter' => $vendorDir . '/pear-pear.php.net/Net_LDAP2/Net/LDAP2/Filter.php',
--    'Net_LDAP2_LDIF' => $vendorDir . '/pear-pear.php.net/Net_LDAP2/Net/LDAP2/LDIF.php',
--    'Net_LDAP2_RootDSE' => $vendorDir . '/pear-pear.php.net/Net_LDAP2/Net/LDAP2/RootDSE.php',
--    'Net_LDAP2_Schema' => $vendorDir . '/pear-pear.php.net/Net_LDAP2/Net/LDAP2/Schema.php',
--    'Net_LDAP2_SchemaCache' => $vendorDir . '/pear-pear.php.net/Net_LDAP2/Net/LDAP2/SchemaCache.interface.php',
--    'Net_LDAP2_Search' => $vendorDir . '/pear-pear.php.net/Net_LDAP2/Net/LDAP2/Search.php',
--    'Net_LDAP2_SimpleFileSchemaCache' => $vendorDir . '/pear-pear.php.net/Net_LDAP2/Net/LDAP2/SimpleFileSchemaCache.php',
--    'Net_LDAP2_Util' => $vendorDir . '/pear-pear.php.net/Net_LDAP2/Net/LDAP2/Util.php',
 -    'Net_POP3' => $vendorDir . '/pear-pear.php.net/Net_POP3/Net/POP3.php',
 -    'Net_Socket' => $vendorDir . '/pear-pear.php.net/Net_Socket/Net/Socket.php',
 -    'Net_URL' => $vendorDir . '/pear-pear.php.net/Net_URL/Net/URL.php',
@@ -67,9 +56,8 @@
      'Report' => $baseDir . '/lib/eventum/class.report.php',
      'Reporter_List_Custom_Field_Backend' => $baseDir . '/lib/eventum/custom_field/class.reporter_list.php',
      'Resolution' => $baseDir . '/lib/eventum/class.resolution.php',
-@@ -119,44 +90,21 @@
+@@ -96,43 +87,20 @@
      'Search_Profile' => $baseDir . '/lib/eventum/class.search_profile.php',
--    'SessionHandlerInterface' => $vendorDir . '/symfony/http-foundation/Resources/stubs/SessionHandlerInterface.php',
      'Setup' => $baseDir . '/lib/eventum/class.setup.php',
      'Severity' => $baseDir . '/lib/eventum/class.severity.php',
 -    'SphinxClient' => $vendorDir . '/sphinx/php-sphinxapi/sphinxapi.php',
@@ -111,7 +99,6 @@
      'Validation' => $baseDir . '/lib/eventum/class.validation.php',
      'Workflow' => $baseDir . '/lib/eventum/class.workflow.php',
 -    'gettext_reader' => $vendorDir . '/php-gettext/php-gettext/gettext.php',
-+    'XmlRpcServer' => $baseDir . '/lib/eventum/rpc/XmlRpcServer.php',
 +
 +    // external deps
 +    'PHPlot' => $phpDir .'/phplot/phplot.php',
