@@ -3,8 +3,8 @@
 %bcond_with	order	# with experimental order patch
 
 %define		rel		1
-#define		subver  189
-#define		githash 7b4eddae
+%define		subver  365
+%define		githash 65c5538f
 %define		php_min_version 5.6.0
 %include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
@@ -14,9 +14,9 @@ Version:	3.3.4
 Release:	%{?subver:1.%{subver}.%{?githash:g%{githash}.}}%{rel}
 License:	GPL v2+
 Group:		Applications/WWW
-Source0:	https://github.com/eventum/eventum/releases/download/v%{version}/%{name}-%{version}.tar.gz
-# Source0-md5:	f2fc7059a2b864000180cf7be00ad3c4
-#Source0:	https://github.com/eventum/eventum/releases/download/snapshot/%{name}-%{version}-%{subver}-g%{githash}.tar.gz
+#Source0:	https://github.com/eventum/eventum/releases/download/v%{version}/%{name}-%{version}.tar.gz
+Source0:	https://github.com/eventum/eventum/releases/download/snapshot/%{name}-%{version}-%{subver}-g%{githash}.tar.gz
+# Source0-md5:	dd6a22d5798358e687b0a68eeb189581
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -70,8 +70,6 @@ Requires:	php-ZendFramework-Mime >= 2.4
 Requires:	php-ZendFramework-ServiceManager >= 2.4
 Requires:	php-ZendFramework-Validator >= 2.4
 Requires:	php-monolog >= 1.17.2
-Requires:	php-pear-Mail_Mime
-Requires:	php-pear-Mail_mimeDecode
 Requires:	php-pear-Math_Stats
 Requires:	php-pear-Net_SMTP
 Requires:	php-pear-Net_Socket
@@ -629,11 +627,11 @@ done
 %{_appdir}/vendor
 %dir %{_appdir}/lib
 %{_appdir}/lib/eventum
-%exclude %{_appdir}/src/Command/MailDownloadCommand.php
-%exclude %{_appdir}/src/Command/MailQueueProcessCommand.php
-%exclude %{_appdir}/src/Command/MailQueueTruncateCommand.php
-%exclude %{_appdir}/src/Command/MonitorCommand.php
-%exclude %{_appdir}/src/Command/ReminderCheckCommand.php
+%exclude %{_appdir}/src/Console/Command/MailDownloadCommand.php
+%exclude %{_appdir}/src/Console/Command/MailQueueProcessCommand.php
+%exclude %{_appdir}/src/Console/Command/MailQueueTruncateCommand.php
+%exclude %{_appdir}/src/Console/Command/MonitorCommand.php
+%exclude %{_appdir}/src/Console/Command/ReminderCheckCommand.php
 
 %dir %{_libdir}
 
@@ -661,27 +659,27 @@ done
 
 %files mail-queue
 %defattr(644,root,root,755)
-%{_appdir}/src/Command/MailQueueProcessCommand.php
-%{_appdir}/src/Command/MailQueueTruncateCommand.php
+%{_appdir}/src/Console/Command/MailQueueProcessCommand.php
+%{_appdir}/src/Console/Command/MailQueueTruncateCommand.php
 %attr(755,root,root) %{_appdir}/bin/process_mail_queue.php
 %attr(755,root,root) %{_appdir}/bin/truncate_mail_queue.php
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/cron.d/%{name}-mail-queue
 
 %files mail-download
 %defattr(644,root,root,755)
-%{_appdir}/src/Command/MailDownloadCommand.php
+%{_appdir}/src/Console/Command/MailDownloadCommand.php
 %attr(755,root,root) %{_appdir}/bin/download_emails.php
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/cron.d/%{name}-mail-download
 
 %files reminder
 %defattr(644,root,root,755)
-%{_appdir}/src/Command/ReminderCheckCommand.php
+%{_appdir}/src/Console/Command/ReminderCheckCommand.php
 %attr(755,root,root) %{_appdir}/bin/check_reminders.php
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/cron.d/%{name}-reminder
 
 %files monitor
 %defattr(644,root,root,755)
-%{_appdir}/src/Command/MonitorCommand.php
+%{_appdir}/src/Console/Command/MonitorCommand.php
 %attr(755,root,root) %{_appdir}/bin/monitor.php
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/cron.d/%{name}-monitor
 

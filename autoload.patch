@@ -1,5 +1,5 @@
---- eventum-3.3.4/vendor/composer/autoload_classmap.php~	2017-11-25 21:38:55.815488470 +0200
-+++ eventum-3.3.4/vendor/composer/autoload_classmap.php	2017-11-25 21:41:08.406871403 +0200
+--- eventum-3.3.4-365-g65c5538f/vendor/composer/autoload_classmap.php~	2018-03-13 23:23:55.986285399 +0200
++++ eventum-3.3.4-365-g65c5538f/vendor/composer/autoload_classmap.php	2018-03-13 23:25:42.798025491 +0200
 @@ -4,6 +4,7 @@
  
  $vendorDir = dirname(dirname(__FILE__));
@@ -24,13 +24,10 @@
      'Filter' => $baseDir . '/lib/eventum/class.filter.php',
      'Group' => $baseDir . '/lib/eventum/class.group.php',
      'Help' => $baseDir . '/lib/eventum/class.help.php',
-@@ -56,22 +56,13 @@
+@@ -60,19 +60,13 @@
      'Link_Filter' => $baseDir . '/lib/eventum/class.link_filter.php',
      'Mail_Helper' => $baseDir . '/lib/eventum/class.mail_helper.php',
      'Mail_Queue' => $baseDir . '/lib/eventum/class.mail_queue.php',
--    'Mail_mime' => $vendorDir . '/pear-pear.php.net/Mail_Mime/Mail/mime.php',
--    'Mail_mimeDecode' => $vendorDir . '/pear-pear.php.net/Mail_mimeDecode/Mail/mimeDecode.php',
--    'Mail_mimePart' => $vendorDir . '/pear-pear.php.net/Mail_Mime/Mail/mimePart.php',
 -    'Math_Stats' => $vendorDir . '/pear-pear.php.net/Math_Stats/Math/Stats.php',
      'Mime_Helper' => $baseDir . '/lib/eventum/class.mime_helper.php',
      'Misc' => $baseDir . '/lib/eventum/class.misc.php',
@@ -45,19 +42,10 @@
 -    'PHPlot' => $vendorDir . '/phplot/phplot/phplot.php',
 -    'PHPlot_truecolor' => $vendorDir . '/phplot/phplot/phplot.php',
      'Pager' => $baseDir . '/lib/eventum/class.pager.php',
+     'ParseError' => $vendorDir . '/symfony/polyfill-php70/Resources/stubs/ParseError.php',
      'Partner' => $baseDir . '/lib/eventum/class.partner.php',
-     'Phone_Support' => $baseDir . '/lib/eventum/class.phone_support.php',
-@@ -109,6 +78,8 @@
-     'Reminder' => $baseDir . '/lib/eventum/class.reminder.php',
-     'Reminder_Action' => $baseDir . '/lib/eventum/class.reminder_action.php',
-     'Reminder_Condition' => $baseDir . '/lib/eventum/class.reminder_condition.php',
-+    'RemoteApi' => $baseDir . '/lib/eventum/rpc/RemoteApi.php',
-+    'RemoteApiException' => $baseDir . '/lib/eventum/rpc/RemoteApi.php',
-     'Report' => $baseDir . '/lib/eventum/class.report.php',
-     'Reporter_List_Custom_Field_Backend' => $baseDir . '/lib/eventum/custom_field/class.reporter_list.php',
-     'Resolution' => $baseDir . '/lib/eventum/class.resolution.php',
-@@ -96,43 +87,20 @@
-     'Search_Profile' => $baseDir . '/lib/eventum/class.search_profile.php',
+@@ -99,44 +93,21 @@
+     'SessionUpdateTimestampHandlerInterface' => $vendorDir . '/symfony/polyfill-php70/Resources/stubs/SessionUpdateTimestampHandlerInterface.php',
      'Setup' => $baseDir . '/lib/eventum/class.setup.php',
      'Severity' => $baseDir . '/lib/eventum/class.severity.php',
 -    'SphinxClient' => $vendorDir . '/sphinx/php-sphinxapi/sphinxapi.php',
@@ -95,6 +83,7 @@
 -    'Text_Diff_ThreeWay_Op_copy' => $vendorDir . '/pear-pear.php.net/Text_Diff/Text/Diff/ThreeWay.php',
 -    'Text_MappedDiff' => $vendorDir . '/pear-pear.php.net/Text_Diff/Text/Diff.php',
      'Time_Tracking' => $baseDir . '/lib/eventum/class.time_tracking.php',
+     'TypeError' => $vendorDir . '/symfony/polyfill-php70/Resources/stubs/TypeError.php',
      'User' => $baseDir . '/lib/eventum/class.user.php',
      'Validation' => $baseDir . '/lib/eventum/class.validation.php',
      'Workflow' => $baseDir . '/lib/eventum/class.workflow.php',
@@ -105,15 +94,17 @@
 +    'Smarty' => $phpDir. '/Smarty3/Smarty.class.php',
 +    'SphinxClient' => $phpDir . '/sphinxapi.php',
  );
---- eventum-3.1.7/vendor/composer/autoload_files.php~	2016-12-28 18:37:10.000000000 +0200
-+++ eventum-3.1.7/vendor/composer/autoload_files.php	2016-12-28 18:52:04.467065215 +0200
-@@ -4,11 +4,10 @@
+--- eventum-3.3.4-365-g65c5538f/vendor/composer/autoload_files.php~	2018-03-13 23:16:48.000000000 +0200
++++ eventum-3.3.4-365-g65c5538f/vendor/composer/autoload_files.php	2018-03-13 23:30:31.740381964 +0200
+@@ -4,13 +4,12 @@
  
  $vendorDir = dirname(dirname(__FILE__));
  $baseDir = dirname($vendorDir);
 +$phpDir = PHP_DATADIR . '/php';
  
  return array(
+     '5255c38a0faeba867671b61dfda6d864' => $vendorDir . '/paragonie/random_compat/lib/random.php',
+     '023d27dca8066ef29e6739335ea73bad' => $vendorDir . '/symfony/polyfill-php70/bootstrap.php',
 -    'f084d01b0a599f67676cffef638aa95b' => $vendorDir . '/smarty/smarty/libs/bootstrap.php',
      '8170285c807a9f24f165f37b15bc9a36' => $vendorDir . '/defuse/php-encryption/Crypto.php',
 -    'b2b3f01361f3aaeab67fde08ae76446f' => $vendorDir . '/smarty-gettext/smarty-gettext/block.t.php',
@@ -121,9 +112,9 @@
      'd12685060d57775f2bc3adf90c7d62bd' => $baseDir . '/lib/eventum/gettext.php',
 +    'b2b3f01361f3aaeab67fde08ae76446f' => $phpDir. '/Smarty3/plugins/block.t.php',
  );
---- eventum-3.1.10-340-gfc2f2394/vendor/composer/autoload_namespaces.php~	2017-05-16 18:19:02.000000000 +0300
-+++ eventum-3.1.10-340-gfc2f2394/vendor/composer/autoload_namespaces.php	2017-05-17 19:57:34.487527478 +0300
-@@ -3,13 +3,15 @@
+--- eventum-3.3.4-365-g65c5538f/vendor/composer/autoload_namespaces.php~	2018-03-13 23:16:48.000000000 +0200
++++ eventum-3.3.4-365-g65c5538f/vendor/composer/autoload_namespaces.php	2018-03-13 23:31:58.989080399 +0200
+@@ -3,18 +3,21 @@
  // autoload_namespaces.php @generated by Composer
  
  $vendorDir = dirname(dirname(__FILE__));
@@ -136,16 +127,22 @@
      'RandomLib' => array($vendorDir . '/ircmaxell/random-lib/lib'),
 -    'PEAR' => array($vendorDir . '/pear/pear_exception'),
 -    'Net' => array($vendorDir . '/pear/net_smartirc/Net', $vendorDir . '/pear/net_smtp'),
+     'Doctrine\\ORM\\' => array($vendorDir . '/doctrine/orm/lib'),
+     'Doctrine\\DBAL\\' => array($vendorDir . '/doctrine/dbal/lib'),
+     'Doctrine\\Common\\Lexer\\' => array($vendorDir . '/doctrine/lexer/lib'),
+     'Doctrine\\Common\\Inflector\\' => array($vendorDir . '/doctrine/inflector/lib'),
+     'Doctrine\\Common\\Collections\\' => array($vendorDir . '/doctrine/collections/lib'),
 -    'Auth' => array($vendorDir . '/pear/auth_sasl'),
 -    '' => array($vendorDir . '/pear/pear-core-minimal/src'),
++	// PEAR deps
 +    'Auth' => array($pearDir),
 +    'Mail' => array($pearDir),
 +    'Net' => array($pearDir),
 +    'PEAR' => array($pearDir),
 +    'Text' => array($pearDir),
  );
---- eventum-3.2.3-136-gbd09ead2/vendor/composer/autoload_psr4.php	2017-09-20 20:12:31.188141500 +0300
-+++ eventum-3.2.3-136-gbd09ead2/vendor/composer/autoload_psr4.php	2017-09-20 20:33:35.633314968 +0300
+--- eventum-3.3.4-365-g65c5538f/vendor/composer/autoload_psr4.php~	2018-03-13 23:16:48.000000000 +0200
++++ eventum-3.3.4-365-g65c5538f/vendor/composer/autoload_psr4.php	2018-03-13 23:33:17.547908446 +0200
 @@ -7,13 +7,6 @@
  
  return array(
@@ -157,10 +154,12 @@
 -    'Zend\\Mail\\' => array($vendorDir . '/zendframework/zend-mail/src'),
 -    'Zend\\Loader\\' => array($vendorDir . '/zendframework/zend-loader/src'),
 -    'Zend\\Config\\' => array($vendorDir . '/zendframework/zend-config/src'),
+     'Symfony\\Polyfill\\Php70\\' => array($vendorDir . '/symfony/polyfill-php70'),
      'Symfony\\Component\\Yaml\\' => array($vendorDir . '/symfony/yaml'),
      'Symfony\\Component\\Serializer\\' => array($vendorDir . '/symfony/serializer'),
-     'Symfony\\Component\\OptionsResolver\\' => array($vendorDir . '/symfony/options-resolver'),
-@@ -26,15 +19,21 @@
+@@ -26,16 +19,12 @@
+     'Symfony\\Component\\Console\\' => array($vendorDir . '/symfony/console'),
+     'Symfony\\Component\\Config\\' => array($vendorDir . '/symfony/config'),
      'Silly\\' => array($vendorDir . '/mnapoli/silly/src'),
 -    'Psr\\Log\\' => array($vendorDir . '/psr/log/Psr/Log'),
 -    'Psr\\Container\\' => array($vendorDir . '/psr/container/src'),
@@ -174,6 +173,10 @@
 -    'Eventum\\Test\\' => array($baseDir . '/tests', $baseDir . '/tests/src'),
      'Eventum\\' => array($baseDir . '/src'),
      'EmailReplyParser\\' => array($vendorDir . '/willdurand/email-reply-parser/src/EmailReplyParser'),
+     'Doctrine\\Instantiator\\' => array($vendorDir . '/doctrine/instantiator/src/Doctrine/Instantiator'),
+@@ -43,4 +32,14 @@
+     'Doctrine\\Common\\Annotations\\' => array($vendorDir . '/doctrine/annotations/lib/Doctrine/Common/Annotations'),
+     'Doctrine\\Common\\' => array($vendorDir . '/doctrine/common/lib/Doctrine/Common'),
      'Cascade\\' => array($vendorDir . '/theorchard/monolog-cascade/src'),
 +
 +    'Zend\\Validator\\' =>  array($phpDir . '/Zend/Validator'),
@@ -194,18 +197,18 @@
  // fonts directory for phplot
 -define('APP_FONTS_PATH', APP_PATH . '/vendor/fonts/liberation');
 +define('APP_FONTS_PATH', '/usr/share/fonts/TTF');
---- eventum-3.1.6/vendor/composer/autoload_real.php~	2016-12-09 01:12:28.646671725 +0200
-+++ eventum-3.1.6/vendor/composer/autoload_real.php	2016-12-09 01:12:30.253314754 +0200
+--- eventum-3.3.4-365-g65c5538f/vendor/composer/autoload_real.php~	2018-03-13 23:16:48.000000000 +0200
++++ eventum-3.3.4-365-g65c5538f/vendor/composer/autoload_real.php	2018-03-13 23:35:23.062702617 +0200
 @@ -23,11 +23,7 @@
          self::$loader = $loader = new \Composer\Autoload\ClassLoader();
          spl_autoload_unregister(array('ComposerAutoloaderInitEventumCore', 'loadClassLoader'));
  
 -        $includePaths = require __DIR__ . '/include_paths.php';
--        array_push($includePaths, get_include_path());
+-        $includePaths[] = get_include_path();
 -        set_include_path(implode(PATH_SEPARATOR, $includePaths));
 -
 -        $useStaticLoader = PHP_VERSION_ID >= 50600 && !defined('HHVM_VERSION') && (!function_exists('zend_loader_file_encoded') || !zend_loader_file_encoded());
-+        $useStaticLoader = false; // TODO: patch autoload_static.php as well
++        $useStaticLoader = false; // autoload_static.php patching is annoying and not worth the effort
          if ($useStaticLoader) {
              require_once __DIR__ . '/autoload_static.php';
  
