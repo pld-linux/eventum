@@ -65,7 +65,7 @@ Requires:	php-Smarty >= 3.1
 Requires:	php-Smarty-plugin-gettext
 Requires:	php-ZendFramework-Config >= 2.4
 Requires:	php-ZendFramework-Loader >= 2.4
-Requires:	php-ZendFramework-Mail >= 2.4.11-4
+Requires:	php-ZendFramework-Mail >= 2.4.13-2
 Requires:	php-ZendFramework-Mime >= 2.4
 Requires:	php-ZendFramework-ServiceManager >= 2.4
 Requires:	php-ZendFramework-Validator >= 2.4
