@@ -415,6 +415,8 @@ vendor symfony/options-resolver
 vendor symfony/serializer
 vendor symfony/yaml
 vendor symfony/ldap
+vendor paragonie/random_compat
+vendor symfony/polyfill-php70
 
 # remove backups from patching as we use globs to package files to buildroot
 find '(' -name '*~' -o -name '*.orig' ')' | xargs -r rm -v
