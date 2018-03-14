@@ -6,7 +6,6 @@
 %define		subver  365
 %define		githash 65c5538f
 %define		php_min_version 5.6.0
-%include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl.UTF-8):	Eventum - system śledzenia spraw/błędów
 Name:		eventum
@@ -42,7 +41,6 @@ Patch108:	autoload.patch
 Patch200:	%{name}-fixed-nav.patch
 URL:		https://wiki.github.com/eventum/eventum/
 BuildRequires:	gettext-tools
-BuildRequires:	rpm-php-pearprov >= 4.0.2-98
 BuildRequires:	rpmbuild(macros) >= 1.654
 BuildRequires:	sed >= 4.0
 Requires(postun):	/usr/sbin/groupdel
@@ -97,13 +95,6 @@ Obsoletes:	eventum-route-notes < 3.0.8-1.1
 Conflicts:	logrotate < 3.8.0
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
-
-%define		_noautoreq_pear	../init.php ../../init.php init.php /usr/share/eventum/init.php /etc/webapps/.* %{_appdir}/.* .*Smarty.class.php Services/JSON.php class.date_helper.php sphinxapi.php Auth/SASL.* Util.php smarty_internal.*
-
-# exclude optional php dependencies
-%define		_noautophp	php-gnupg php-hash php-pecl-http php-tk
-
-%define		_noautoreq	%{_noautophp}
 
 %define		_libdir		%{_prefix}/lib/%{name}
 %define		_appdir		%{_datadir}/%{name}
