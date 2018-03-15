@@ -3,8 +3,8 @@
 %bcond_with	order	# with experimental order patch
 
 %define		rel		1
-%define		subver  365
-%define		githash 65c5538f
+%define		subver  387
+%define		githash eb24072d
 %define		php_min_version 5.6.0
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl.UTF-8):	Eventum - system śledzenia spraw/błędów
@@ -15,7 +15,7 @@ License:	GPL v2+
 Group:		Applications/WWW
 #Source0:	https://github.com/eventum/eventum/releases/download/v%{version}/%{name}-%{version}.tar.gz
 Source0:	https://github.com/eventum/eventum/releases/download/snapshot/%{name}-%{version}-%{subver}-g%{githash}.tar.gz
-# Source0-md5:	dd6a22d5798358e687b0a68eeb189581
+# Source0-md5:	69d68ade0fca82ede7ccf47af5c6062b
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -408,6 +408,8 @@ vendor symfony/yaml
 vendor symfony/ldap
 vendor paragonie/random_compat
 vendor symfony/polyfill-php70
+vendor symfony/polyfill-intl-normalizer
+vendor glen/filename-normalizer
 
 # remove backups from patching as we use globs to package files to buildroot
 find '(' -name '*~' -o -name '*.orig' ')' | xargs -r rm -v
