@@ -410,6 +410,15 @@ vendor paragonie/random_compat
 vendor symfony/polyfill-php70
 vendor symfony/polyfill-intl-normalizer
 vendor glen/filename-normalizer
+vendor doctrine/annotations
+vendor doctrine/cache
+vendor doctrine/collections
+vendor doctrine/common
+vendor doctrine/dbal
+vendor doctrine/inflector
+vendor doctrine/instantiator
+vendor doctrine/lexer
+vendor doctrine/orm
 
 # remove backups from patching as we use globs to package files to buildroot
 find '(' -name '*~' -o -name '*.orig' ')' | xargs -r rm -v
