@@ -505,7 +505,7 @@ done
 
 # run database update if configured
 test -s %{_webappdir}/config.php && \
-%{_appdir}/bin/upgrade.php || :
+runuser -u http -- %{_appdir}/bin/upgrade.php || :
 
 # nuke Smarty templates cache after upgrade
 rm -f /var/cache/eventum/*.php
@@ -577,7 +577,7 @@ done
 
 %files -f %{name}.lang
 %defattr(644,root,root,755)
-%attr(751,root,root) %dir %{_webappdir}
+%attr(771,root,http) %dir %{_webappdir}
 %attr(751,root,http) %dir %{_webappdir}/crm
 %attr(751,root,http) %dir %{_webappdir}/custom_field
 %attr(751,root,http) %dir %{_webappdir}/partner
