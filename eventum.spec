@@ -43,6 +43,7 @@ URL:		https://wiki.github.com/eventum/eventum/
 BuildRequires:	gettext-tools
 BuildRequires:	rpmbuild(macros) >= 1.654
 BuildRequires:	sed >= 4.0
+Requires(post):	sudo
 Requires(postun):	/usr/sbin/groupdel
 Requires(postun):	/usr/sbin/userdel
 Requires(pre):	/bin/id
@@ -505,7 +506,7 @@ done
 
 # run database update if configured
 test -s %{_webappdir}/config.php && \
-runuser -u http -- %{_appdir}/bin/upgrade.php || :
+sudo -H -u http -- %{_appdir}/bin/upgrade.php || :
 
 # nuke Smarty templates cache after upgrade
 rm -f /var/cache/eventum/*.php
