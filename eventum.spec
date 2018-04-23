@@ -2,11 +2,10 @@
 # Conditional build:
 %bcond_with	order	# with experimental order patch
 
-%define		rel		1
-#define		subver  189
-#define		githash 7b4eddae
+%define		rel		8
+%define		subver  436
+%define		githash 2c1520b6
 %define		php_min_version 5.6.0
-%include	/usr/lib/rpm/macros.php
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl.UTF-8):	Eventum - system śledzenia spraw/błędów
 Name:		eventum
@@ -14,9 +13,9 @@ Version:	3.3.4
 Release:	%{?subver:1.%{subver}.%{?githash:g%{githash}.}}%{rel}
 License:	GPL v2+
 Group:		Applications/WWW
-Source0:	https://github.com/eventum/eventum/releases/download/v%{version}/%{name}-%{version}.tar.gz
-# Source0-md5:	f2fc7059a2b864000180cf7be00ad3c4
-#Source0:	https://github.com/eventum/eventum/releases/download/snapshot/%{name}-%{version}-%{subver}-g%{githash}.tar.gz
+#Source0:	https://github.com/eventum/eventum/releases/download/v%{version}/%{name}-%{version}.tar.gz
+Source0:	https://github.com/eventum/eventum/releases/download/snapshot/%{name}-%{version}-%{subver}-g%{githash}.tar.gz
+# Source0-md5:	16faa7d710b71bb9d362568bbab7a664
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -42,9 +41,9 @@ Patch108:	autoload.patch
 Patch200:	%{name}-fixed-nav.patch
 URL:		https://wiki.github.com/eventum/eventum/
 BuildRequires:	gettext-tools
-BuildRequires:	rpm-php-pearprov >= 4.0.2-98
 BuildRequires:	rpmbuild(macros) >= 1.654
 BuildRequires:	sed >= 4.0
+Requires(post):	sudo
 Requires(postun):	/usr/sbin/groupdel
 Requires(postun):	/usr/sbin/userdel
 Requires(pre):	/bin/id
@@ -70,8 +69,6 @@ Requires:	php-ZendFramework-Mime >= 2.4
 Requires:	php-ZendFramework-ServiceManager >= 2.4
 Requires:	php-ZendFramework-Validator >= 2.4
 Requires:	php-monolog >= 1.17.2
-Requires:	php-pear-Mail_Mime
-Requires:	php-pear-Mail_mimeDecode
 Requires:	php-pear-Math_Stats
 Requires:	php-pear-Net_SMTP
 Requires:	php-pear-Net_Socket
@@ -99,13 +96,6 @@ Obsoletes:	eventum-route-notes < 3.0.8-1.1
 Conflicts:	logrotate < 3.8.0
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
-
-%define		_noautoreq_pear	../init.php ../../init.php init.php /usr/share/eventum/init.php /etc/webapps/.* %{_appdir}/.* .*Smarty.class.php Services/JSON.php class.date_helper.php sphinxapi.php Auth/SASL.* Util.php smarty_internal.*
-
-# exclude optional php dependencies
-%define		_noautophp	php-gnupg php-hash php-pecl-http php-tk
-
-%define		_noautoreq	%{_noautophp}
 
 %define		_libdir		%{_prefix}/lib/%{name}
 %define		_appdir		%{_datadir}/%{name}
@@ -417,6 +407,21 @@ vendor symfony/options-resolver
 vendor symfony/serializer
 vendor symfony/yaml
 vendor symfony/ldap
+vendor paragonie/random_compat
+vendor symfony/polyfill-php70
+vendor symfony/polyfill-intl-normalizer
+vendor glen/filename-normalizer
+vendor doctrine/annotations
+vendor doctrine/cache
+vendor doctrine/collections
+vendor doctrine/common
+vendor doctrine/dbal
+vendor doctrine/inflector
+vendor doctrine/instantiator
+vendor doctrine/lexer
+vendor doctrine/orm
+vendor cebe/markdown
+vendor enrise/urihelper
 
 # remove backups from patching as we use globs to package files to buildroot
 find '(' -name '*~' -o -name '*.orig' ')' | xargs -r rm -v
@@ -501,7 +506,7 @@ done
 
 # run database update if configured
 test -s %{_webappdir}/config.php && \
-%{_appdir}/bin/upgrade.php || :
+sudo -H -u http -- %{_appdir}/bin/upgrade.php || :
 
 # nuke Smarty templates cache after upgrade
 rm -f /var/cache/eventum/*.php
@@ -573,7 +578,7 @@ done
 
 %files -f %{name}.lang
 %defattr(644,root,root,755)
-%attr(751,root,root) %dir %{_webappdir}
+%attr(771,root,http) %dir %{_webappdir}
 %attr(751,root,http) %dir %{_webappdir}/crm
 %attr(751,root,http) %dir %{_webappdir}/custom_field
 %attr(751,root,http) %dir %{_webappdir}/partner
@@ -629,11 +634,11 @@ done
 %{_appdir}/vendor
 %dir %{_appdir}/lib
 %{_appdir}/lib/eventum
-%exclude %{_appdir}/src/Command/MailDownloadCommand.php
-%exclude %{_appdir}/src/Command/MailQueueProcessCommand.php
-%exclude %{_appdir}/src/Command/MailQueueTruncateCommand.php
-%exclude %{_appdir}/src/Command/MonitorCommand.php
-%exclude %{_appdir}/src/Command/ReminderCheckCommand.php
+%exclude %{_appdir}/src/Console/Command/MailDownloadCommand.php
+%exclude %{_appdir}/src/Console/Command/MailQueueProcessCommand.php
+%exclude %{_appdir}/src/Console/Command/MailQueueTruncateCommand.php
+%exclude %{_appdir}/src/Console/Command/MonitorCommand.php
+%exclude %{_appdir}/src/Console/Command/ReminderCheckCommand.php
 
 %dir %{_libdir}
 
@@ -661,27 +666,27 @@ done
 
 %files mail-queue
 %defattr(644,root,root,755)
-%{_appdir}/src/Command/MailQueueProcessCommand.php
-%{_appdir}/src/Command/MailQueueTruncateCommand.php
+%{_appdir}/src/Console/Command/MailQueueProcessCommand.php
+%{_appdir}/src/Console/Command/MailQueueTruncateCommand.php
 %attr(755,root,root) %{_appdir}/bin/process_mail_queue.php
 %attr(755,root,root) %{_appdir}/bin/truncate_mail_queue.php
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/cron.d/%{name}-mail-queue
 
 %files mail-download
 %defattr(644,root,root,755)
-%{_appdir}/src/Command/MailDownloadCommand.php
+%{_appdir}/src/Console/Command/MailDownloadCommand.php
 %attr(755,root,root) %{_appdir}/bin/download_emails.php
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/cron.d/%{name}-mail-download
 
 %files reminder
 %defattr(644,root,root,755)
-%{_appdir}/src/Command/ReminderCheckCommand.php
+%{_appdir}/src/Console/Command/ReminderCheckCommand.php
 %attr(755,root,root) %{_appdir}/bin/check_reminders.php
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/cron.d/%{name}-reminder
 
 %files monitor
 %defattr(644,root,root,755)
-%{_appdir}/src/Command/MonitorCommand.php
+%{_appdir}/src/Console/Command/MonitorCommand.php
 %attr(755,root,root) %{_appdir}/bin/monitor.php
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/cron.d/%{name}-monitor
 

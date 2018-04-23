@@ -1,16 +1,16 @@
---- eventum-3.1.10-340-gfc2f2394/globals.php~	2017-05-16 18:18:37.000000000 +0300
-+++ eventum-3.1.10-340-gfc2f2394/globals.php	2017-05-17 19:54:53.436574941 +0300
-@@ -25,7 +25,7 @@
+--- eventum-3.3.4-365-g65c5538f/globals.php~	2018-03-13 10:49:12.000000000 +0200
++++ eventum-3.3.4-365-g65c5538f/globals.php	2018-03-13 23:22:58.153814696 +0200
+@@ -22,7 +22,7 @@
  
  // define other paths
  define('APP_TPL_PATH', APP_PATH . '/templates');
 -define('APP_TPL_COMPILE_PATH', APP_VAR_PATH . '/cache');
--define('APP_LOCKS_PATH', APP_VAR_PATH . '/lock');
 -define('APP_LOG_PATH', APP_VAR_PATH . '/log');
 +define('APP_TPL_COMPILE_PATH', '/var/cache/eventum');
-+define('APP_LOCKS_PATH', '/var/run/eventum');
 +define('APP_LOG_PATH', '/var/log/eventum');
  define('APP_ERROR_LOG', APP_LOG_PATH . '/errors.log');
+-define('APP_LOCKS_PATH', APP_VAR_PATH . '/lock');
++define('APP_LOCKS_PATH', '/var/run/eventum');
 --- eventum-3.1.10-340-gfc2f2394/src/Controller/Setup/SetupController.php~	2017-05-04 23:47:50.000000000 +0300
 +++ eventum-3.1.10-340-gfc2f2394/src/Controller/Setup/SetupController.php	2017-05-17 19:55:50.362400076 +0300
 @@ -201,10 +201,6 @@
@@ -24,8 +24,8 @@
          $error = $this->checkPermissions(APP_SETUP_FILE, "File '" . APP_SETUP_FILE . "'");
          if (!empty($error)) {
              $errors[] = $error;
---- eventum-3.0.8-100-g3543f89/src/Command/MonitorCommand.php~	2016-01-31 18:24:19.000000000 +0200
-+++ eventum-3.0.8-100-g3543f89/src/Command/MonitorCommand.php	2016-02-01 00:16:28.751423105 +0200
+--- eventum-3.0.8-100-g3543f89/src/Console/Command/MonitorCommand.php~	2016-01-31 18:24:19.000000000 +0200
++++ eventum-3.0.8-100-g3543f89/src/Console/Command/MonitorCommand.php	2016-02-01 00:16:28.751423105 +0200
 @@ -31,17 +31,17 @@
          $required_files = array(
              APP_CONFIG_PATH . '/config.php' => [
