@@ -10,8 +10,11 @@ cd "$dir"
 
 if [ -f "$1" ]; then
 	rev=$1
+	version=${rev#eventum-}
+	version=${version%%-*}
 	rev=${rev#eventum-*-}
 	rev=${rev%.tar.gz}
+	rev=${rev%.tar.xz}
 elif [ "$1" ]; then
 	rev=$1
 else
@@ -20,7 +23,7 @@ else
 	# save this under some local ref, so repeated calls don't have to fetch everything
 	git update-ref refs/keep-around/snapshot FETCH_HEAD
 	out=$(git show FETCH_HEAD -s)
-	tarball=$(echo "$out" | grep -o 'eventum-.*\.tar.gz')
+	tarball=$(echo "$out" | grep -oE 'eventum-.*\.tar.(gz|xz)')
 	url="$repo_url/releases/download/snapshot/$tarball"
 	test -f "$tarball" || wget -c $url
 	exec "$0" "$tarball"
@@ -44,3 +47,5 @@ sed -i -re "
 	s/^[#%](define[ \t]+githash[ \t]+)[0-9a-fg]+\$/%\1$githash/
 " $specfile
 ../builder -ncs -5 $specfile
+
+git commit -am "up to $version-$rev"
