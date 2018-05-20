@@ -3,8 +3,8 @@
 %bcond_with	order	# with experimental order patch
 
 %define		rel		1
-%define		subver  6
-%define		githash fb792422
+%define		subver  30
+%define		githash a83a1da8
 %define		php_min_version 5.6.0
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl.UTF-8):	Eventum - system śledzenia spraw/błędów
@@ -15,14 +15,12 @@ License:	GPL v2+
 Group:		Applications/WWW
 #Source0:	https://github.com/eventum/eventum/releases/download/v%{version}/%{name}-%{version}.tar.xz
 Source0:	https://github.com/eventum/eventum/releases/download/snapshot/%{name}-%{version}-%{subver}-g%{githash}.tar.xz
-# Source0-md5:	959b620f33b3ca66729da53c18e539c4
+# Source0-md5:	3b06621384082cd09260641fbd3fa154
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
 Source4:	%{name}-reminder.cron
 Source5:	%{name}-monitor.cron
-Source8:	%{name}-irc.init
-Source9:	%{name}-irc.sysconfig
 Source10:	sphinx.crontab
 Source13:	%{name}-router-postfix.sh
 Source14:	%{name}.logrotate
@@ -267,41 +265,6 @@ przez Postfiksa.
 Opis konfiguracji Postfiksa można znaleźć pod adresem
 <https://github.com/eventum/eventum/wiki/System-Admin:-Setting-up-email-routing-with-postfix>
 
-%package irc
-Summary:	Eventum IRC Notification Bot
-Summary(pl.UTF-8):	IRC-owy bot powiadamiający dla Eventum
-Group:		Applications/WWW
-Requires(post,preun):	/sbin/chkconfig
-Requires:	%{name} = %{version}-%{release}
-Requires:	php(pcntl)
-Requires:	php(sockets)
-Requires:	php-pear-Net_SmartIRC >= 1.1.9
-Requires:	rc-scripts >= 0.4.0.18
-
-%description irc
-The IRC notification bot is a nice feature for remote teams that want
-to handle issues and want to have a quick and easy way to get simple
-notifications. Right now the bot notifies of the following actions:
-- New Issues
-- Blocked emails
-- Issues that got their assignment list changed
-
-NOTE: You will need to manually edit the bot.php script to set your
-appropriate preferences, like IRC server and channel that the bot
-should join.
-
-%description irc -l pl.UTF-8
-IRC-owy bot powiadamiający to miła funkcjonalność dla zdalnych
-zespołów chcących obsługiwać sprawy i mieć szybki i łatwy sposób na
-uzyskiwanie prostych powiadomień. Aktualnie bot powiadamia o
-następujących zdarzeniach:
-- nowych sprawach
-- zablokowanych listach
-- sprawach, dla których zmieniła się lista powiązań
-
-UWAGA: w celu wprowadzenia własnych ustawień, takich jak serwer IRC i
-kanał używany przez bota, trzeba ręcznie zmodyfikować skrypt bot.php .
-
 %package cli
 Summary:	Eventum command-line interface
 Summary(pl.UTF-8):	Interfejs linii poleceń dla Eventum
@@ -367,7 +330,6 @@ rm config/config.php
 
 rm htdocs/.htaccess.dist
 
-mv config/irc_config{.dist.php,.php}
 rm config/config.dist.php
 
 # cleanup vendor. keep only needed libraries.
@@ -471,9 +433,6 @@ cp -p %{SOURCE4} $RPM_BUILD_ROOT/etc/cron.d/%{name}-reminder
 cp -p %{SOURCE5} $RPM_BUILD_ROOT/etc/cron.d/%{name}-monitor
 cp -p %{SOURCE10} $RPM_BUILD_ROOT/etc/cron.d/%{name}-sphinx
 
-install -p %{SOURCE8} $RPM_BUILD_ROOT/etc/rc.d/init.d/eventum-irc
-cp -p %{SOURCE9} $RPM_BUILD_ROOT/etc/sysconfig/eventum-irc
-
 cp -p %{SOURCE14} $RPM_BUILD_ROOT/etc/logrotate.d/%{name}
 
 # postfix router
@@ -498,7 +457,6 @@ for a in \
 	errors.log login_attempts.log \
 	eventum.log \
 	auth.log cli.log \
-	irc_bot_error.log irc_bot_smartirc.log \
 ; do
 	test -f /var/log/%{name}/$a && continue
 	install -m 0620 -o root -g http /dev/null /var/log/%{name}/$a
@@ -535,16 +493,6 @@ chown root:http %{_webappdir}/{config,private_key,secret_key}.php
 if [ "$1" = "0" ] && [ -f %{_webappdir}/config.php ]; then
 	chmod 640 %{_webappdir}/{config,private_key,secret_key}.php
 	chown root:http %{_webappdir}/{config,private_key,secret_key}.php
-fi
-
-%post irc
-/sbin/chkconfig --add eventum-irc
-%service eventum-irc restart "Eventum IRC Bot"
-
-%preun irc
-if [ "$1" = 0 ]; then
-	%service eventum-irc stop
-	/sbin/chkconfig --del eventum-irc
 fi
 
 %triggerin -- apache1 < 1.3.37-3, apache1-base
@@ -693,13 +641,6 @@ done
 %files router-postfix
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/router-postfix
-
-%files irc
-%defattr(644,root,root,755)
-%attr(640,root,eventum) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/irc_config.php
-%attr(640,root,eventum) %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/eventum-irc
-%attr(755,root,root) %{_appdir}/bin/irc-bot.php
-%attr(754,root,root) /etc/rc.d/init.d/%{name}-irc
 
 %files cli
 %defattr(644,root,root,755)
