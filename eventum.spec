@@ -3,19 +3,19 @@
 %bcond_with	order	# with experimental order patch
 
 %define		rel		1
-%define		subver  45
-%define		githash dc8e82f4
+#define		subver  45
+#define		githash dc8e82f4
 %define		php_min_version 5.6.0
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl.UTF-8):	Eventum - system śledzenia spraw/błędów
 Name:		eventum
-Version:	3.4.2
+Version:	3.5.0
 Release:	%{?subver:1.%{subver}.%{?githash:g%{githash}.}}%{rel}
 License:	GPL v2+
 Group:		Applications/WWW
-#Source0:	https://github.com/eventum/eventum/releases/download/v%{version}/%{name}-%{version}.tar.xz
-Source0:	https://github.com/eventum/eventum/releases/download/snapshot/%{name}-%{version}-%{subver}-g%{githash}.tar.xz
-# Source0-md5:	300aef7173ef4aa37dbf58ef03c4c0fb
+Source0:	https://github.com/eventum/eventum/releases/download/v%{version}/%{name}-%{version}.tar.xz
+# Source0-md5:	17c510ffe6155191a42dfa2b63dbcccd
+#Source0:	https://github.com/eventum/eventum/releases/download/snapshot/%{name}-%{version}-%{subver}-g%{githash}.tar.xz
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -41,6 +41,8 @@ URL:		https://wiki.github.com/eventum/eventum/
 BuildRequires:	gettext-tools
 BuildRequires:	rpmbuild(macros) >= 1.654
 BuildRequires:	sed >= 4.0
+BuildRequires:	tar >= 1:1.22
+BuildRequires:	xz
 Requires(post):	sudo
 Requires(postun):	/usr/sbin/groupdel
 Requires(postun):	/usr/sbin/userdel
