@@ -95,15 +95,14 @@
 +    'Smarty' => $phpDir. '/Smarty3/Smarty.class.php',
 +    'SphinxClient' => $phpDir . '/sphinxapi.php',
  );
---- eventum-3.3.4-436-g2c1520b6/vendor/composer/autoload_files.php~	2018-04-16 20:46:24.000000000 +0300
-+++ eventum-3.3.4-436-g2c1520b6/vendor/composer/autoload_files.php	2018-04-16 20:52:49.806338430 +0300
-@@ -4,13 +4,12 @@
- 
- $vendorDir = dirname(dirname(__FILE__));
+--- eventum-3.5.2/vendor/composer/autoload_files.php	2018-07-06 10:56:53.018210155 +0300
++++ eventum-3.5.2/vendor/composer/autoload_files.php	2018-07-06 10:57:42.254191350 +0300
+@@ -6,12 +6,10 @@
  $baseDir = dirname($vendorDir);
 +$phpDir = PHP_DATADIR . '/php';
  
  return array(
+-    '320cde22f66dd4f5d3fd621d3e88b98f' => $vendorDir . '/symfony/polyfill-ctype/bootstrap.php',
      '5255c38a0faeba867671b61dfda6d864' => $vendorDir . '/paragonie/random_compat/lib/random.php',
      '023d27dca8066ef29e6739335ea73bad' => $vendorDir . '/symfony/polyfill-php70/bootstrap.php',
 -    'f084d01b0a599f67676cffef638aa95b' => $vendorDir . '/smarty/smarty/libs/bootstrap.php',
