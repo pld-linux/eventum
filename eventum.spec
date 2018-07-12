@@ -2,7 +2,7 @@
 # Conditional build:
 %bcond_with	order	# with experimental order patch
 
-%define		rel		1
+%define		rel		2
 #define		subver  45
 #define		githash dc8e82f4
 %define		php_min_version 5.6.0
@@ -374,6 +374,8 @@ vendor symfony/ldap
 vendor paragonie/random_compat
 vendor symfony/polyfill-php70
 vendor symfony/polyfill-intl-normalizer
+vendor symfony/security-core
+vendor symfony/security-csrf
 vendor glen/filename-normalizer
 vendor doctrine/annotations
 vendor doctrine/cache
