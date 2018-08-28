@@ -45,6 +45,8 @@ echo "Updating $specfile for $rev (subver: $subver, githash: $githash)..."
 sed -i -re "
 	s/^[#%](define[ \t]+subver[ \t]+)[0-9]+\$/%\1$subver/
 	s/^[#%](define[ \t]+githash[ \t]+)[0-9a-fg]+\$/%\1$githash/
+	 /^Source0:.*download\/v/ s/^/#/
+	/^#Source0:.*download\/snapshot/ s/^#//
 " $specfile
 ../builder -ncs -5 $specfile
 
