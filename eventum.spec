@@ -517,17 +517,6 @@ fi
 %triggerun -- lighttpd
 %webapp_unregister lighttpd %{_webapp}
 
-%triggerpostun -- %{name} < 3.0.0-0.2
-for f in /etc/cron.d/eventum-*; do
-	# crontabs moved to bin
-	%{__sed} -i -e '
-		s,/usr/share/eventum/crons/process_mail_queue.php,%{_appdir}/bin/process_mail_queue.php,
-		s,/usr/share/eventum/crons/download_emails.php,%{_appdir}/bin/download_emails.php,
-		s,/usr/share/eventum/crons/check_reminders.php,%{_appdir}/bin/check_reminders.php,
-		s,/usr/share/eventum/crons/monitor.php,%{_appdir}/bin/monitor.php,
-	' $f
-done
-
 %files -f %{name}.lang
 %defattr(644,root,root,755)
 %attr(771,root,http) %dir %{_webappdir}
@@ -556,6 +545,7 @@ done
 %dir %{_appdir}/bin
 %attr(755,root,root) %{_appdir}/bin/extension.php
 %attr(755,root,root) %{_appdir}/bin/ldapsync.php
+%attr(755,root,root) %{_appdir}/bin/migrate_storage_adapter.php
 %attr(755,root,root) %{_appdir}/bin/process_all_emails.php
 %attr(755,root,root) %{_appdir}/bin/upgrade.php
 
