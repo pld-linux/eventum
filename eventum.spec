@@ -3,18 +3,18 @@
 %bcond_with	order	# with experimental order patch
 
 %define		rel		1
-#define		subver  45
-#define		githash dc8e82f4
+#define		subver  7
+#define		githash f3c41492
 %define		php_min_version 5.6.0
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl.UTF-8):	Eventum - system śledzenia spraw/błędów
 Name:		eventum
-Version:	3.5.3
+Version:	3.5.4
 Release:	%{?subver:1.%{subver}.%{?githash:g%{githash}.}}%{rel}
 License:	GPL v2+
 Group:		Applications/WWW
 Source0:	https://github.com/eventum/eventum/releases/download/v%{version}/%{name}-%{version}.tar.xz
-# Source0-md5:	2c923a45b78d43d3527e6e0d15232c11
+# Source0-md5:	47414f0f8e5a1047f4b5478580c11bee
 #Source0:	https://github.com/eventum/eventum/releases/download/snapshot/%{name}-%{version}-%{subver}-g%{githash}.tar.xz
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
@@ -517,17 +517,6 @@ fi
 %triggerun -- lighttpd
 %webapp_unregister lighttpd %{_webapp}
 
-%triggerpostun -- %{name} < 3.0.0-0.2
-for f in /etc/cron.d/eventum-*; do
-	# crontabs moved to bin
-	%{__sed} -i -e '
-		s,/usr/share/eventum/crons/process_mail_queue.php,%{_appdir}/bin/process_mail_queue.php,
-		s,/usr/share/eventum/crons/download_emails.php,%{_appdir}/bin/download_emails.php,
-		s,/usr/share/eventum/crons/check_reminders.php,%{_appdir}/bin/check_reminders.php,
-		s,/usr/share/eventum/crons/monitor.php,%{_appdir}/bin/monitor.php,
-	' $f
-done
-
 %files -f %{name}.lang
 %defattr(644,root,root,755)
 %attr(771,root,http) %dir %{_webappdir}
@@ -556,6 +545,7 @@ done
 %dir %{_appdir}/bin
 %attr(755,root,root) %{_appdir}/bin/extension.php
 %attr(755,root,root) %{_appdir}/bin/ldapsync.php
+%attr(755,root,root) %{_appdir}/bin/migrate_storage_adapter.php
 %attr(755,root,root) %{_appdir}/bin/process_all_emails.php
 %attr(755,root,root) %{_appdir}/bin/upgrade.php
 
