@@ -2,7 +2,7 @@
 # Conditional build:
 %bcond_with	order	# with experimental order patch
 
-%define		rel		1
+%define		rel		2
 #define		subver  7
 #define		githash f3c41492
 %define		php_min_version 5.6.0
