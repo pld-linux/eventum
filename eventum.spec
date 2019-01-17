@@ -3,8 +3,8 @@
 %bcond_with	order	# with experimental order patch
 
 %define		rel		1
-%define		subver  50
-%define		githash 34453995
+%define		subver  75
+%define		githash 293a8feb
 %define		php_min_version 5.6.0
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl.UTF-8):	Eventum - system śledzenia spraw/błędów
@@ -15,7 +15,7 @@ License:	GPL v2+
 Group:		Applications/WWW
 #Source0:	https://github.com/eventum/eventum/releases/download/v%{version}/%{name}-%{version}.tar.xz
 Source0:	https://github.com/eventum/eventum/releases/download/snapshot/%{name}-%{version}-%{subver}-g%{githash}.tar.xz
-# Source0-md5:	36ea0d8eb6a1c4bc51da0cbaf29fb8d9
+# Source0-md5:	e3059184b6eafb87b4504722f64fb93f
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -303,9 +303,7 @@ mv docs/examples .
 %{?with_order:%patch2 -p1}
 #%patch3 -p0
 #%patch4 -p1
-
 %{?with_order:cp -p %{SOURCE16} htdocs/images}
-
 #%patch200 -p1
 
 # produce default sphinx config
@@ -331,7 +329,6 @@ rm config/config.php
 %patch108 -p1
 
 rm htdocs/.htaccess.dist
-
 rm config/config.dist.php
 
 # cleanup vendor. keep only needed libraries.
@@ -360,10 +357,9 @@ vendor psr/container
 vendor phlib/flysystem-pdo
 vendor league/flysystem
 vendor php-di/invoker
-vendor container-interop/container-interop
 vendor symfony/config
 vendor symfony/console
-vendor symfony/debug
+vendor symfony/contracts
 vendor symfony/event-dispatcher
 vendor symfony/filesystem
 vendor symfony/http-foundation
@@ -372,7 +368,6 @@ vendor symfony/serializer
 vendor symfony/yaml
 vendor symfony/ldap
 vendor paragonie/random_compat
-vendor symfony/polyfill-php70
 vendor symfony/polyfill-intl-normalizer
 vendor symfony/security-core
 vendor symfony/security-csrf
@@ -388,6 +383,9 @@ vendor doctrine/lexer
 vendor doctrine/orm
 vendor cebe/markdown
 vendor enrise/urihelper
+vendor cakephp/core
+vendor cakephp/collection
+vendor cakephp/utility
 
 # remove backups from patching as we use globs to package files to buildroot
 find '(' -name '*~' -o -name '*.orig' ')' | xargs -r rm -v
