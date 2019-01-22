@@ -386,6 +386,13 @@ vendor enrise/urihelper
 vendor cakephp/core
 vendor cakephp/collection
 vendor cakephp/utility
+vendor cakephp/datasource
+vendor cakephp/database
+vendor cakephp/log
+vendor cakephp/cache
+vendor doctrine/persistence
+vendor doctrine/reflection
+vendor doctrine/event-manager
 
 # remove backups from patching as we use globs to package files to buildroot
 find '(' -name '*~' -o -name '*.orig' ')' | xargs -r rm -v
