@@ -3,8 +3,8 @@
 %bcond_with	order	# with experimental order patch
 
 %define		rel		1
-%define		subver  75
-%define		githash 293a8feb
+%define		subver  67
+%define		githash 26f3e1f3
 %define		php_min_version 5.6.0
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl.UTF-8):	Eventum - system śledzenia spraw/błędów
@@ -15,7 +15,7 @@ License:	GPL v2+
 Group:		Applications/WWW
 #Source0:	https://github.com/eventum/eventum/releases/download/v%{version}/%{name}-%{version}.tar.xz
 Source0:	https://github.com/eventum/eventum/releases/download/snapshot/%{name}-%{version}-%{subver}-g%{githash}.tar.xz
-# Source0-md5:	e3059184b6eafb87b4504722f64fb93f
+# Source0-md5:	85dfe8f431b58010ad7af20fd43bba57
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -367,8 +367,6 @@ vendor symfony/options-resolver
 vendor symfony/serializer
 vendor symfony/yaml
 vendor symfony/ldap
-vendor paragonie/random_compat
-vendor symfony/polyfill-intl-normalizer
 vendor symfony/security-core
 vendor symfony/security-csrf
 vendor glen/filename-normalizer

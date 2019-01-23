@@ -11,9 +11,9 @@
  define('APP_ERROR_LOG', APP_LOG_PATH . '/errors.log');
 -define('APP_LOCKS_PATH', APP_VAR_PATH . '/lock');
 +define('APP_LOCKS_PATH', '/var/run/eventum');
---- eventum-3.5.0/src/Controller/Setup/SetupController.php~	2018-05-20 17:33:34.000000000 +0300
-+++ eventum-3.5.0/src/Controller/Setup/SetupController.php	2018-05-21 01:40:24.095066355 +0300
-@@ -210,10 +210,6 @@
+--- eventum-3.5.6-98-g5b87d2b0/src/Setup/Requirements.php~	2019-01-23 01:50:42.000000000 +0200
++++ eventum-3.5.6-98-g5b87d2b0/src/Setup/Requirements.php	2019-01-24 22:18:56.047816296 +0200
+@@ -64,10 +64,6 @@
          $configPath = Setup::getConfigPath();
          $setupFile = Setup::getSetupFile();
  
