@@ -3,8 +3,8 @@
 %bcond_with	order	# with experimental order patch
 
 %define		rel		1
-%define		subver  67
-%define		githash 26f3e1f3
+%define		subver  118
+%define		githash eeac61d8
 %define		php_min_version 5.6.0
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl.UTF-8):	Eventum - system śledzenia spraw/błędów
@@ -15,7 +15,7 @@ License:	GPL v2+
 Group:		Applications/WWW
 #Source0:	https://github.com/eventum/eventum/releases/download/v%{version}/%{name}-%{version}.tar.xz
 Source0:	https://github.com/eventum/eventum/releases/download/snapshot/%{name}-%{version}-%{subver}-g%{githash}.tar.xz
-# Source0-md5:	85dfe8f431b58010ad7af20fd43bba57
+# Source0-md5:	6742324fa94655aeffa6dfe0fd1da652
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -267,21 +267,6 @@ przez Postfiksa.
 Opis konfiguracji Postfiksa można znaleźć pod adresem
 <https://github.com/eventum/eventum/wiki/System-Admin:-Setting-up-email-routing-with-postfix>
 
-%package cli
-Summary:	Eventum command-line interface
-Summary(pl.UTF-8):	Interfejs linii poleceń dla Eventum
-Group:		Applications/WWW
-Requires:	php(core) >= %{php_min_version}
-Requires:	php(phar)
-
-%description cli
-The Eventum command-line interface allows you to access most of the
-features of the web interface straight from your command shell.
-
-%description cli -l pl.UTF-8
-Interfejs linii poleceń Eventum pozwala na dostęp do większości
-funkcji interfejsu WWW prosto z linii poleceń powłoki.
-
 %package sphinx
 Summary:	Eventum Sphinx Search
 Group:		Applications/WWW
@@ -408,7 +393,7 @@ install -d \
 	$RPM_BUILD_ROOT/var/lib/%{name}/{routed_{emails,drafts,notes},storage} \
 	$RPM_BUILD_ROOT%{systemdtmpfilesdir}
 
-%{__make} install-eventum install-cli install-localization \
+%{__make} install-eventum install-localization \
 	sysconfdir=%{_webappdir} \
 	localedir=%{_localedir} \
 	DESTDIR=$RPM_BUILD_ROOT
@@ -638,11 +623,6 @@ fi
 %files router-postfix
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/router-postfix
-
-%files cli
-%defattr(644,root,root,755)
-%doc cli/eventumrc
-%attr(755,root,root) %{_bindir}/%{name}
 
 %files sphinx
 %defattr(644,root,root,755)
