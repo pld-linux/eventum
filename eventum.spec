@@ -3,8 +3,8 @@
 %bcond_with	order	# with experimental order patch
 
 %define		rel		1
-%define		subver  176
-%define		githash f5fc844a6
+%define		subver  195
+%define		githash a5872073e
 %define		php_min_version 5.6.0
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl.UTF-8):	Eventum - system śledzenia spraw/błędów
@@ -15,7 +15,7 @@ License:	GPL v2+
 Group:		Applications/WWW
 #Source0:	https://github.com/eventum/eventum/releases/download/v%{version}/%{name}-%{version}.tar.xz
 Source0:	https://github.com/eventum/eventum/releases/download/snapshot/%{name}-%{version}-%{subver}-g%{githash}.tar.xz
-# Source0-md5:	ea2ad5a01646d840477c7a4de0cebf0f
+# Source0-md5:	3e1b7e7f76b5207fa0c3d3df422445b6
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -316,67 +316,26 @@ rm config/config.php
 rm htdocs/.htaccess.dist
 rm config/config.dist.php
 
-# cleanup vendor. keep only needed libraries.
-# (the rest are packaged with system packages)
-mv vendor vendor.dist
-vendor() {
-	local path dir
-	for path; do
-		dir=$(dirname $path)
-		test -d vendor/$dir || mkdir -p vendor/$dir
-		mv vendor.dist/$path vendor/$path
-	done
-}
-vendor autoload.php
-vendor composer/autoload_{classmap,files,namespaces,real,psr4}.php
-vendor composer/ClassLoader.php
-vendor ircmaxell/{random-lib,security-lib}
-vendor defuse/php-encryption
-vendor willdurand/email-reply-parser
-vendor theorchard/monolog-cascade
-vendor malkusch/lock
-vendor phpxmlrpc/phpxmlrpc
-vendor robmorgan/phinx
-vendor mnapoli/silly
-vendor psr/container
-vendor phlib/flysystem-pdo
-vendor league/flysystem
-vendor php-di/invoker
-vendor symfony/config
-vendor symfony/console
-vendor symfony/contracts
-vendor symfony/event-dispatcher
-vendor symfony/filesystem
-vendor symfony/http-foundation
-vendor symfony/options-resolver
-vendor symfony/serializer
-vendor symfony/yaml
-vendor symfony/ldap
-vendor symfony/security-core
-vendor symfony/security-csrf
-vendor symfony/var-exporter
-vendor glen/filename-normalizer
-vendor doctrine/annotations
-vendor doctrine/cache
-vendor doctrine/collections
-vendor doctrine/common
-vendor doctrine/dbal
-vendor doctrine/inflector
-vendor doctrine/instantiator
-vendor doctrine/lexer
-vendor doctrine/orm
-vendor cebe/markdown
-vendor enrise/urihelper
-vendor cakephp/core
-vendor cakephp/collection
-vendor cakephp/utility
-vendor cakephp/datasource
-vendor cakephp/database
-vendor cakephp/log
-vendor cakephp/cache
-vendor doctrine/persistence
-vendor doctrine/reflection
-vendor doctrine/event-manager
+# cleanup libs taken from system, everything else gets bundled
+rm -r vendor/fonts/liberation
+rm -r vendor/monolog/monolog
+rm -r vendor/pear/pear-core-minimal
+rm -r vendor/pear/pear_exception
+rm -r vendor/pear-pear.php.net/Math_Stats
+rm -r vendor/pear-pear.php.net/Text_Diff
+rm -r vendor/php-gettext/php-gettext
+rm -r vendor/phplot/phplot
+rm -r vendor/psr/log
+rm -r vendor/smarty-gettext/smarty-gettext
+rm -r vendor/smarty/smarty
+rm -r vendor/sphinx/php-sphinxapi
+rm -r vendor/zendframework/zend-config
+rm -r vendor/zendframework/zend-loader
+rm -r vendor/zendframework/zend-mail
+rm -r vendor/zendframework/zend-mime
+rm -r vendor/zendframework/zend-servicemanager
+rm -r vendor/zendframework/zend-stdlib
+rm -r vendor/zendframework/zend-validator
 
 # remove backups from patching as we use globs to package files to buildroot
 find '(' -name '*~' -o -name '*.orig' ')' | xargs -r rm -v
