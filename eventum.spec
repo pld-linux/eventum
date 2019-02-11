@@ -3,18 +3,18 @@
 %bcond_with	order	# with experimental order patch
 
 %define		rel		1
-#define		subver  7
-#define		githash f3c41492
-%define		php_min_version 5.6.0
+#define		subver  195
+#define		githash a5872073e
+%define		php_min_version 7.1.3
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl.UTF-8):	Eventum - system śledzenia spraw/błędów
 Name:		eventum
-Version:	3.5.6
+Version:	3.6.0
 Release:	%{?subver:1.%{subver}.%{?githash:g%{githash}.}}%{rel}
 License:	GPL v2+
 Group:		Applications/WWW
 Source0:	https://github.com/eventum/eventum/releases/download/v%{version}/%{name}-%{version}.tar.xz
-# Source0-md5:	b9900f21d34989392d4e6feab7afa8ae
+# Source0-md5:	44a969e6f3e2f3b87c11886e405efe7a
 #Source0:	https://github.com/eventum/eventum/releases/download/snapshot/%{name}-%{version}-%{subver}-g%{githash}.tar.xz
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
@@ -267,21 +267,6 @@ przez Postfiksa.
 Opis konfiguracji Postfiksa można znaleźć pod adresem
 <https://github.com/eventum/eventum/wiki/System-Admin:-Setting-up-email-routing-with-postfix>
 
-%package cli
-Summary:	Eventum command-line interface
-Summary(pl.UTF-8):	Interfejs linii poleceń dla Eventum
-Group:		Applications/WWW
-Requires:	php(core) >= %{php_min_version}
-Requires:	php(phar)
-
-%description cli
-The Eventum command-line interface allows you to access most of the
-features of the web interface straight from your command shell.
-
-%description cli -l pl.UTF-8
-Interfejs linii poleceń Eventum pozwala na dostęp do większości
-funkcji interfejsu WWW prosto z linii poleceń powłoki.
-
 %package sphinx
 Summary:	Eventum Sphinx Search
 Group:		Applications/WWW
@@ -303,9 +288,7 @@ mv docs/examples .
 %{?with_order:%patch2 -p1}
 #%patch3 -p0
 #%patch4 -p1
-
 %{?with_order:cp -p %{SOURCE16} htdocs/images}
-
 #%patch200 -p1
 
 # produce default sphinx config
@@ -331,63 +314,28 @@ rm config/config.php
 %patch108 -p1
 
 rm htdocs/.htaccess.dist
-
 rm config/config.dist.php
 
-# cleanup vendor. keep only needed libraries.
-# (the rest are packaged with system packages)
-mv vendor vendor.dist
-vendor() {
-	local path dir
-	for path; do
-		dir=$(dirname $path)
-		test -d vendor/$dir || mkdir -p vendor/$dir
-		mv vendor.dist/$path vendor/$path
-	done
-}
-vendor autoload.php
-vendor composer/autoload_{classmap,files,namespaces,real,psr4}.php
-vendor composer/ClassLoader.php
-vendor ircmaxell/{random-lib,security-lib}
-vendor defuse/php-encryption
-vendor willdurand/email-reply-parser
-vendor theorchard/monolog-cascade
-vendor malkusch/lock
-vendor phpxmlrpc/phpxmlrpc
-vendor robmorgan/phinx
-vendor mnapoli/silly
-vendor psr/container
-vendor phlib/flysystem-pdo
-vendor league/flysystem
-vendor php-di/invoker
-vendor container-interop/container-interop
-vendor symfony/config
-vendor symfony/console
-vendor symfony/debug
-vendor symfony/event-dispatcher
-vendor symfony/filesystem
-vendor symfony/http-foundation
-vendor symfony/options-resolver
-vendor symfony/serializer
-vendor symfony/yaml
-vendor symfony/ldap
-vendor paragonie/random_compat
-vendor symfony/polyfill-php70
-vendor symfony/polyfill-intl-normalizer
-vendor symfony/security-core
-vendor symfony/security-csrf
-vendor glen/filename-normalizer
-vendor doctrine/annotations
-vendor doctrine/cache
-vendor doctrine/collections
-vendor doctrine/common
-vendor doctrine/dbal
-vendor doctrine/inflector
-vendor doctrine/instantiator
-vendor doctrine/lexer
-vendor doctrine/orm
-vendor cebe/markdown
-vendor enrise/urihelper
+# cleanup libs taken from system, everything else gets bundled
+rm -r vendor/fonts/liberation
+rm -r vendor/monolog/monolog
+rm -r vendor/pear/pear-core-minimal
+rm -r vendor/pear/pear_exception
+rm -r vendor/pear-pear.php.net/Math_Stats
+rm -r vendor/pear-pear.php.net/Text_Diff
+rm -r vendor/php-gettext/php-gettext
+rm -r vendor/phplot/phplot
+rm -r vendor/psr/log
+rm -r vendor/smarty-gettext/smarty-gettext
+rm -r vendor/smarty/smarty
+rm -r vendor/sphinx/php-sphinxapi
+rm -r vendor/zendframework/zend-config
+rm -r vendor/zendframework/zend-loader
+rm -r vendor/zendframework/zend-mail
+rm -r vendor/zendframework/zend-mime
+rm -r vendor/zendframework/zend-servicemanager
+rm -r vendor/zendframework/zend-stdlib
+rm -r vendor/zendframework/zend-validator
 
 # remove backups from patching as we use globs to package files to buildroot
 find '(' -name '*~' -o -name '*.orig' ')' | xargs -r rm -v
@@ -405,7 +353,7 @@ install -d \
 	$RPM_BUILD_ROOT/var/lib/%{name}/{routed_{emails,drafts,notes},storage} \
 	$RPM_BUILD_ROOT%{systemdtmpfilesdir}
 
-%{__make} install-eventum install-cli install-localization \
+%{__make} install-eventum install-localization \
 	sysconfdir=%{_webappdir} \
 	localedir=%{_localedir} \
 	DESTDIR=$RPM_BUILD_ROOT
@@ -635,11 +583,6 @@ fi
 %files router-postfix
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/router-postfix
-
-%files cli
-%defattr(644,root,root,755)
-%doc cli/eventumrc
-%attr(755,root,root) %{_bindir}/%{name}
 
 %files sphinx
 %defattr(644,root,root,755)
