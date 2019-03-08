@@ -1,5 +1,5 @@
---- eventum-3.5.6-67-g26f3e1f3/vendor/composer/autoload_classmap.php~	2019-01-28 00:43:31.648570821 +0200
-+++ eventum-3.5.6-67-g26f3e1f3/vendor/composer/autoload_classmap.php	2019-01-28 00:44:17.377912139 +0200
+--- eventum-3.6.1-76-g74f125a7a/vendor/composer/autoload_classmap.php~	2019-03-07 17:19:22.676504958 +0200
++++ eventum-3.6.1-76-g74f125a7a/vendor/composer/autoload_classmap.php	2019-03-07 17:20:50.191892269 +0200
 @@ -4,6 +4,7 @@
  
  $vendorDir = dirname(dirname(__FILE__));
@@ -8,7 +8,7 @@
  
  return array(
      'APIAuthToken' => $baseDir . '/lib/eventum/auth/APIAuthToken.php',
-@@ -55,7 +55,6 @@
+@@ -54,7 +55,6 @@
      'Link_Filter' => $baseDir . '/lib/eventum/class.link_filter.php',
      'Mail_Helper' => $baseDir . '/lib/eventum/class.mail_helper.php',
      'Mail_Queue' => $baseDir . '/lib/eventum/class.mail_queue.php',
@@ -16,7 +16,7 @@
      'Mime_Helper' => $baseDir . '/lib/eventum/class.mime_helper.php',
      'Misc' => $baseDir . '/lib/eventum/class.misc.php',
      'MySQL_Fulltext_Search' => $baseDir . '/lib/eventum/search/class.mysql_fulltext_search.php',
-@@ -63,8 +62,6 @@
+@@ -62,8 +62,6 @@
      'News' => $baseDir . '/lib/eventum/class.news.php',
      'Note' => $baseDir . '/lib/eventum/class.note.php',
      'Notification' => $baseDir . '/lib/eventum/class.notification.php',
@@ -25,8 +25,8 @@
      'Pager' => $baseDir . '/lib/eventum/class.pager.php',
      'Partner' => $baseDir . '/lib/eventum/class.partner.php',
      'Phone_Support' => $baseDir . '/lib/eventum/class.phone_support.php',
-@@ -83,43 +77,20 @@
-     'Search_Profile' => $baseDir . '/lib/eventum/class.search_profile.php',
+@@ -94,12 +92,9 @@
+     'SebastianBergmann\\Diff\\TimeEfficientLongestCommonSubsequenceCalculator' => $vendorDir . '/sebastian/diff/src/TimeEfficientLongestCommonSubsequenceCalculator.php',
      'Setup' => $baseDir . '/lib/eventum/class.setup.php',
      'Severity' => $baseDir . '/lib/eventum/class.severity.php',
 -    'SphinxClient' => $vendorDir . '/sphinx/php-sphinxapi/sphinxapi.php',
@@ -38,34 +38,7 @@
      'Support' => $baseDir . '/lib/eventum/class.support.php',
      'SupportLevelNotFoundException' => $baseDir . '/lib/eventum/crm/class.support_level.php',
      'Support_Level' => $baseDir . '/lib/eventum/crm/class.support_level.php',
-     'Template_Helper' => $baseDir . '/lib/eventum/class.template_helper.php',
--    'Text_Diff' => $vendorDir . '/pear-pear.php.net/Text_Diff/Text/Diff.php',
--    'Text_Diff3' => $vendorDir . '/pear-pear.php.net/Text_Diff/Text/Diff3.php',
--    'Text_Diff3_BlockBuilder' => $vendorDir . '/pear-pear.php.net/Text_Diff/Text/Diff3.php',
--    'Text_Diff3_Op' => $vendorDir . '/pear-pear.php.net/Text_Diff/Text/Diff3.php',
--    'Text_Diff3_Op_copy' => $vendorDir . '/pear-pear.php.net/Text_Diff/Text/Diff3.php',
--    'Text_Diff_Engine_native' => $vendorDir . '/pear-pear.php.net/Text_Diff/Text/Diff/Engine/native.php',
--    'Text_Diff_Engine_shell' => $vendorDir . '/pear-pear.php.net/Text_Diff/Text/Diff/Engine/shell.php',
--    'Text_Diff_Engine_string' => $vendorDir . '/pear-pear.php.net/Text_Diff/Text/Diff/Engine/string.php',
--    'Text_Diff_Engine_xdiff' => $vendorDir . '/pear-pear.php.net/Text_Diff/Text/Diff/Engine/xdiff.php',
--    'Text_Diff_Mapped' => $vendorDir . '/pear-pear.php.net/Text_Diff/Text/Diff/Mapped.php',
--    'Text_Diff_Op' => $vendorDir . '/pear-pear.php.net/Text_Diff/Text/Diff.php',
--    'Text_Diff_Op_add' => $vendorDir . '/pear-pear.php.net/Text_Diff/Text/Diff.php',
--    'Text_Diff_Op_change' => $vendorDir . '/pear-pear.php.net/Text_Diff/Text/Diff.php',
--    'Text_Diff_Op_copy' => $vendorDir . '/pear-pear.php.net/Text_Diff/Text/Diff.php',
--    'Text_Diff_Op_delete' => $vendorDir . '/pear-pear.php.net/Text_Diff/Text/Diff.php',
--    'Text_Diff_Renderer' => $vendorDir . '/pear-pear.php.net/Text_Diff/Text/Diff/Renderer.php',
--    'Text_Diff_Renderer_context' => $vendorDir . '/pear-pear.php.net/Text_Diff/Text/Diff/Renderer/context.php',
--    'Text_Diff_Renderer_inline' => $vendorDir . '/pear-pear.php.net/Text_Diff/Text/Diff/Renderer/inline.php',
--    'Text_Diff_Renderer_unified' => $vendorDir . '/pear-pear.php.net/Text_Diff/Text/Diff/Renderer/unified.php',
--    'Text_Diff_ThreeWay' => $vendorDir . '/pear-pear.php.net/Text_Diff/Text/Diff/ThreeWay.php',
--    'Text_Diff_ThreeWay_BlockBuilder' => $vendorDir . '/pear-pear.php.net/Text_Diff/Text/Diff/ThreeWay.php',
--    'Text_Diff_ThreeWay_Op' => $vendorDir . '/pear-pear.php.net/Text_Diff/Text/Diff/ThreeWay.php',
--    'Text_Diff_ThreeWay_Op_copy' => $vendorDir . '/pear-pear.php.net/Text_Diff/Text/Diff/ThreeWay.php',
--    'Text_MappedDiff' => $vendorDir . '/pear-pear.php.net/Text_Diff/Text/Diff.php',
-     'Time_Tracking' => $baseDir . '/lib/eventum/class.time_tracking.php',
-     'User' => $baseDir . '/lib/eventum/class.user.php',
-     'Validation' => $baseDir . '/lib/eventum/class.validation.php',
+@@ -110,3 +105,7 @@
      'Workflow' => $baseDir . '/lib/eventum/class.workflow.php',
 -    'gettext_reader' => $vendorDir . '/php-gettext/php-gettext/gettext.php',
 +
@@ -117,8 +90,8 @@
 +    'PEAR' => array($pearDir),
 +    'Text' => array($pearDir),
  );
---- eventum-3.5.6-67-g26f3e1f3/vendor/composer/autoload_psr4.php~	2019-01-28 00:48:54.920583094 +0200
-+++ eventum-3.5.6-67-g26f3e1f3/vendor/composer/autoload_psr4.php	2019-01-28 00:49:18.200249716 +0200
+--- eventum-3.6.1-82-gd9bc22cf6/vendor/composer/autoload_psr4.php~	2019-03-08 16:59:06.044745889 +0200
++++ eventum-3.6.1-82-gd9bc22cf6/vendor/composer/autoload_psr4.php	2019-03-08 17:11:50.127383625 +0200
 @@ -10,13 +10,6 @@
      'glen\\FilenameNormalizer\\Test\\' => array($vendorDir . '/glen/filename-normalizer/tests'),
      'glen\\FilenameNormalizer\\' => array($vendorDir . '/glen/filename-normalizer/src'),
@@ -130,9 +103,9 @@
 -    'Zend\\Mail\\' => array($vendorDir . '/zendframework/zend-mail/src'),
 -    'Zend\\Loader\\' => array($vendorDir . '/zendframework/zend-loader/src'),
 -    'Zend\\Config\\' => array($vendorDir . '/zendframework/zend-config/src'),
+     'TrueBV\\' => array($vendorDir . '/true/punycode/src'),
      'Symfony\\Contracts\\' => array($vendorDir . '/symfony/contracts'),
      'Symfony\\Component\\Yaml\\' => array($vendorDir . '/symfony/yaml'),
-     'Symfony\\Component\\Serializer\\' => array($vendorDir . '/symfony/serializer'),
 @@ -32,15 +25,11 @@
      'Symfony\\Component\\Console\\' => array($vendorDir . '/symfony/console'),
      'Symfony\\Component\\Config\\' => array($vendorDir . '/symfony/config'),

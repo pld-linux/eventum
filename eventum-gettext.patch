@@ -1,9 +1,10 @@
---- eventum-3.0.0/lib/eventum/gettext.php~	2014-11-12 18:47:36.000000000 +0200
-+++ eventum-3.0.0/lib/eventum/gettext.php	2015-02-02 20:08:38.869227761 +0200
-@@ -95,6 +95,5 @@
+--- eventum-3.6.1-76-g74f125a7a/lib/eventum/gettext.php~	2019-02-27 17:49:42.000000000 +0200
++++ eventum-3.6.1-76-g74f125a7a/lib/eventum/gettext.php	2019-03-07 17:18:16.284142306 +0200
+@@ -82,7 +82,6 @@
  }
  
- // this won't change over the request. so set it once and permanently
--_bindtextdomain('eventum', APP_PATH . '/localization/');
- _bind_textdomain_codeset('eventum', APP_CHARSET);
- _textdomain('eventum');
+ if (defined('APP_PATH')) {
+-    _bindtextdomain('eventum', APP_PATH . '/localization/');
+     _bind_textdomain_codeset('eventum', APP_CHARSET);
+     _textdomain('eventum');
+ }

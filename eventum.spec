@@ -3,18 +3,18 @@
 %bcond_with	order	# with experimental order patch
 
 %define		rel		1
-#define		subver  43
-#define		githash 860c74205
+#define		subver  82
+#define		githash d9bc22cf6
 %define		php_min_version 7.1.3
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl.UTF-8):	Eventum - system śledzenia spraw/błędów
 Name:		eventum
-Version:	3.6.1
+Version:	3.6.2
 Release:	%{?subver:1.%{subver}.%{?githash:g%{githash}.}}%{rel}
 License:	GPL v2+
 Group:		Applications/WWW
 Source0:	https://github.com/eventum/eventum/releases/download/v%{version}/%{name}-%{version}.tar.xz
-# Source0-md5:	bd31b91e0670a521686571cbf558ac49
+# Source0-md5:	59635b7c5b6c016fce3cdb5626303666
 #Source0:	https://github.com/eventum/eventum/releases/download/snapshot/%{name}-%{version}-%{subver}-g%{githash}.tar.xz
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
@@ -74,7 +74,6 @@ Requires:	php-pear-Net_SMTP
 Requires:	php-pear-Net_Socket
 Requires:	php-pear-Net_URL
 Requires:	php-pear-PEAR-core
-Requires:	php-pear-Text_Diff
 Requires:	php-psr-Log >= 1.0.0-2
 Requires:	phplot >= 5.8.0
 Requires:	webapps
@@ -322,7 +321,6 @@ rm -r vendor/monolog/monolog
 rm -r vendor/pear/pear-core-minimal
 rm -r vendor/pear/pear_exception
 rm -r vendor/pear-pear.php.net/Math_Stats
-rm -r vendor/pear-pear.php.net/Text_Diff
 rm -r vendor/php-gettext/php-gettext
 rm -r vendor/phplot/phplot
 rm -r vendor/psr/log
