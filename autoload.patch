@@ -90,12 +90,12 @@
 +    'PEAR' => array($pearDir),
 +    'Text' => array($pearDir),
  );
---- eventum-3.6.1-82-gd9bc22cf6/vendor/composer/autoload_psr4.php~	2019-03-08 16:59:06.044745889 +0200
-+++ eventum-3.6.1-82-gd9bc22cf6/vendor/composer/autoload_psr4.php	2019-03-08 17:11:50.127383625 +0200
-@@ -10,13 +10,6 @@
+--- eventum-3.6.2-191-ga6336856a/vendor/composer/autoload_psr4.php~	2019-03-21 08:31:36.517612816 +0200
++++ eventum-3.6.2-191-ga6336856a/vendor/composer/autoload_psr4.php	2019-03-21 08:32:51.503216402 +0200
+@@ -9,13 +9,6 @@
+     'malkusch\\lock\\' => array($vendorDir . '/malkusch/lock/classes'),
      'glen\\FilenameNormalizer\\Test\\' => array($vendorDir . '/glen/filename-normalizer/tests'),
      'glen\\FilenameNormalizer\\' => array($vendorDir . '/glen/filename-normalizer/src'),
-     'cebe\\markdown\\' => array($vendorDir . '/cebe/markdown'),
 -    'Zend\\Validator\\' => array($vendorDir . '/zendframework/zend-validator/src'),
 -    'Zend\\Stdlib\\' => array($vendorDir . '/zendframework/zend-stdlib/src'),
 -    'Zend\\ServiceManager\\' => array($vendorDir . '/zendframework/zend-servicemanager/src'),
@@ -103,10 +103,10 @@
 -    'Zend\\Mail\\' => array($vendorDir . '/zendframework/zend-mail/src'),
 -    'Zend\\Loader\\' => array($vendorDir . '/zendframework/zend-loader/src'),
 -    'Zend\\Config\\' => array($vendorDir . '/zendframework/zend-config/src'),
+     'Webuni\\CommonMark\\TableExtension\\' => array($vendorDir . '/webuni/commonmark-table-extension/src'),
      'TrueBV\\' => array($vendorDir . '/true/punycode/src'),
      'Symfony\\Contracts\\' => array($vendorDir . '/symfony/contracts'),
-     'Symfony\\Component\\Yaml\\' => array($vendorDir . '/symfony/yaml'),
-@@ -32,15 +25,11 @@
+@@ -32,12 +25,9 @@
      'Symfony\\Component\\Console\\' => array($vendorDir . '/symfony/console'),
      'Symfony\\Component\\Config\\' => array($vendorDir . '/symfony/config'),
      'Silly\\' => array($vendorDir . '/mnapoli/silly/src'),
@@ -116,12 +116,17 @@
      'Phlib\\Flysystem\\Pdo\\' => array($vendorDir . '/phlib/flysystem-pdo/src'),
      'Phinx\\' => array($vendorDir . '/robmorgan/phinx/src/Phinx'),
 -    'Monolog\\' => array($vendorDir . '/monolog/monolog/src/Monolog'),
+     'Lossendae\\CommonMark\\TaskLists\\' => array($vendorDir . '/lossendae/commonmark-task-lists/src'),
      'League\\Flysystem\\' => array($vendorDir . '/league/flysystem/src'),
+     'League\\CommonMark\\Extras\\' => array($vendorDir . '/league/commonmark-extras/src'),
+@@ -46,7 +36,6 @@
+     'League\\CommonMark\\Ext\\Autolink\\' => array($vendorDir . '/league/commonmark-ext-autolink/src'),
+     'League\\CommonMark\\' => array($vendorDir . '/league/commonmark/src'),
      'Invoker\\' => array($vendorDir . '/php-di/invoker/src'),
 -    'Eventum\\Test\\' => array($baseDir . '/tests', $baseDir . '/tests/src'),
      'Eventum\\' => array($baseDir . '/src'),
      'EmailReplyParser\\' => array($vendorDir . '/willdurand/email-reply-parser/src/EmailReplyParser'),
-     'Doctrine\\ORM\\' => array($vendorDir . '/doctrine/orm/lib/Doctrine/ORM'),
+     'Ds\\' => array($vendorDir . '/php-ds/php-ds/src'),
 @@ -59,4 +48,14 @@
      'Cake\\Core\\' => array($vendorDir . '/cakephp/core'),
      'Cake\\Collection\\' => array($vendorDir . '/cakephp/collection'),

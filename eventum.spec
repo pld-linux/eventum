@@ -3,8 +3,8 @@
 %bcond_with	order	# with experimental order patch
 
 %define		rel		1
-%define		subver  109
-%define		githash 70ca92086
+%define		subver  191
+%define		githash a6336856a
 %define		php_min_version 7.1.3
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl.UTF-8):	Eventum - system śledzenia spraw/błędów
@@ -15,7 +15,7 @@ License:	GPL v2+
 Group:		Applications/WWW
 #Source0:	https://github.com/eventum/eventum/releases/download/v%{version}/%{name}-%{version}.tar.xz
 Source0:	https://github.com/eventum/eventum/releases/download/snapshot/%{name}-%{version}-%{subver}-g%{githash}.tar.xz
-# Source0-md5:	93c585d4f1f7ef4fdf04d14af217eb45
+# Source0-md5:	837a2f7c1be8dbf59f603154deda5e8f
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -52,6 +52,7 @@ Requires(pre):	/usr/sbin/groupadd
 Requires(pre):	/usr/sbin/useradd
 Requires:	fonts-TTF-RedHat-liberation
 Requires:	php(core) >= %{php_min_version}
+Requires:	php(ds)
 Requires:	php(filter)
 Requires:	php(iconv)
 Requires:	php(imap)
