@@ -3,8 +3,8 @@
 %bcond_with	order	# with experimental order patch
 
 %define		rel		1
-#define		subver  82
-#define		githash d9bc22cf6
+%define		subver  222
+%define		githash 837d91cbe
 %define		php_min_version 7.1.3
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl.UTF-8):	Eventum - system śledzenia spraw/błędów
@@ -13,9 +13,9 @@ Version:	3.6.2
 Release:	%{?subver:1.%{subver}.%{?githash:g%{githash}.}}%{rel}
 License:	GPL v2+
 Group:		Applications/WWW
-Source0:	https://github.com/eventum/eventum/releases/download/v%{version}/%{name}-%{version}.tar.xz
-# Source0-md5:	59635b7c5b6c016fce3cdb5626303666
-#Source0:	https://github.com/eventum/eventum/releases/download/snapshot/%{name}-%{version}-%{subver}-g%{githash}.tar.xz
+#Source0:	https://github.com/eventum/eventum/releases/download/v%{version}/%{name}-%{version}.tar.xz
+Source0:	https://github.com/eventum/eventum/releases/download/snapshot/%{name}-%{version}-%{subver}-g%{githash}.tar.xz
+# Source0-md5:	9f98f708e05b538457c4bef4247ba2cd
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -52,6 +52,7 @@ Requires(pre):	/usr/sbin/groupadd
 Requires(pre):	/usr/sbin/useradd
 Requires:	fonts-TTF-RedHat-liberation
 Requires:	php(core) >= %{php_min_version}
+Requires:	php(ds)
 Requires:	php(filter)
 Requires:	php(iconv)
 Requires:	php(imap)
@@ -70,9 +71,6 @@ Requires:	php-ZendFramework-ServiceManager >= 2.4
 Requires:	php-ZendFramework-Validator >= 2.4
 Requires:	php-monolog >= 1.17.2
 Requires:	php-pear-Math_Stats
-Requires:	php-pear-Net_SMTP
-Requires:	php-pear-Net_Socket
-Requires:	php-pear-Net_URL
 Requires:	php-pear-PEAR-core
 Requires:	php-psr-Log >= 1.0.0-2
 Requires:	phplot >= 5.8.0
