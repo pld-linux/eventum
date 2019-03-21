@@ -71,9 +71,6 @@ Requires:	php-ZendFramework-ServiceManager >= 2.4
 Requires:	php-ZendFramework-Validator >= 2.4
 Requires:	php-monolog >= 1.17.2
 Requires:	php-pear-Math_Stats
-Requires:	php-pear-Net_SMTP
-Requires:	php-pear-Net_Socket
-Requires:	php-pear-Net_URL
 Requires:	php-pear-PEAR-core
 Requires:	php-psr-Log >= 1.0.0-2
 Requires:	phplot >= 5.8.0
