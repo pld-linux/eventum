@@ -3,8 +3,8 @@
 %bcond_with	order	# with experimental order patch
 
 %define		rel		1
-#define		subver  222
-#define		githash 837d91cbe
+%define		subver  37
+%define		githash a8d4c81db
 %define		php_min_version 7.1.3
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl.UTF-8):	Eventum - system śledzenia spraw/błędów
@@ -13,9 +13,9 @@ Version:	3.6.3
 Release:	%{?subver:1.%{subver}.%{?githash:g%{githash}.}}%{rel}
 License:	GPL v2+
 Group:		Applications/WWW
-Source0:	https://github.com/eventum/eventum/releases/download/v%{version}/%{name}-%{version}.tar.xz
-# Source0-md5:	f1156ad1465d2a6a28f6a22c262b8331
-#Source0:	https://github.com/eventum/eventum/releases/download/snapshot/%{name}-%{version}-%{subver}-g%{githash}.tar.xz
+#Source0:	https://github.com/eventum/eventum/releases/download/v%{version}/%{name}-%{version}.tar.xz
+Source0:	https://github.com/eventum/eventum/releases/download/snapshot/%{name}-%{version}-%{subver}-g%{githash}.tar.xz
+# Source0-md5:	5eb1fe9db2f2c9e0dfcdaef2d1e99105
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -70,8 +70,6 @@ Requires:	php-ZendFramework-Mime >= 2.4
 Requires:	php-ZendFramework-ServiceManager >= 2.4
 Requires:	php-ZendFramework-Validator >= 2.4
 Requires:	php-monolog >= 1.17.2
-Requires:	php-pear-Math_Stats
-Requires:	php-pear-PEAR-core
 Requires:	php-psr-Log >= 1.0.0-2
 Requires:	phplot >= 5.8.0
 Requires:	webapps
@@ -82,7 +80,6 @@ Requires:	webserver(php) >= 4.2.0
 Suggests:	localedb
 Suggests:	php(mcrypt)
 Suggests:	php(openssl)
-Suggests:	php-pear-Net_POP3
 Suggests:	webserver(setenv)
 Provides:	group(eventum)
 Provides:	user(eventum)
@@ -316,9 +313,6 @@ rm config/config.dist.php
 # cleanup libs taken from system, everything else gets bundled
 rm -r vendor/fonts/liberation
 rm -r vendor/monolog/monolog
-rm -r vendor/pear/pear-core-minimal
-rm -r vendor/pear/pear_exception
-rm -r vendor/pear-pear.php.net/Math_Stats
 rm -r vendor/php-gettext/php-gettext
 rm -r vendor/phplot/phplot
 rm -r vendor/psr/log
@@ -469,14 +463,14 @@ fi
 %attr(751,root,http) %dir %{_webappdir}/partner
 %attr(751,root,http) %dir %{_webappdir}/templates
 %attr(751,root,http) %dir %{_webappdir}/workflow
+%attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/config.php
+%attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/htpasswd
+%attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/private_key.php
+%attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/secret_key.php
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/apache.conf
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/httpd.conf
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/lighttpd.conf
-%attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/config.php
-%attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/private_key.php
-%attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/secret_key.php
 %attr(660,root,http) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/setup.php
-%attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/htpasswd
 
 %dir %attr(731,root,http) /var/log/%{name}
 %attr(620,root,http) %ghost /var/log/%{name}/*
