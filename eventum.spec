@@ -3,19 +3,19 @@
 %bcond_with	order	# with experimental order patch
 
 %define		rel		1
-%define		subver  11
-%define		githash de1c95975
+#define		subver  11
+#define		githash de1c95975
 %define		php_min_version 7.1.3
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl.UTF-8):	Eventum - system śledzenia spraw/błędów
 Name:		eventum
-Version:	3.6.4
+Version:	3.6.5
 Release:	%{?subver:1.%{subver}.%{?githash:g%{githash}.}}%{rel}
 License:	GPL v2+
 Group:		Applications/WWW
-#Source0:	https://github.com/eventum/eventum/releases/download/v%{version}/%{name}-%{version}.tar.xz
-Source0:	https://github.com/eventum/eventum/releases/download/snapshot/%{name}-%{version}-%{subver}-g%{githash}.tar.xz
-# Source0-md5:	4d371a3262a4be9a6368ed9ed53ac2fc
+Source0:	https://github.com/eventum/eventum/releases/download/v%{version}/%{name}-%{version}.tar.xz
+# Source0-md5:	271c0ca19f30505e74810fdbffc1609d
+#Source0:	https://github.com/eventum/eventum/releases/download/snapshot/%{name}-%{version}-%{subver}-g%{githash}.tar.xz
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -338,9 +338,10 @@ rm -rf $RPM_BUILD_ROOT
 install -d \
 	$RPM_BUILD_ROOT{%{_webappdir}/{custom_field,templates,workflow},%{_sysconfdir},%{_bindir},%{_sbindir},%{_libdir}} \
 	$RPM_BUILD_ROOT/etc/{rc.d/init.d,cron.d,logrotate.d,sysconfig} \
-	$RPM_BUILD_ROOT/var/{run,cache,lib}/%{name} \
+	$RPM_BUILD_ROOT/var/{run,lib}/%{name} \
 	$RPM_BUILD_ROOT/var/log/{archive/,}%{name} \
 	$RPM_BUILD_ROOT/var/lib/%{name}/{routed_{emails,drafts,notes},storage} \
+	$RPM_BUILD_ROOT/var/cache/%{name}/doctrine/proxies \
 	$RPM_BUILD_ROOT%{systemdtmpfilesdir}
 
 %{__make} install-eventum install-localization \
@@ -463,11 +464,9 @@ fi
 %attr(751,root,http) %dir %{_webappdir}/partner
 %attr(751,root,http) %dir %{_webappdir}/templates
 %attr(751,root,http) %dir %{_webappdir}/workflow
-%attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/bundles.php
 %attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/config.php
 %attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/htpasswd
 %attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/private_key.php
-%attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/routes.yml
 %attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/secret_key.php
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/apache.conf
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/httpd.conf
@@ -483,7 +482,6 @@ fi
 %{_appdir}/config
 
 %dir %{_appdir}/bin
-%attr(755,root,root) %{_appdir}/bin/console.php
 %attr(755,root,root) %{_appdir}/bin/extension.php
 %attr(755,root,root) %{_appdir}/bin/ldapsync.php
 %attr(755,root,root) %{_appdir}/bin/migrate_storage_adapter.php
@@ -511,6 +509,8 @@ fi
 %dir %{_appdir}/db
 %dir %{_appdir}/db/migrations
 %{_appdir}/db/migrations/*.php
+%dir %{_appdir}/db/seeds
+%{_appdir}/db/seeds/*.php
 
 %{_appdir}/res
 %{_appdir}/src
@@ -530,6 +530,8 @@ fi
 %dir /var/lib/%{name}
 %dir %attr(730,root,http) /var/run/%{name}
 %dir %attr(730,root,http) /var/cache/%{name}
+%dir %attr(730,root,http) /var/cache/%{name}/doctrine
+%dir %attr(730,root,http) /var/cache/%{name}/doctrine/proxies
 
 # saved mail copies
 %attr(770,root,http) %dir /var/lib/%{name}/routed_emails
