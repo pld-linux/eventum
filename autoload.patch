@@ -57,8 +57,8 @@
      'd12685060d57775f2bc3adf90c7d62bd' => $baseDir . '/lib/eventum/gettext.php',
 +    'b2b3f01361f3aaeab67fde08ae76446f' => $phpDir. '/Smarty3/plugins/block.t.php',
  );
---- eventum-3.6.3-37-ga8d4c81db/vendor/composer/autoload_psr4.php~	2019-03-28 23:36:47.697875133 +0200
-+++ eventum-3.6.3-37-ga8d4c81db/vendor/composer/autoload_psr4.php	2019-03-28 23:37:22.690724043 +0200
+--- eventum-3.6.5/vendor/composer/autoload_psr4.php~	2019-04-08 13:06:08.567069724 +0300
++++ eventum-3.6.5/vendor/composer/autoload_psr4.php	2019-04-08 13:06:31.383421815 +0300
 @@ -4,18 +4,11 @@
  
  $vendorDir = dirname(dirname(__FILE__));
@@ -92,11 +92,11 @@
      'Lossendae\\CommonMark\\TaskLists\\' => array($vendorDir . '/lossendae/commonmark-task-lists/src'),
      'League\\Flysystem\\' => array($vendorDir . '/league/flysystem/src'),
      'League\\CommonMark\\Ext\\InlinesOnly\\' => array($vendorDir . '/league/commonmark-ext-inlines-only/src'),
-@@ -55,7 +45,6 @@
+@@ -34,7 +34,6 @@
      'League\\CommonMark\\Ext\\Autolink\\' => array($vendorDir . '/league/commonmark-ext-autolink/src'),
      'League\\CommonMark\\' => array($vendorDir . '/league/commonmark/src'),
      'Invoker\\' => array($vendorDir . '/php-di/invoker/src'),
--    'Eventum\\Test\\' => array($baseDir . '/tests', $baseDir . '/tests/src'),
+-    'Eventum\\Test\\' => array($baseDir . '/tests'),
      'Eventum\\' => array($baseDir . '/src'),
      'EmailReplyParser\\' => array($vendorDir . '/willdurand/email-reply-parser/src/EmailReplyParser'),
      'Ds\\' => array($vendorDir . '/php-ds/php-ds/src'),

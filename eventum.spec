@@ -3,18 +3,18 @@
 %bcond_with	order	# with experimental order patch
 
 %define		rel		1
-#define		subver  37
-#define		githash a8d4c81db
+#define		subver  11
+#define		githash de1c95975
 %define		php_min_version 7.1.3
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl.UTF-8):	Eventum - system śledzenia spraw/błędów
 Name:		eventum
-Version:	3.6.4
+Version:	3.6.5
 Release:	%{?subver:1.%{subver}.%{?githash:g%{githash}.}}%{rel}
 License:	GPL v2+
 Group:		Applications/WWW
 Source0:	https://github.com/eventum/eventum/releases/download/v%{version}/%{name}-%{version}.tar.xz
-# Source0-md5:	68bef5cfe7c0d6aadc16e49473892907
+# Source0-md5:	271c0ca19f30505e74810fdbffc1609d
 #Source0:	https://github.com/eventum/eventum/releases/download/snapshot/%{name}-%{version}-%{subver}-g%{githash}.tar.xz
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
@@ -338,9 +338,10 @@ rm -rf $RPM_BUILD_ROOT
 install -d \
 	$RPM_BUILD_ROOT{%{_webappdir}/{custom_field,templates,workflow},%{_sysconfdir},%{_bindir},%{_sbindir},%{_libdir}} \
 	$RPM_BUILD_ROOT/etc/{rc.d/init.d,cron.d,logrotate.d,sysconfig} \
-	$RPM_BUILD_ROOT/var/{run,cache,lib}/%{name} \
+	$RPM_BUILD_ROOT/var/{run,lib}/%{name} \
 	$RPM_BUILD_ROOT/var/log/{archive/,}%{name} \
 	$RPM_BUILD_ROOT/var/lib/%{name}/{routed_{emails,drafts,notes},storage} \
+	$RPM_BUILD_ROOT/var/cache/%{name}/doctrine/proxies \
 	$RPM_BUILD_ROOT%{systemdtmpfilesdir}
 
 %{__make} install-eventum install-localization \
@@ -508,6 +509,8 @@ fi
 %dir %{_appdir}/db
 %dir %{_appdir}/db/migrations
 %{_appdir}/db/migrations/*.php
+%dir %{_appdir}/db/seeds
+%{_appdir}/db/seeds/*.php
 
 %{_appdir}/res
 %{_appdir}/src
@@ -527,6 +530,8 @@ fi
 %dir /var/lib/%{name}
 %dir %attr(730,root,http) /var/run/%{name}
 %dir %attr(730,root,http) /var/cache/%{name}
+%dir %attr(730,root,http) /var/cache/%{name}/doctrine
+%dir %attr(730,root,http) /var/cache/%{name}/doctrine/proxies
 
 # saved mail copies
 %attr(770,root,http) %dir /var/lib/%{name}/routed_emails

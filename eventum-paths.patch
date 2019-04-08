@@ -70,3 +70,14 @@
  
      /**
       * @var MountManager
+--- eventum-3.6.5/src/Db/Doctrine.php~	2019-03-23 21:53:29.000000000 +0200
++++ eventum-3.6.5/src/Db/Doctrine.php	2019-04-08 13:08:37.751679436 +0300
+@@ -64,7 +64,7 @@
+         ];
+ 
+         $cacheDriver = new Cache\ArrayCache();
+-        $proxyDir = APP_VAR_PATH . '/cache/doctrine/proxies';
++        $proxyDir = '/var/cache/eventum/doctrine/proxies';
+ 
+         $config = Setup::createAnnotationMetadataConfiguration($paths, $isDevMode, $proxyDir, $cache = null, $useSimpleAnnotationReader = false);
+ 
