@@ -58,8 +58,8 @@
      'd12685060d57775f2bc3adf90c7d62bd' => $baseDir . '/lib/eventum/gettext.php',
 +    'b2b3f01361f3aaeab67fde08ae76446f' => $phpDir. '/Smarty3/plugins/block.t.php',
  );
---- eventum-3.6.5/vendor/composer/autoload_psr4.php~	2019-04-08 13:06:08.567069724 +0300
-+++ eventum-3.6.5/vendor/composer/autoload_psr4.php	2019-04-08 13:06:31.383421815 +0300
+--- eventum-3.6.6-35-gf057f1f6d/vendor/composer/autoload_psr4.php~	2019-04-29 09:17:56.833800940 +0300
++++ eventum-3.6.6-35-gf057f1f6d/vendor/composer/autoload_psr4.php	2019-04-29 09:18:29.366648505 +0300
 @@ -4,18 +4,11 @@
  
  $vendorDir = dirname(dirname(__FILE__));
@@ -80,10 +80,10 @@
      'Webuni\\CommonMark\\TableExtension\\' => array($vendorDir . '/webuni/commonmark-table-extension/src'),
      'TrueBV\\' => array($vendorDir . '/true/punycode/src'),
      'Symfony\\Contracts\\' => array($vendorDir . '/symfony/contracts'),
-@@ -25,12 +25,9 @@
-     'Symfony\\Component\\Console\\' => array($vendorDir . '/symfony/console'),
+@@ -26,12 +26,9 @@
      'Symfony\\Component\\Config\\' => array($vendorDir . '/symfony/config'),
      'Silly\\' => array($vendorDir . '/mnapoli/silly/src'),
+     'Psr\\SimpleCache\\' => array($vendorDir . '/psr/simple-cache/src'),
 -    'Psr\\Log\\' => array($vendorDir . '/psr/log/Psr/Log'),
 -    'Psr\\Container\\' => array($vendorDir . '/psr/container/src'),
      'PhpXmlRpc\\' => array($vendorDir . '/phpxmlrpc/phpxmlrpc/src'),
