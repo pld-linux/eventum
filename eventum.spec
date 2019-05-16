@@ -3,18 +3,18 @@
 %bcond_with	order	# with experimental order patch
 
 %define		rel		1
-#define		subver  36
-#define		githash a73f6ae20
+#define		subver  73
+#define		githash a12094613
 %define		php_min_version 7.1.3
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl.UTF-8):	Eventum - system śledzenia spraw/błędów
 Name:		eventum
-Version:	3.6.7
+Version:	3.7.0
 Release:	%{?subver:1.%{subver}.%{?githash:g%{githash}.}}%{rel}
 License:	GPL v2+
 Group:		Applications/WWW
 Source0:	https://github.com/eventum/eventum/releases/download/v%{version}/%{name}-%{version}.tar.xz
-# Source0-md5:	b709f674cb815013635c782b2c7e1ed4
+# Source0-md5:	0c6f03267d909ca21b64b2a42d559a7f
 #Source0:	https://github.com/eventum/eventum/releases/download/snapshot/%{name}-%{version}-%{subver}-g%{githash}.tar.xz
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
@@ -464,9 +464,11 @@ fi
 %attr(751,root,http) %dir %{_webappdir}/partner
 %attr(751,root,http) %dir %{_webappdir}/templates
 %attr(751,root,http) %dir %{_webappdir}/workflow
+%attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/bundles.php
 %attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/config.php
 %attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/htpasswd
 %attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/private_key.php
+%attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/routes.yml
 %attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/secret_key.php
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/apache.conf
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/httpd.conf
@@ -482,6 +484,7 @@ fi
 %{_appdir}/config
 
 %dir %{_appdir}/bin
+%attr(755,root,root) %{_appdir}/bin/console.php
 %attr(755,root,root) %{_appdir}/bin/extension.php
 %attr(755,root,root) %{_appdir}/bin/ldapsync.php
 %attr(755,root,root) %{_appdir}/bin/migrate_storage_adapter.php

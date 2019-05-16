@@ -1,12 +1,15 @@
---- eventum-3.3.4-365-g65c5538f/globals.php~	2018-03-13 10:49:12.000000000 +0200
-+++ eventum-3.3.4-365-g65c5538f/globals.php	2018-03-13 23:22:58.153814696 +0200
-@@ -22,7 +22,7 @@
+--- eventum-3.6.7-73-ga12094613/globals.php	2019-05-17 00:29:37.284776088 +0300
++++ eventum-3.6.7-73-ga12094613/globals.php	2019-05-17 00:30:55.133655597 +0300
+@@ -22,10 +22,8 @@
+-// /var path for writable data
+-define('APP_VAR_PATH', APP_PATH . '/var');
+-define('APP_CACHE_PATH', APP_VAR_PATH . '/cache');
++define('APP_CACHE_PATH', '/var/cache/eventum');
  
  // define other paths
  define('APP_TPL_PATH', APP_PATH . '/templates');
--define('APP_TPL_COMPILE_PATH', APP_VAR_PATH . '/cache');
+ define('APP_TPL_COMPILE_PATH', APP_CACHE_PATH . '/smarty');
 -define('APP_LOG_PATH', APP_VAR_PATH . '/log');
-+define('APP_TPL_COMPILE_PATH', '/var/cache/eventum');
 +define('APP_LOG_PATH', '/var/log/eventum');
  define('APP_ERROR_LOG', APP_LOG_PATH . '/errors.log');
 -define('APP_LOCKS_PATH', APP_VAR_PATH . '/lock');
@@ -70,14 +73,3 @@
  
      /**
       * @var MountManager
---- eventum-3.6.5/src/Db/Doctrine.php~	2019-03-23 21:53:29.000000000 +0200
-+++ eventum-3.6.5/src/Db/Doctrine.php	2019-04-08 13:08:37.751679436 +0300
-@@ -64,7 +64,7 @@
-         ];
- 
-         $cacheDriver = new Cache\ArrayCache();
--        $proxyDir = APP_VAR_PATH . '/cache/doctrine/proxies';
-+        $proxyDir = '/var/cache/eventum/doctrine/proxies';
- 
-         $config = Setup::createAnnotationMetadataConfiguration($paths, $isDevMode, $proxyDir, $cache = null, $useSimpleAnnotationReader = false);
- 
