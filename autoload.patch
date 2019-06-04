@@ -58,9 +58,9 @@
      'd12685060d57775f2bc3adf90c7d62bd' => $baseDir . '/lib/eventum/gettext.php',
 +    'b2b3f01361f3aaeab67fde08ae76446f' => $phpDir. '/Smarty3/plugins/block.t.php',
  );
---- eventum-3.7.1/vendor/composer/autoload_psr4.php~	2019-05-23 17:12:00.973032447 +0300
-+++ eventum-3.7.1/vendor/composer/autoload_psr4.php	2019-05-23 17:12:19.062788377 +0300
-@@ -4,18 +4,11 @@
+--- eventum-3.7.1/vendor/composer/autoload_psr4.php~	2019-06-04 18:51:21.124819450 +0300
++++ eventum-3.7.1/vendor/composer/autoload_psr4.php	2019-06-04 18:51:45.507833814 +0300
+@@ -4,10 +4,10 @@
  
  $vendorDir = dirname(dirname(__FILE__));
  $baseDir = dirname($vendorDir);
@@ -70,17 +70,9 @@
      'malkusch\\lock\\' => array($vendorDir . '/malkusch/lock/classes'),
 -    'glen\\FilenameNormalizer\\Test\\' => array($vendorDir . '/glen/filename-normalizer/tests'),
      'glen\\FilenameNormalizer\\' => array($vendorDir . '/glen/filename-normalizer/src'),
--    'Zend\\Validator\\' => array($vendorDir . '/zendframework/zend-validator/src'),
--    'Zend\\Stdlib\\' => array($vendorDir . '/zendframework/zend-stdlib/src'),
--    'Zend\\ServiceManager\\' => array($vendorDir . '/zendframework/zend-servicemanager/src'),
--    'Zend\\Mime\\' => array($vendorDir . '/zendframework/zend-mime/src'),
--    'Zend\\Mail\\' => array($vendorDir . '/zendframework/zend-mail/src'),
--    'Zend\\Loader\\' => array($vendorDir . '/zendframework/zend-loader/src'),
--    'Zend\\Config\\' => array($vendorDir . '/zendframework/zend-config/src'),
-     'Webuni\\CommonMark\\TableExtension\\' => array($vendorDir . '/webuni/commonmark-table-extension/src'),
-     'TrueBV\\' => array($vendorDir . '/true/punycode/src'),
-     'Symfony\\Contracts\\' => array($vendorDir . '/symfony/contracts'),
-@@ -33,14 +33,12 @@
+     'Zend\\Validator\\' => array($vendorDir . '/zendframework/zend-validator/src'),
+     'Zend\\Stdlib\\' => array($vendorDir . '/zendframework/zend-stdlib/src'),
+@@ -33,14 +40,12 @@
      'Symfony\\Bundle\\FrameworkBundle\\' => array($vendorDir . '/symfony/framework-bundle'),
      'Silly\\' => array($vendorDir . '/mnapoli/silly/src'),
      'Psr\\SimpleCache\\' => array($vendorDir . '/psr/simple-cache/src'),
@@ -95,7 +87,7 @@
      'Lossendae\\CommonMark\\TaskLists\\' => array($vendorDir . '/lossendae/commonmark-task-lists/src'),
      'League\\Flysystem\\' => array($vendorDir . '/league/flysystem/src'),
      'League\\CommonMark\\Ext\\InlinesOnly\\' => array($vendorDir . '/league/commonmark-ext-inlines-only/src'),
-@@ -45,7 +46,6 @@
+@@ -45,7 +53,6 @@
      'League\\CommonMark\\' => array($vendorDir . '/league/commonmark/src'),
      'Invoker\\' => array($vendorDir . '/php-di/invoker/src'),
      'Interop\\Container\\' => array($vendorDir . '/container-interop/container-interop/src/Interop/Container'),
@@ -103,16 +95,9 @@
      'Eventum\\' => array($baseDir . '/src'),
      'EmailReplyParser\\' => array($vendorDir . '/willdurand/email-reply-parser/src/EmailReplyParser'),
      'Ds\\' => array($vendorDir . '/php-ds/php-ds/src'),
-@@ -60,2 +51,12 @@
+@@ -60,2 +58,5 @@
      'Cake\\Cache\\' => array($vendorDir . '/cakephp/cache'),
 +
-+    'Zend\\Validator\\' =>  array($phpDir . '/Zend/Validator'),
-+    'Zend\\ServiceManager\\' => array($phpDir . '/Zend/ServiceManager'),
-+    'Zend\\Stdlib\\' => array($phpDir . '/Zend/Stdlib'),
-+    'Zend\\Mime\\' => array($phpDir . '/Zend/Mime'),
-+    'Zend\\Mail\\' => array($phpDir . '/Zend/Mail'),
-+    'Zend\\Loader\\' => array($phpDir . '/Zend/Loader'),
-+    'Zend\\Config\\' => array($phpDir . '/Zend/Config'),
 +    'Monolog\\' => array($phpDir . '/Monolog'),
 +    'Psr\\Log\\' => array($phpDir. '/Psr/Log'),
  );
