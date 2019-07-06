@@ -39,16 +39,17 @@
 +    'Smarty' => $phpDir. '/Smarty3/Smarty.class.php',
 +    'SphinxClient' => $phpDir . '/sphinxapi.php',
  );
---- eventum-3.6.5-35-g379513d37/vendor/composer/autoload_files.php~	2019-04-18 13:05:11.000000000 +0300
-+++ eventum-3.6.5-35-g379513d37/vendor/composer/autoload_files.php	2019-04-18 14:27:33.184919302 +0300
-@@ -4,14 +4,13 @@
+--- eventum-3.7.2/vendor/composer/autoload_files.php~	2019-07-06 20:22:42.000000000 +0300
++++ eventum-3.7.2/vendor/composer/autoload_files.php	2019-07-06 20:32:18.581001458 +0300
+@@ -4,6 +4,7 @@
  
  $vendorDir = dirname(dirname(__FILE__));
  $baseDir = dirname($vendorDir);
 +$phpDir = PHP_DATADIR . '/php';
  
  return array(
-     '72142d7b40a3a0b14e91825290b5ad82' => $vendorDir . '/cakephp/core/functions.php',
+     '25072dd6e2470089de65ae7bf11d3109' => $vendorDir . '/symfony/polyfill-php72/bootstrap.php',
+@@ -13,8 +14,6 @@
      '028fdea3165c4ba1ecccc83b7fec69fc' => $vendorDir . '/cakephp/collection/functions.php',
      '948ad5488880985ff1c06721a4e447fe' => $vendorDir . '/cakephp/utility/bootstrap.php',
      '2cffec82183ee1cea088009cef9a6fc3' => $vendorDir . '/ezyang/htmlpurifier/library/HTMLPurifier.composer.php',
@@ -58,8 +59,8 @@
      'd12685060d57775f2bc3adf90c7d62bd' => $baseDir . '/lib/eventum/gettext.php',
 +    'b2b3f01361f3aaeab67fde08ae76446f' => $phpDir. '/Smarty3/plugins/block.t.php',
  );
---- eventum-3.7.1/vendor/composer/autoload_psr4.php~	2019-06-04 18:51:21.124819450 +0300
-+++ eventum-3.7.1/vendor/composer/autoload_psr4.php	2019-06-04 18:51:45.507833814 +0300
+--- eventum-3.7.2/vendor/composer/autoload_psr4.php~	2019-07-06 20:28:59.020572075 +0300
++++ eventum-3.7.2/vendor/composer/autoload_psr4.php	2019-07-06 20:29:50.513156079 +0300
 @@ -4,10 +4,10 @@
  
  $vendorDir = dirname(dirname(__FILE__));
@@ -72,14 +73,15 @@
      'glen\\FilenameNormalizer\\' => array($vendorDir . '/glen/filename-normalizer/src'),
      'Zend\\Validator\\' => array($vendorDir . '/zendframework/zend-validator/src'),
      'Zend\\Stdlib\\' => array($vendorDir . '/zendframework/zend-stdlib/src'),
-@@ -33,14 +40,12 @@
-     'Symfony\\Bundle\\FrameworkBundle\\' => array($vendorDir . '/symfony/framework-bundle'),
+@@ -51,7 +51,6 @@
      'Silly\\' => array($vendorDir . '/mnapoli/silly/src'),
+     'Seld\\Signal\\' => array($vendorDir . '/seld/signal-handler/src'),
      'Psr\\SimpleCache\\' => array($vendorDir . '/psr/simple-cache/src'),
 -    'Psr\\Log\\' => array($vendorDir . '/psr/log/Psr/Log'),
      'Psr\\Container\\' => array($vendorDir . '/psr/container/src'),
      'Psr\\Cache\\' => array($vendorDir . '/psr/cache/src'),
-     'PhpXmlRpc\\' => array($vendorDir . '/phpxmlrpc/phpxmlrpc/src'),
+     'Port\\Tests\\' => array($vendorDir . '/portphp/portphp/tests'),
+@@ -63,7 +62,6 @@
      'Phlib\\Flysystem\\Pdo\\' => array($vendorDir . '/phlib/flysystem-pdo/src'),
      'Phinx\\' => array($vendorDir . '/robmorgan/phinx/src/Phinx'),
      'PackageVersions\\' => array($vendorDir . '/ocramius/package-versions/src/PackageVersions'),

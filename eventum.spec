@@ -2,19 +2,19 @@
 # Conditional build:
 %bcond_with	order	# with experimental order patch
 
-%define		rel		3
+%define		rel		1
 #define		subver  73
 #define		githash a12094613
 %define		php_min_version 7.1.3
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl.UTF-8):	Eventum - system śledzenia spraw/błędów
 Name:		eventum
-Version:	3.7.1
+Version:	3.7.2
 Release:	%{?subver:1.%{subver}.%{?githash:g%{githash}.}}%{rel}
 License:	GPL v2+
 Group:		Applications/WWW
 Source0:	https://github.com/eventum/eventum/releases/download/v%{version}/%{name}-%{version}.tar.xz
-# Source0-md5:	41f91cc9c162061229c14324f7882a06
+# Source0-md5:	6049e029fb1716696bdc679c53099ee4
 #Source0:	https://github.com/eventum/eventum/releases/download/snapshot/%{name}-%{version}-%{subver}-g%{githash}.tar.xz
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
@@ -472,6 +472,7 @@ fi
 
 %dir %{_appdir}/bin
 %attr(755,root,root) %{_appdir}/bin/console.php
+%attr(755,root,root) %{_appdir}/bin/export-issues.php
 %attr(755,root,root) %{_appdir}/bin/extension.php
 %attr(755,root,root) %{_appdir}/bin/ldapsync.php
 %attr(755,root,root) %{_appdir}/bin/migrate_storage_adapter.php
