@@ -448,19 +448,25 @@ fi
 %attr(771,root,http) %dir %{_webappdir}
 %attr(751,root,http) %dir %{_webappdir}/crm
 %attr(751,root,http) %dir %{_webappdir}/custom_field
+%attr(751,root,http) %dir %{_webappdir}/packages
+%attr(751,root,http) %dir %{_webappdir}/packages/prod
 %attr(751,root,http) %dir %{_webappdir}/partner
 %attr(751,root,http) %dir %{_webappdir}/templates
-%attr(751,root,http) %dir %{_webappdir}/workflow
 %attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/bundles.php
 %attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/config.php
 %attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/htpasswd
 %attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/private_key.php
 %attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/routes.yml
 %attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/secret_key.php
+%attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/services.yml
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/apache.conf
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/httpd.conf
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/lighttpd.conf
 %attr(660,root,http) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/setup.php
+%attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/packages/doctrine.yml
+%attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/packages/framework.yml
+%attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/packages/security.yml
+%attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/packages/prod/doctrine.yml
 
 %dir %attr(731,root,http) /var/log/%{name}
 %attr(620,root,http) %ghost /var/log/%{name}/*
