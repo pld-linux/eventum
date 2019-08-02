@@ -3,18 +3,18 @@
 %bcond_with	order	# with experimental order patch
 
 %define		rel		1
-#define		subver  73
-#define		githash a12094613
+#define		subver  60
+#define		githash b1bd92244
 %define		php_min_version 7.1.3
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl.UTF-8):	Eventum - system śledzenia spraw/błędów
 Name:		eventum
-Version:	3.7.2
+Version:	3.7.3
 Release:	%{?subver:1.%{subver}.%{?githash:g%{githash}.}}%{rel}
 License:	GPL v2+
 Group:		Applications/WWW
 Source0:	https://github.com/eventum/eventum/releases/download/v%{version}/%{name}-%{version}.tar.xz
-# Source0-md5:	6049e029fb1716696bdc679c53099ee4
+# Source0-md5:	3304e082ae3ea1a6cacf01f30fa6824b
 #Source0:	https://github.com/eventum/eventum/releases/download/snapshot/%{name}-%{version}-%{subver}-g%{githash}.tar.xz
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
@@ -37,7 +37,7 @@ Patch107:	%{name}-gettext.patch
 Patch108:	autoload.patch
 # some tests
 Patch200:	%{name}-fixed-nav.patch
-URL:		https://wiki.github.com/eventum/eventum/
+URL:		https://github.com/eventum/eventum/wiki
 BuildRequires:	gettext-tools
 BuildRequires:	rpmbuild(macros) >= 1.654
 BuildRequires:	sed >= 4.0
@@ -448,19 +448,25 @@ fi
 %attr(771,root,http) %dir %{_webappdir}
 %attr(751,root,http) %dir %{_webappdir}/crm
 %attr(751,root,http) %dir %{_webappdir}/custom_field
+%attr(751,root,http) %dir %{_webappdir}/packages
+%attr(751,root,http) %dir %{_webappdir}/packages/prod
 %attr(751,root,http) %dir %{_webappdir}/partner
 %attr(751,root,http) %dir %{_webappdir}/templates
-%attr(751,root,http) %dir %{_webappdir}/workflow
 %attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/bundles.php
 %attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/config.php
 %attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/htpasswd
 %attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/private_key.php
 %attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/routes.yml
 %attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/secret_key.php
+%attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/services.yml
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/apache.conf
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/httpd.conf
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/lighttpd.conf
 %attr(660,root,http) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/setup.php
+%attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/packages/doctrine.yml
+%attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/packages/framework.yml
+%attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/packages/security.yml
+%attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/packages/prod/doctrine.yml
 
 %dir %attr(731,root,http) /var/log/%{name}
 %attr(620,root,http) %ghost /var/log/%{name}/*
