@@ -3,8 +3,8 @@
 %bcond_with	order	# with experimental order patch
 
 %define		rel		1
-%define		subver  70
-%define		githash f111fb668
+%define		subver  440
+%define		githash cc5ad3db5
 %define		php_min_version 7.1.3
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl.UTF-8):	Eventum - system śledzenia spraw/błędów
@@ -15,7 +15,7 @@ License:	GPL v2+
 Group:		Applications/WWW
 #Source0:	https://github.com/eventum/eventum/releases/download/v%{version}/%{name}-%{version}.tar.xz
 Source0:	https://github.com/eventum/eventum/releases/download/snapshot/%{name}-%{version}-%{subver}-g%{githash}.tar.xz
-# Source0-md5:	5b49f9457fb94f6740234507d7689c8d
+# Source0-md5:	80fbe561a3f4e0bad81d8ff3d679ae39
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
 Source3:	%{name}-mail-download.cron
@@ -307,7 +307,6 @@ rm config/config.dist.php
 # cleanup libs taken from system, everything else gets bundled
 rm -r vendor/fonts/liberation
 rm -r vendor/monolog/monolog
-rm -r vendor/php-gettext/php-gettext
 rm -r vendor/phplot/phplot
 rm -r vendor/psr/log
 rm -r vendor/smarty-gettext/smarty-gettext
