@@ -37,7 +37,7 @@ Patch107:	%{name}-gettext.patch
 Patch108:	autoload.patch
 # some tests
 Patch200:	%{name}-fixed-nav.patch
-URL:		https://github.com/eventum/eventum/wiki
+URL:		https://github.com/eventum/eventum
 BuildRequires:	gettext-tools
 BuildRequires:	rpmbuild(macros) >= 1.654
 BuildRequires:	sed >= 4.0
@@ -126,7 +126,7 @@ Summary:	Eventum documentation and Wiki
 Group:		Documentation
 
 %description doc
-Eventum documentation and copy of Wiki.
+Eventum documentation and Wiki.
 
 %package mail-queue
 Summary:	Eventum mail queue process
@@ -246,14 +246,14 @@ This package provides way of routing notes and emails back to Eventum
 via Postfix.
 
 The Postfix configuration instructions you can find from
-<https://github.com/eventum/eventum/wiki/System-Admin:-Setting-up-email-routing-with-postfix>
+<https://github.com/eventum/eventum/blob/v%{version}/docs/wiki/System-Admin/Setting-up-email-routing-with-postfix.md>
 
 %description router-postfix -l pl.UTF-8
 Ten pakiet udostępnia metodę przekazywania notatek i listów do Eventum
 przez Postfiksa.
 
 Opis konfiguracji Postfiksa można znaleźć pod adresem
-<https://github.com/eventum/eventum/wiki/System-Admin:-Setting-up-email-routing-with-postfix>
+<https://github.com/eventum/eventum/blob/v%{version}/docs/wiki/System-Admin/Setting-up-email-routing-with-postfix.md>
 
 %package sphinx
 Summary:	Eventum Sphinx Search
