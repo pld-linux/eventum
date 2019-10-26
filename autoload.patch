@@ -55,8 +55,8 @@
      'd12685060d57775f2bc3adf90c7d62bd' => $baseDir . '/lib/eventum/gettext.php',
 +    'b2b3f01361f3aaeab67fde08ae76446f' => $phpDir. '/Smarty3/plugins/block.t.php',
  );
---- eventum-3.7.2-52-g4b3cb3541/vendor/composer/autoload_psr4.php~	2019-08-02 00:49:33.602293956 +0300
-+++ eventum-3.7.2-52-g4b3cb3541/vendor/composer/autoload_psr4.php	2019-08-02 00:51:06.877611283 +0300
+--- eventum-3.8.5/vendor/composer/autoload_psr4.php~	2019-10-26 04:19:31.788361290 +0300
++++ eventum-3.8.5/vendor/composer/autoload_psr4.php	2019-10-26 04:53:23.625455791 +0300
 @@ -4,10 +4,10 @@
  
  $vendorDir = dirname(dirname(__FILE__));
@@ -77,14 +77,14 @@
      'Psr\\Container\\' => array($vendorDir . '/psr/container/src'),
      'Psr\\Cache\\' => array($vendorDir . '/psr/cache/src'),
      'Port\\Tests\\' => array($vendorDir . '/portphp/portphp/tests'),
-@@ -66,7 +66,6 @@
+@@ -64,7 +64,6 @@
      'Phlib\\Flysystem\\Pdo\\' => array($vendorDir . '/phlib/flysystem-pdo/src'),
      'Phinx\\' => array($vendorDir . '/robmorgan/phinx/src/Phinx'),
      'PackageVersions\\' => array($vendorDir . '/ocramius/package-versions/src/PackageVersions'),
 -    'Monolog\\' => array($vendorDir . '/monolog/monolog/src/Monolog'),
+     'League\\HTMLToMarkdown\\' => array($vendorDir . '/league/html-to-markdown/src'),
      'League\\Flysystem\\' => array($vendorDir . '/league/flysystem/src'),
      'League\\CommonMark\\Ext\\TaskList\\' => array($vendorDir . '/league/commonmark-ext-task-list/src'),
-     'League\\CommonMark\\Ext\\Table\\' => array($vendorDir . '/league/commonmark-ext-table/src'),
 @@ -45,7 +53,6 @@
      'League\\CommonMark\\' => array($vendorDir . '/league/commonmark/src'),
      'Invoker\\' => array($vendorDir . '/php-di/invoker/src'),
