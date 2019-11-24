@@ -1,5 +1,5 @@
---- eventum-3.7.4-440-gcc5ad3db5/vendor/composer/autoload_classmap.php~	2019-08-21 23:35:48.930431880 +0300
-+++ eventum-3.7.4-440-gcc5ad3db5/vendor/composer/autoload_classmap.php	2019-08-21 23:36:26.853221213 +0300
+--- eventum-3.8.6/vendor/composer/autoload_classmap.php~	2019-11-24 18:16:45.598780557 +0200
++++ eventum-3.8.6/vendor/composer/autoload_classmap.php	2019-11-24 18:18:22.087329736 +0200
 @@ -4,6 +4,7 @@
  
  $vendorDir = dirname(dirname(__FILE__));
@@ -17,10 +17,10 @@
      'Pager' => $baseDir . '/lib/eventum/class.pager.php',
      'Partner' => $baseDir . '/lib/eventum/class.partner.php',
      'Phone_Support' => $baseDir . '/lib/eventum/class.phone_support.php',
-@@ -128,7 +128,6 @@
-     'SebastianBergmann\\Diff\\TimeEfficientLongestCommonSubsequenceCalculator' => $vendorDir . '/sebastian/diff/src/TimeEfficientLongestCommonSubsequenceCalculator.php',
-     'Setup' => $baseDir . '/lib/eventum/class.setup.php',
-     'Severity' => $baseDir . '/lib/eventum/class.severity.php',
+@@ -299,7 +299,6 @@
+     'Smarty_Template_Source' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_template_source.php',
+     'Smarty_Undefined_Variable' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_undefined_variable.php',
+     'Smarty_Variable' => $vendorDir . '/smarty/smarty/libs/sysplugins/smarty_variable.php',
 -    'SphinxClient' => $vendorDir . '/sphinx/php-sphinxapi/sphinxapi.php',
      'Sphinx_Fulltext_Search' => $baseDir . '/lib/eventum/search/class.sphinx_fulltext_search.php',
      'SqlFormatter' => $vendorDir . '/jdorn/sql-formatter/lib/SqlFormatter.php',
@@ -35,8 +35,8 @@
 +    'Smarty' => $phpDir. '/Smarty3/Smarty.class.php',
 +    'SphinxClient' => $phpDir . '/sphinxapi.php',
  );
---- eventum-3.7.2/vendor/composer/autoload_files.php~	2019-07-06 20:22:42.000000000 +0300
-+++ eventum-3.7.2/vendor/composer/autoload_files.php	2019-07-06 20:32:18.581001458 +0300
+--- eventum-3.8.6/vendor/composer/autoload_files.php~	2019-11-24 18:16:45.598780557 +0200
++++ eventum-3.8.6/vendor/composer/autoload_files.php	2019-11-24 18:19:26.599693077 +0200
 @@ -4,6 +4,7 @@
  
  $vendorDir = dirname(dirname(__FILE__));
@@ -45,11 +45,10 @@
  
  return array(
      '25072dd6e2470089de65ae7bf11d3109' => $vendorDir . '/symfony/polyfill-php72/bootstrap.php',
-@@ -13,8 +14,6 @@
+@@ -12,7 +12,6 @@
      '028fdea3165c4ba1ecccc83b7fec69fc' => $vendorDir . '/cakephp/collection/functions.php',
      '948ad5488880985ff1c06721a4e447fe' => $vendorDir . '/cakephp/utility/bootstrap.php',
      '2cffec82183ee1cea088009cef9a6fc3' => $vendorDir . '/ezyang/htmlpurifier/library/HTMLPurifier.composer.php',
--    'f084d01b0a599f67676cffef638aa95b' => $vendorDir . '/smarty/smarty/libs/bootstrap.php',
 -    'b2b3f01361f3aaeab67fde08ae76446f' => $vendorDir . '/smarty-gettext/smarty-gettext/block.t.php',
 -    'd3114450b53a83020e2822546c24e1ad' => $vendorDir . '/smarty-gettext/smarty-gettext/function.locale.php',
      'd12685060d57775f2bc3adf90c7d62bd' => $baseDir . '/lib/eventum/gettext.php',
