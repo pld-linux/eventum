@@ -3,18 +3,18 @@
 %bcond_with	order	# with experimental order patch
 
 %define		rel		1
-#define		subver  26
-#define		githash 89d9eb0f0
+#define		subver  37
+#define		githash 2276dac77
 %define		php_min_version 7.1.3
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl.UTF-8):	Eventum - system śledzenia spraw/błędów
 Name:		eventum
-Version:	3.8.8
+Version:	3.8.9
 Release:	%{?subver:1.%{subver}.%{?githash:g%{githash}.}}%{rel}
 License:	GPL v2+
 Group:		Applications/WWW
 Source0:	https://github.com/eventum/eventum/releases/download/v%{version}/%{name}-%{version}.tar.xz
-# Source0-md5:	fbb08e1aa663c83abf874296e2856566
+# Source0-md5:	b06658cf1ce557a615d4e7fb6f559f7c
 #Source0:	https://github.com/eventum/eventum/releases/download/snapshot/%{name}-%{version}-%{subver}-g%{githash}.tar.xz
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
@@ -484,15 +484,16 @@ fi
 %dir %{_appdir}/htdocs
 %{_appdir}/htdocs/*.php
 %{_appdir}/htdocs/*.ico
+%{_appdir}/htdocs/mix-manifest.json
 %{_appdir}/htdocs/ajax
 %{_appdir}/htdocs/css
 %{_appdir}/htdocs/customer
+%{_appdir}/htdocs/fonts
 %{_appdir}/htdocs/images
 %{_appdir}/htdocs/js
 %{_appdir}/htdocs/manage
 %{_appdir}/htdocs/reports
 %{_appdir}/htdocs/rpc
-%{_appdir}/htdocs/components
 %{_appdir}/templates
 
 %dir %{_appdir}/db
