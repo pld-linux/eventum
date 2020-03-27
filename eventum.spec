@@ -313,6 +313,8 @@ rm -r vendor/smarty-gettext/smarty-gettext
 rm -r vendor/smarty/smarty
 rm -r vendor/sphinx/php-sphinxapi
 
+%{__sed} -i '1s|^#!.*php\b|#!/usr/bin/php|' config/sphinx.conf.php bin/*.php
+
 # remove backups from patching as we use globs to package files to buildroot
 find '(' -name '*~' -o -name '*.orig' ')' | xargs -r rm -v
 
