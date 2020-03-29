@@ -2,7 +2,7 @@
 # Conditional build:
 %bcond_with	order	# with experimental order patch
 
-%define		rel		1
+%define		rel		2
 #define		subver  37
 #define		githash 2276dac77
 %define		php_min_version 7.1.3
@@ -85,6 +85,7 @@ Conflicts:	logrotate < 3.8.0
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
+%define		_noautoreq_pear .*
 %define		_libdir		%{_prefix}/lib/%{name}
 %define		_appdir		%{_datadir}/%{name}
 %define		_smartydir	%{php_data_dir}/Smarty
