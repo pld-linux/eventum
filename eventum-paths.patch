@@ -32,24 +32,14 @@
          $error = $this->checkPermissions($setupFile, "File '" . $setupFile . "'");
          if (!empty($error)) {
              $errors[] = $error;
---- eventum-3.5.0/src/Console/Command/MonitorCommand.php~	2018-05-20 17:33:34.000000000 +0300
-+++ eventum-3.5.0/src/Console/Command/MonitorCommand.php	2018-05-21 01:42:21.463354763 +0300
-@@ -47,17 +47,17 @@
+--- eventum-3.9.0/src/Console/Command/MonitorCommand.php~	2019-10-21 22:17:43.000000000 +0300
++++ eventum-3.9.0/src/Console/Command/MonitorCommand.php	2020-07-02 00:40:16.042698823 +0300
+@@ -68,9 +68,9 @@
          $required_files = [
-             $configPath . '/config.php' => [
-                 'check_owner' => true,
--                'owner' => 'apache',
-+                'owner' => 'root',
-                 'check_group' => true,
--                'group' => 'apache',
-+                'group' => 'http',
-                 'check_permission' => true,
-                 'permission' => 640,
-             ],
              $configPath . '/setup.php' => [
                  'check_owner' => true,
 -                'owner' => 'apache',
-+                'owner' => 'root',
++                'owner' => 'http',
                  'check_group' => true,
 -                'group' => 'apache',
 +                'group' => 'http',

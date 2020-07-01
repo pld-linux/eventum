@@ -5,16 +5,16 @@
 %define		rel		1
 #define		subver  37
 #define		githash 2276dac77
-%define		php_min_version 7.1.3
+%define		php_min_version 7.2.5
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl.UTF-8):	Eventum - system śledzenia spraw/błędów
 Name:		eventum
-Version:	3.8.17
+Version:	3.9.0
 Release:	%{?subver:1.%{subver}.%{?githash:g%{githash}.}}%{rel}
 License:	GPL v2+
 Group:		Applications/WWW
 Source0:	https://github.com/eventum/eventum/releases/download/v%{version}/%{name}-%{version}.tar.xz
-# Source0-md5:	5b2749abb9493dd319199cf3182de809
+# Source0-md5:	37f709400ae2bbbe25404d372e60542d
 #Source0:	https://github.com/eventum/eventum/releases/download/snapshot/%{name}-%{version}-%{subver}-g%{githash}.tar.xz
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
@@ -303,7 +303,6 @@ rm config/config.php
 %patch108 -p1
 
 rm htdocs/.htaccess.dist
-rm config/config.dist.php
 
 # cleanup libs taken from system, everything else gets bundled
 rm -r vendor/fonts/liberation
@@ -395,7 +394,7 @@ for a in \
 done
 
 # run database update if configured
-test -s %{_webappdir}/config.php && \
+test -s %{_webappdir}/setup.php && \
 sudo -H -u http -- %{_appdir}/bin/upgrade.php || :
 
 # nuke Smarty templates cache after upgrade
@@ -418,13 +417,13 @@ if [ "$1" = "0" ]; then
 fi
 
 %post setup
-chmod 660 %{_webappdir}/{config,private_key,secret_key}.php
-chown root:http %{_webappdir}/{config,private_key,secret_key}.php
+chmod 660 %{_webappdir}/{setup,private_key,secret_key}.php
+chown root:http %{_webappdir}/{setup,private_key,secret_key}.php
 
 %postun setup
-if [ "$1" = "0" ] && [ -f %{_webappdir}/config.php ]; then
-	chmod 640 %{_webappdir}/{config,private_key,secret_key}.php
-	chown root:http %{_webappdir}/{config,private_key,secret_key}.php
+if [ "$1" = "0" ] && [ -f %{_webappdir}/setup.php ]; then
+	chmod 640 %{_webappdir}/{setup,private_key,secret_key}.php
+	chown root:http %{_webappdir}/{setup,private_key,secret_key}.php
 fi
 
 %triggerin -- apache1 < 1.3.37-3, apache1-base
@@ -452,7 +451,6 @@ fi
 %attr(751,root,http) %dir %{_webappdir}/custom_field
 %attr(751,root,http) %dir %{_webappdir}/partner
 %attr(751,root,http) %dir %{_webappdir}/templates
-%attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/config.php
 %attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/htpasswd
 %attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/private_key.php
 %attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_webappdir}/secret_key.php
