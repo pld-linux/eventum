@@ -404,12 +404,6 @@ rm -f /var/cache/eventum/smarty/*.php
 # actually php engines "php-fcgi" and "php-fpm" needed only, apache is restarted anyway via webapp trigger.
 %php_webserver_restart
 
-%preun
-if [ "$1" = "0" ]; then
-	# nuke cache
-	rm -f /var/cache/eventum/*.php 2>/dev/null || :
-fi
-
 %postun
 if [ "$1" = "0" ]; then
 	%userremove %{name}
