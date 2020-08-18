@@ -398,7 +398,7 @@ test -s %{_webappdir}/setup.php && \
 sudo -H -u http -- %{_appdir}/bin/upgrade.php || :
 
 # nuke Smarty templates cache after upgrade
-rm -f /var/cache/eventum/*.php
+rm -f /var/cache/eventum/smarty/*.php
 
 # Restart webserver on upgrade to get .mo translations reloaded.
 # actually php engines "php-fcgi" and "php-fpm" needed only, apache is restarted anyway via webapp trigger.
