@@ -462,12 +462,17 @@ fi
 %{_appdir}/config
 
 %dir %{_appdir}/bin
+%attr(755,root,root) %{_appdir}/bin/check_reminders.php
 %attr(755,root,root) %{_appdir}/bin/console.php
+%attr(755,root,root) %{_appdir}/bin/download_emails.php
 %attr(755,root,root) %{_appdir}/bin/export-issues.php
 %attr(755,root,root) %{_appdir}/bin/extension.php
 %attr(755,root,root) %{_appdir}/bin/ldapsync.php
 %attr(755,root,root) %{_appdir}/bin/migrate_storage_adapter.php
+%attr(755,root,root) %{_appdir}/bin/monitor.php
 %attr(755,root,root) %{_appdir}/bin/process_all_emails.php
+%attr(755,root,root) %{_appdir}/bin/process_mail_queue.php
+%attr(755,root,root) %{_appdir}/bin/truncate_mail_queue.php
 %attr(755,root,root) %{_appdir}/bin/upgrade.php
 
 %{_appdir}/autoload.php
@@ -499,11 +504,6 @@ fi
 %{_appdir}/vendor
 %dir %{_appdir}/lib
 %{_appdir}/lib/eventum
-%exclude %{_appdir}/src/Console/Command/MailDownloadCommand.php
-%exclude %{_appdir}/src/Console/Command/MailQueueProcessCommand.php
-%exclude %{_appdir}/src/Console/Command/MailQueueTruncateCommand.php
-%exclude %{_appdir}/src/Console/Command/MonitorCommand.php
-%exclude %{_appdir}/src/Console/Command/ReminderCheckCommand.php
 
 %dir %{_libdir}
 
@@ -533,28 +533,18 @@ fi
 
 %files mail-queue
 %defattr(644,root,root,755)
-%{_appdir}/src/Console/Command/MailQueueProcessCommand.php
-%{_appdir}/src/Console/Command/MailQueueTruncateCommand.php
-%attr(755,root,root) %{_appdir}/bin/process_mail_queue.php
-%attr(755,root,root) %{_appdir}/bin/truncate_mail_queue.php
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/cron.d/%{name}-mail-queue
 
 %files mail-download
 %defattr(644,root,root,755)
-%{_appdir}/src/Console/Command/MailDownloadCommand.php
-%attr(755,root,root) %{_appdir}/bin/download_emails.php
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/cron.d/%{name}-mail-download
 
 %files reminder
 %defattr(644,root,root,755)
-%{_appdir}/src/Console/Command/ReminderCheckCommand.php
-%attr(755,root,root) %{_appdir}/bin/check_reminders.php
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/cron.d/%{name}-reminder
 
 %files monitor
 %defattr(644,root,root,755)
-%{_appdir}/src/Console/Command/MonitorCommand.php
-%attr(755,root,root) %{_appdir}/bin/monitor.php
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/cron.d/%{name}-monitor
 
 %files router-postfix
