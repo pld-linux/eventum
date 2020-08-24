@@ -1,8 +1,11 @@
---- eventum-3.7.4-440-gcc5ad3db5/src/Config/Paths.php	2019-08-21 23:32:40.826463576 +0300
-+++ eventum-3.7.4-440-gcc5ad3db5/src/Config/Paths.php	2019-08-21 23:38:04.548486455 +0300
-@@ -24,14 +24,13 @@
-     // "/var" path for writable data
--    public const APP_VAR_PATH = APP_PATH . '/var';
+--- eventum-3.9.4/src/Config/Paths.php~	2020-08-10 16:32:37.000000000 +0300
++++ eventum-3.9.4/src/Config/Paths.php	2020-08-24 14:18:12.547339038 +0300
+@@ -22,18 +22,16 @@
+     public const APP_PUBLIC_PATH = APP_PATH . '/htdocs';
+     public const APP_INC_PATH = APP_PATH . '/lib/eventum';
+ 
+-    // "/var" path for writable data
+-    private const APP_VAR_PATH = APP_PATH . '/var';
 -    public const APP_CACHE_PATH = self::APP_VAR_PATH . '/cache';
 +    public const APP_CACHE_PATH = '/var/cache/eventum';
  
@@ -11,6 +14,7 @@
      public const APP_TPL_COMPILE_PATH = self::APP_CACHE_PATH . '/smarty';
 -    public const APP_LOG_PATH = self::APP_VAR_PATH . '/log';
 +    public const APP_LOG_PATH = '/var/log/eventum';
+     /** @deprecated */
      public const APP_ERROR_LOG = self::APP_LOG_PATH . '/errors.log';
 -    public const APP_LOCKS_PATH = self::APP_VAR_PATH . '/lock';
 +    public const APP_LOCKS_PATH = '/var/run/eventum';
@@ -68,22 +72,3 @@
  
      /**
       * @var MountManager
---- eventum-3.9.3/res/services.yml~	2020-07-29 23:40:22.000000000 +0300
-+++ eventum-3.9.3/res/services.yml	2020-08-10 16:29:01.591109700 +0300
-@@ -15,13 +15,13 @@
-   # makes classes in src/ available to be used as services
-   # this creates a service per class whose id is the fully-qualified class name
-   Eventum\:
--    resource: '../src/*'
--    exclude: '../src/{DependencyInjection,Entity,Migrations,Tests,Kernel.php}'
-+    resource: '/usr/share/eventum/src/*'
-+    exclude: '/usr/share/eventum/src/{DependencyInjection,Entity,Migrations,Tests,Kernel.php}'
- 
-   # controllers are imported separately to make sure services can be injected
-   # as action arguments even if you don't extend any base controller class
-   Eventum\Controller\:
--    resource: '../src/Controller'
-+    resource: '/usr/share/eventum/src/Controller'
-     tags: ['controller.service_arguments']
- 
-   # add more service definitions when explicit configuration is needed
