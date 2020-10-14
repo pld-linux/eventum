@@ -1,6 +1,6 @@
---- eventum-3.9.4/src/Config/Paths.php~	2020-08-10 16:32:37.000000000 +0300
-+++ eventum-3.9.4/src/Config/Paths.php	2020-08-24 14:18:12.547339038 +0300
-@@ -22,18 +22,16 @@
+--- eventum-3.9.6/src/Config/Paths.php~	2020-08-21 18:50:08.000000000 +0300
++++ eventum-3.9.6/src/Config/Paths.php	2020-10-14 14:34:44.081698316 +0300
+@@ -22,19 +22,17 @@
      public const APP_PUBLIC_PATH = APP_PATH . '/htdocs';
      public const APP_INC_PATH = APP_PATH . '/lib/eventum';
  
@@ -22,6 +22,7 @@
      // fonts directory for phplot
 -    public const APP_FONTS_PATH = APP_PATH . '/vendor/fonts/liberation';
 +    public const APP_FONTS_PATH = '/usr/share/fonts/TTF';
+     public const APP_HELP_PATH = APP_PATH . '/docs/help';
  }
 --- eventum-3.5.6-98-g5b87d2b0/src/Setup/Requirements.php~	2019-01-23 01:50:42.000000000 +0200
 +++ eventum-3.5.6-98-g5b87d2b0/src/Setup/Requirements.php	2019-01-24 22:18:56.047816296 +0200
