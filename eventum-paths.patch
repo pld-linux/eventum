@@ -1,22 +1,24 @@
---- eventum-3.9.6/src/Config/Paths.php~	2020-08-21 18:50:08.000000000 +0300
-+++ eventum-3.9.6/src/Config/Paths.php	2020-10-14 14:34:44.081698316 +0300
-@@ -22,19 +22,17 @@
+--- eventum-3.9.7/src/Config/Paths.php~	2020-10-01 16:09:15.000000000 +0300
++++ eventum-3.9.7/src/Config/Paths.php	2020-11-14 01:54:53.491837117 +0200
+@@ -22,20 +22,16 @@
      public const APP_PUBLIC_PATH = APP_PATH . '/htdocs';
      public const APP_INC_PATH = APP_PATH . '/lib/eventum';
  
 -    // "/var" path for writable data
 -    private const APP_VAR_PATH = APP_PATH . '/var';
+-    public const APP_SPOOL_PATH = self::APP_VAR_PATH . '/spool';
 -    public const APP_CACHE_PATH = self::APP_VAR_PATH . '/cache';
++    public const APP_SPOOL_PATH = '/var/spool/eventum';
 +    public const APP_CACHE_PATH = '/var/cache/eventum';
  
      // define other paths
      public const APP_TPL_PATH = APP_PATH . '/templates';
      public const APP_TPL_COMPILE_PATH = self::APP_CACHE_PATH . '/smarty';
 -    public const APP_LOG_PATH = self::APP_VAR_PATH . '/log';
-+    public const APP_LOG_PATH = '/var/log/eventum';
-     /** @deprecated */
-     public const APP_ERROR_LOG = self::APP_LOG_PATH . '/errors.log';
+-    /** @deprecated */
+-    public const APP_ERROR_LOG = self::APP_LOG_PATH . '/errors.log';
 -    public const APP_LOCKS_PATH = self::APP_VAR_PATH . '/lock';
++    public const APP_LOG_PATH = '/var/log/eventum';
 +    public const APP_LOCKS_PATH = '/var/run/eventum';
  
      // fonts directory for phplot

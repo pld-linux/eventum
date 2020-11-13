@@ -9,12 +9,12 @@
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl.UTF-8):	Eventum - system śledzenia spraw/błędów
 Name:		eventum
-Version:	3.9.6
+Version:	3.9.7
 Release:	%{?subver:1.%{subver}.%{?githash:g%{githash}.}}%{rel}
 License:	GPL v2+
 Group:		Applications/WWW
 Source0:	https://github.com/eventum/eventum/releases/download/v%{version}/%{name}-%{version}.tar.xz
-# Source0-md5:	51f2e1f129090df2aac2a9e7d3931317
+# Source0-md5:	8b40e94661bac1e2d1af654eea84f26c
 #Source0:	https://github.com/eventum/eventum/releases/download/snapshot/%{name}-%{version}-%{subver}-g%{githash}.tar.xz
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
@@ -326,7 +326,7 @@ rm -rf $RPM_BUILD_ROOT
 install -d \
 	$RPM_BUILD_ROOT{%{_webappdir}/{custom_field,templates,workflow},%{_sysconfdir},%{_bindir},%{_sbindir},%{_libdir}} \
 	$RPM_BUILD_ROOT/etc/{rc.d/init.d,cron.d,logrotate.d,sysconfig} \
-	$RPM_BUILD_ROOT/var/{run,lib}/%{name} \
+	$RPM_BUILD_ROOT/var/{run,lib,spool}/%{name} \
 	$RPM_BUILD_ROOT/var/log/{archive/,}%{name} \
 	$RPM_BUILD_ROOT/var/lib/%{name}/{routed_{emails,drafts,notes},storage} \
 	$RPM_BUILD_ROOT/var/cache/%{name}/doctrine/proxies \
@@ -511,6 +511,7 @@ fi
 
 %dir /var/lib/%{name}
 %dir %attr(730,root,http) /var/run/%{name}
+%dir %attr(730,root,http) /var/spool/%{name}
 %dir %attr(730,root,http) /var/cache/%{name}
 %dir %attr(730,root,http) /var/cache/%{name}/doctrine
 %dir %attr(730,root,http) /var/cache/%{name}/doctrine/proxies
