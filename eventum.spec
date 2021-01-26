@@ -9,12 +9,12 @@
 Summary:	Eventum Issue / Bug tracking system
 Summary(pl.UTF-8):	Eventum - system śledzenia spraw/błędów
 Name:		eventum
-Version:	3.9.9
+Version:	3.9.10
 Release:	%{?subver:1.%{subver}.%{?githash:g%{githash}.}}%{rel}
 License:	GPL v2+
 Group:		Applications/WWW
 Source0:	https://github.com/eventum/eventum/releases/download/v%{version}/%{name}-%{version}.tar.xz
-# Source0-md5:	265c30fa014bafd8b91f54de49f4f493
+# Source0-md5:	46c9cbb19f7fabd8ef34332089a2f2d4
 #Source0:	https://github.com/eventum/eventum/releases/download/snapshot/%{name}-%{version}-%{subver}-g%{githash}.tar.xz
 Source1:	%{name}-apache.conf
 Source2:	%{name}-mail-queue.cron
