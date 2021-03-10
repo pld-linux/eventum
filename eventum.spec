@@ -335,7 +335,7 @@ install -d \
 	localedir=%{_localedir} \
 	DESTDIR=$RPM_BUILD_ROOT
 
-ln -s %{_webappdir} $RPM_BUILD_ROOT%{_appdir}/config
+ln -s --relative $RPM_BUILD_ROOT{%{_webappdir},%{_appdir}/config}
 
 cp -a vendor $RPM_BUILD_ROOT%{_appdir}
 
