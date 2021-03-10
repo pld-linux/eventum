@@ -239,8 +239,6 @@ Summary(pl.UTF-8):	Przekazywanie poczty Eventum - Postfix
 Group:		Applications/Mail
 Requires:	%{name} = %{version}-%{release}
 Requires:	postfix
-Provides:	eventum(router)
-Obsoletes:	eventum(router)
 
 %description router-postfix
 This package provides way of routing notes and emails back to Eventum
