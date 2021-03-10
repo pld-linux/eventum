@@ -26,10 +26,10 @@
 +    public const APP_FONTS_PATH = '/usr/share/fonts/TTF';
      public const APP_HELP_PATH = APP_PATH . '/docs/help';
  }
---- eventum-3.5.6-98-g5b87d2b0/src/Setup/Requirements.php~	2019-01-23 01:50:42.000000000 +0200
-+++ eventum-3.5.6-98-g5b87d2b0/src/Setup/Requirements.php	2019-01-24 22:18:56.047816296 +0200
-@@ -64,10 +64,6 @@
-         $configPath = Setup::getConfigPath();
+--- eventum-3.9.11.org/src/Setup/Requirements.php	2020-08-01 20:21:08.000000000 +0200
++++ eventum-3.9.11/src/Setup/Requirements.php	2021-03-10 15:18:12.361997906 +0100
+@@ -69,10 +69,6 @@ class Requirements
+         $privateKeyPath = Setup::getPrivateKeyPath();
          $setupFile = Setup::getSetupFile();
  
 -        $error = $this->checkPermissions($configPath, "Directory '" . $configPath . "'", true);
@@ -53,17 +53,17 @@
                  'check_permission' => true,
                  'permission' => 660,
                  'check_filesize' => true,
---- eventum-3.1.5/config/sphinx.conf.php~	2016-11-13 12:05:37.000000000 +0200
-+++ eventum-3.1.5/config/sphinx.conf.php	2016-11-23 03:10:05.855040510 +0200
-@@ -1,7 +1,7 @@
- #!/usr/bin/php
- <?php
+--- eventum-3.9.11.org/config/sphinx.conf.php	2020-05-05 08:20:33.000000000 +0200
++++ eventum-3.9.11/config/sphinx.conf.php	2021-03-10 15:18:12.361997906 +0100
+@@ -4,7 +4,7 @@
+ use Eventum\Config\SphinxConfig;
+ use Eventum\ServiceContainer;
  
 -require_once __DIR__ . '/../init.php';
 +require_once '/usr/share/eventum/init.php';
  
- if (!defined('SPHINX_LOG_PATH')) {
-     define('SPHINX_LOG_PATH', '/var/log/sphinx/');
+ /** @var SphinxConfig $config */
+ $config = ServiceContainer::get(SphinxConfig::class);
 --- eventum-3.7.4-440-gcc5ad3db5/src/Attachment/StorageManager.php~	2019-08-11 22:49:07.000000000 +0300
 +++ eventum-3.7.4-440-gcc5ad3db5/src/Attachment/StorageManager.php	2019-08-21 23:33:19.325911295 +0300
 @@ -33,7 +33,7 @@
