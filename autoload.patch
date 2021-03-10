@@ -235,8 +235,8 @@
      'd12685060d57775f2bc3adf90c7d62bd' => $baseDir . '/lib/eventum/gettext.php',
 +    'b2b3f01361f3aaeab67fde08ae76446f' => $phpDir. '/Smarty3/plugins/block.t.php',
  );
---- eventum-3.9.11.org/vendor/composer/autoload_psr4.php	2021-03-07 12:40:52.000000000 +0100
-+++ eventum-3.9.11/vendor/composer/autoload_psr4.php	2021-03-10 15:18:19.159013641 +0100
+--- eventum-3.9.12/vendor/composer/autoload_psr4.php~	2021-03-10 22:30:35.487760320 +0200
++++ eventum-3.9.12/vendor/composer/autoload_psr4.php	2021-03-10 22:31:30.816910713 +0200
 @@ -4,9 +4,9 @@
  
  $vendorDir = dirname(dirname(__FILE__));
@@ -264,10 +264,10 @@
      'League\\MimeTypeDetection\\' => array($vendorDir . '/league/mime-type-detection/src'),
      'League\\HTMLToMarkdown\\' => array($vendorDir . '/league/html-to-markdown/src'),
      'League\\Flysystem\\' => array($vendorDir . '/league/flysystem/src'),
-@@ -80,7 +78,6 @@ return array(
-     'Laminas\\Config\\' => array($vendorDir . '/laminas/laminas-config/src'),
-     'Invoker\\' => array($vendorDir . '/php-di/invoker/src'),
+@@ -80,7 +80,6 @@
      'Interop\\Container\\' => array($vendorDir . '/container-interop/container-interop/src/Interop/Container'),
+     'Giberti\\EmojiExtension\\' => array($vendorDir . '/giberti/commonmark-emoji-extension/src'),
+     'Giberti\\EmojiData\\' => array($vendorDir . '/giberti/emoji-data/src'),
 -    'Eventum\\Test\\' => array($baseDir . '/tests'),
      'Eventum\\' => array($baseDir . '/src'),
      'EmailReplyParser\\' => array($vendorDir . '/willdurand/email-reply-parser/src/EmailReplyParser'),
