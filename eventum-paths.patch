@@ -1,6 +1,6 @@
---- eventum-3.9.7/src/Config/Paths.php~	2020-10-01 16:09:15.000000000 +0300
-+++ eventum-3.9.7/src/Config/Paths.php	2020-11-14 01:54:53.491837117 +0200
-@@ -22,20 +22,16 @@
+--- eventum-3.10.1/src/Config/Paths.php~	2020-12-02 23:16:35.000000000 +0200
++++ eventum-3.10.1/src/Config/Paths.php	2021-03-24 21:56:18.672527936 +0200
+@@ -22,18 +22,16 @@
      public const APP_PUBLIC_PATH = APP_PATH . '/htdocs';
      public const APP_INC_PATH = APP_PATH . '/lib/eventum';
  
@@ -15,8 +15,6 @@
      public const APP_TPL_PATH = APP_PATH . '/templates';
      public const APP_TPL_COMPILE_PATH = self::APP_CACHE_PATH . '/smarty';
 -    public const APP_LOG_PATH = self::APP_VAR_PATH . '/log';
--    /** @deprecated */
--    public const APP_ERROR_LOG = self::APP_LOG_PATH . '/errors.log';
 -    public const APP_LOCKS_PATH = self::APP_VAR_PATH . '/lock';
 +    public const APP_LOG_PATH = '/var/log/eventum';
 +    public const APP_LOCKS_PATH = '/var/run/eventum';
