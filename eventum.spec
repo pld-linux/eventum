@@ -22,7 +22,6 @@ Source3:	%{name}-mail-download.cron
 Source4:	%{name}-reminder.cron
 Source5:	%{name}-monitor.cron
 Source10:	sphinx.crontab
-Source13:	%{name}-router-postfix.sh
 Source14:	%{name}.logrotate
 Source15:	%{name}-lighttpd.conf
 Source16:	http://www.isocra.com/images/updown2.gif
@@ -232,27 +231,6 @@ testów uprawnień i plików w Monitor::checkConfiguration().
 
 Ten pakiet zawiera zadanie dla crona.
 
-%package router-postfix
-Summary:	Eventum Mail Routing - Postfix
-Summary(pl.UTF-8):	Przekazywanie poczty Eventum - Postfix
-Group:		Applications/Mail
-Requires:	%{name} = %{version}-%{release}
-Requires:	postfix
-
-%description router-postfix
-This package provides way of routing notes and emails back to Eventum
-via Postfix.
-
-The Postfix configuration instructions you can find from
-<https://github.com/eventum/eventum/blob/v%{version}/docs/wiki/System-Admin/Setting-up-email-routing-with-postfix.md>
-
-%description router-postfix -l pl.UTF-8
-Ten pakiet udostępnia metodę przekazywania notatek i listów do Eventum
-przez Postfiksa.
-
-Opis konfiguracji Postfiksa można znaleźć pod adresem
-<https://github.com/eventum/eventum/blob/v%{version}/docs/wiki/System-Admin/Setting-up-email-routing-with-postfix.md>
-
 %package sphinx
 Summary:	Eventum Sphinx Search
 Group:		Applications/WWW
@@ -362,9 +340,6 @@ cp -p %{SOURCE5} $RPM_BUILD_ROOT/etc/cron.d/%{name}-monitor
 cp -p %{SOURCE10} $RPM_BUILD_ROOT/etc/cron.d/%{name}-sphinx
 
 cp -p %{SOURCE14} $RPM_BUILD_ROOT/etc/logrotate.d/%{name}
-
-# postfix router
-install -p %{SOURCE13} $RPM_BUILD_ROOT%{_libdir}/router-postfix
 
 cp -p %{SOURCE17} $RPM_BUILD_ROOT%{systemdtmpfilesdir}/%{name}.conf
 
@@ -544,10 +519,6 @@ fi
 %files monitor
 %defattr(644,root,root,755)
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/cron.d/%{name}-monitor
-
-%files router-postfix
-%defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/router-postfix
 
 %files sphinx
 %defattr(644,root,root,755)
