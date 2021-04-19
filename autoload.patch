@@ -235,8 +235,8 @@
      'd12685060d57775f2bc3adf90c7d62bd' => $baseDir . '/lib/eventum/gettext.php',
 +    'b2b3f01361f3aaeab67fde08ae76446f' => $phpDir. '/Smarty3/plugins/block.t.php',
  );
---- eventum-3.9.12/vendor/composer/autoload_psr4.php~	2021-03-10 22:30:35.487760320 +0200
-+++ eventum-3.9.12/vendor/composer/autoload_psr4.php	2021-03-10 22:31:30.816910713 +0200
+--- eventum-3.10.3/vendor/composer/autoload_psr4.php~	2021-04-19 12:15:39.000000000 +0300
++++ eventum-3.10.3/vendor/composer/autoload_psr4.php	2021-04-19 12:16:18.716201441 +0300
 @@ -4,9 +4,9 @@
  
  $vendorDir = dirname(dirname(__FILE__));
@@ -248,18 +248,18 @@
      'glen\\FilenameNormalizer\\' => array($vendorDir . '/glen/filename-normalizer/src'),
      'Xhgui\\Profiler\\' => array($vendorDir . '/perftools/php-profiler/src'),
      'TrueBV\\' => array($vendorDir . '/true/punycode/src'),
-@@ -55,7 +55,6 @@ return array(
-     'Silly\\' => array($vendorDir . '/mnapoli/silly/src'),
+@@ -54,7 +54,6 @@
+     'Symfony\\Bridge\\Doctrine\\' => array($vendorDir . '/symfony/doctrine-bridge'),
      'Seld\\Signal\\' => array($vendorDir . '/seld/signal-handler/src'),
      'Psr\\SimpleCache\\' => array($vendorDir . '/psr/simple-cache/src'),
 -    'Psr\\Log\\' => array($vendorDir . '/psr/log/Psr/Log'),
      'Psr\\Container\\' => array($vendorDir . '/psr/container/src'),
      'Psr\\Cache\\' => array($vendorDir . '/psr/cache/src'),
      'Port\\Tests\\' => array($vendorDir . '/portphp/portphp/tests'),
-@@ -67,7 +66,6 @@ return array(
+@@ -66,7 +65,6 @@
      'Phlib\\Flysystem\\Pdo\\' => array($vendorDir . '/phlib/flysystem-pdo/src'),
      'Phinx\\' => array($vendorDir . '/robmorgan/phinx/src/Phinx'),
-     'PackageVersions\\' => array($vendorDir . '/ocramius/package-versions/src/PackageVersions'),
+     'PackageVersions\\' => array($vendorDir . '/composer/package-versions-deprecated/src/PackageVersions'),
 -    'Monolog\\' => array($vendorDir . '/monolog/monolog/src/Monolog'),
      'League\\MimeTypeDetection\\' => array($vendorDir . '/league/mime-type-detection/src'),
      'League\\HTMLToMarkdown\\' => array($vendorDir . '/league/html-to-markdown/src'),
