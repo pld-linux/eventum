@@ -235,8 +235,8 @@
      'd12685060d57775f2bc3adf90c7d62bd' => $baseDir . '/lib/eventum/gettext.php',
 +    'b2b3f01361f3aaeab67fde08ae76446f' => $phpDir. '/Smarty3/plugins/block.t.php',
  );
---- eventum-3.10.3/vendor/composer/autoload_psr4.php~	2021-04-19 12:15:39.000000000 +0300
-+++ eventum-3.10.3/vendor/composer/autoload_psr4.php	2021-04-19 12:16:18.716201441 +0300
+--- eventum-3.10.7/vendor/composer/autoload_psr4.php~	2021-10-25 09:46:51.000000000 +0300
++++ eventum-3.10.7/vendor/composer/autoload_psr4.php	2021-10-25 09:47:30.321342878 +0300
 @@ -4,9 +4,9 @@
  
  $vendorDir = dirname(dirname(__FILE__));
@@ -247,7 +247,7 @@
 -    'glen\\FilenameNormalizer\\Test\\' => array($vendorDir . '/glen/filename-normalizer/tests'),
      'glen\\FilenameNormalizer\\' => array($vendorDir . '/glen/filename-normalizer/src'),
      'Xhgui\\Profiler\\' => array($vendorDir . '/perftools/php-profiler/src'),
-     'TrueBV\\' => array($vendorDir . '/true/punycode/src'),
+     'Webmozart\\Assert\\' => array($vendorDir . '/webmozart/assert/src'),
 @@ -54,7 +54,6 @@
      'Symfony\\Bridge\\Doctrine\\' => array($vendorDir . '/symfony/doctrine-bridge'),
      'Seld\\Signal\\' => array($vendorDir . '/seld/signal-handler/src'),
